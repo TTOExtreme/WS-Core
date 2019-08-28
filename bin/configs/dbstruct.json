@@ -261,7 +261,7 @@
                 },
                 {
                     "name": "ports",
-                    "struct": "VARCHAR(16384)"
+                    "struct": "MEDIUMTEXT"
                 },
                 {
                     "name": "hostname",

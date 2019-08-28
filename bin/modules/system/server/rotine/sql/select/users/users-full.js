@@ -1,7 +1,7 @@
-var db = require('../../connector');
+var db = require('../../../../../../../rotine/sql/connector');
 var fs = require('fs');
 var colors = require('colors');
-var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../../configs/dbstruct.json", 'utf8'));
+var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../../configs/dbstruct.json"), 'utf8'));
 
 const single = (callback) => {
     var sql = "SELECT USR1.id_user,USR1.isConnected,USR1.user,USR1.username,USR1.lastLogin,USR1.lastTry,USR1.lastIp,USR1.addedIn, USR2.user AS addedByUser,USR1.deactivatedIn,USR3.user AS deactivatedByUser,USR1.active" +
