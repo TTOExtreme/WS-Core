@@ -1,0 +1,370 @@
+
+.subnets_main_table_holder{
+    background-color: var(--div);
+    width: 100vw;
+    max-width: calc(100vw - 298px);
+    margin: 0;
+    padding: 0;
+    margin-top: 32px;
+    margin-left: 48px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.subnets_Lside_table_holder{
+    background-color: var(--div);
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.subnets_Mside_table_holder{
+    background-color: var(--div);
+    width: calc(100vw - 298px);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.subnets_Mside_table{
+    background-color: var(--div);
+    width: calc(100vw - 298px);
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+    transition: .5s;
+}
+
+.subnets_Lside_table_items_holder{
+    background-color: var(--div);
+    width: 300px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    height: calc(100vh - 96px);
+    max-height: calc(100vh - 96px);
+    scrollbar-width: none;
+}
+
+.subnets_ipmap_table_holder{
+    background-color: var(--div);
+    height: 250px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    width: calc(100vw - 368px);
+    max-height: 76px;
+}
+
+.subnets_ipmap_table{
+    background-color: var(--div);
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    max-width: calc(100vw - 382px);
+    max-height: 25px;
+}
+
+.subnets_ipmap_section_tr{
+    height:76px;
+    max-height:76px;
+}
+
+.subnets_ipmap_section_td{
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: calc(100vw - 132px);
+    max-width: calc(100vw - 132px);
+    max-height: 76px;
+    /*! height: 76px; */
+}
+
+.subnets_ipmap_table_td{
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    padding:0;
+    margin:0;
+    border:0;
+}
+
+.subnets_ipmap_table_td p{
+    max-width: 14px;
+    max-height: 14px;
+    height: 14px;
+    width: 14px;
+    padding:0;
+    margin:0;
+    border:0;
+    border-radius: 7px;
+}
+
+.subnets_stats_table_td_label p{
+    margin:5px;
+    padding:0;
+    border:0;
+    white-space: nowrap;
+}
+
+.subnets_stats_table_td_label{
+    font-size: 14pt;
+    color: white;
+    vertical-align: middle;
+    white-space:nowrap;
+    height: 15px;
+    overflow: hidden;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #101010f8;
+    text-align: center;
+}
+
+.subnets_stats_table_td p { 
+    background: #303030f0;
+}
+
+.subnets_stats_table_td{
+    background: var(--div);
+}
+
+.subnets_stats_table_td:hover { 
+    background: var(--div-hover);
+}
+
+.subnets_hostlist_section_tr{
+    height:76px;
+    max-height:76px;
+}
+
+.subnets_hostlist_section_td{
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: calc(100vw - 72px);
+    max-width: calc(100vw - 72px);
+    max-height: 76px;
+}
+
+.subnets_hostlist_section_tr{
+    height:calc(100vh - 76px - 40px - 150px - 40px);
+    /*! max-height:16px; */
+    
+}
+
+.subnets_hostlist_tablelist_holder{
+    /* background-color: var(--div); */
+    height: 100%;
+    width: calc(100vw - 250px - 123px);
+    margin: 0;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding: 0;
+    overflow: auto;
+    /* width: calc(100vw - 322px); */
+    max-height: calc(100vh - 76px - 40px - 150px - 40px);
+}
+
+.subnets_hostlist_tablelist_td_dot{
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #303030f0;
+}
+
+.subnets_hostlist_tablelist_tr:hover { 
+    background: var(--div-hover);
+}
+
+.subnets_hostlist_tablelist_td{
+    color: white;
+    vertical-align: middle;
+    white-space:nowrap;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #303030f0;
+    text-align: center;
+}
+
+.subnets_hostlist_tablelist_td_label p{
+    margin:5px;
+    padding:0;
+    border:0;
+}
+
+.subnets_hostlist_tablelist_td_label{
+    font-size: 18pt;
+    color: white;
+    vertical-align: middle;
+    white-space:nowrap;
+    height: 20px;
+    overflow: hidden;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #101010f8;
+    text-align: center;
+}
+
+.subnets_hostlist_tablelist_td p{
+    margin:5px;
+    max-height: 30px;
+    padding:0;
+    border:0;
+}
+
+.subnets_hostlist_tablelist_td_dot p{
+    max-width: 14px;
+    max-height: 14px;
+    height: 14px;
+    width: 14px;
+    padding:0;
+    margin:0;
+    border:0;
+    border-radius: 7px;
+}
+
+.subnets_ipmap_table_td p:hover { 
+    background: var(--div-hover);
+}
+
+
+.subnet_hosts_td_alive_0 p{ /* nao cadastrado*/
+    background-color: #10101070;
+    border: 1px solid #303030;
+}
+
+.subnet_hosts_td_alive_1 p{ /* cadastrado mas inativo*/
+    background-color: #ff101070;
+    border: 1px solid #919191;
+}
+
+.subnet_hosts_td_alive_2 p{ /* nao cadastrado e ativo (impossivel)*/
+}
+
+.subnet_hosts_td_alive_3 p{ /* cadastrado e ativo*/
+    background-color: #10ff1070;
+    border: 1px solid #919191;
+}
+
+.subnets_Lside_table{
+    background-color: var(--div);
+    width: 250px;
+    height: 0;
+    opacity: 0;
+    overflow-y: scroll;
+    transition: 0.5s;
+}
+.subnets_stats_table_infotable td{
+    background: var(--table-row-even-bg);
+    color: var(--table-item-row-text);
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.subnets_stats_table_infotable tr{
+    background: var(--div);
+    white-space: nowrap;
+}
+
+.subnets_Lside_tr_item{
+    background-color: var(--table-item-row-bg);
+    color: var(--table-item-row-text);
+    border: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    }
+
+.subnets_Lside_tr_item:hover{
+    background-color: var(--table-item-row-bg-hover);
+    color: var(--table-item-row-text-hover);
+}
+
+.subnets_Lside_tr_item_label{
+    background-color: var(--div);
+}
+
+.subnets_Lside_td_item_label{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.subnets_Lside_td_item_label p{
+    margin: 0;
+    padding-left: 16px;
+}
+
+.subnets_Lside_td_item p,.subnets_Lside_td_item a{
+    margin: 0;
+    padding-left: 16px;
+}
+
+.subnets_Lside_td_item p:hover,.subnets_Lside_td_item a:hover{
+    /*color: #f1f1f1;*/
+}
+
+.subnets_Lside_tr_item_label a, .subnets_Lside_td_item a{
+    margin-left: 8px;
+    padding: 0 4px 0 4px;
+}
+
+
+.subnets_add_table{
+    vertical-align: middle;
+    background-color: #10101050;
+    width: 40vw;
+}
+
+.subnets_add_table p{
+    margin:4px;
+    border:0;
+    padding:0;
+}
+
+.subnets_add_table_holder{
+    vertical-align: middle;
+    background-color: #303030;
+    opacity: 0;
+    position: absolute;
+    width: 40vw;
+    height: 40vh;
+    top: -100vh;
+    left: 30vw;
+    transition: 0.5s;
+    border-radius: 25px;
+    border: 1px solid black;
+}
+
+.subnets_add_table_holder td{
+    width: 20vw;
+    color: #f1f1f1
+}

@@ -1,0 +1,451 @@
+{
+    "database": "WS_1_3_0",
+    "tables": [
+        {
+            "table": "_Users",
+            "colunas": [
+                {
+                    "name": "id_user",
+                    "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+                },
+                {
+                    "name": "user",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "username",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "pass",
+                    "struct": "VARCHAR(4096)"
+                },
+                {
+                    "name": "UUID",
+                    "struct": "VARCHAR(4096)"
+                },
+                {
+                    "name": "lastLogin",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "lastTry",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "isConnected",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "lastIp",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "deactivatedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                }
+            ]
+        },
+        {
+            "table": "_Groups",
+            "colunas": [
+                {
+                    "name": "id_group",
+                    "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+                },
+                {
+                    "name": "grp",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "groupname",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "GID",
+                    "struct": "VARCHAR(4096)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "deactivatedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                }
+            ]
+        },
+        {
+            "table": "_Permissions",
+            "colunas": [
+                {
+                    "name": "id_Permission",
+                    "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+                },
+                {
+                    "name": "perm_code",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "perm_name",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "perm_desc",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "perm_type",
+                    "struct": "VARCHAR(200)"
+                }
+            ]
+        },
+        {
+            "table": "rel_perm_usr",
+            "colunas": [
+                {
+                    "name": "id_Permission",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_user",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "rel_groups_usr",
+            "colunas": [
+                {
+                    "name": "id_group",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_user",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "rel_group_group",
+            "colunas": [
+                {
+                    "name": "id_group",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_group_son",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "rel_perm_group",
+            "colunas": [
+                {
+                    "name": "id_Permission",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_group",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "_Hosts",
+            "colunas": [
+                {
+                    "name": "name",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "subnet",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "ip",
+                    "struct": "VARCHAR(20) KEY"
+                },
+                {
+                    "name": "ports",
+                    "struct": "VARCHAR(16384)"
+                },
+                {
+                    "name": "hostname",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "mac",
+                    "struct": "VARCHAR(40)"
+                },
+                {
+                    "name": "vendor",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "hostnameErr",
+                    "struct": "VARCHAR(400)"
+                },
+                {
+                    "name": "macErr",
+                    "struct": "VARCHAR(400)"
+                },
+                {
+                    "name": "vendorErr",
+                    "struct": "VARCHAR(400)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "BIGINT(64)"
+                },
+                {
+                    "name": "alive",
+                    "struct": "INT(1) DEFAULT 0"
+                },
+                {
+                    "name": "seted",
+                    "struct": "INT(1) DEFAULT 0"
+                }
+            ]
+        },
+        {
+            "table": "_Subnets",
+            "colunas": [
+                {
+                    "name": "name",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "ip",
+                    "struct": "VARCHAR(20) KEY"
+                },
+                {
+                    "name": "gtw",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "netmask",
+                    "struct": "INT(10) DEFAULT 24"
+                },
+                {
+                    "name": "autoscan",
+                    "struct": "INT(1) DEFAULT 0"
+                }
+            ]
+        },
+        {
+            "table": "_Radios",
+            "colunas": [
+                {
+                    "name": "name",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "ip",
+                    "struct": "VARCHAR(20) KEY"
+                },
+                {
+                    "name": "community",
+                    "struct": "VARCHAR(60)"
+                },
+                {
+                    "name": "hostname",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "mac",
+                    "struct": "VARCHAR(40)"
+                },
+                {
+                    "name": "vendor",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "hostnameErr",
+                    "struct": "VARCHAR(400)"
+                },
+                {
+                    "name": "macErr",
+                    "struct": "VARCHAR(400)"
+                },
+                {
+                    "name": "vendorErr",
+                    "struct": "VARCHAR(400)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "BIGINT(64)"
+                },
+                {
+                    "name": "alive",
+                    "struct": "INT(1) DEFAULT 0"
+                },
+                {
+                    "name": "seted",
+                    "struct": "INT(1) DEFAULT 1"
+                },
+                {
+                    "name": "autoscan",
+                    "struct": "INT(1) DEFAULT 0"
+                },
+                {
+                    "name": "SSID",
+                    "struct": "VARCHAR (300)"
+                },
+                {
+                    "name": "Pass",
+                    "struct": "VARCHAR (300)"
+                },
+                {
+                    "name": "RadioMode",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "ChannelFreq",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "dbmPower",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "RadioSignal",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "RSSI",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "CCQ",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "Noise",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "TXrate",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "RXrate",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "Encrypt",
+                    "struct": "VARCHAR (60)"
+                },
+                {
+                    "name": "ChannelWidth",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "AirmaxState",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "AirmaxQuality",
+                    "struct": "INT (10)"
+                },
+                {
+                    "name": "AirmaxCapacity",
+                    "struct": "INT (10)"
+                }
+            ]
+        }
+    ]
+}
