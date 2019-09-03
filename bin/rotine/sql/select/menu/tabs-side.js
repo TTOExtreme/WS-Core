@@ -3,15 +3,7 @@ const fs = require('fs');
 const path = require("path");
 
 var lista = [
-    {
-        perm: "tab/side/subnets",
-        data: {
-            id: "ipam",
-            name: "Gerencia IP",
-            img: "subnet.png",
-            onClick: "loadScript(\"module/ipam/ipam.js\")"
-        }
-    }
+
 ];
 
 function init() {

@@ -1,11 +1,20 @@
 var db = require('../connector');
-var fs = require('fs');
-var colors = require('colors');
+const fs = require('fs');
+const colors = require('colors');
+const path = require("path")
 var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
 
 const exe = (callback) => {
 
     var sql = "";
+
+
+    fs.readdirSync(path.join(__dirname + '/../../../modules')).forEach(e => {
+        if (fs.existsSync(path.join(__dirname + '/../../../modules/' + e + "/server/configs/dbstruct.json"))) {
+            var v = JSON.parse(fs.readFileSync(path.join(__dirname + '/../../../modules/' + e + "/server/configs/dbstruct.json")));
+            dbstruct.tables = dbstruct.tables.concat(v);
+        }
+    })
 
     rec(dbstruct.tables, callback);
 
