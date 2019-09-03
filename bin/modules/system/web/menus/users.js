@@ -53,50 +53,53 @@ function system_append_users(data) {
 
 function reloadUserTable() {
     menuCancel();
-    main_table = new Tabulator("#system_bottom_table", {
-        data: indb.lists["UserList"],
-        headerFilterPlaceholder: "Filtrar",
-        index: "id_user",
-        dataTree: true,
-        dataTreeStartExpanded: false,
-        columns: [
-            {
-                title: actionName, field: actionfield, formatter: actionIcon, cellClick: function (e, cell) {
-                    var data = cell.getData();
-                    if (confirmExecution) {
-                        if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " o Usuário: " + data.user + "\nVoce tem certeza disso?")) {
-                            if (actionCallback != null) {
-                                actionCallback(data);
-                            } else {
-                                send(actionFunction, data);
-                            }
-                        }
-                    } else {
+
+    const newCollums = [
+        {
+            title: actionName, field: actionfield, formatter: actionIcon, cellClick: function (e, cell) {
+                var data = cell.getData();
+                if (confirmExecution) {
+                    if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " o Usuário: " + data.user + "\nVoce tem certeza disso?")) {
                         if (actionCallback != null) {
                             actionCallback(data);
                         } else {
                             send(actionFunction, data);
                         }
                     }
-                }, visible: !(actionName == "")
-            },
-            { title: 'Nome', field: 'username', headerFilter: "input" },
-            { title: 'Login', field: 'user', headerFilter: "input" },
-            { title: 'Conectado', field: 'isConnected', formatter: "tickCross", editor: "select", headerFilter: true, headerFilterParams: { "": "-", "1": "Conectado", "0": "Desconectado" } },
-            { title: 'Ultimo Login', field: 'lastLogin', formatter: ((data) => formatTime(data.getRow().getData().lastLogin)), headerFilter: "input" },
-            { title: 'Ultima Tentativa', field: 'lastTry', formatter: ((data) => formatTime(data.getRow().getData().lastTry)), headerFilter: "input" },
-            { title: 'Ultimo IP', field: 'lastIp', headerFilter: "input" },
-            {
-                title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
-                    "1": "Ativo",
-                    "0": "Inativo"
+                } else {
+                    if (actionCallback != null) {
+                        actionCallback(data);
+                    } else {
+                        send(actionFunction, data);
+                    }
                 }
-            },
-            { title: 'Adicionado Em', field: 'addedIn', formatter: ((data) => formatTime(data.getRow().getData().addedIn)), headerFilter: "input" },
-            { title: 'Adicionado Por', field: 'addedByUser', headerFilter: "input" },
-            { title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
-            { title: 'Desativado Por', field: 'deactivatedByUser', headerFilter: "input" }
-        ],
+            }, visible: !(actionName == "")
+        },
+        { title: 'Nome', field: 'username', headerFilter: "input" },
+        { title: 'Login', field: 'user', headerFilter: "input" },
+        { title: 'Conectado', field: 'isConnected', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] },
+        { title: 'Ultimo Login', field: 'lastLogin', formatter: ((data) => formatTime(data.getRow().getData().lastLogin)), headerFilter: "input" },
+        { title: 'Ultima Tentativa', field: 'lastTry', formatter: ((data) => formatTime(data.getRow().getData().lastTry)), headerFilter: "input" },
+        { title: 'Ultimo IP', field: 'lastIp', headerFilter: "input" },
+        {
+            title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
+                "1": "Ativo",
+                "0": "Inativo"
+            }
+        },
+        { title: 'Adicionado Em', field: 'addedIn', formatter: ((data) => formatTime(data.getRow().getData().addedIn)), headerFilter: "input" },
+        { title: 'Adicionado Por', field: 'addedByUser', headerFilter: "input" },
+        { title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
+        { title: 'Desativado Por', field: 'deactivatedByUser', headerFilter: "input" }
+    ];
+
+    main_table = new Tabulator("#system_bottom_table", {
+        data: indb.lists["UserList"],
+        headerFilterPlaceholder: "Filtrar",
+        index: "id_user",
+        dataTree: true,
+        dataTreeStartExpanded: false,
+        columns: newCollums,
         height: '100%',
         paginationButtonCount: 3,
         pagination: "local",

@@ -8,7 +8,7 @@ const exe = (user, username, pass, UUID, addedBy, active, callback) => {
     sql += " VALUES ('" + user + "','" + username + "','" + pass + "','" + UUID + "',0," + new Date().getTime() + "," + addedBy + "," + active + ",0);";
     db.query(sql, function (err, results, fields) {
 
-        if (err) { callback({ status: "ERROR", mess: "[ERROR] on  <" + __filename + ">:\n", sql: sql, stack: err }); return; }
+        if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
         callback({});
     });
 };

@@ -22,15 +22,13 @@ const exe = (callback) => {
                 asyncForEach(dbdata.tables, (table) => {
                     asyncForEach(table.data, (dat, datIndex) => {
                         require('../insert/dataToTables.js')(table.name, table.struct, dat, () => {
-                            if (datIndex == table.data.length - 1) {
-                                userCrt(300, () => {
-                                    grpCrt(80, () => {
-                                        callback();
-
-                                    })
-                                })
-                            }
+                            return;
                         })
+                    })
+                })
+                userCrt(50, () => {
+                    grpCrt(80, () => {
+                        callback();
                     })
                 })
                 /*

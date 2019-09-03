@@ -46,6 +46,11 @@ function initSocket() {
             executeRoute(JSON.parse(udata));
             ck_new();
         });
+        socket.on("logout", function () {
+            if (window.location.pathname != "/login/") {
+                window.location.replace(rootLocation + "login/");
+            }
+        })
         socket.on('disconnect', function () {
             connected = false;
             logged = false;

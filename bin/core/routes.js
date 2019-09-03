@@ -73,7 +73,7 @@ function RouteInit() {
     fs.readdirSync(path.join(__dirname + '/../modules')).forEach(e => {
         if (fs.existsSync(path.join(__dirname + '/../modules/' + e + "/server/routes.js"))) {
             var v = require(path.join(__dirname + '/../modules/' + e + "/server/routes.js"))
-            v(RouteAdd);
+            v.RoutesInit(RouteAdd);
         }
     })
 

@@ -8,7 +8,7 @@ const exe = (id_user, id_group, addedBy, active, callback) => {
     sql += " VALUES ('" + id_user + "','" + id_group + "'," + new Date().getTime() + "," + addedBy + "," + active + ");";
     console.log(sql.green)
     db.query(sql, function (err, results, fields) {
-        if (err) { console.log(("[ERROR] on  <" + __filename + ">:\n").red); console.log(err); callback({ status: "ERROR", mess: "[ERROR] on  <" + __filename + ">:\n", sql: sql, stack: err }); return; }
+        if (err) { console.log(("[ERROR] on  {" + __filename + "}:\n").red); console.log(err); callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
         callback({});
     });
 };

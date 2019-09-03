@@ -1,7 +1,7 @@
 
 const path = require("path");
 
-function routesInit(RouteAdd) {
+function RoutesInit(RouteAdd) {
     //adm
     //menus
     RouteAdd("system/get/top/menu", "system/get/top/menu", (UUID, user_id, data, returnData) => {
@@ -70,9 +70,9 @@ function routesInit(RouteAdd) {
 
     //  load perm
     RouteAdd("system/get/users/perm", "system/get/users/perm", (UUID, user_id, data, returnData) => {
-        require(path.join(__dirname + '/rotine/sql/select/users/perm.js'))(data.data.id_user, (ret) => {
+        require(path.join(__dirname + '/rotine/sql/select/users/perm.js'))(user_id, data.data.id_user, (ret) => {
             if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
-            returnData({ route: "system/atr/users/perm", data: ret });
+            returnData({ route: "system/lst/users/perm", data: ret });
         });
     });
 
@@ -86,13 +86,22 @@ function routesInit(RouteAdd) {
             returnData({ route: "system/list/users/groups", data: data.data });
         });
     });
+
     //  attrib perm
-    RouteAdd("system/atr/users/perm", "system/atr/users/perm", (UUID, user_id, data, returnData) => {
-        require(path.join(__dirname + '/rotine/sql/insert/users/perm.js'))(data.data.id_user, (ret) => {
-            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
-            returnData({ route: "system/atr/users/perm", data: ret });
-        });
+    RouteAdd("system/edt/users/perm", "system/edt/users/perm", (UUID, user_id, data, returnData) => {
+        if (data.data.active != 1) {//insert/update
+            require(path.join(__dirname + '/rotine/sql/insert/users/perm.js'))(user_id, data.data, (ret) => {
+                if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+                returnData({ route: "system/edt/users/perm", data: ret });
+            });
+        } else {//remove/deactivate
+            require(path.join(__dirname + '/rotine/sql/drop/users/perm.js'))(user_id, data.data, (ret) => {
+                if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+                returnData({ route: "system/edt/users/perm", data: ret });
+            });
+        }
+
     });
 }
 
-module.exports = routesInit;
+module.exports = { RoutesInit };

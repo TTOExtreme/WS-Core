@@ -12,6 +12,8 @@ function system_mess(data, _cb) {
                 attr += "background-color:var(--message-bg-ok);";
             } else {
                 if (data.status == "ERROR") {
+                    console.log(data);
+                    data.mess = "[Erro]"
                     attr += "background-color:var(--message-bg-err);";
                 } else {
                     attr += "background-color:var(--message-bg-info);";

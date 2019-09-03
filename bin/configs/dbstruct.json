@@ -152,6 +152,10 @@
                     "struct": "INT(1)"
                 },
                 {
+                    "name": "deactivatedby",
+                    "struct": "INT(10)"
+                },
+                {
                     "name": "deactivatedIn",
                     "struct": "VARCHAR(20)"
                 }
