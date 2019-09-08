@@ -1,4 +1,4 @@
-var db = require('../connector');
+var db = require('../../../../../../rotine/sql/connector');
 var fs = require('fs');
 var colors = require('colors');
 var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));

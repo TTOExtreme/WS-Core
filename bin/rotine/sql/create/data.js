@@ -1,9 +1,11 @@
 var db = require('../connector');
-var fs = require('fs');
-var colors = require('colors');
+const fs = require('fs');
+const colors = require('colors');
+const path = require("path");
+
 var bcypher = require('../../../lib/bcypher');
 var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
-var dbdata = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbdata.json", 'utf8'));
+var dbdata = {};
 
 const exe = (callback) => {
 
@@ -16,33 +18,51 @@ const exe = (callback) => {
         //add user admin to Administradores groups
         require('../insert/users/groups')(1, 1, 1, 1, () => { });
 
-        //add data to tables
-        if (dbdata.tables != undefined) {
-            if (dbdata.tables.length > 0) {
-                asyncForEach(dbdata.tables, (table) => {
-                    asyncForEach(table.data, (dat, datIndex) => {
-                        require('../insert/dataToTables.js')(table.name, table.struct, dat, () => {
-                            return;
-                        })
-                    })
-                })
-                userCrt(50, () => {
-                    grpCrt(80, () => {
-                        callback();
-                    })
-                })
-                /*
-                dbdata.tables.forEach(table => {
-                    table.data.forEach(dat => {
-                        require('../insert/dataToTables.js')(table.name, table.struct, dat, () => { })
-                    })
-                });
-                //*/
+        //request data on root folder
+        dbdata = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbdata.json", 'utf8'));
+
+        //load all the modules  
+        fs.readdirSync(path.join(__dirname + "/../../../modules/")).forEach((e) => {
+            var dpath = path.join(__dirname + "/../../../modules/" + e + "/server/configs/dbdata.json")
+            if (fs.existsSync(dpath)) {
+                dbdata.tables = dbdata.tables.concat(JSON.parse(fs.readFileSync(dpath, 'utf8')).tables);
             }
-        }
+        })
+
+        //add data to tables
+        insertData(dbdata, () => {
+            userCrt(50, () => {
+                grpCrt(80, () => {
+                    callback();
+                })
+            })
+        })
+
     });
+
+
+
+    //*/
 };
 
+function insertData(data, callback) {
+    if (data.tables != undefined) {
+        if (data.tables.length > 0) {
+            data.tables.forEach((table) => {
+                if (table.data != undefined) {
+                    if (table.data.length > 0) {
+                        table.data.forEach((dat, datIndex) => {
+                            require('../insert/dataToTables.js')(table.name, table.struct, dat, () => { })
+                        })
+                    }
+                } else {
+                    console.log(table);
+                }
+            })
+        }
+    }
+    callback();
+}
 
 function userCrt(id, callback) {
     require('../insert/users/add')("usr-" + id, "user-" + id, "asd", bcypher.ger_crypt(), 1, 1, () => {

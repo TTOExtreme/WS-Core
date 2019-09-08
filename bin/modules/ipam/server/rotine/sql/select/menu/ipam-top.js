@@ -2,30 +2,30 @@ var colors = require('colors');
 
 const lista = [
     {
-        perm: "ipam/top/menu/users",
+        perm: "ipam/top/menu/subnet",
         data: {
-            id: "ipam-users",
-            name: "Usuários",
-            img: "Users.png",
-            onClick: "loadScript(\"module/ipam/menus/users.js\")"
+            id: "ipam-subnet",
+            name: "Redes",
+            img: "",
+            onClick: "loadScript(\"module/ipam/menus/subnets.js\")"
         }
     },
     {
-        perm: "ipam/top/menu/groups",
+        perm: "ipam/top/menu/hosts",
         data: {
-            id: "ipam-groups",
-            name: "Grupos",
-            img: "Groups.png",
-            onClick: "loadScript(\"module/ipam/menus/groups.js\")"
+            id: "ipam-hosts",
+            name: "Hosts",
+            img: "",
+            onClick: "loadScript(\"module/ipam/menus/hosts.js\")"
         }
     },
     {
         perm: "ipam/top/menu/config",
         data: {
             id: "ipam-config",
-            name: "Configuração",
-            img: "Config.png",
-            onClick: "loadScript(\"module/ipam/menus/configs.js\")"
+            name: "Config",
+            img: "",
+            onClick: "loadScript(\"module/ipam/menus/config.js\")"
         }
     }
 ];
