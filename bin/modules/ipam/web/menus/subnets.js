@@ -10,7 +10,6 @@ function ipam_subnet_init() {
 function ipam_get_subnet() {
     indb.lists["subnetList"] = [];
     send("ipam/get/subnets", {});
-    //send("ipam/get/subnet", { start: rows_each_request * (rowsIndex - 1), end: rows_each_request * rowsIndex });
 }
 //Add new
 
@@ -35,7 +34,6 @@ var actionOptions = [];
 var actionRowFormatter = (data) => { };
 
 function ipam_list_subnet(data) {
-    console.log(indb);
     indb.lists["subnetList"] = data;
     reloadSubnetTable();
 }
@@ -76,21 +74,10 @@ function reloadSubnetTable() {
             }, visible: !(actionName == "")
         },
         { title: 'Nome', field: 'name', headerFilter: "input" },
-        { title: 'IP', field: 'ip', headerFilter: "input" }/*,
-        { title: 'Mascara', field: 'netmask', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] },
-        { title: 'Ultimo Login', field: 'lastLogin', formatter: ((data) => formatTime(data.getRow().getData().lastLogin)), headerFilter: "input" },
-        { title: 'Ultima Tentativa', field: 'lastTry', formatter: ((data) => formatTime(data.getRow().getData().lastTry)), headerFilter: "input" },
-        { title: 'Ultimo IP', field: 'lastIp', headerFilter: "input" },
-        {
-            title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
-                "1": "Ativo",
-                "0": "Inativo"
-            }
-        },
-        { title: 'Adicionado Em', field: 'addedIn', formatter: ((data) => formatTime(data.getRow().getData().addedIn)), headerFilter: "input" },
-        { title: 'Adicionado Por', field: 'addedByUser', headerFilter: "input" },
-        { title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
-        { title: 'Desativado Por', field: 'deactivatedByUser', headerFilter: "input" }//*/
+        { title: 'IP', field: 'ip', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().ip)) },
+        { title: 'Gateway', field: 'gtw', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().gtw)) },
+        { title: 'Mascara', field: 'netmask', headerFilter: "input", formatter: ((data) => normalizeNetmask(data.getRow().getData().netmask)) },
+        { title: 'AutoScan', field: 'autoscan', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] }
     ];
 
     main_table = new Tabulator("#ipam_bottom_table", {

@@ -48,3 +48,28 @@
 .ipam_user_table{
     
 }
+.overlay_input_table{
+    vertical-align: middle;
+    background-color: #303030;
+    opacity: 0;
+    position: absolute;
+    width: 40vw;
+    height: 40vh;
+    top: -100vh;
+    left: 30vw;
+    transition: 0.5s;
+    border-radius: 25px;
+    border: 1px solid black;
+}
+
+
+.overlay_input_table p{
+    margin:4px;
+    border:0;
+    padding:0;
+}
+
+.overlay_input_table td{
+    width: 20vw;
+    color: #f1f1f1
+}

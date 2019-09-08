@@ -4,11 +4,13 @@ function initIpam() {
     startLoader();
     closeLeftMenu();
     loadCSS("module/ipam/Ipam.css");
+    loadScript("module/ipam/utils/ipCalculator.js");
 
     var htm = "";
     htm += "<table id='ipam_main_table' class='ipam_main_table_holder'>";
     htm += "<tr><td><div class='ipam_top_table_holder'><table id='ipam_top_table' class='ipam_top_table'></table></div></td></tr>";
     htm += "<tr><td><div class='ipam_bottom_table_holder'><div id='ipam_bottom_table' class='ipam_bottom_table'></div></div></td></tr></table>";
+    htm += "<tr><td><center><table id='overlay_input_table' class='overlay_input_table'></table></td></tr>";
 
     document.getElementById("mainPage").innerHTML = htm;
     reloadIpam();

@@ -1,11 +1,12 @@
-var db = require('../../../../../rotine/sql/connector');
+var db = require('../../../../../../rotine/sql/connector');
 var fs = require('fs');
 var colors = require('colors');
-var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
+var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../configs/dbstruct.json"), 'utf8'));
 var newHost = require('./newHost.js');
-var ipList = require('../../../../../rotine/utils/ipNetmask-List.js');
+var ipList = require('../../../utils/ipNetmask-List.js');
 
-const exe = (subnet, callback) => {
+const exe = (data, callback) => {
+    var subnet = JSON.parse(data.data);
     var name = subnet.name, ip = subnet.ip, gtw = subnet.gtw, netmask = subnet.netmask, autoScan = subnet.autoScan;
     ip = ipList.normalizeip(ip);
     gtw = ipList.normalizeip(gtw);
@@ -15,7 +16,6 @@ const exe = (subnet, callback) => {
     sql += "ON DUPLICATE KEY UPDATE ";
     sql += " `name`= '" + name + "',`ip`= '" + ip + "',`gtw`='" + gtw + "' ,`netmask`=" + netmask + " ,`autoscan`=" + autoScan + " ";
     sql += ";";
-    console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {
 
         if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
@@ -26,8 +26,8 @@ const exe = (subnet, callback) => {
 };
 
 function fillHosts(ip, netmask, callback) {
-    require('../../../../../rotine/sql/delete/HostsOtherNetmask')(ip, netmask, () => {
-        require('../../../../../rotine/utils/ipNetmask-List.js').GetList(ip, netmask, (subnetsList) => {
+    require('../delete/HostsOtherNetmask')(ip, netmask, () => {
+        require('../../../utils/ipNetmask-List.js').GetList(ip, netmask, (subnetsList) => {
             ipList.GetList(ip, netmask, (ips) => {
                 var promise = ips.map((host) => {
                     return getPromiseInsert(ip, host);

@@ -1,7 +1,7 @@
 var db = require('../../../../../../rotine/sql/connector');
 var fs = require('fs');
 var colors = require('colors');
-var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
+var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../configs/dbstruct.json"), 'utf8'));
 var ipnormalize = require('../../../../../rotine/utils/ipNetmask-List.js').normalizeip;
 
 const exe = (subnet, callback) => {

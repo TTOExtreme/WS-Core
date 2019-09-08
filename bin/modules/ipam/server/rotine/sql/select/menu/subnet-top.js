@@ -7,7 +7,7 @@ const lista = [
             id: "ipam-add-subnet",
             name: "Adicionar",
             img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnet/add.js\")"
+            onClick: "loadScript(\"module/ipam/menus/subnets/add.js\")"
         }
     },
     {
@@ -16,7 +16,7 @@ const lista = [
             id: "ipam-edt-subnet",
             name: "Editar",
             img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnet/edt.js\")"
+            onClick: "loadScript(\"module/ipam/menus/subnets/edt.js\")"
         }
     },
     {
@@ -25,7 +25,7 @@ const lista = [
             id: "ipam-del-subnet",
             name: "Excluir",
             img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnet/del.js\")"
+            onClick: "loadScript(\"module/ipam/menus/subnets/del.js\")"
         }
     }
 ];

@@ -59,7 +59,6 @@ function appendRoutes() {
 }
 
 function subnet_list(data) {
-    console.log(data)
     subnet_clearHosts();
     indb.lists["SubnetList"] = data;
     subnet_draw();

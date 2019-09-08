@@ -1,10 +1,9 @@
-var db = require('../../../../../rotine/sql/connector');
+var db = require('../../../../../../rotine/sql/connector');
 var fs = require('fs');
 var colors = require('colors');
-var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
-var ipnormalize = require('../../../../../rotine/utils/ipNetmask-List.js').normalizeip;
-var ipList = require('../../../../../rotine/utils/ipNetmask-List.js');
-
+var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../configs/dbstruct.json"), 'utf8'));
+var ipnormalize = require('../../../utils/ipNetmask-List.js').normalizeip;
+var ipList = require('../../../utils/ipNetmask-List.js');
 function server(subnet, name, ip, hostname, mac, vendor, hostnameErr, macErr, vendorErr, alive, callback) {
     ip = ipnormalize(ip);
     subnet = ipnormalize(subnet);

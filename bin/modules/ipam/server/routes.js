@@ -6,14 +6,13 @@ function RoutesInit(RouteAdd) {
     //menus
     RouteAdd("ipam/get/top/menu", "ipam/get/top/menu", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/sql/select/menu/ipam-top.js'))(UUID, (ret) => {
-            if (ret.status == "ERROR") { returnData({ route: "ipam/error", data: ret }); return; }
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
             returnData({ route: "ipam/list/top/menus", data: ret });
         });
     });
     RouteAdd("ipam/top/menu/subnet", "ipam/top/menu/subnet", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/sql/select/menu/subnet-top.js'))(UUID, (ret) => {
-            if (ret.status == "ERROR") { returnData({ route: "ipam/error", data: ret }); return; }
-            console.log(ret)
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
             returnData({ route: "ipam/list/subnet/menu", data: ret });
         });
     });
@@ -22,10 +21,27 @@ function RoutesInit(RouteAdd) {
     //load subnets list
     RouteAdd("ipam/get/subnets", "ipam/get/subnets", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/sql/select/Subnet.js'))((ret) => {
-            if (ret.status == "ERROR") { returnData({ route: "ipam/error", data: ret }); return; }
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
             returnData({ route: "ipam/list/subnets", data: ret });
         });
     });
+
+    //add new subnet
+    RouteAdd("ipam/add/subnets", "ipam/add/subnets", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/insert/Subnet.js'))(data, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "ipam/added/subnet", data: ret });
+        });
+    });
+
+    //remove subnet
+    RouteAdd("ipam/del/subnets", "ipam/del/subnets", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/delete/Subnet.js'))(data, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "ipam/added/subnet", data: ret });
+        });
+    });
+
 
     //if (data.route == "/get_all_hosts") { console.log("GetAllHosts".green); require('../rotine/sql/select/AllHosts.js')(data.data, (ret) => { callback({ route: "/hosts_hosts_list", data: ret }); }) }
 
