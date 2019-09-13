@@ -17,7 +17,8 @@
                 "20040,'ipam/edt/subnets','(Global) Editar Usuário','Editar Usuário','adm'",
                 "20041,'ipam/edt/hosts','(Global) Editar Grupo','Editar Grupo','adm'",
                 "20050,'ipam/del/subnets','(Global) Excluir Usuário','Excluir Usuário','adm'",
-                "20051,'ipam/del/hosts','(Global) Excluir Grupo','Excluir Grupo','adm'"
+                "20051,'ipam/del/hosts','(Global) Excluir Grupo','Excluir Grupo','adm'",
+                "20060,'ipam/scan/subnets','(Global) Escanear Redes','Escanear Redes','adm'"
             ]
         },
         {
@@ -37,7 +38,8 @@
                 " 20040,1,2,1,1,0",
                 " 20041,1,2,1,1,0",
                 " 20050,1,2,1,1,0",
-                " 20051,1,2,1,1,0"
+                " 20051,1,2,1,1,0",
+                " 20060,1,2,1,1,0"
             ]
         }
     ]

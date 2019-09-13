@@ -1,7 +1,7 @@
 var fs = require('fs');
 var colors = require('colors');
-const netList = require('../../lib/netscan.js');
-var ipList = require('../utils/ipNetmask-List');
+const netList = require('../../core/netscan');
+var ipList = require('../../utils/ipNetmask-List');
 const nmap = require('./nmap');
 
 var newHost = require('../sql/insert/newHost');
@@ -16,21 +16,24 @@ var opt = {
     vendor: true
 }
 
-function scanNet(subnet, done) {
-    opt.ip = ipList.normalizeIP4(subnet.ip);
-    opt.netmask = subnet.netmask;
+//scan using only arp tables
+function scanNet(subnet, done, step = ((data) => { })) {
+    opt.ip = ipList.normalizeIP4(subnet.data.ip);
+    opt.netmask = subnet.data.netmask;
     //console.log("Scanning: " + opt.ip)
     netList.NetScan(opt, (err, obj) => {
         if (err) { console.log(err); return; }
         //console.log("Returned: " + obj.ip)
-        newHost.server(subnet.ip, "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
-            if (obj.alive) hostsScaned.push({ subnet: subnet.ip, ip: obj.ip });
+        step(obj);
+        newHost.server(normalizeip(opt.ip), "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
+            //if (obj.alive) hostsScaned.push({ subnet: subnet.ip, ip: obj.ip });
         });
     }, () => {
         done(subnet);
     });
 }
 
+//scan using arp and nmap
 function fullScanNet(subnet, done) {
     opt.ip = ipList.normalizeIP4(subnet.ip);
     opt.netmask = subnet.netmask;
@@ -38,7 +41,7 @@ function fullScanNet(subnet, done) {
     netList.NetScan(opt, (err, obj) => {
         if (err) { console.log(err); return; }
         //console.log("Returned: " + obj.ip)
-        newHost.server(subnet.ip, "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
+        newHost.server(opt.ip, "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
             if (obj.alive) hostsScaned.push({ subnet: subnet.ip, ip: obj.ip });
         });
     }, () => {

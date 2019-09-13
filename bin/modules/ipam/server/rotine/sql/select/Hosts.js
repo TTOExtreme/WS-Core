@@ -2,10 +2,10 @@ var db = require('../../../../../../rotine/sql/connector');
 var fs = require('fs');
 var colors = require('colors');
 var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../configs/dbstruct.json"), 'utf8'));
-var ipnormalize = require('../../utils/ipNetmask-List.js').normalizeip;
+var ipnormalize = require('../../../utils/ipNetmask-List').normalizeip;
 
 const exe = (subnet, callback) => {
-    var snet = JSON.parse(subnet);
+    var snet = (subnet.data);
     if (snet != undefined) {
         snet.ip = ipnormalize(snet.ip);
         var sql = "SELECT * FROM " + dbstruct.database + "._Hosts WHERE `subnet`='" + snet.ip + "' ORDER BY `ip`;";

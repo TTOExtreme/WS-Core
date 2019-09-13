@@ -96,7 +96,7 @@ function normalizeip(ip) {
             }
         }
     }
-    return "192.168.0.0";
+    return "192.168.000.000";
 }
 
 function normalizeIP3(ip) {

@@ -55,12 +55,12 @@ function portsOpen(subnet, ip, ports, callback) {
 };
 
 function client(data, callback) {
-    var ip = ipList.normalizeip(data.ip);
-    var subnet = ipList.normalizeip(ipList.normalizeIP3(data.subnet));
-    var name = (data.name != undefined) ? data.name : "-";
-    var mac = (data.mac != undefined) ? data.mac : "-";
-    var hostname = (data.hostname != undefined) ? data.hostname : "-";
-    var vendor = (data.vendor != undefined) ? data.vendor : "-";
+    var ip = ipList.normalizeip(data.data.ip);
+    var subnet = ipList.normalizeip(ipList.normalizeIP3(data.data.subnet));
+    var name = (data.data.name != undefined) ? data.data.name : "-";
+    var mac = (data.data.mac != undefined) ? data.data.mac : "-";
+    var hostname = (data.data.hostname != undefined) ? data.data.hostname : "-";
+    var vendor = (data.data.vendor != undefined) ? data.data.vendor : "-";
 
 
     if (name == "null") { name = "-" }

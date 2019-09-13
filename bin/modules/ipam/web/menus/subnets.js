@@ -8,6 +8,8 @@ function ipam_subnet_init() {
     ipam_get_subnet();
 }
 function ipam_get_subnet() {
+    stopLoader();
+    menuCancel();
     indb.lists["subnetList"] = [];
     send("ipam/get/subnets", {});
 }
@@ -22,6 +24,7 @@ function appendRoutes() {
     appendRoute("ipam/edited/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Editada com Exito", time: 1000 }); });
     appendRoute("ipam/disabled/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Desabilitada com Exito", time: 1000 }); });
     appendRoute("ipam/enabled/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Habilitada com Exito", time: 1000 }); });
+    appendRoute("ipam/scanned/subnet", () => { ipam_get_subnet(); stopLoader(); ipam_mess({ status: "OK", mess: "Rede Escaneada com Exito", time: 1000 }); });
 }
 
 var actionFunction = "null";
@@ -57,7 +60,7 @@ function reloadSubnetTable() {
             title: actionName, field: actionfield, formatter: actionIcon, cellClick: function (e, cell) {
                 var data = cell.getData();
                 if (confirmExecution) {
-                    if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " o Rede: " + data.user + "\nVoce tem certeza disso?")) {
+                    if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " a Rede: " + data.name + "\nVoce tem certeza disso?")) {
                         if (actionCallback != null) {
                             actionCallback(data);
                         } else {
@@ -76,16 +79,15 @@ function reloadSubnetTable() {
         { title: 'Nome', field: 'name', headerFilter: "input" },
         { title: 'IP', field: 'ip', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().ip)) },
         { title: 'Gateway', field: 'gtw', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().gtw)) },
-        { title: 'Mascara', field: 'netmask', headerFilter: "input", formatter: ((data) => normalizeNetmask(data.getRow().getData().netmask)) },
-        { title: 'AutoScan', field: 'autoscan', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] }
+        { title: 'Mascara', field: 'netmask', headerFilter: "input", formatter: ((data) => GetFullNetmask(data.getRow().getData().netmask)) },
+        { title: 'CIDR', field: 'netmask', headerFilter: "input", formatter: ((data) => normalizeNetmask(data.getRow().getData().netmask)) },
+        { title: 'AutoScan', field: 'autoscan', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Ativo", value: "1" }, { label: "Desativado", value: "0" }] }
     ];
 
     main_table = new Tabulator("#ipam_bottom_table", {
         data: indb.lists["subnetList"],
         headerFilterPlaceholder: "Filtrar",
-        index: "id_user",
-        dataTree: true,
-        dataTreeStartExpanded: false,
+        index: "ip",
         columns: newCollums,
         height: '100%',
         paginationButtonCount: 3,
@@ -93,6 +95,7 @@ function reloadSubnetTable() {
         paginationSize: 15,
         paginationSizeSelector: [10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
         movableColumns: true,
+        layout: "fitColumns",
         rowFormatter: actionRowFormatter
     });
 }

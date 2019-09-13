@@ -614,16 +614,16 @@
   display: -ms-inline-flexbox;
   display: inline-flex;
   -ms-flex-pack: center;
-      justify-content: center;
+  justify-content: center;
   -ms-flex-align: center;
-      align-items: center;
+  align-items: center;
   vertical-align: middle;
   height: 11px;
   width: 11px;
   margin-right: 5px;
-  border: 1px solid #333;
+  border: 1px solid #aaa;
   border-radius: 2px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.3);
   overflow: hidden;
 }
 

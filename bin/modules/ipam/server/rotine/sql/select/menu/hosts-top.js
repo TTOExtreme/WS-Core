@@ -2,39 +2,30 @@ var colors = require('colors');
 
 const lista = [
     {
-        perm: "ipam/add/subnets",
+        perm: "ipam/add/hosts",
         data: {
-            id: "ipam-add-subnet",
+            id: "ipam-add-hosts",
             name: "Adicionar",
             img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnets/add.js\")"
+            onClick: "loadScript(\"module/ipam/menus/hosts/add.js\")"
         }
     },
     {
-        perm: "ipam/edt/subnets",
+        perm: "ipam/edt/hosts",
         data: {
-            id: "ipam-edt-subnet",
+            id: "ipam-edt-hosts",
             name: "Editar",
             img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnets/edt.js\")"
+            onClick: "loadScript(\"module/ipam/menus/hosts/edt.js\")"
         }
     },
     {
-        perm: "ipam/del/subnets",
+        perm: "ipam/del/hosts",
         data: {
-            id: "ipam-del-subnet",
+            id: "ipam-del-hosts",
             name: "Excluir",
             img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnets/del.js\")"
-        }
-    },
-    {
-        perm: "ipam/scan/subnets",
-        data: {
-            id: "ipam-scan-subnets",
-            name: "Scan",
-            img: "",
-            onClick: "loadScript(\"module/ipam/menus/subnets/scan.js\")"
+            onClick: "loadScript(\"module/ipam/menus/hosts/del.js\")"
         }
     }
 ];

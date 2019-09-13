@@ -106,6 +106,7 @@ function reloadUserTable() {
         paginationSize: 15,
         paginationSizeSelector: [10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
         movableColumns: true,
+        layout: "fitColumns",
         rowFormatter: actionRowFormatter
     });
 }

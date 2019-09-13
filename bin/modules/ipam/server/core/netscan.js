@@ -6,7 +6,7 @@ var arp = require('node-arp');
 var dns = require('dns');
 var request = require('request');
 var ip = require('ip');
-var ipList = require('../rotine/utils/ipNetmask-List.js');
+var ipList = require('../utils/ipNetmask-List');
 
 var options = {
     // ip: '192.168.1',

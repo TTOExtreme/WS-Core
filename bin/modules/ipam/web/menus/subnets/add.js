@@ -8,7 +8,7 @@ function addNewSubnet() {
     htm += "<tr><td><p style='text-align: right;vertical-align: middle;'>Scan Automatico:</td><td><label class='switch'><input type='checkbox' id='add_in_autoscan'> <span class='slider round'></span></label></td></tr>";
     htm += "</table></td></tr><tr>";
     htm += "<td><center><input type='button' value='Adicionar' onclick='subnetAddSend()'></td>";
-    htm += "<td><center><input type='button' value='Cancelar' onclick='subnetCancel()'></td>";
+    htm += "<td><center><input type='button' value='Fechar' onclick='subnetCancel()'></td>";
     htm += "</tr>";
 
     document.getElementById("overlay_input_table").innerHTML = htm;
@@ -17,7 +17,7 @@ function addNewSubnet() {
 }
 
 function subnetAddSend() {
-    //startLoader();
+    startLoader();
     var data = {};
     data.name = document.getElementById("add_in_name").value;
     data.ip = normalizeIP3(document.getElementById("add_in_ip").value);
