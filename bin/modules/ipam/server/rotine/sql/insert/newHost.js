@@ -5,8 +5,8 @@ var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../
 var ipnormalize = require('../../../utils/ipNetmask-List.js').normalizeip;
 var ipList = require('../../../utils/ipNetmask-List.js');
 function server(subnet, name, ip, hostname, mac, vendor, hostnameErr, macErr, vendorErr, alive, callback) {
-    ip = ipnormalize(ip);
-    subnet = ipnormalize(subnet);
+    ip = ipList.normalizeip(ip);
+    subnet = ipList.normalizeip(ipList.normalizeIP3(subnet));
 
     if (name == "null" || name == null) { name = "-" }
     if (hostname == "null" || hostname == null) { hostname = "-" }

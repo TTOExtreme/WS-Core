@@ -25,7 +25,7 @@ function scanNet(subnet, done, step = ((data) => { })) {
         if (err) { console.log(err); return; }
         //console.log("Returned: " + obj.ip)
         step(obj);
-        newHost.server(normalizeip(opt.ip), "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
+        newHost.server(ipList.normalizeip(opt.ip), "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
             //if (obj.alive) hostsScaned.push({ subnet: subnet.ip, ip: obj.ip });
         });
     }, () => {

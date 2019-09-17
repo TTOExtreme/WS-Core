@@ -9,8 +9,8 @@ function addNewSubnet() {
     htm += "<tr><td><p style='text-align: right;vertical-align: middle;'>Mac:</td><td><input id='add_in_mac' value='" + host.mac + "'></td></tr>";
     htm += "<tr><td><p style='text-align: right;vertical-align: middle;'>Fabricante:</td><td><input id='add_in_vendor' value='" + host.vendor + "'></td></tr>";
     htm += "</table></td></tr><tr>";
-    htm += "<td><center><div class='button' onclick='subnetHostAddSend()'><p style='vertical-align: middle;'>Adicionar</p></div></td>";
-    htm += "<td><center><div class='button' onclick='subnetCancel()'><p style='vertical-align: middle;'>Cancelar</p></div></td>";
+    htm += "<td><center><input type='button' value='Adicionar' onclick='subnetHostAddSend()'></td>";
+    htm += "<td><center><input type='button' value='Fechar' onclick='subnetCancel()'></td>";
     htm += "</tr>";
 
     document.getElementById("overlay_input_table").innerHTML = htm;

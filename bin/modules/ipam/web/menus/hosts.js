@@ -20,11 +20,11 @@ function appendRoutes() {
     appendRoute("ipam/list/hosts/menu", changeIpamMenuItems);
     appendRoute("ipam/list/subnets", ipam_list_host);
     appendRoute("ipam/list/hosts", update_subnet);
-    appendRoute("ipam/added/hosts", () => { ipam_get_host(); ipam_mess({ status: "OK", mess: "Host Adicionado com Exito", time: 1000 }); });
-    appendRoute("ipam/removed/hosts", () => { ipam_get_host(); ipam_mess({ status: "OK", mess: "Host Removido com Exito", time: 1000 }); });
-    appendRoute("ipam/edited/hosts", () => { ipam_get_host(); ipam_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
-    appendRoute("ipam/disabled/hosts", () => { ipam_get_host(); ipam_mess({ status: "OK", mess: "Host Desabilitado com Exito", time: 1000 }); });
-    appendRoute("ipam/enabled/hosts", () => { ipam_get_host(); ipam_mess({ status: "OK", mess: "Host Habilitado com Exito", time: 1000 }); });
+    appendRoute("ipam/added/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Adicionado com Exito", time: 1000 }); });
+    appendRoute("ipam/removed/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Removido com Exito", time: 1000 }); });
+    appendRoute("ipam/edited/hosts", (data) => { ipam_list_host(data); system_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
+    appendRoute("ipam/disabled/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Desabilitado com Exito", time: 1000 }); });
+    appendRoute("ipam/enabled/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Habilitado com Exito", time: 1000 }); });
 }
 
 
@@ -46,7 +46,6 @@ function ipam_list_host(data) {
 }
 
 function update_subnet(data) {
-    console.log(data);
     if (main_table != null) {
         main_table.updateData([data]);
     }
@@ -60,7 +59,7 @@ function reloadSubnetTable() {
             title: actionName, field: actionfield, formatter: actionIcon, cellClick: function (e, cell) {
                 var data = cell.getData();
                 if (confirmExecution) {
-                    if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " o Rede: " + data.user + "\nVoce tem certeza disso?")) {
+                    if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " o Host: " + normalizeIP(data.ip) + "\nVoce tem certeza disso?")) {
                         if (actionCallback != null) {
                             actionCallback(data);
                         } else {

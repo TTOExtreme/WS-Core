@@ -19,12 +19,12 @@ function ipam_get_subnet() {
 function appendRoutes() {
     appendRoute("ipam/list/subnet/menu", changeIpamMenuItems);
     appendRoute("ipam/list/subnets", ipam_list_subnet);
-    appendRoute("ipam/added/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Adicionada com Exito", time: 1000 }); });
-    appendRoute("ipam/removed/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Removida com Exito", time: 1000 }); });
-    appendRoute("ipam/edited/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Editada com Exito", time: 1000 }); });
-    appendRoute("ipam/disabled/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Desabilitada com Exito", time: 1000 }); });
-    appendRoute("ipam/enabled/subnet", () => { ipam_get_subnet(); ipam_mess({ status: "OK", mess: "Rede Habilitada com Exito", time: 1000 }); });
-    appendRoute("ipam/scanned/subnet", () => { ipam_get_subnet(); stopLoader(); ipam_mess({ status: "OK", mess: "Rede Escaneada com Exito", time: 1000 }); });
+    appendRoute("ipam/added/subnet", () => { ipam_get_subnet(); system_mess({ status: "OK", mess: "Rede Adicionada com Exito", time: 1000 }); });
+    appendRoute("ipam/removed/subnet", () => { ipam_get_subnet(); system_mess({ status: "OK", mess: "Rede Removida com Exito", time: 1000 }); });
+    appendRoute("ipam/edited/subnet", () => { ipam_get_subnet(); system_mess({ status: "OK", mess: "Rede Editada com Exito", time: 1000 }); });
+    appendRoute("ipam/disabled/subnet", () => { ipam_get_subnet(); system_mess({ status: "OK", mess: "Rede Desabilitada com Exito", time: 1000 }); });
+    appendRoute("ipam/enabled/subnet", () => { ipam_get_subnet(); system_mess({ status: "OK", mess: "Rede Habilitada com Exito", time: 1000 }); });
+    appendRoute("ipam/scanned/subnet", () => { ipam_get_subnet(); stopLoader(); system_mess({ status: "OK", mess: "Rede Escaneada com Exito", time: 1000 }); });
 }
 
 var actionFunction = "null";

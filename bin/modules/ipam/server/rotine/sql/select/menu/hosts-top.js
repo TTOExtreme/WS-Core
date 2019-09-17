@@ -2,15 +2,6 @@ var colors = require('colors');
 
 const lista = [
     {
-        perm: "ipam/add/hosts",
-        data: {
-            id: "ipam-add-hosts",
-            name: "Adicionar",
-            img: "",
-            onClick: "loadScript(\"module/ipam/menus/hosts/add.js\")"
-        }
-    },
-    {
         perm: "ipam/edt/hosts",
         data: {
             id: "ipam-edt-hosts",

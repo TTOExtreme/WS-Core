@@ -78,11 +78,9 @@ function RoutesInit(RouteAdd) {
 
     //  load groups
     RouteAdd("system/get/users/groups", "system/get/users/groups", (UUID, user_id, data, returnData) => {
-        console.log(data);
         require(path.join(__dirname + '/rotine/sql/select/users/groups.js'))(data.data.id_user, (ret) => {
             if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
             data.data.groups = ret;
-            console.log(data.data);
             returnData({ route: "system/list/users/groups", data: data.data });
         });
     });

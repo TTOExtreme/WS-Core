@@ -54,6 +54,13 @@ function RoutesInit(RouteAdd) {
             returnData({ route: "ipam/removed/subnet", data: ret });
         });
     });
+    //remove Hosts / clear data
+    RouteAdd("ipam/del/hosts", "ipam/del/hosts", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/insert/newHost.js')).client(data, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "ipam/removed/subnet", data: ret });
+        });
+    });
 
 
     //get Hosts in
