@@ -14,7 +14,7 @@ const exe = (callback) => {
 function nextItem(list, callback) {
     if (list[0] != undefined) {
         var e = list.pop();
-        console.log("Scanning: ".green + colors.gray(e.ip));
+        // console.log("Scanning: ".green + colors.gray(e.ip));
         scanNet(e, () => {
             setTimeout(() => {
                 nextItem(list, callback);

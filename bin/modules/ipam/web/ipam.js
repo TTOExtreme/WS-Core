@@ -45,7 +45,7 @@ function changeIpamMenuItems(list = [{ name: "teste", onclick: "resetTopMenuItem
 }
 
 function resetIpamMenuItems() {
-    document.getElementById("ipam_top_table").innerHTML = "";
+    //document.getElementById("ipam_top_table").innerHTML = "";
 }
 
 initIpam();

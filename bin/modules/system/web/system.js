@@ -43,7 +43,7 @@ function changeSystemMenuItems(list = [{ name: "teste", onclick: "resetTopMenuIt
 }
 
 function resetSystemMenuItems() {
-    document.getElementById("system_top_table").innerHTML = "";
+    //document.getElementById("system_top_table").innerHTML = "";
 }
 
 initSystem();

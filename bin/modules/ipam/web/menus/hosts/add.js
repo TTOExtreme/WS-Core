@@ -36,9 +36,6 @@ function subnetCancel() {
     if (h != undefined) {
         document.getElementById("overlay_input_table").style.opacity = 0;
         document.getElementById("overlay_input_table").style.top = "-100vh";
-        setTimeout(() => {
-            h.innerHTML = "";
-        }, 1000)
     }
 }
 

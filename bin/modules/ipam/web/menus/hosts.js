@@ -22,7 +22,7 @@ function appendRoutes() {
     appendRoute("ipam/list/hosts", update_subnet);
     appendRoute("ipam/added/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Adicionado com Exito", time: 1000 }); });
     appendRoute("ipam/removed/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Removido com Exito", time: 1000 }); });
-    appendRoute("ipam/edited/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
+    appendRoute("ipam/edited/hosts", (data) => { send("ipam/get/singlehost", { ip: data.data.ip }); system_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
     appendRoute("ipam/disabled/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Desabilitado com Exito", time: 1000 }); });
     appendRoute("ipam/enabled/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Habilitado com Exito", time: 1000 }); });
 }
@@ -30,12 +30,18 @@ function appendRoutes() {
 
 var actionFunction = "null";
 var actionName = "Ações";
-var actionIcon = ""; //"buttonTick" "buttonCross" "tickCross"
-var actionfield = "0";
-var actionCallback = null;
+var actionIcon = "buttonTick"; //"buttonTick" "buttonCross" "tickCross"
+var actionfield = "";
+var actionCallback = (data) => {
+    if (data.hosts != undefined) {
+        main_table.setData(data.hosts);
+    } else {
+        actionIcon = "";
+    }
+};
 var confirmExecution = false;
 var actionOptions = [];
-var actionRowFormatter = (data) => { };
+var actionRowFormatter = (data) => { return "Abrir"; };
 
 function ipam_list_host(data) {
     indb.lists["hostsList"] = data;
@@ -46,6 +52,9 @@ function ipam_list_host(data) {
 }
 
 function update_subnet(data) {
+    stopLoader();
+    menuCancel();
+    console.log(data);
     if (main_table != null) {
         main_table.updateData([data]);
     }
@@ -75,7 +84,15 @@ function reloadSubnetTable() {
                 }
             }, visible: !(actionName == "")
         },
-        { title: 'Status', field: 'status', headerFilter: "input", headerFilterFunc: filterChild, formatter: ((data) => { return (data.getRow().getData().seted == undefined) ? "-" : ("<div class='div_dot div_dot_" + (data.getRow().getData().seted + (data.getRow().getData().alive * 2)) + "'><p title='" + HostData(data.getRow().getData()) + "'></p></div>") }) },
+        {
+            title: 'Status', field: 'status', headerFilter: "select", headerFilterParams:
+                [{ label: "-", value: "" }, { label: "Livre", value: "0" }, { label: "Inativo", value: "1" }, { label: "Ativo", value: "3" }],
+            headerFilterFunc: filterStatus, formatter: ((data) => {
+                return (data.getRow().getData().seted == undefined) ? "-" :
+                    ("<div class='div_dot div_dot_" + (data.getRow().getData().seted + (data.getRow().getData().alive * 2)) +
+                        "'><p title='" + HostData(data.getRow().getData()) + "'></p></div>")
+            })
+        },
         { title: 'Nome', field: 'name', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().name == undefined) ? "-" : data.getRow().getData().name }) },
         { title: 'Hostname', field: 'hostname', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().hostname == undefined) ? "-" : data.getRow().getData().hostname }) },
         { title: 'IP', field: 'ip', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().ip)) },
@@ -88,10 +105,12 @@ function reloadSubnetTable() {
         data: indb.lists["hostsList"],
         headerFilterPlaceholder: "Filtrar",
         index: "ip",
-        dataTree: true,
+        dataTree: false,
+        /*
         dataTreeChildField: "hosts",
         dataTreeStartExpanded: false,
         dataTreeChildIndent: 25,
+        //*/
 
         columns: newCollums,
         height: '100%',
@@ -105,24 +124,17 @@ function reloadSubnetTable() {
     });
 }
 
-function filterChild(headerValue, cellValue, rowData, filterParams) {
+function filterStatus(headerValue, cellValue, rowData, filterParams) {
     //headerValue - the value of the header filter element
     //cellValue- the value of the column in this row
     //rowData - the data for the row being filtered
     //filterParams - params object passed to the headerFilterFuncParams property
 
     var matched = false;
-    var values = headerValue.split(","); //break header into list of options
 
-    values.forEach(function (val) {
-        if (val.toLowerCase().indexOf(cellValue.toLowerCase()) > -1) {
-            matched = true;
-        }
-        if (rowData.getData().ip.indexOf(rowData.getData().subnet) > -1) {
-            matched = true;
-            console.log(rowData.getData())
-        }
-    });
+    if (headerValue == rowData.seted + (rowData.alive * 2)) {
+        matched = true;
+    }
 
     return matched;
 }
@@ -154,3 +166,12 @@ function HostData(e) {
 }
 
 ipam_host_init();
+
+
+function menuCancel() {
+    var h = document.getElementById("overlay_input_table");
+    if (h != undefined) {
+        document.getElementById("overlay_input_table").style.opacity = 0;
+        document.getElementById("overlay_input_table").style.top = "-100vh";
+    }
+}

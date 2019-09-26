@@ -1,6 +1,6 @@
 function initTopMenuItems() {
     loadCSSCall("comum/css/top_menu.css", () => {
-        resetTopMenuItems();
+        //resetTopMenuItems();
         //changeTopMenuItems();
     });
 }

@@ -4,7 +4,13 @@ var actionFunction = "";
 var actionName = "Editar";
 var actionIcon = "buttonTick"; //"buttonTick" "buttonCross" "tickCross"
 var actionfield = "0";
-var actionCallback = updateHost;
+var actionCallback = (data) => {
+    if (data.hosts != undefined) {
+        main_table.setData(data.hosts);
+    } else {
+        updateHost(data);
+    }
+};
 var confirmExecution = false;
 var actionOptions = [];
 var actionRowFormatter = (data) => { };
@@ -49,8 +55,5 @@ function subnetCancel() {
     if (h != undefined) {
         document.getElementById("overlay_input_table").style.opacity = 0;
         document.getElementById("overlay_input_table").style.top = "-100vh";
-        setTimeout(() => {
-            h.innerHTML = "";
-        }, 1000)
     }
 }

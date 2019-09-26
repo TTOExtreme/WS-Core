@@ -4,7 +4,13 @@ var actionFunction = "";
 var actionName = "Excluir";
 var actionIcon = "buttonCross"; //"buttonTick" "buttonCross" "tickCross"
 var actionfield = "0";
-var actionCallback = delHost;
+var actionCallback = (data) => {
+    if (data.hosts != undefined) {
+        main_table.setData(data.hosts);
+    } else {
+        delHost(data);
+    }
+};
 var confirmExecution = true;
 var actionOptions = [];
 var actionRowFormatter = (data) => { };
