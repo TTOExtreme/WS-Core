@@ -3,7 +3,7 @@ var colors = require('colors');
 
 var upHost = require('../sql/update/AliveHost')
 var subnets = require('../sql/select/Alive-Hosts');
-var ipnormalize = require('../utils/ipNetmask-List.js');
+var ipnormalize = require('../../utils/ipNetmask-List');
 
 const exe = () => {
     subnets((data) => {

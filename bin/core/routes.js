@@ -15,7 +15,7 @@ function routes(data, UUID, user_id, callback) {
                 if (typeof ca == "function") {
                     ca(UUID, user_id, data, callback);
                 } else {
-                    console.log("Route Not Found: ".red + ("" + data.route).gray)
+                    console.log("Route Not Found: ".red + ("" + JSON.stringify(data)).gray)
                 }
             } catch (err) {
                 console.log(colors.yellow(data));

@@ -1,12 +1,12 @@
-var scan = require('../../../rotine/background/scan');
-var checker = require('../../../rotine/background/icmp-scan');
-var radiosScan = require('../../../rotine/background/radios/radios_scan');
+var scan = require('./scan');
+var checker = require('./icmp-scan');
+var radiosScan = require('./radios/radios_scan');
 var schedule = require("node-schedule");
 
 var times = [
     "0 0 11 * * *", //todos os dias as 11hs e 15hs
-    "0 0 15 * * *"
-    //"0 */2 * * * *"
+    "0 0 15 * * *",
+    "0 59 08 * * *"
 ]
 
 var upAlive = "0 */5 * * * *";
