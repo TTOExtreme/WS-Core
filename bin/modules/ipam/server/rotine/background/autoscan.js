@@ -6,7 +6,7 @@ var schedule = require("node-schedule");
 var times = [
     "0 0 11 * * *", //todos os dias as 11hs e 15hs
     "0 0 15 * * *",
-    "0 59 08 * * *"
+    "0 02 11 * * *"
 ]
 
 var upAlive = "0 */5 * * * *";

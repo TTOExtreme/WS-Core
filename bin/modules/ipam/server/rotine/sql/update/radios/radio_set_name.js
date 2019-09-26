@@ -1,8 +1,9 @@
-var db = require('../../connector');
-var fs = require('fs');
-var colors = require('colors');
-var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
-var ipnormalize = require('../../../utils/ipNetmask-List.js').normalizeip;
+const db = require('../../../../../../../rotine/sql/connector');
+const fs = require('fs');
+const colors = require('colors');
+const path = require("path")
+const dbstruct = JSON.parse(fs.readFileSync(path.join(__dirname + "/../../../../configs/dbstruct.json"), 'utf8'));
+const ipnormalize = require('../../../../utils/ipNetmask-List').normalizeip;
 
 const exe = (ip, name) => {
     ip = ipnormalize(ip);

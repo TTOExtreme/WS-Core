@@ -20,7 +20,7 @@ var opt = {
 function scanNet(subnet, done, step = ((data) => { })) {
     opt.ip = ipList.normalizeIP4(subnet.data.ip);
     opt.netmask = subnet.data.netmask;
-    //console.log("Scanning: " + opt.ip)
+    console.log("Scanning: ".green + colors.gray(opt.ip));
     netList.NetScan(opt, (err, obj) => {
         if (err) { console.log(err); return; }
         //console.log("Returned: " + obj.ip)
@@ -37,17 +37,16 @@ function scanNet(subnet, done, step = ((data) => { })) {
 function fullScanNet(subnet, done) {
     opt.ip = ipList.normalizeIP4(subnet.ip);
     opt.netmask = subnet.netmask;
-    //console.log("Scanning: " + opt.ip)
     netList.NetScan(opt, (err, obj) => {
         if (err) { console.log(err); return; }
+        //console.log("Get: ".green + colors.gray(obj.ip));
         //console.log("Returned: " + obj.ip)
         newHost.server(opt.ip, "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
             if (obj.alive) hostsScaned.push({ subnet: subnet.ip, ip: obj.ip });
         });
     }, () => {
-        nmapHosts(() => {
-            done(subnet);
-        });
+        done(subnet);
+        nmapHosts(() => { });
     });
 }
 

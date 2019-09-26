@@ -3,7 +3,7 @@ var colors = require('colors');
 
 var upHost = require('../../sql/update/AliveHost')
 var subnets = require('../../sql/select/RadiosScanner');
-var ipnormalize = require('../../utils/ipNetmask-List.js');
+var ipnormalize = require('../../../utils/ipNetmask-List');
 var scanRadio = require('./snmp_get_radio_info');
 
 const exe = () => {

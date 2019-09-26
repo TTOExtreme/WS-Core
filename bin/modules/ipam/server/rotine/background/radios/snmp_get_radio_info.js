@@ -4,23 +4,23 @@ var snmp = require("net-snmp");
 var fs = require("fs");
 var oidsList = require("./snmp_oids");
 
-var SetName = require("../../sql/update/radio_set_name");
-var SetHostname = require("../../sql/update/radio_set_hostname");
-var SetSSID = require("../../sql/update/radio_set_ssid");
-var SetAMC = require("../../sql/update/radio_set_airmaxcapacity");
-var SetAMQ = require("../../sql/update/radio_set_airmaxquality");
-var SetAMS = require("../../sql/update/radio_set_airmaxstate");
-var SetCCQ = require("../../sql/update/radio_set_ccq");
-var SetCFreq = require("../../sql/update/radio_set_channelfreq");
-var SetCWidth = require("../../sql/update/radio_set_channelwidth");
-var SetEnc = require("../../sql/update/radio_set_encrypt");
-var SetNoise = require("../../sql/update/radio_set_noise");
-var SetRSSI = require("../../sql/update/radio_set_rssi");
-var SetRXR = require("../../sql/update/radio_set_rxrate");
-var SetTXR = require("../../sql/update/radio_set_txrate");
-var SetRMode = require("../../sql/update/radio_set_radiomode");
-var SetRSignal = require("../../sql/update/radio_set_radiosignal");
-var SetDBMPower = require("../../sql/update/radio_set_dbmpower");
+var SetName = require("../../sql/update/radios/radio_set_name");
+var SetHostname = require("../../sql/update/radios/radio_set_hostname");
+var SetSSID = require("../../sql/update/radios/radio_set_ssid");
+var SetAMC = require("../../sql/update/radios/radio_set_airmaxcapacity");
+var SetAMQ = require("../../sql/update/radios/radio_set_airmaxquality");
+var SetAMS = require("../../sql/update/radios/radio_set_airmaxstate");
+var SetCCQ = require("../../sql/update/radios/radio_set_ccq");
+var SetCFreq = require("../../sql/update/radios/radio_set_channelfreq");
+var SetCWidth = require("../../sql/update/radios/radio_set_channelwidth");
+var SetEnc = require("../../sql/update/radios/radio_set_encrypt");
+var SetNoise = require("../../sql/update/radios/radio_set_noise");
+var SetRSSI = require("../../sql/update/radios/radio_set_rssi");
+var SetRXR = require("../../sql/update/radios/radio_set_rxrate");
+var SetTXR = require("../../sql/update/radios/radio_set_txrate");
+var SetRMode = require("../../sql/update/radios/radio_set_radiomode");
+var SetRSignal = require("../../sql/update/radios/radio_set_radiosignal");
+var SetDBMPower = require("../../sql/update/radios/radio_set_dbmpower");
 
 
 function getOID(ip, community, oid, callback) {
