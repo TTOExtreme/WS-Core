@@ -1,19 +1,19 @@
 var crp = require('crypto-js');
 
 function sha512(mess) {
-    var r = crp.SHA512(mess).toString();
+    let r = crp.SHA512(mess).toString();
     return r;
 }
 
 
 function crypt(key, mess) {
-    var r = crp.AES.encrypt(mess, key).toString();
+    let r = crp.AES.encrypt(mess, key).toString();
     return r;
 }
 
 function uncrypt(key, crypt_mess) {
     if (crypt_mess == "0") { return "0"; }
-    var r = crp.AES.decrypt(crypt_mess, key);
+    let r = crp.AES.decrypt(crypt_mess, key);
     return r.toString(crp.enc.Utf8);
 }
 

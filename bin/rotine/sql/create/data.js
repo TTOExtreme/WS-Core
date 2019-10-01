@@ -5,7 +5,7 @@ const path = require("path");
 
 var bcypher = require('../../../lib/bcypher');
 var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
-var dbdata = {};
+let dbdata = {};
 
 const exe = (callback) => {
 
@@ -23,7 +23,7 @@ const exe = (callback) => {
 
         //load all the modules  
         fs.readdirSync(path.join(__dirname + "/../../../modules/")).forEach((e) => {
-            var dpath = path.join(__dirname + "/../../../modules/" + e + "/server/configs/dbdata.json")
+            let dpath = path.join(__dirname + "/../../../modules/" + e + "/server/configs/dbdata.json")
             if (fs.existsSync(dpath)) {
                 dbdata.tables = dbdata.tables.concat(JSON.parse(fs.readFileSync(dpath, 'utf8')).tables);
             }
@@ -78,7 +78,7 @@ function grpCrt(id, callback) {
         if (id == 1) {
             callback();
         } else {
-            userCrt(id - 1, callback);
+            grpCrt(id - 1, callback);
         }
     });
 }

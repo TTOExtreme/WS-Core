@@ -1,4 +1,4 @@
-var leftMenuItemsList = []
+let leftMenuItemsList = []
 
 function exitLeftMenu() {
     window.location.replace(rootLocation + "login")
@@ -29,7 +29,7 @@ function side_menu_init() {
 
 function side_menu_load(data) {
     if (data != undefined) {
-        var menu = document.getElementById("leftMenu_Items");
+        let menu = document.getElementById("leftMenu_Items");
         if (menu != undefined) {
             leftMenuItemsList = data;
             menu.innerHTML = "";

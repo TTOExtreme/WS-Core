@@ -1,4 +1,4 @@
-var indb = {
+let indb = {
     UserDefined: {
         theme: "theme-dark",
         customColors: {

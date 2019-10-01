@@ -5,7 +5,7 @@ function initSystem() {
     closeLeftMenu();
     loadCSS("module/system/System.css");
 
-    var htm = "";
+    let htm = "";
     htm += "<table id='system_main_table' class='system_main_table_holder'>";
     htm += "<tr><td><div class='system_top_table_holder'><table id='system_top_table' class='system_top_table'></table></div></td></tr>";
     htm += "<tr><td><div class='system_bottom_table_holder'><div id='system_bottom_table' class='system_bottom_table'></div></div></td></tr></table>";
@@ -32,8 +32,8 @@ function initSystemMenuItems() {
 }
 
 function changeSystemMenuItems(list = [{ name: "teste", onclick: "resetTopMenuItems()" }]) {
-    var tm = document.getElementById("system_top_table");
-    var htm = "<tr class='topMenu_Items_tr'>";
+    let tm = document.getElementById("system_top_table");
+    let htm = "<tr class='topMenu_Items_tr'>";
     list.forEach(e => {
         htm += "<td class='topMenu_Items_td'><center><p onclick='" + e.onClick + "'>" + e.name + "</p></center></td>";
     })

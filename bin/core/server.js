@@ -6,7 +6,7 @@ const fs = require("fs");
 
 const path = require('path')
 
-var wid = 0;
+let wid = 0;
 var colors = require('colors')
 
 const createServer = (_wid, webport) => {

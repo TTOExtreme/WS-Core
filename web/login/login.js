@@ -1,12 +1,12 @@
 function login_init() {
-    var htm = "<table id='loginholder' class='login'>";
+    let htm = "<table id='loginholder' class='login'>";
     htm += "<tr><td><center><div class='input_holder'><input class='input_' id='login_user' placeholder='Usuário'></td></tr>";
     htm += "<tr><td><center><div class='input_holder'><input class='input_' id='login_pass' type='password' placeholder='Senha'></td></tr>";
     htm += "<tr><td><center><input type='button' onclick='Login()' value='Entrar'></td></tr>";
     htm += "<tr><td><center><p id='loginInfo' class='loginInfo'></p></td></tr>";
     htm += "</table></td></tr><tr>";
 
-    var loginDiv = document.createElement("div")
+    let loginDiv = document.createElement("div")
     loginDiv.setAttribute("class", "login_holder");
     loginDiv.setAttribute("id", "login_holder");
     loginDiv.innerHTML = htm;

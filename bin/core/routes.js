@@ -3,7 +3,7 @@ const bcypher = require('../lib/bcypher');
 const fs = require("fs");
 const path = require("path");
 
-var RouteMap = new Map();
+let RouteMap = new Map();
 
 function routes(data, UUID, user_id, callback) {
     if (data != undefined) {
@@ -11,7 +11,7 @@ function routes(data, UUID, user_id, callback) {
             try {
 
 
-                var ca = RouteMap.get(data.route);
+                let ca = RouteMap.get(data.route);
                 if (typeof ca == "function") {
                     ca(UUID, user_id, data, callback);
                 } else {
@@ -50,7 +50,7 @@ function RouteInit() {
 
     fs.readdirSync(path.join(__dirname + '/../modules')).forEach(e => {
         if (fs.existsSync(path.join(__dirname + '/../modules/' + e + "/server/routes.js"))) {
-            var v = require(path.join(__dirname + '/../modules/' + e + "/server/routes.js"))
+            let v = require(path.join(__dirname + '/../modules/' + e + "/server/routes.js"))
             v.RoutesInit(RouteAdd);
         }
     })
