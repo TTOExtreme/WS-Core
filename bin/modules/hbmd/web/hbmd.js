@@ -6,7 +6,7 @@ function inithbmd() {
     loadCSS("module/hbmd/hbmd.css");
     loadScript("module/hbmd/utils/ipCalculator.js");
 
-    var htm = "";
+    let htm = "";
     htm += "<table id='hbmd_main_table' class='hbmd_main_table_holder'>";
     htm += "<tr><td><div class='hbmd_top_table_holder'><table id='hbmd_top_table' class='hbmd_top_table'></table></div></td></tr>";
     htm += "<tr><td><div class='hbmd_bottom_table_holder'><div id='hbmd_bottom_table' class='hbmd_bottom_table'></div></div></td></tr></table>";
@@ -34,8 +34,8 @@ function inithbmdMenuItems() {
 }
 
 function changehbmdMenuItems(list = [{ name: "teste", onclick: "resetTopMenuItems()" }]) {
-    var tm = document.getElementById("hbmd_top_table");
-    var htm = "<tr class='topMenu_Items_tr'>";
+    let tm = document.getElementById("hbmd_top_table");
+    let htm = "<tr class='topMenu_Items_tr'>";
     list.forEach(e => {
         htm += "<td class='topMenu_Items_td'><center><p onclick='" + e.onClick + "'>" + e.name + "</p></center></td>";
     })

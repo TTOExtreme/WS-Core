@@ -4,7 +4,7 @@ var colors = require('colors');
 var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruct.json", 'utf8'));
 
 const exe = (tableName, tableStruct, tableData, callback) => {
-    var sql = "INSERT INTO " + dbstruct.database + "." + tableName + " (" + tableStruct + ")";
+    let sql = "INSERT INTO " + dbstruct.database + "." + tableName + " (" + tableStruct + ")";
     sql += " VALUES  (" + tableData + ");";
     console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {

@@ -5,22 +5,21 @@ const log = require('../rotine/sql/insert/log');
 
 const salt = "VFRPRXh0cmVtZS1MdWNhc1JhbWFsaG9D";
 
-//var server;
 var io;
 
-var c = JSON.parse(fs.readFileSync(__dirname + "/../configs/server.json", 'utf8'));
-var asd = 0;
+const c = JSON.parse(fs.readFileSync(__dirname + "/../configs/server.json", 'utf8'));
+let asd = 0;
 function start(server) {
     io = require('socket.io').listen(server);
     console.log("Socket Server Online ".green);
     io.on('connection', function (socket) {
-        var usrData = "";
+        let usrData = "";
         console.log('New Connection Arrives');
         socket.emit("hs", { status: 0 });
         socket.on('auth', function (data) {
             require('../rotine/check/checkUser')(data.user, data.pass, (usr) => {
                 if (usr != undefined) {
-                    var usrData = usr;
+                    let usrData = usr;
                     usrData.pass = "";
                     socket.emit("auth-ok", JSON.stringify(usr));
                     require('../rotine/sql/update/users/connected')(usrData.UUID, 1, (data) => { });
@@ -32,7 +31,7 @@ function start(server) {
                     require('../rotine/sql/update/users/lastTry')(data.user, new Date().getTime(), (data) => { });
                     console.log("[ERROR] Wrong Credentials ".red + ("" + JSON.stringify(data)).gray);
                 }
-                var address = socket.handshake.address;
+                let address = socket.handshake.address;
                 //console.log(address);
                 require('../rotine/sql/update/users/lastIp')(usrData.UUID, address, (data) => { });
             });
@@ -49,8 +48,8 @@ function loadRoutes(socket, usrData) {
 
     socket.on('data', function (data) {
         try {
-            var kdata = bcypher.uncrypt(usrData.UUID.substring(32, 48), data);
-            var ldata = JSON.parse(kdata);
+            let kdata = bcypher.uncrypt(usrData.UUID.substring(32, 48), data);
+            let ldata = JSON.parse(kdata);
             require('./routes')(ldata, usrData.UUID, usrData.id_user, (rdata) => {
                 socket.emit("data", bcypher.crypt(usrData.UUID.substring(0, 16), JSON.stringify(rdata)))
             })

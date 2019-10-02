@@ -1,19 +1,19 @@
 //load menu items
-var rootLocation = document.location.origin + "/";
+let rootLocation = document.location.origin + "/";
 
-var libs = [
+let libs = [
     rootLocation + "comum/utils/index.js",
     rootLocation + "comum/socket/index.js",
     rootLocation + "comum/screen/index.js"
 ]
 
-var csss = [
+let csss = [
     rootLocation + "comum/css/tables.css",
     rootLocation + "comum/css/main.css",
     rootLocation + "comum/css/tabulator.css"
 ]
 
-var loading = true;
+let loading = true;
 
 function loader(libid) {
     if (libs[libid] != undefined) {
@@ -95,7 +95,7 @@ function loadCSSCall(scrp, callback) {
     }
 }
 function getStylesheet(path, callback) {
-    var link = document.createElement('link');
+    let link = document.createElement('link');
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("type", "text/css");
     link.onload = function () { callback(); }

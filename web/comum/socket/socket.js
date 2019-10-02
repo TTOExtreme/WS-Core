@@ -1,20 +1,20 @@
-var socket;
+let socket;
 
-var routes = {};
-var connected = false;
-var logged = false;
+let routes = {};
+let connected = false;
+let logged = false;
 
 const ReconnectionTimes = [5, 10, 20, 30, 60];
-var ReconnectionIndex = 0;
-var reconnecting = false;
-var locationSocket = window.location.host;
+let ReconnectionIndex = 0;
+let reconnecting = false;
+let locationSocket = window.location.host;
 
 function initSocket() {
     connected = false;
     logged = false;
     socket = io.connect(locationSocket, { reconnection: false, transports: ['websocket'] }); //use the next port to communicate
 
-    //var locationSocket = document.location.hostname + ":" + (parseInt(document.location.port));
+    //let locationSocket = document.location.hostname + ":" + (parseInt(document.location.port));
     socket.on('connect', function () {
         socket.on("hs", function (data) {
             connected = true;
@@ -42,7 +42,7 @@ function initSocket() {
             }
         });
         socket.on("data", function (data) {
-            var udata = uncrypt(indb.login.UUID.substring(0, 16), data);
+            let udata = uncrypt(indb.login.UUID.substring(0, 16), data);
             executeRoute(JSON.parse(udata));
             ck_new();
         });
@@ -127,7 +127,7 @@ function executeRoute(u) {
 
 appendRoute("login", (retrive) => {
     if (retrive != undefined) {
-        var jr = JSON.parse(retrive);
+        let jr = JSON.parse(retrive);
         if (jr.username != undefined) {
             indb.login.username = jr.username;
         }

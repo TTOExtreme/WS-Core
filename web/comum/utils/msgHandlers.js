@@ -1,19 +1,20 @@
 
-var systemMessageIndex = 0;
+let systemMessageIndex = 0;
 function system_mess(data, _cb) {
     if (data != undefined) {
         if (data.mess != undefined) {
-            var tr = document.createElement("tr");
-            var id = systemMessageIndex;
+            let tr = document.createElement("tr");
+            let id = systemMessageIndex;
             systemMessageIndex++;
             tr.setAttribute("id", "systemmess_tr_" + id);
-            var attr = "";
+            let attr = "";
             if (data.status == "OK") {
                 attr += "background-color:var(--message-bg-ok);";
             } else {
                 if (data.status == "ERROR") {
+                    stopLoader();
                     console.log(data);
-                    data.mess = "[Erro]"
+                    data.mess = "[Erro]";
                     attr += "background-color:var(--message-bg-err);";
                 } else {
                     attr += "background-color:var(--message-bg-info);";

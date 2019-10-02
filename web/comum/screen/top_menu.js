@@ -6,8 +6,9 @@ function initTopMenuItems() {
 }
 
 function changeTopMenuItems(list = [{ name: "teste", onclick: "resetTopMenuItems()" }]) {
-    var tm = document.getElementById("topMenu_Items_table");
-    var htm = "<tr class='topMenu_Items_tr'>";
+    console.log(list);
+    let tm = document.getElementById("topMenu_Items_table");
+    let htm = "<tr class='topMenu_Items_tr'>";
     list.forEach(e => {
         htm += "<td class='topMenu_Items_td'><center><p onclick='" + e.onClick + "'>" + e.name + "</p></center></td>";
     })

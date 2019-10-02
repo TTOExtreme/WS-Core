@@ -6,12 +6,12 @@ var dbstruct = JSON.parse(fs.readFileSync(__dirname + "/../../../configs/dbstruc
 
 const exe = (callback) => {
 
-    var sql = "";
+    let sql = "";
 
 
     fs.readdirSync(path.join(__dirname + '/../../../modules')).forEach(e => {
         if (fs.existsSync(path.join(__dirname + '/../../../modules/' + e + "/server/configs/dbstruct.json"))) {
-            var v = JSON.parse(fs.readFileSync(path.join(__dirname + '/../../../modules/' + e + "/server/configs/dbstruct.json")));
+            let v = JSON.parse(fs.readFileSync(path.join(__dirname + '/../../../modules/' + e + "/server/configs/dbstruct.json")));
             dbstruct.tables = dbstruct.tables.concat(v);
         }
     })
@@ -22,9 +22,9 @@ const exe = (callback) => {
 
 function rec(tble, callback) {
     if (tble[0] != undefined) {
-        var table = tble.pop();
+        let table = tble.pop();
         sql = "CREATE TABLE IF NOT EXISTS " + dbstruct.database + "." + table.table + " (";
-        var index = 0;
+        let index = 0;
         table.colunas.forEach(coluna => {
             if (index != 0) sql += ",";
             sql += coluna.name + " " + coluna.struct + " ";
