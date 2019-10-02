@@ -2,29 +2,29 @@ var rows_each_request = 20;
 var rowsIndex = 1
 var main_table = null;
 
-function ipam_host_init() {
+function radios_host_init() {
     appendRoutes();
-    send("ipam/top/menu/hosts", {});
-    ipam_get_host();
+    send("radios/top/menu/dashboard", {});
+    radios_get_host();
 }
-function ipam_get_host() {
+function radios_get_host() {
     stopLoader();
     menuCancel();
-    indb.lists["hostsList"] = [];
-    send("ipam/get/subnets", {});
+    indb.lists["dashboardList"] = [];
+    send("radios/get/subnets", {});
 }
 //Add new
 
 
 function appendRoutes() {
-    appendRoute("ipam/list/hosts/menu", changeIpamMenuItems);
-    appendRoute("ipam/list/subnets", ipam_list_host);
-    appendRoute("ipam/list/hosts", update_subnet);
-    appendRoute("ipam/added/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Adicionado com Exito", time: 1000 }); });
-    appendRoute("ipam/removed/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Removido com Exito", time: 1000 }); });
-    appendRoute("ipam/edited/hosts", (data) => { send("ipam/get/singlehost", { ip: data.data.ip }); system_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
-    appendRoute("ipam/disabled/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Desabilitado com Exito", time: 1000 }); });
-    appendRoute("ipam/enabled/hosts", () => { ipam_get_host(); system_mess({ status: "OK", mess: "Host Habilitado com Exito", time: 1000 }); });
+    appendRoute("radios/list/dashboard/menu", changeIpamMenuItems);
+    appendRoute("radios/list/subnets", radios_list_host);
+    appendRoute("radios/list/dashboard", update_subnet);
+    appendRoute("radios/added/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Adicionado com Exito", time: 1000 }); });
+    appendRoute("radios/removed/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Removido com Exito", time: 1000 }); });
+    appendRoute("radios/edited/dashboard", (data) => { send("radios/get/singlehost", { ip: data.data.ip }); system_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
+    appendRoute("radios/disabled/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Desabilitado com Exito", time: 1000 }); });
+    appendRoute("radios/enabled/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Habilitado com Exito", time: 1000 }); });
 }
 
 
@@ -33,8 +33,8 @@ var actionName = "Ações";
 var actionIcon = "buttonTick"; //"buttonTick" "buttonCross" "tickCross"
 var actionfield = "";
 var actionCallback = (data) => {
-    if (data.hosts != undefined) {
-        main_table.setData(data.hosts);
+    if (data.dashboard != undefined) {
+        main_table.setData(data.dashboard);
     } else {
         actionIcon = "";
     }
@@ -43,11 +43,11 @@ var confirmExecution = false;
 var actionOptions = [];
 var actionRowFormatter = (data) => { return "Abrir"; };
 
-function ipam_list_host(data) {
-    indb.lists["hostsList"] = data;
+function radios_list_host(data) {
+    indb.lists["dashboardList"] = data;
     reloadSubnetTable();
-    indb.lists["hostsList"].forEach(subnet => {
-        send("ipam/get/hosts", subnet);
+    indb.lists["dashboardList"].forEach(subnet => {
+        send("radios/get/dashboard", subnet);
     });
 }
 
@@ -101,13 +101,13 @@ function reloadSubnetTable() {
         { title: 'Portas Abertas', field: 'openPorts', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().vendor == undefined) ? "-" : data.getRow().getData().vendor }) }
     ];
 
-    main_table = new Tabulator("#ipam_bottom_table", {
-        data: indb.lists["hostsList"],
+    main_table = new Tabulator("#radios_bottom_table", {
+        data: indb.lists["dashboardList"],
         headerFilterPlaceholder: "Filtrar",
         index: "ip",
         dataTree: false,
         /*
-        dataTreeChildField: "hosts",
+        dataTreeChildField: "dashboard",
         dataTreeStartExpanded: false,
         dataTreeChildIndent: 25,
         //*/
@@ -165,7 +165,7 @@ function HostData(e) {
     ";
 }
 
-ipam_host_init();
+radios_host_init();
 
 
 function menuCancel() {

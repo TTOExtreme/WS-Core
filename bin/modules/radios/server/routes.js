@@ -49,8 +49,12 @@ function RoutesInit(RouteAdd) {
     //Scan Radios 
     RouteAdd("radios/scan/radios", "radios/get/radios", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/background/radios/get_scan_radio.js'))(data.data, (ret) => {
-            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
-            returnData({ route: "radios/scanned/radios", data: ret });
+            if (ret.status == "ERROR") {
+                console.log("error");
+                returnData({ route: "system/error", data: ret });
+            } else {
+                returnData({ route: "radios/scanned/radios", data: ret });
+            }
         });
     });
 

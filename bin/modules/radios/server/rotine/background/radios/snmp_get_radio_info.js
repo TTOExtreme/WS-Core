@@ -23,10 +23,11 @@ var SetRSignal = require("../../sql/update/radios/radio_set_radiosignal");
 var SetDBMPower = require("../../sql/update/radios/radio_set_dbmpower");
 
 
-function getOID(ip, community, oid, callback) {
+function getOID(ip, community, oid, callback, errorcall) {
     var session = snmp.createSession(ip, community);
     session.get([oid], function (error, varbinds) {
         if (error) {
+            errorcall(error.toString())
             console.error("ip: " + ip + " > " + error.toString());
         } else {
             for (var i = 0; i < varbinds.length; i++) {
@@ -35,6 +36,7 @@ function getOID(ip, community, oid, callback) {
                 // for version 2c we must check each OID for an error condition
                 if (snmp.isVarbindError(varbinds[i])) {
                     //console.error("V2: " + snmp.varbindError(varbinds[i]));
+                    errorcall("Cannot Comunicate");
                 } else {
                     //console.log("V2: " + varbinds[i].oid + "|" + varbinds[i].value);
                     callback(varbinds[i].value);
@@ -44,7 +46,7 @@ function getOID(ip, community, oid, callback) {
     });
 }
 
-function getIP(ip, community, callback) {
+function getIP(ip, community, callback, errorcall) {
     //console.log("Radio IP: " + ip)
     getOID(ip, community, oidsList.name, (value) => {
         SetHostname(ip, value);
@@ -79,22 +81,22 @@ function getIP(ip, community, callback) {
                                                                 getOID(ip, community, oidsList.dbmPower, (value) => {
                                                                     SetDBMPower(ip, value);
                                                                     callback();
-                                                                });
-                                                            });
-                                                        });
-                                                    });
-                                                });
-                                            });
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-    });
+                                                                }, (error) => { errorcall(error) });
+                                                            }, (error) => { errorcall(error) });
+                                                        }, (error) => { errorcall(error) });
+                                                    }, (error) => { errorcall(error) });
+                                                }, (error) => { errorcall(error) });
+                                            }, (error) => { errorcall(error) });
+                                        }, (error) => { errorcall(error) });
+                                    }, (error) => { errorcall(error) });
+                                }, (error) => { errorcall(error) });
+                            }, (error) => { errorcall(error) });
+                        }, (error) => { errorcall(error) });
+                    }, (error) => { errorcall(error) });
+                }, (error) => { errorcall(error) });
+            }, (error) => { errorcall(error) });
+        }, (error) => { errorcall(error) });
+    }, (error) => { errorcall(error) });
 }
 
 //getIP("192.168.140.2");

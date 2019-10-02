@@ -17,7 +17,7 @@ function nextItem(list) {
         var e = list.pop();
         scanRadio(e.ip, e.community, () => {
             nextItem(list);
-        });
+        }, (error) => { });
 
     }
 }
