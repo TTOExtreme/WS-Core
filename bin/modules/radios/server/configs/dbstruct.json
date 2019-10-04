@@ -3,12 +3,16 @@
         "table": "_Radios",
         "colunas": [
             {
+                "name": "id",
+                "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+            },
+            {
                 "name": "name",
                 "struct": "VARCHAR(200)"
             },
             {
                 "name": "ip",
-                "struct": "VARCHAR(20) KEY"
+                "struct": "VARCHAR(20)"
             },
             {
                 "name": "community",
@@ -128,7 +132,7 @@
                 "struct": "INT(10)"
             },
             {
-                "name": "id_user_st",
+                "name": "id_radio_st",
                 "struct": "INT(10)"
             },
             {

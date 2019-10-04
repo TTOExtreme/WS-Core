@@ -11,15 +11,21 @@ function RoutesInit(RouteAdd) {
         });
     });
     RouteAdd("radios/top/menu/dashboard", "radios/top/menu/dashboard", (UUID, user_id, data, returnData) => {
-        require(path.join(__dirname + '/rotine/sql/select/menu/subnet-top.js'))(UUID, (ret) => {
+        require(path.join(__dirname + '/rotine/sql/select/menu/dashboard-top.js'))(UUID, (ret) => {
             if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
-            returnData({ route: "radios/list/subnet/menu", data: ret });
+            returnData({ route: "radios/list/dashboard/menu", data: ret });
         });
     });
     RouteAdd("radios/top/menu/radios", "radios/top/menu/radios", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/sql/select/menu/radiosList-top.js'))(UUID, (ret) => {
             if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
             returnData({ route: "radios/list/radios/menu", data: ret });
+        });
+    });
+    RouteAdd("radios/top/menu/connection", "radios/top/menu/connection", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/select/menu/radiosConnection-top.js'))(UUID, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "radios/list/connection/menu", data: ret });
         });
     });
 
@@ -30,6 +36,14 @@ function RoutesInit(RouteAdd) {
             returnData({ route: "radios/list/radios", data: ret });
         });
     });
+    //load Radios list of connections
+    RouteAdd("radios/get/connection", "radios/get/connection", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/select/RadiosConnection.js'))((ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "radios/list/connection", data: ret });
+        });
+    });
+
     //add new Radio
     RouteAdd("radios/add/radios", "radios/add/radios", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/sql/insert/Radio.js'))(data.data, (ret) => {
@@ -37,12 +51,26 @@ function RoutesInit(RouteAdd) {
             returnData({ route: "radios/added/radios", data: ret });
         });
     });
+    //add new Radio Connection
+    RouteAdd("radios/add/connection", "radios/add/connection", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/insert/RadioConnection.js'))(user_id, data.data, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "radios/added/connection", data: ret });
+        });
+    });
 
-    //remove subnet
+    //remove Radio
     RouteAdd("radios/del/radios", "radios/del/radios", (UUID, user_id, data, returnData) => {
         require(path.join(__dirname + '/rotine/sql/delete/Radios.js'))(data.data, (ret) => {
             if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
             returnData({ route: "radios/removed/radios", data: ret });
+        });
+    });
+    //remove Radio Connection
+    RouteAdd("radios/del/connection", "radios/del/connection", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/sql/delete/RadiosConnection.js'))(data.data, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "radios/removed/connection", data: ret });
         });
     });
 

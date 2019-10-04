@@ -9,7 +9,7 @@ function radios_radios_init() {
 }
 function radios_get_radios() {
     stopLoader();
-    menuCancel();
+    //menuCancel();
     indb.lists["radiosList"] = [];
     send("radios/get/radios", {});
 }
@@ -46,14 +46,14 @@ function radios_append_radios(data) {
         indb.lists["radiosList"] = [].concat(indb.lists["radiosList"], data);
         send("radios/get/radios", { start: rows_each_request * (rowsIndex - 1), end: rows_each_request * rowsIndex });
     } else {
-        console.log(indb);
+        //console.log(indb);
         reloadSubnetTable();
     }
     //reloadSubnetTable();
 }
 
 function reloadSubnetTable() {
-    menuCancel();
+    //menuCancel();
 
     const newCollums = [
         {
@@ -77,9 +77,18 @@ function reloadSubnetTable() {
             }, visible: !(actionName == ""), frozen: true
         },
         { title: 'Nome', field: 'name', headerFilter: "input", frozen: true },
+        { title: 'ID', field: 'id', headerFilter: "input" },
         { title: 'IP', field: 'ip', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().ip)) },
         { title: 'SSID', field: 'SSID', headerFilter: "input" },
-        { title: 'Modo', field: 'RadioMode', headerFilter: "input" },
+        { title: 'Pass', field: 'pass', headerFilter: "input" },
+        {
+            title: 'Modo', field: 'RadioMode', headerFilter: "select", headerFilterParams:
+                [{ label: "-", value: "" }, { label: "Estação", value: "1" }, { label: "AP", value: "2" }, { label: "AP Repetidora", value: "3" }, { label: "AP WSD", value: "4" }],
+            formatter: ((data) => {
+                let v = data.getRow().getData().RadioMode;
+                return ((v == 1) ? "Estação" : ((v == 2) ? "AP" : ((v == 3) ? "AP Repetidora" : ((v == 4) ? "AP WSD" : "-"))));
+            })
+        },
         { title: 'Community', field: 'community', headerFilter: "input" },
         { title: 'Frequencia', field: 'ChannelFreq', headerFilter: "input" },
         { title: 'DBM', field: 'dbmPower', headerFilter: "input" },

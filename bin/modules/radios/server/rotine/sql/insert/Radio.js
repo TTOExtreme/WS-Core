@@ -40,13 +40,18 @@ function exe(dt, callback) {
     if (vendor == "null") { vendor = "-" }
 
     let sql = "";
-    sql = "INSERT INTO " + dbstruct.database + "._Radios (name,ip,community,hostname,mac,vendor,hostnameErr,macErr,vendorErr,addedIn,alive,seted,autoscan,";
-    sql += "SSID,Pass,AirmaxCapacity,AirmaxQuality,AirmaxState,CCQ,ChannelFreq,ChannelWidth,Encrypt,Noise,RSSI,RXrate,TXrate,RadioMode,RadioSignal,dbmPower)";
-    sql += " VALUES ('" + name + "','" + ip + "','" + community + "','-','" + mac + "',\"-\",\"-\",\"-\",\"-\"," + new Date().getTime() + ",0,1," + autoScan + ",";
-    sql += "'" + SSID + "','" + pass + "'," + AirmaxCapacity + "," + AirmaxQuality + "," + AirmaxState + "," + CCQ + "," + ChannelFreq + "," + ChannelWidth + ",'" + Encrypt + "'," + Noise + "," + RSSI + "," + RXrate + "," + TXrate + "," + RadioMode + "," + RadioSignal + "," + dbmPower + ")";
-    sql += " ON DUPLICATE KEY UPDATE ";
-    sql += "`name`='" + name + "', `pass`='" + pass + "', `seted`=1, `autoscan`=" + autoScan + ", `community`='" + community + "' ";
-    sql += ";";
+    sql = "INSERT INTO " + dbstruct.database + "._Radios " +
+        "(" +
+        ((data.id != undefined) ? "id," : "") +
+        "name,ip,community,hostname,mac,vendor,hostnameErr,macErr,vendorErr,addedIn,alive,seted,autoscan," +
+        "SSID,Pass,AirmaxCapacity,AirmaxQuality,AirmaxState,CCQ,ChannelFreq,ChannelWidth,Encrypt,Noise,RSSI,RXrate,TXrate,RadioMode,RadioSignal,dbmPower)" +
+        " VALUES (" +
+        ((data.id != undefined) ? data.id + "," : "") +
+        "'" + name + "','" + ip + "','" + community + "','-','" + mac + "',\"-\",\"-\",\"-\",\"-\"," + new Date().getTime() + ",0,1," + autoScan + "," +
+        "'" + SSID + "','" + pass + "'," + AirmaxCapacity + "," + AirmaxQuality + "," + AirmaxState + "," + CCQ + "," + ChannelFreq + "," + ChannelWidth + ",'" + Encrypt + "'," + Noise + "," + RSSI + "," + RXrate + "," + TXrate + "," + RadioMode + "," + RadioSignal + "," + dbmPower + ")" +
+        " ON DUPLICATE KEY UPDATE " +
+        "`name`='" + name + "', `pass`='" + pass + "', `seted`=1, `autoscan`=" + autoScan + ", `community`='" + community + "' " +
+        ";";
 
     console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {
