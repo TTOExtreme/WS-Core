@@ -50,7 +50,7 @@ function exe(dt, callback) {
         "'" + name + "','" + ip + "','" + community + "','-','" + mac + "',\"-\",\"-\",\"-\",\"-\"," + new Date().getTime() + ",0,1," + autoScan + "," +
         "'" + SSID + "','" + pass + "'," + AirmaxCapacity + "," + AirmaxQuality + "," + AirmaxState + "," + CCQ + "," + ChannelFreq + "," + ChannelWidth + ",'" + Encrypt + "'," + Noise + "," + RSSI + "," + RXrate + "," + TXrate + "," + RadioMode + "," + RadioSignal + "," + dbmPower + ")" +
         " ON DUPLICATE KEY UPDATE " +
-        "`name`='" + name + "', `pass`='" + pass + "', `seted`=1, `autoscan`=" + autoScan + ", `community`='" + community + "' " +
+        "`name`='" + name + "', `pass`='" + pass + "', `ip`='" + ip + "', `seted`=1, `autoscan`=" + autoScan + ", `community`='" + community + "' " +
         ";";
 
     console.log(colors.green(sql + "\n"));
