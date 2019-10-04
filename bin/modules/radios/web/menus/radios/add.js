@@ -1,6 +1,6 @@
 function addNewSubnet() {
     var htm = "<tr><td colspan=2><table class='radios_add_table'>";
-    htm += "<tr><td colspan=2><p style='text-align: center;vertical-align: middle;'>Adicionar Nova Rede</td></tr>";
+    htm += "<tr><td colspan=2><p style='text-align: center;vertical-align: middle;'>Adicionar Novo Radio</td></tr>";
     htm += "<tr><td><p style='text-align: right;vertical-align: middle;'>Nome:</td><td><input id='add_in_name'></td></tr>";
     htm += "<tr><td><p style='text-align: right;vertical-align: middle;'>IP:</td><td><input id='add_in_ip'></td></tr>";
     htm += "<tr><td><p style='text-align: right;vertical-align: middle;'>Comunidade:</td><td><input id='add_in_community'></td></tr>";
@@ -22,7 +22,7 @@ function radiosAddSend() {
     data.ip = normalizeIP(document.getElementById("add_in_ip").value);
     data.community = document.getElementById("add_in_community").value;
     data.autoScan = (document.getElementById("add_in_autoscan").checked) ? 1 : 0;
-
+    console.log("Added");
     send("radios/add/radios", JSON.stringify(data));
 }
 

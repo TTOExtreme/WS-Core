@@ -2,21 +2,12 @@ var colors = require('colors');
 
 const lista = [
     {
-        perm: "ipam/edt/hosts",
+        perm: "none",
         data: {
-            id: "ipam-edt-hosts",
-            name: "Editar",
-            img: "",
-            onClick: "loadScript(\"module/ipam/menus/hosts/edt.js\")"
-        }
-    },
-    {
-        perm: "ipam/del/hosts",
-        data: {
-            id: "ipam-del-hosts",
-            name: "Excluir",
-            img: "",
-            onClick: "loadScript(\"module/ipam/menus/hosts/del.js\")"
+            id: "none",
+            name: "none",
+            img: "none",
+            onClick: "none"
         }
     }
 ];

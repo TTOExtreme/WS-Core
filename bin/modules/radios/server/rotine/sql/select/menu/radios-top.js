@@ -20,6 +20,15 @@ const lista = [
         }
     },
     {
+        perm: "radios/top/menu/radios",
+        data: {
+            id: "radios-connection",
+            name: "Radios Enlaces",
+            img: "",
+            onClick: "loadScript(\"module/radios/menus/radiosConnection.js\")"
+        }
+    },
+    {
         perm: "radios/top/menu/config",
         data: {
             id: "radios-config",

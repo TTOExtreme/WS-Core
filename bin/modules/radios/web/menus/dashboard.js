@@ -1,30 +1,23 @@
-var rows_each_request = 20;
-var rowsIndex = 1
-var main_table = null;
 
-function radios_host_init() {
+function radios_dashboard_init() {
     appendRoutes();
     send("radios/top/menu/dashboard", {});
-    radios_get_host();
+    radios_get_lists();
 }
-function radios_get_host() {
+function radios_get_lists() {
     stopLoader();
     menuCancel();
-    indb.lists["dashboardList"] = [];
-    send("radios/get/subnets", {});
+    indb.lists["radiosList"] = [];
+    send("radios/get/radios", {});
+    send("radios/get/connection", {});
 }
 //Add new
 
 
 function appendRoutes() {
-    appendRoute("radios/list/dashboard/menu", changeIpamMenuItems);
-    appendRoute("radios/list/subnets", radios_list_host);
-    appendRoute("radios/list/dashboard", update_subnet);
-    appendRoute("radios/added/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Adicionado com Exito", time: 1000 }); });
-    appendRoute("radios/removed/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Removido com Exito", time: 1000 }); });
-    appendRoute("radios/edited/dashboard", (data) => { send("radios/get/singlehost", { ip: data.data.ip }); system_mess({ status: "OK", mess: "Host Editado com Exito", time: 1000 }); });
-    appendRoute("radios/disabled/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Desabilitado com Exito", time: 1000 }); });
-    appendRoute("radios/enabled/dashboard", () => { radios_get_host(); system_mess({ status: "OK", mess: "Host Habilitado com Exito", time: 1000 }); });
+    appendRoute("radios/list/dashboard/menu", changeRadiosMenuItems);
+    appendRoute("radios/list/radios", radios_list_radios);
+    appendRoute("radios/list/connection", radios_list_radios_connection);
 }
 
 
@@ -43,129 +36,134 @@ var confirmExecution = false;
 var actionOptions = [];
 var actionRowFormatter = (data) => { return "Abrir"; };
 
-function radios_list_host(data) {
-    indb.lists["dashboardList"] = data;
-    reloadSubnetTable();
-    indb.lists["dashboardList"].forEach(subnet => {
-        send("radios/get/dashboard", subnet);
-    });
+function radios_list_radios(data) {
+    indb.lists["radiosList"] = data;
+    reloadDashboard();
 }
 
-function update_subnet(data) {
-    stopLoader();
+function radios_list_radios_connection(data) {
+    indb.lists["connectionList"] = data;
+    reloadDashboard();
+}
+
+
+function reloadDashboard() {
     menuCancel();
-    console.log(data);
-    if (main_table != null) {
-        main_table.updateData([data]);
-    }
-}
+    let div = document.getElementById("radios_bottom_table");
+    div.innerHTML = "";
 
-function reloadSubnetTable() {
-    menuCancel();
 
-    const newCollums = [
-        {
-            title: actionName, field: actionfield, formatter: actionIcon, cellClick: function (e, cell) {
-                var data = cell.getData();
-                if (confirmExecution) {
-                    if (confirm("Voce esta prestes a " + ((actionOptions.length > 0) ? actionOptions[data[actionfield]] : actionName) + " o Host: " + normalizeIP(data.ip) + "\nVoce tem certeza disso?")) {
-                        if (actionCallback != null) {
-                            actionCallback(data);
-                        } else {
-                            send(actionFunction, data);
-                        }
-                    }
-                } else {
-                    if (actionCallback != null) {
-                        actionCallback(data);
-                    } else {
-                        send(actionFunction, data);
-                    }
-                }
-            }, visible: !(actionName == "")
-        },
-        {
-            title: 'Status', field: 'status', headerFilter: "select", headerFilterParams:
-                [{ label: "-", value: "" }, { label: "Livre", value: "0" }, { label: "Inativo", value: "1" }, { label: "Ativo", value: "3" }],
-            headerFilterFunc: filterStatus, formatter: ((data) => {
-                return (data.getRow().getData().seted == undefined) ? "-" :
-                    ("<div class='div_dot div_dot_" + (data.getRow().getData().seted + (data.getRow().getData().alive * 2)) +
-                        "'><p title='" + HostData(data.getRow().getData()) + "'></p></div>")
-            })
-        },
-        { title: 'Nome', field: 'name', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().name == undefined) ? "-" : data.getRow().getData().name }) },
-        { title: 'Hostname', field: 'hostname', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().hostname == undefined) ? "-" : data.getRow().getData().hostname }) },
-        { title: 'IP', field: 'ip', headerFilter: "input", formatter: ((data) => normalizeIP(data.getRow().getData().ip)) },
-        { title: 'MAC', field: 'mac', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().mac == undefined) ? "-" : data.getRow().getData().mac }) },
-        { title: 'Fabricante', field: 'vendor', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().vendor == undefined) ? "-" : data.getRow().getData().vendor }) },
-        { title: 'Portas Abertas', field: 'openPorts', headerFilter: "input", formatter: ((data) => { return (data.getRow().getData().vendor == undefined) ? "-" : data.getRow().getData().vendor }) }
-    ];
+    let dataBase = organizeRadios(indb.lists["radiosList"], indb.lists["connectionList"]);
 
-    main_table = new Tabulator("#radios_bottom_table", {
-        data: indb.lists["dashboardList"],
-        headerFilterPlaceholder: "Filtrar",
-        index: "ip",
-        dataTree: false,
-        /*
-        dataTreeChildField: "dashboard",
-        dataTreeStartExpanded: false,
-        dataTreeChildIndent: 25,
-        //*/
 
-        columns: newCollums,
-        height: '100%',
-        paginationButtonCount: 3,
-        pagination: "local",
-        paginationSize: 15,
-        paginationSizeSelector: [10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
-        movableColumns: true,
-        layout: "fitColumns",
-        rowFormatter: actionRowFormatter
+    //dataBase = flatToHierarchy(dataBase);
+
+    //console.log(JSON.stringify(dataBase));
+    //console.log(dataBase);
+
+    ////////////////////////inicio D3 Draw ////////////////////////////////////////////
+
+    let radius = div.offsetHeight / 2 // radius of the dendrogram
+
+    // append the svg object to the body of the page
+    let svg = d3.select("#radios_bottom_table")
+        .append("svg")
+        .attr("width", div.offsetWidth)
+        .attr("height", div.offsetHeight)
+        .append("g")
+        .attr("transform", "translate(40,40)");  // bit of margin on the left = 40
+
+
+    // Create the cluster layout:
+    var cluster = d3.tree()
+        .size([div.offsetWidth - 150, div.offsetHeight - 100]);  // 100 is the margin I will have on the right side
+
+    // Give the data to this cluster layout:
+    let root = d3.hierarchy(dataBase[0], function (d) {
+        return (d != null) ? d.children : [];
     });
-}
+    //*/
+    cluster(root);
 
-function filterStatus(headerValue, cellValue, rowData, filterParams) {
-    //headerValue - the value of the header filter element
-    //cellValue- the value of the column in this row
-    //rowData - the data for the row being filtered
-    //filterParams - params object passed to the headerFilterFuncParams property
+    // Add the links between nodes:
+    svg.selectAll('path')
+        .data(root.descendants().slice(1))
+        .enter()
+        .append('path')
+        .attr("d", function (d) {
+            return "M" + d.x + "," + d.y
+                + "C" + (d.parent.x) + "," + d.y
+                + " " + (d.parent.x) + "," + d.parent.y // 50 and 150 are coordinates of inflexion, plax with it to change links shape
+                + " " + d.parent.x + "," + d.parent.y;
+        })
+        .style("fill", 'none')
+        .attr("stroke", '#aaaaaa30')
 
-    var matched = false;
 
-    if (headerValue == rowData.seted + (rowData.alive * 2)) {
-        matched = true;
+    // Add a circle for each node.
+    svg.selectAll("g")
+        .data(root.descendants())
+        .enter()
+        .append("g")
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")"
+        })
+        .append("circle")
+        .attr("r", 7)
+        .style("fill", "#69b3a2")
+        .attr("stroke", "black")
+        .style("stroke-width", 2)
+        .append("title")
+        .text(function (d, i) { return "     " + HostData(d.data); });
+
+
+
+    //add a text to node
+    svg.selectAll("g")
+        .append("text")
+        .attr("dy", "18 px")
+        .attr("x", 0)
+        .attr("transform", "rotate(-45,0,0)")
+        .style("text-anchor", "middle")
+        .style("font-size", "12pt")
+        .text(function (d) { return d.data.name; });
+
+
+
+    ////////////////////////end D3 Draw ////////////////////////////////////////////
+
+    /*
+    //code for the Map of radios========================================================================;
+
+    let scr = document.getElementById("radios_map_screen");
+    if (scr != undefined) {//check if the screen is created
+        const context = scr.getContext('2d');
+        context.clearRect(0, 0, scr.width, scr.height); //clear the painel
+
+
+
+
+    } else {
+        let div = document.getElementById("radios_bottom_table");
+        div.innerHTML = "<canvas id='radios_map_screen' width='" + div.offsetWidth + "' height='" + div.offsetHeight + "'></canvas>";
     }
-
-    return matched;
+    //*/
 }
-
-var section = "lst";
-
-function createActionField(row) {
-    var data = row.getRow().getData();
-
-    htm = "<table><tr>"
-    htm += "<td class='action_item'><a onclick=\"User_execute('" + data + "')\" style='transform:rotate(90deg);'>&#9998;</a></td>";
-    htm += "</tr></table>"
-
-    return htm;
-
-}
-
 
 function HostData(e) {
-    return "\n\
+    //console.log(e);
+    if (e != null) {
+        return "\n\
     Nome:" + e.name + "\n\
-    Host:" + e.hostname + "\n\
     IP:" + normalizeIP(e.ip) + "\n\
-    MAC: " + e.mac + "\n\
-    Fabricante: " + e.vendor + "\n\
     Ativo: " + ((e.alive) ? "Sim" : "Não") + "\n\
-    Cadastrado: " + ((e.seted) ? "Sim" : "Não") + "\n\
     ";
+    } else {
+        return "null";
+    }
 }
 
-radios_host_init();
+radios_dashboard_init();
 
 
 function menuCancel() {
@@ -175,3 +173,89 @@ function menuCancel() {
         document.getElementById("overlay_input_table").style.top = "-100vh";
     }
 }
+
+
+function organizeRadios(radios, indexers) {
+    let rad = radios;
+    let ret = [];
+
+    for (let i = 0; i < rad.length; i++) {
+        rad[i] = getChildren(rad[i], rad, indexers);
+        if (rad[i] != undefined) {
+            //if (rad[i].children.length == 0) { rad[i] = null; } // insere na raiz se não encontrar o pai (considera Root)
+            //console.log(rad[i]);
+        }
+    }
+    //console.log(rad);
+    rad.forEach(item => {
+        if (item != null) {
+            if (item.children.length > 0)
+                ret.push(item);
+        }
+    })
+    //console.log(ret);
+    return ret;
+}
+
+function getChildren(item, radios, indexers) {
+    let ret = item;
+    if (indexers != undefined && ret != undefined) {
+        if (ret["children"] == undefined) { ret["children"] = []; }
+        indexers.forEach(id => {
+            if (id != null) {
+                if (ret.id == id.id_radio_ap) {
+                    for (let ri = 0; ri < radios.length; ri++) {
+                        if (id != null && radios[ri] != null) {
+                            if (radios[ri].id == id.id_radio_st) {
+                                let c = getChildren(radios[ri], radios, indexers);
+                                ret.children.forEach(c1 => { if (c != null) { if (c.id == c1.id) { c = null; } } })
+                                if (c != null) { ret.children.push(c); }
+                                radios[ri] = null;
+                            }
+                        }
+                    }
+                    return ret;
+                }
+            }
+        })
+    }
+    return ret;
+}
+/*
+//find the father of child
+function getChildren(item, radios, indexers) {
+    let ret = null;
+    if (item != undefined) {
+        indexers.forEach(ind => {
+            //verifica se o radio é um ap ou um pai para procurar pelo filho
+            if (item.id == ind.id_radio_ap) {
+                for (let i = 0; i < radios.length; i++) {
+                    if (radios[i] != null) {
+                        if (radios[i].id == ind.id_radio_st) { //encontra os filhos do filho
+                            if (item["children"] == undefined) {
+                                item["children"] = [];
+                            }
+                            let r = getChildren(radios[i], radios, indexers);
+                            if (r != null) {
+                                radios[i] = null;
+                                item["children"].push(r);
+                            }
+                        }
+                    }
+                }
+                ret = item;
+            }
+        });
+        if (ret == null) {
+            ret = item;
+            indexers.forEach(ind => {
+                //verifica se o radio faz parte de um enlace
+                if (item.id == ind.id_radio_st) {
+                    ret = null;
+                }
+            });
+        }
+    }
+    return ret;
+}
+//*/
