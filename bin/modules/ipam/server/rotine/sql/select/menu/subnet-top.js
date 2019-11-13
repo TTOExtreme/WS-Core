@@ -36,6 +36,15 @@ const lista = [
             img: "",
             onClick: "loadScript(\"module/ipam/menus/subnets/scan.js\")"
         }
+    },
+    {
+        perm: "ipam/scan/subnets",
+        data: {
+            id: "ipam-scan-subnets-full",
+            name: "Scan ARP",
+            img: "",
+            onClick: "loadScript(\"module/ipam/menus/subnets/scanfull.js\")"
+        }
     }
 ];
 

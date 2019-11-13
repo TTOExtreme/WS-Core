@@ -11,7 +11,7 @@ var ipList = require('../utils/ipNetmask-List');
 var options = {
     // ip: '192.168.1',
 
-    timeout: 15,
+    timeout: 128,
     vendor: true,
     min: 1,
     max: 255

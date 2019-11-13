@@ -88,6 +88,14 @@ function RoutesInit(RouteAdd) {
             });
     });
 
+    //get Full Scan Subnet 
+    RouteAdd("ipam/scan/subnets/full", "ipam/get/subnets", (UUID, user_id, data, returnData) => {
+        require(path.join(__dirname + '/rotine/background/scanSubnet.js')).fullScanNet(data, (ret) => {
+            if (ret.status == "ERROR") { returnData({ route: "system/error", data: ret }); return; }
+            returnData({ route: "ipam/scanned/subnet", data: ret });
+        });
+    });
+
     //if (data.route == "/get_all_hosts") { console.log("GetAllHosts".green); require('../rotine/sql/select/AllHosts.js')(data.data, (ret) => { callback({ route: "/hosts_hosts_list", data: ret }); }) }
 
     //if (data.route == "/add_subnet") { console.log("addSubnet".green); require('../rotine/sql/insert/newSubnet.js')(data.data, (ret) => { callback({ route: "/subnet_added", data: ret }); }) }

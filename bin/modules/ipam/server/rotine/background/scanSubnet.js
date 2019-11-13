@@ -12,7 +12,7 @@ var ended = false;
 var opt = {
     ip: '192.168.0',
     netmask: 24,
-    timeout: 15,
+    timeout: 128,
     vendor: true
 }
 
@@ -35,12 +35,15 @@ function scanNet(subnet, done, step = ((data) => { })) {
 
 //scan using arp and nmap
 function fullScanNet(subnet, done) {
-    opt.ip = ipList.normalizeIP4(subnet.ip);
+    console.log(subnet);
+    opt.ip = ipList.normalizeIP4(subnet.data.ip);
     opt.netmask = subnet.netmask;
+    console.log("Scanning: ".green + colors.gray(opt.ip));
     netList.NetScan(opt, (err, obj) => {
         if (err) { console.log(err); return; }
         //console.log("Get: ".green + colors.gray(obj.ip));
         //console.log("Returned: " + obj.ip)
+        console.log("Returned: " + JSON.stringify(obj))
         newHost.server(opt.ip, "-", obj.ip, obj.hostname, obj.mac, obj.vendor, obj.hostnameError, obj.macError, obj.vendorError, obj.alive, () => {
             if (obj.alive) hostsScaned.push({ subnet: subnet.ip, ip: obj.ip });
         });

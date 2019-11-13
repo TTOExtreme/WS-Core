@@ -7,6 +7,8 @@ var ipnormalize = require('../../utils/ipNetmask-List');
 
 const exe = () => {
     subnets((data) => {
+        console.log("ICMP-Scan");
+        //console.log(data)
         nextItem(data);
     });
 };
@@ -46,8 +48,8 @@ var ping = require('net-ping');
 function HostIsAlive(host, alive, dead) {
     var options = {
         networkProtocol: ping.NetworkProtocol.IPv4,
-        packetSize: .1,
-        retries: 1,
+        packetSize: 1,
+        retries: 5,
         sessionId: (process.pid % 65535),
         timeout: 2000,
         ttl: 128

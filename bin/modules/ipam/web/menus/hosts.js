@@ -116,8 +116,8 @@ function reloadSubnetTable() {
         height: '100%',
         paginationButtonCount: 3,
         pagination: "local",
-        paginationSize: 15,
-        paginationSizeSelector: [10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
+        paginationSize: 256,
+        paginationSizeSelector: [16,32,64,128,256,512,1024,2048,4096],
         movableColumns: true,
         layout: "fitColumns",
         rowFormatter: actionRowFormatter
