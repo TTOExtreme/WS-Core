@@ -7,7 +7,7 @@ var ipnormalize = require('../../utils/ipNetmask-List');
 
 const exe = () => {
     subnets((data) => {
-        console.log("ICMP-Scan");
+        //console.log("ICMP-Scan");
         //console.log(data)
         nextItem(data);
     });
