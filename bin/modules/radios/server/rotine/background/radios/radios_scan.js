@@ -15,9 +15,12 @@ const exe = (callback) => {
 function nextItem(list, callback) {
     if (list[0] != undefined) {
         var e = list.pop();
+        console.log("Scanning Radio: ".green + (e.ip).white)
         scanRadio(e.ip, e.community, () => {
             nextItem(list, callback);
-        }, (error) => { });
+        }, (error) => {
+            nextItem(list, callback);
+        });
 
     } else {
         callback();

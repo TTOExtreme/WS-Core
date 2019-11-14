@@ -2,9 +2,9 @@ let checker = require('./icmp-scan');
 let radiosScan = require('./radios/radios_scan');
 let schedule = require("node-schedule");
 
-let upAlive = "0 * * * * *";
+let upAlive = "0 */1 * * * *";
 
-let upRadios = "0 */5 * * * *";
+let upRadios = "0 */10 * * * *";
 
 function exe() {
     //chech if radio still alive

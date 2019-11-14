@@ -111,7 +111,7 @@ function reloadDashboard() {
         .append("circle")
         .attr("r", 7)
         .style("fill", function (d) {
-            return (d.data.alive == 1 || d.data.community == "") ? "var(--message-bg-ok)" : "var(--message-bg-err)"
+            return (d.data.alive == 1) ? "var(--message-bg-ok)" : ((d.data.community == "") ? "var(--message-bg-info)" : "var(--message-bg-err)")
         })
         .attr("stroke", "black")
         .style("stroke-width", 2)
