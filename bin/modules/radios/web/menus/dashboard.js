@@ -71,7 +71,7 @@ function reloadDashboard() {
         .attr("width", div.offsetWidth)
         .attr("height", div.offsetHeight)
         .append("g")
-        .attr("transform", "translate(40,40)");  // bit of margin on the left = 40
+        .attr("transform", "translate(100,40)");  // bit of margin on the left = 40
 
 
     // Create the cluster layout:
@@ -110,7 +110,9 @@ function reloadDashboard() {
         })
         .append("circle")
         .attr("r", 7)
-        .style("fill", "#69b3a2")
+        .style("fill", function (d) {
+            return (d.data.alive == 1 || d.data.community == "") ? "var(--message-bg-ok)" : "var(--message-bg-err)"
+        })
         .attr("stroke", "black")
         .style("stroke-width", 2)
         .append("title")
@@ -121,11 +123,11 @@ function reloadDashboard() {
     //add a text to node
     svg.selectAll("g")
         .append("text")
-        .attr("dy", "18 px")
-        .attr("x", 0)
-        .attr("transform", "rotate(-45,0,0)")
-        .style("text-anchor", "middle")
-        .style("font-size", "12pt")
+        .attr("dy", ".35em")
+        .attr("x", -13)
+        .attr("transform", "rotate(-20,0,0)")
+        .style("text-anchor", "end")
+        .style("font-size", "9pt")
         .text(function (d) { return d.data.name; });
 
 

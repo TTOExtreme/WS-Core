@@ -1,6 +1,5 @@
 var scan = require('./scan');
 var checker = require('./icmp-scan');
-var radiosScan = require('./radios/radios_scan');
 var schedule = require("node-schedule");
 
 var times = [
@@ -11,15 +10,13 @@ var times = [
 
 var upAlive = "0 */5 * * * *";
 
-var upRadios = "0 * * * * *";
-
 function exe() {
     //scan
     times.forEach((time) => {
         schedule.scheduleJob(time, () => {
             console.log("Initiate Auto Scan".green)
             scan(() => {
-                console.log("Scan Done".green);
+                console.log("Scan IPAM Done".green);
             });
         });
     });
@@ -28,12 +25,6 @@ function exe() {
     schedule.scheduleJob(upAlive, () => {
         console.log("Initiate Checker".green)
         checker();
-    });
-
-    //checker
-    schedule.scheduleJob(upRadios, () => {
-        console.log("Initiate Radio Scanner".green)
-        //radiosScan();
     });
 }
 

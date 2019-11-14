@@ -36,7 +36,11 @@ function scanNet(subnet, done, step = ((data) => { })) {
 //scan using arp and nmap
 function fullScanNet(subnet, done) {
     //console.log(subnet);
-    opt.ip = ipList.normalizeIP4(subnet.data.ip);
+    if (subnet["data"]) {
+        opt.ip = ipList.normalizeIP4(subnet.data.ip);
+    } else {
+        opt.ip = ipList.normalizeIP4(subnet.ip);
+    }
     opt.netmask = subnet.netmask;
     console.log("Scanning: ".green + colors.gray(opt.ip));
     netList.NetScan(opt, (err, obj) => {

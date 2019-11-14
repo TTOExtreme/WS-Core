@@ -7,15 +7,16 @@ var ipnormalize = require('../../../utils/ipNetmask-List').normalizeip;
 const exe = (ip, alive, callback) => {
     ip = ipnormalize(ip);
     var sql = "";
-    sql = "UPDATE " + dbstruct.database + "._Hosts ";
+    sql = "UPDATE " + dbstruct.database + "._Radios ";
     sql += "SET `alive`= " + alive + " ";
     sql += " WHERE `ip`='" + ip + "';";
 
     //console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {
-
-        if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
-        callback({});
+        if (callback) {
+            if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
+            callback({});
+        }
     });
 };
 

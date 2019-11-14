@@ -1,26 +1,28 @@
 var fs = require('fs');
 var colors = require('colors');
 
-var upHost = require('../sql/update/AliveHost')
-var subnets = require('../sql/select/Alive-Hosts');
+var upHost = require('../sql/update/AliveRadio')
+var subnets = require('../sql/select/RadiosScanner');
 var ipnormalize = require('../../utils/ipNetmask-List');
 
-const exe = () => {
+const exe = (callback) => {
     subnets((data) => {
-        nextItem(data);
+        nextItem(data, callback);
     });
 };
 
-function nextItem(list) {
+function nextItem(list, callback) {
     if (list[0] != undefined) {
         var e = list.pop();
-        HostIsAlive(ipnormalize.normalizeIP4(e), (host) => {
-            upHost(e, 1);
-            nextItem(list);
+        HostIsAlive(ipnormalize.normalizeIP4(e.ip), (host) => {
+            upHost(e.ip, 1);
+            nextItem(list, callback);
         }, (host) => {
-            upHost(e, 0);
-            nextItem(list);
+            upHost(e.ip, 0);
+            nextItem(list, callback);
         });
+    } else {
+        callback();
     }
 }
 /*
@@ -46,7 +48,7 @@ var ping = require('net-ping');
 function HostIsAlive(host, alive, dead) {
     var options = {
         networkProtocol: ping.NetworkProtocol.IPv4,
-        packetSize: .1,
+        packetSize: 1,
         retries: 1,
         sessionId: (process.pid % 65535),
         timeout: 2000,
@@ -54,6 +56,7 @@ function HostIsAlive(host, alive, dead) {
     };
     var session = ping.createSession(options);
     session.pingHost(host, function (error, target) {
+        //console.log("Scanning Host: ".green + (host).white)
         if (error)
             if (error instanceof ping.RequestTimedOutError)
                 dead(host)

@@ -14,8 +14,10 @@ const exe = (ip, alive, callback) => {
     //console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {
 
-        if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
-        callback({});
+        if (callback) {
+            if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
+            callback({});
+        }
     });
 };
 
