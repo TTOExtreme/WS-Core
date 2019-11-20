@@ -5,17 +5,24 @@ const log = require('../rotine/sql/insert/log');
 
 const salt = "VFRPRXh0cmVtZS1MdWNhc1JhbWFsaG9D";
 
-var io;
+let io;
 
 const c = JSON.parse(fs.readFileSync(__dirname + "/../configs/server.json", 'utf8'));
 let asd = 0;
 function start(server) {
-    io = require('socket.io').listen(server);
+    server.socketIO = require('socket.io').listen(server);
     console.log("Socket Server Online ".green);
-    io.on('connection', function (socket) {
+
+    server.socketIO.of("/").on('connection', function (socket) {
+        //console.log("Connected to Root")
+        //socket.emit("hs", { status: "0" })
+    });
+    //*/
+
+    server.socketIO.of("/user").on("connection", function (socket) {
+        console.log("Connected to User")
         let usrData = "";
-        console.log('New Connection Arrives');
-        socket.emit("hs", { status: 0 });
+        socket.emit("hs", { status: "0" })
         socket.on('auth', function (data) {
             require('../rotine/check/checkUser')(data.user, data.pass, (usr) => {
                 if (usr != undefined) {
@@ -41,7 +48,8 @@ function start(server) {
             console.log('user disconnected');
             require('../rotine/sql/update/users/connected')(usrData.UUID, 0, (data) => { });
         });
-    });
+    })
+    //*/
 }
 
 function loadRoutes(socket, usrData) {
