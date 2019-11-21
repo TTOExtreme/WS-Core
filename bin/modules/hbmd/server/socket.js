@@ -20,8 +20,23 @@ function start(server) {
 
             })
             socket.on('data', function (data) {
-                console.log("data:");
-                console.log(data);
+                //console.log("data:");
+                //console.log(data);
+
+                data.hostname = ComputerInfo.hostname;
+
+                if (data.route == "CPU") {
+                    require('./rotine/sql/insert/cpu')(data);
+                }
+                if (data.route == "NIC") {
+                    require('./rotine/sql/insert/network')(data);
+                }
+                if (data.route == "System") {
+                    require('./rotine/sql/insert/system')(data);
+                }
+                if (data.route == "MEM") {
+                    require('./rotine/sql/insert/mem')(data);
+                }
             });
 
             socket.on('disconnect', function () {
