@@ -13,7 +13,7 @@ function start(server) {
             //console.log(socket)
             console.log("Connected to HBMD")
             socket.on("auth", function (data) {
-                if (data.hostname) {
+                if (data) {
                     ComputerInfo = data;
                 }
                 socket.emit("hs", { status: 0 });
@@ -24,6 +24,7 @@ function start(server) {
                 //console.log(data);
 
                 data.hostname = ComputerInfo.hostname;
+                data.mac = ComputerInfo.mac;
 
                 if (data.route == "CPU") {
                     require('./rotine/sql/insert/cpu')(data);

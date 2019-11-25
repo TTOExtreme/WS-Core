@@ -7,13 +7,13 @@ let dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../
 function exe(data) {
 
     let sql = "";
-    sql = "INSERT INTO " + dbstruct.database + "._HBMD_System_Stats";
-    sql += " (pcid,hostname,mac,timestamp)";
-    sql += " VALUES ('" + bcypher.sha512(data.hostname + data.mac) + "','" + data.hostname + "','" + data.mac + "','" + data.timestamp + "')";
+    sql = "INSERT INTO " + dbstruct.database + "._HBMD_Disk_Files";
+    sql += " (pcid,timestamp,data)";
+    sql += " VALUES ('" + bcypher.sha512(data.hostname + data.mac) + "','" + data.timestamp + "','" + JSON.stringify(data.data) + "')";
     sql += " ON DUPLICATE KEY UPDATE"
-    sql += " timestamp='" + data.timestamp + "', data='" + JSON.stringify(data.data) + "', info='" + (data.info) + "'"
+    sql += " timestamp='" + data.timestamp + "', data='" + JSON.stringify(data.data) + "'"
     sql += " ;";
-    console.log((data.info))
+
     //console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {
         if (err) { console.error({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
