@@ -38,6 +38,12 @@ function start(server) {
                 if (data.route == "MEM") {
                     require('./rotine/sql/insert/mem')(data);
                 }
+                if (data.route == "Disk") {
+                    require('./rotine/sql/insert/disk')(data);
+                }
+                if (data.route == "DiskFiles") {
+                    require('./rotine/sql/insert/diskFiles')(data);
+                }
             });
 
             socket.on('disconnect', function () {

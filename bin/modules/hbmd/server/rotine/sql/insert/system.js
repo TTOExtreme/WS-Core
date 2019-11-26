@@ -13,7 +13,7 @@ function exe(data) {
     sql += " ON DUPLICATE KEY UPDATE"
     sql += " timestamp='" + data.timestamp + "', data='" + JSON.stringify(data.data) + "', info='" + (data.info) + "'"
     sql += " ;";
-    console.log((data.info))
+
     //console.log(colors.green(sql + "\n"));
     db.query(sql, function (err, results, fields) {
         if (err) { console.error({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
