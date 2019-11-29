@@ -10,7 +10,7 @@ function exe(data) {
     var sql = "";
     sql = "INSERT INTO " + dbstruct.database + "._HBMD_Disk_Stats";
     sql += " (pcid,hostname,timestamp,data,info,min,max,med)";
-    sql += " VALUES ('" + data.hostname + "','" + data.timestamp + "','" + JSON.stringify(data.data) + "','" + JSON.stringify(data.info) + "','" + JSON.stringify(data.min) + "','" + JSON.stringify(data.max) + "','" + JSON.stringify(data.med) + "')";
+    sql += " VALUES ('" + bcypher.sha512(data.hostname + data.mac) + "','" + data.hostname + "','" + data.timestamp + "','" + JSON.stringify(data.data) + "','" + JSON.stringify(data.info) + "','" + JSON.stringify(data.min) + "','" + JSON.stringify(data.max) + "','" + JSON.stringify(data.med) + "')";
     sql += ";";
 
     //console.log(colors.green(sql + "\n"));
