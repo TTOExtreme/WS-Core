@@ -6,10 +6,8 @@
             "data": [
                 "30000,'tab/side/hbmd','Aba HBMD','Acesso a aba HBMD','acesso'",
                 "30001,'hbmd/get/top/menu','Listar Abas HBMD','Listar abas permitidas do menu HBMD','user'",
-                "30010,'hbmd/top/menu/cpu','Aba CPU','Acesso a aba CPU do HBMD','user'",
-                "30011,'hbmd/top/menu/mem','Aba Memoria','Acesso a aba Memoria do HBMD','user'",
-                "30012,'hbmd/top/menu/disk','Aba Disco','Acesso a aba Disco do HBMD','user'",
-                "30013,'hbmd/top/menu/network','Aba Rede','Acesso a aba Rede do HBMD','user'"
+                "30010,'hbmd/top/menu/host','Aba Host','Acesso a aba Host do HBMD','user'",
+                "30012,'hbmd/top/menu/disk','Aba Disco','Acesso a aba Disco do HBMD','user'"
             ]
         },
         {
@@ -20,8 +18,7 @@
                 " 30001,1,2,1,1,0",
                 " 30010,1,2,1,1,0",
                 " 30011,1,2,1,1,0",
-                " 30012,1,2,1,1,0",
-                " 30013,1,2,1,1,0"
+                " 30012,1,2,1,1,0"
             ]
         }
     ]

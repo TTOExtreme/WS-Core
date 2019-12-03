@@ -1,28 +1,43 @@
-var db = require('../../../../../../rotine/sql/connector');
-var fs = require('fs');
-var colors = require('colors');
-var dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../configs/dbstruct.json"), 'utf8'));
-var ipnormalize = require('../../../utils/ipNetmask-List').normalizeip;
+let db = require('../../../../../../rotine/sql/connector');
+let fs = require('fs');
+let colors = require('colors');
+let dbstruct = JSON.parse(fs.readFileSync(require("path").join(__dirname + "/../../../../../../configs/dbstruct.json"), 'utf8'));
+let ipnormalize = require('../../../utils/ipNetmask-List').normalizeip;
 
-const exe = (subnet, callback) => {
-    var snet = (subnet.data);
-    if (snet != undefined) {
-        snet.ip = ipnormalize(snet.ip);
-        var sql = "SELECT * FROM " + dbstruct.database + "._Hosts WHERE `subnet`='" + snet.ip + "' ORDER BY `ip`;";
-        db.query(sql, function (err, results, fields) {
+const exe = (callback) => {
+    let sql = "SELECT pcid,hostname,mac,timestamp FROM " + dbstruct.database + "._HBMD_System_Stats as SYS;";
 
-            if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
-            var data = [];
-            results.forEach(element => {
-                data.push(JSON.parse(JSON.stringify(element)));
-            });
-            snet.hosts = data;
-            callback(snet);
+    sql += ";";
+
+    db.query(sql, function (err, results, fields) {
+
+        if (err) { callback({ status: "ERROR", mess: "[ERROR] on  {" + __filename + "}:\n", sql: sql, stack: err }); return; }
+        let promisses = [];
+
+        results.forEach(element => {
+            let e = JSON.parse(JSON.stringify(element));
+            promisses.push(new Promise(function (resolve, reject) {
+                require("./Host_Last_Mem")(e.pcid, function (data) {
+                    e["Mem"] = data[0];
+                    require("./Host_Last_Network")(e.pcid, function (data) {
+                        e["Network"] = data[0];
+                        require("./Host_Last_CPU")(e.pcid, function (data) {
+                            e["CPU"] = data[0];
+                            require("./Host_Last_Disk")(e.pcid, function (data) {
+                                e["Disk"] = data[0];
+                                resolve(e);
+                            }, (err) => { reject(err) })
+                        }, (err) => { reject(err) })
+                    }, (err) => { reject(err) })
+                }, (err) => { reject(err) })
+            }))
         });
-    } else {
-        console.log("[ERROR] Subnet undefined.".red + "\n\tat: /bin/rotine/sql/select/HostsIn.js\n".white);
-        callback(snet);
-    }
+
+        Promise.all(promisses).then(function (values) {
+
+            callback(values);
+        }).catch(err => { console.log("[ERROR] on requesting for host data: "); console.log(err) })
+    });
 };
 
 module.exports = exe;

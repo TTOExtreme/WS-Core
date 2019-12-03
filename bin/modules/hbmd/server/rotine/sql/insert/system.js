@@ -11,7 +11,7 @@ function exe(data) {
     sql += " (pcid,hostname,mac,timestamp)";
     sql += " VALUES ('" + bcypher.sha512(data.hostname + data.mac) + "','" + data.hostname + "','" + data.mac + "','" + data.timestamp + "')";
     sql += " ON DUPLICATE KEY UPDATE"
-    sql += " timestamp='" + data.timestamp + "', data='" + JSON.stringify(data.data) + "', info='" + (data.info) + "'"
+    sql += " timestamp='" + data.timestamp + "', mac='" + data.mac + "', data='" + JSON.stringify(data.data) + "', info='" + (data.info) + "'"
     sql += " ;";
 
     //console.log(colors.green(sql + "\n"));

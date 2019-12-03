@@ -11,6 +11,8 @@ function exe(data) {
     sql = "INSERT INTO " + dbstruct.database + "._HBMD_Disk_Stats";
     sql += " (pcid,hostname,timestamp,data,info)";
     sql += " VALUES ('" + bcypher.sha512(data.hostname + data.mac) + "','" + data.hostname + "','" + data.timestamp + "','" + JSON.stringify(data.data) + "','" + JSON.stringify(data.info) + "')";
+    sql += " ON DUPLICATE KEY UPDATE"
+    sql += " timestamp='" + data.timestamp + "', data='" + JSON.stringify(data.data) + "', info='" + (data.info) + "'"
     sql += ";";
 
     //console.log(colors.green(sql + "\n"));
