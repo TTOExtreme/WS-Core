@@ -12,7 +12,7 @@ let locationSocket = window.location.host;
 function initSocket() {
     connected = false;
     logged = false;
-    socket = io.connect(locationSocket, { reconnection: false, transports: ['websocket'] }); //use the next port to communicate
+    socket = io.connect(locationSocket + "/user", { reconnection: false, transports: ['websocket'] }); //use the next port to communicate
 
     //let locationSocket = document.location.hostname + ":" + (parseInt(document.location.port));
     socket.on('connect', function () {

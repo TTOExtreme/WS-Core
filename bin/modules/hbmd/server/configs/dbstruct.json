@@ -1,204 +1,199 @@
 [
     {
-        "table": "_Hosts",
+        "table": "_HBMD_System_Stats",
         "colunas": [
             {
-                "name": "name",
-                "struct": "VARCHAR(200)"
-            },
-            {
-                "name": "subnet",
-                "struct": "VARCHAR(20)"
-            },
-            {
-                "name": "ip",
-                "struct": "VARCHAR(20) KEY"
-            },
-            {
-                "name": "ports",
-                "struct": "MEDIUMTEXT"
+                "name": "pcid",
+                "struct": "VARCHAR(128) PRIMARY KEY"
             },
             {
                 "name": "hostname",
-                "struct": "VARCHAR(200)"
+                "struct": "VARCHAR(100)"
             },
             {
                 "name": "mac",
-                "struct": "VARCHAR(40)"
-            },
-            {
-                "name": "vendor",
-                "struct": "VARCHAR(200)"
-            },
-            {
-                "name": "hostnameErr",
-                "struct": "VARCHAR(400)"
-            },
-            {
-                "name": "macErr",
-                "struct": "VARCHAR(400)"
-            },
-            {
-                "name": "vendorErr",
-                "struct": "VARCHAR(400)"
-            },
-            {
-                "name": "addedIn",
-                "struct": "BIGINT(64)"
-            },
-            {
-                "name": "alive",
-                "struct": "INT(1) DEFAULT 0"
-            },
-            {
-                "name": "seted",
-                "struct": "INT(1) DEFAULT 0"
-            }
-        ]
-    },
-    {
-        "table": "_Subnets",
-        "colunas": [
-            {
-                "name": "name",
-                "struct": "VARCHAR(200)"
-            },
-            {
-                "name": "ip",
-                "struct": "VARCHAR(20) KEY"
-            },
-            {
-                "name": "gtw",
-                "struct": "VARCHAR(20)"
-            },
-            {
-                "name": "netmask",
-                "struct": "INT(10) DEFAULT 24"
-            },
-            {
-                "name": "autoscan",
-                "struct": "INT(1) DEFAULT 0"
-            }
-        ]
-    },
-    {
-        "table": "_Radios",
-        "colunas": [
-            {
-                "name": "name",
-                "struct": "VARCHAR(200)"
-            },
-            {
-                "name": "ip",
-                "struct": "VARCHAR(20) KEY"
-            },
-            {
-                "name": "community",
                 "struct": "VARCHAR(60)"
             },
             {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "LONGTEXT"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_CPU_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
+            },
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
+            },
+            {
                 "name": "hostname",
+                "struct": "VARCHAR(100)"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "med",
                 "struct": "VARCHAR(200)"
             },
             {
-                "name": "mac",
-                "struct": "VARCHAR(40)"
-            },
-            {
-                "name": "vendor",
+                "name": "max",
                 "struct": "VARCHAR(200)"
             },
             {
-                "name": "hostnameErr",
-                "struct": "VARCHAR(400)"
+                "name": "min",
+                "struct": "VARCHAR(200)"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_Network_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
             },
             {
-                "name": "macErr",
-                "struct": "VARCHAR(400)"
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
             },
             {
-                "name": "vendorErr",
-                "struct": "VARCHAR(400)"
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
             },
             {
-                "name": "addedIn",
-                "struct": "BIGINT(64)"
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
             },
             {
-                "name": "alive",
-                "struct": "INT(1) DEFAULT 0"
+                "name": "data",
+                "struct": "MEDIUMTEXT"
             },
             {
-                "name": "seted",
-                "struct": "INT(1) DEFAULT 1"
+                "name": "info",
+                "struct": "MEDIUMTEXT"
             },
             {
-                "name": "autoscan",
-                "struct": "INT(1) DEFAULT 0"
+                "name": "med",
+                "struct": "VARCHAR(200)"
             },
             {
-                "name": "SSID",
-                "struct": "VARCHAR (300)"
+                "name": "max",
+                "struct": "VARCHAR(200)"
             },
             {
-                "name": "Pass",
-                "struct": "VARCHAR (300)"
+                "name": "min",
+                "struct": "VARCHAR(200)"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_MEM_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
             },
             {
-                "name": "RadioMode",
-                "struct": "INT (10)"
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
             },
             {
-                "name": "ChannelFreq",
-                "struct": "INT (10)"
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
             },
             {
-                "name": "dbmPower",
-                "struct": "INT (10)"
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
             },
             {
-                "name": "RadioSignal",
-                "struct": "INT (10)"
+                "name": "data",
+                "struct": "MEDIUMTEXT"
             },
             {
-                "name": "RSSI",
-                "struct": "INT (10)"
+                "name": "info",
+                "struct": "MEDIUMTEXT"
             },
             {
-                "name": "CCQ",
-                "struct": "INT (10)"
+                "name": "med",
+                "struct": "VARCHAR(200)"
             },
             {
-                "name": "Noise",
-                "struct": "INT (10)"
+                "name": "max",
+                "struct": "VARCHAR(200)"
             },
             {
-                "name": "TXrate",
-                "struct": "INT (10)"
+                "name": "min",
+                "struct": "VARCHAR(200)"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_Disk_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
             },
             {
-                "name": "RXrate",
-                "struct": "INT (10)"
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
             },
             {
-                "name": "Encrypt",
-                "struct": "VARCHAR (60)"
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
             },
             {
-                "name": "ChannelWidth",
-                "struct": "INT (10)"
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
             },
             {
-                "name": "AirmaxState",
-                "struct": "INT (10)"
+                "name": "data",
+                "struct": "MEDIUMTEXT"
             },
             {
-                "name": "AirmaxQuality",
-                "struct": "INT (10)"
+                "name": "info",
+                "struct": "MEDIUMTEXT"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_Disk_Files",
+        "colunas": [
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128) PRIMARY KEY"
             },
             {
-                "name": "AirmaxCapacity",
-                "struct": "INT (10)"
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "LONGTEXT"
             }
         ]
     }

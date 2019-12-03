@@ -13,7 +13,7 @@ const createServer = (_wid, webport) => {
     wid = _wid;
     server.listen(webport || 8000);
 
-    console.log(("Server Started on: " + webport || 8000).green);
+    console.log(("Server Started on: ").green + colors.gray(webport || 8000));
 
     console.log("up Main Web".green);
     /*
@@ -32,6 +32,7 @@ const createServer = (_wid, webport) => {
         app.use('/module/' + mod, express.static(path.join(__dirname + '/../modules/' + mod + "/web/")));
     })
 
+
     require('./socket').start(server);
     console.log("up Socket Web".green);
 
@@ -43,8 +44,13 @@ const createServer = (_wid, webport) => {
                 require(bgPath).init();
             }
         })
-        //require('../core/autoscan');
-        //console.log("up AutoScan".green);
+        fs.readdirSync(path.join(__dirname + '/../modules/')).forEach(mod => {
+            let bgPath = path.join(__dirname + '/../modules/' + mod + "/server/socket.js");
+            if (fs.existsSync(bgPath)) {
+                console.log("Loading Module Service in Background: ".green + (mod).gray);
+                require(bgPath).start(server);
+            }
+        })
     }
 }
 

@@ -115,3 +115,32 @@
     background-color: #10ff1070;
     border: 1px solid #919191;
 }
+.host_data_holder{
+    box-sizing: border-box;
+    padding: 0px;
+    border: none;
+    background: rgb(221, 221, 221);
+    display: block;
+    border: 1px solid #f1f1f1;
+}
+.host_data_table{
+    color: #303030;
+    border-collapse: collapse;
+    width: 100%;
+}
+.host_data_table th{
+    background: #233167;
+    color: #d8d8d8;
+    width: calc(25% - 3px);
+    max-width: calc(25% - 3px);
+}
+.host_data_table td{
+    background: #555c77;
+    color: #fff;
+    width: calc(25% - 3px);
+    max-width: calc(25% - 3px);
+    overflow: hidden;
+}
+.host_data_table_right{
+    border-right: 1px solid #ffffff;
+}
