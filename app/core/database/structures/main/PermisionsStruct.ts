@@ -1,0 +1,18 @@
+class PermissionsStruct {
+    id: number;
+    name: string;
+    description: string;
+    code: string;
+    type: string;
+}
+
+const _DB = {
+    id: "INT",
+    name: "VARCHAR(200)",
+    description: "VARCHAR(200)",
+    code: "VARCHAR(200)",
+    type: "VARCHAR(200)"
+}
+
+
+export { PermissionsStruct, _DB }

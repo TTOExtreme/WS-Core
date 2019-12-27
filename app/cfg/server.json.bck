@@ -1,0 +1,10 @@
+{
+    "webPort": 8080,
+    "webpageFolder":"/opt/WS-Core/web/",
+    "DB": {
+        "host": "localhost",
+        "user": "WSCore",
+        "password": "TTO@WS2019",
+        "database_name": "WS_1_3_1"
+    }
+}

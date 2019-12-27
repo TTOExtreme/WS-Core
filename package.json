@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "colors": "^1.3.3",
+    "cookie": "^0.4.0",
     "crypto-js": "^3.1.9-1",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
@@ -26,10 +28,12 @@
     "path": "^0.12.7",
     "ping": "^0.2.2",
     "randomstring": "^1.1.5",
+    "raw-socket": "^1.7.0",
     "readline": "^1.3.0",
     "socket.io": "^2.3.0",
     "tsc": "^1.20150623.0",
     "tsc-watch": "^4.0.0",
+    "typeorm": "^0.2.21",
     "typescript": "^3.7.3",
     "unirest": "^0.6.0"
   },
@@ -40,7 +44,8 @@
     "install": "",
     "debug": "node --inspect-brk=9229 server.js",
     "start": "node server.js",
-    "ts": "tsc-watch --onsuccess \"node output-ts/server.js\""
+    "ts": "tsc-watch --onsuccess \"node output-ts/server.js\"",
+    "tsInstall": "tsc-watch --onsuccess \"node output-ts/install.js\""
   },
   "author": "",
   "license": "ISC"

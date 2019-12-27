@@ -1,0 +1,13 @@
+
+const _DB = {
+    id_Group_Father: "INT",
+    id_Group_Child: "INT",
+    createdIn: "BIGINT",
+    createdBy: "INT",
+    deactivatedIn: "BIGINT",
+    deactivatedBy: "INT",
+    active: "INT(1)",
+}
+
+
+export { _DB }
