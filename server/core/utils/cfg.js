@@ -1,33 +1,22 @@
 
-import { WSMainServer, WSConfig } from '../main';
-import { WSLog } from './log';
-import * as fs from 'fs';
-import { join } from 'path';
-import * as readline from 'readline';
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+const WSConfigStruct = require('./cfgStruct').WSConfigStruct;
 
 class WSCfg {
 
-    private log: WSLog;
-    private configFolder = join(__dirname + "/../../cfg");
-    private configFile = join(this.configFolder + "/server.json");
+    log;
+    configFolder = path.join("./../../cfg");
+    configFile = path.join(this.configFolder + "/server.json");
 
-    config: WSConfig = {
-        webPort: 8080,
-        webpageFolder: "/opt/WS-Core/web",
-        version: "1.3.1",
-        DB: {
-            host: "localhost",
-            user: "WSCore",
-            password: "TTO@ws2019",
-            database_name: "WS_Core"
-        }
-    };
+    config = new WSConfigStruct();
 
-    constructor(WSMainServer: WSMainServer) {
-        this.log = WSMainServer.log;
+    constructor(WSMain) {
+        this.log = WSMain.log;
     }
 
-    public LoadConfig() {
+    LoadConfig() {
         this.log.info("Loading config ")
         if (!fs.existsSync(this.configFile)) {
             this.SaveConfig();
@@ -43,7 +32,7 @@ class WSCfg {
         return this.config;
     }
 
-    public SaveConfig() {
+    SaveConfig() {
         this.log.warning("Config not Found on folder: " + this.configFile);
         this.log.warning("Creating new One");
 
@@ -80,7 +69,7 @@ class WSCfg {
         });
     }
 
-    private checkConfigFileStruct(config) {
+    checkConfigFileStruct(config) {
         let retrieved = Object.keys(config);
         Object.keys(this.config).forEach(item => {
             retrieved.forEach(item2 => {
@@ -93,4 +82,4 @@ class WSCfg {
 
 }
 
-export { WSCfg };
+module.exports = { WSCfg }

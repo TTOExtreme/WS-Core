@@ -1,18 +1,18 @@
 class UserStruct {
-    id: number;
-    name: string;
-    username: string;
-    password: string;
-    uuid: string;
-    createdIn: number;
-    createdBy: number;
-    deactivatedIn: number;
-    deactivatedBy: number;
-    active: boolean;
-    connected: boolean;
-    lastConnection: number;
-    lastTry: number;
-    lastIp: string;
+    id;
+    name;
+    username;
+    password;
+    uuid;
+    createdIn;
+    createdBy;
+    deactivatedIn;
+    deactivatedBy;
+    active;
+    connected;
+    lastConnection;
+    lastTry;
+    lastIp;
 }
 
 const _DB = {
@@ -34,4 +34,4 @@ const _DB = {
 }
 
 
-export { UserStruct, _DB }
+module.exports = { UserStruct, _DB }

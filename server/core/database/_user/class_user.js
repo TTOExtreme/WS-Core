@@ -1,24 +1,24 @@
-import { UserStruct } from '../structures/main/UserStruct';
-import { WSMainServer } from '../../main';
-import { DBConnector } from '../connector';
-import { WSLog } from '../../utils/log';
+import { UserStruct } from '../structures/main/UserStruct.js';
+import { WSMainServer } from '../../main.js';
+import { DBConnector } from '../connector.js';
+import { WSLog } from '../../utils/log.js';
 
-class User {
+export class User {
 
-    private db: DBConnector;
-    private log: WSLog;
-    User(WSMain: WSMainServer) {
+    db = new DBConnector();
+    log = new WSLog;
+    User(WSMain = new WSMainServer) {
         this.db = WSMain.db;
         this.log = WSMain.log;
     }
 
-    public myself: UserStruct;
+    myself = new UserStruct;
 
 
     /**
      * Method to find myself in database
      */
-    public findme(username: string, pass: string) {
+    findme(username, pass) {
         if (this.log.logLevel == 3) this.log.info("Searching user: <" + username + "> in database.");
 
         if (this.log.logLevel == 3) this.log.warning("Not Found user: <" + username + "> in database.");
@@ -29,7 +29,7 @@ class User {
     /**
      * Method to change my password
      */
-    public changePass(oldPass: string, newPass: string) {
+    changePass(oldPass, newPass) {
         // TODO
 
     }
@@ -38,7 +38,7 @@ class User {
     /**
      * Method to find myself in database
      */
-    public changeName(oldPass: string, newPass: string) {
+    changeName(oldPass, newPass) {
         // TODO
     }
 }

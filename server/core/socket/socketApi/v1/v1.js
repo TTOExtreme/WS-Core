@@ -1,9 +1,9 @@
 
-import * as SocketIO from 'socket.io';
-import * as CookieIO from 'cookie';
+const SocketIO = require('socket.io');
+const CookieIO = require('cookie');
 
-function socket(io: SocketIO.io) {
-    io.on("connect", (socket: any) => {
+function socket(io) {
+    io.on("connect", (socket) => {
 
         //try to authenticate user else redirect to login page
         try {
@@ -29,4 +29,4 @@ function socket(io: SocketIO.io) {
     })
 }
 
-export { socket };
+module.exports = { socket }

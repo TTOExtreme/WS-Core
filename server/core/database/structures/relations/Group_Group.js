@@ -9,5 +9,4 @@ const _DB = {
     active: "INT(1)",
 }
 
-
-export { _DB }
+module.exports = { _DB }

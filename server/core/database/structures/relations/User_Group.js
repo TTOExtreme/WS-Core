@@ -1,7 +1,7 @@
 
 const _DB = {
     id_User: "INT",
-    id_Permission: "INT",
+    id_Group: "INT",
     createdIn: "BIGINT",
     createdBy: "INT",
     deactivatedIn: "BIGINT",
@@ -9,5 +9,4 @@ const _DB = {
     active: "INT(1)",
 }
 
-
-export { _DB }
+module.exports = { _DB }

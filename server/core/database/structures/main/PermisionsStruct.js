@@ -1,9 +1,9 @@
 class PermissionsStruct {
-    id: number;
-    name: string;
-    description: string;
-    code: string;
-    type: string;
+    id;
+    name;
+    description;
+    code;
+    type;
 }
 
 const _DB = {
@@ -14,5 +14,4 @@ const _DB = {
     type: "VARCHAR(200)"
 }
 
-
-export { PermissionsStruct, _DB }
+module.exports = { PermissionsStruct, _DB }

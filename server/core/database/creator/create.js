@@ -1,24 +1,21 @@
-import { WSMainServerInstaller } from '../../installer';
-import { DBConnector } from '../connector';
-import { WSLog } from '../../utils/log';
-import * as fs from 'fs';
+const fs = require('fs');
 
 class DatabaseCreator {
 
-    private version: string;
-    private db: DBConnector;
-    private log: WSLog;
+    _version;
+    _db;
+    _log;
 
-    private databasename: string;
+    _databasename;
 
-    constructor(WSMain: WSMainServerInstaller) {
+    constructor(WSMain) {
         this.version = WSMain.config.version;
         this.db = WSMain.db;
         this.log = WSMain.log;
         this.log.info((this.version).replace(".", "_").replace(".", "_").replace(".", "_"))
     }
 
-    public creatDatabase() {
+    creatDatabase() {
         this.databasename = "WS_CORE_" + this.version.replace(".", "_").replace(".", "_").replace(".", "_");
         this.db.query("DROP DATABASE IF EXISTS " + this.databasename + ";")
             .then(() => {
@@ -29,14 +26,14 @@ class DatabaseCreator {
                     })
             }).then(() => {
                 this.log.warning("Created Database.")
-                this.CreateTables();
+                this._CreateTables();
             }).catch((err) => {
                 this.log.error("Error on creating Database: \n" + (err).toString())
             })
 
     }
 
-    private CreateTables() {
+    _CreateTables() {
         let structs = fs.readdirSync(__dirname + '/../structures/main/')
         structs.forEach((table) => {
             let tablename = "_" + table.replace(".ts", "").replace(".js", "").replace("Struct", "");
@@ -61,10 +58,10 @@ class DatabaseCreator {
                 this.log.error("Structure Undefined for: " + table);
             }
         })
-        this.CreateRlationsTables();
+        this._CreateRelationsTables();
     }
 
-    private CreateRlationsTables() {
+    _CreateRelationsTables() {
         let structs = fs.readdirSync(__dirname + '/../structures/relations/')
         structs.forEach((table) => {
             let tablename = "rlt_" + table.replace(".ts", "").replace(".js", "").replace("Struct", "");
@@ -92,7 +89,7 @@ class DatabaseCreator {
         })
     }
 
-    private PopulateDatabase() {
+    _PopulateDatabase() {
         let datas = fs.readdirSync(__dirname + '/../structures/data/')
         datas.forEach((table) => {
             let tablename = "" + table.replace(".ts", "").replace(".js", "").replace("Struct", "");
@@ -121,5 +118,4 @@ class DatabaseCreator {
     }
 
 }
-
-export { DatabaseCreator };
+module.exports = { DatabaseCreator }

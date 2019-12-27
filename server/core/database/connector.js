@@ -1,27 +1,25 @@
-import { createConnection, QueryError, RowDataPacket, mysql } from 'mysql';
-import { WSMainServer } from '../main';
-import { WSLog } from '../utils/log';
+const mysql = require('mysql');
 
 class DBConnector {
 
-    private db: mysql;
-    private connected: boolean = false;
-    private log: WSLog;
+    db;
+    connected = false;
+    log;
 
     /**
      * connect: connect to the database
      */
-    public connect(WSMain: WSMainServer) {
-        this.db = createConnection(WSMain.config.DB);
+    connect(WSMain) {
+        this.db = mysql.createConnection(WSMain.config.DB);
         this.log = WSMain.log;
     }
 
     /**
      * query: Execute sql statements and return results
      */
-    public query(sql: string) {
+    query(sql) {
         return new Promise((resolve, reject) => {
-            this.db.query(sql, (err: QueryError, rows: RowDataPacket[]) => {
+            this.db.query(sql, (err, rows) => {
                 if (err) {
                     this.log.error("SQL ERROR:" + "\n\t" +
                         "ERR CODE: " + err.code + "\n\t" +
@@ -45,4 +43,4 @@ class DBConnector {
 
 }
 
-export { DBConnector }
+module.exports = { DBConnector }

@@ -1,64 +1,54 @@
-/**
- * webserver class 
- * handler for the pages and socket
- */
 
-import { WSMainServer, WSConfig } from './main';
-import { WSLog } from './utils/log';
-import * as fs from 'fs';
-import { join } from 'path';
+const http = require('http');
+const Express = require('express');
+const SocketIO = require('socket.io');
 
-import { createServer, Server } from 'http';
-import * as Express from 'express';
-import { Request, Response, Router } from 'express';
-import * as SocketIO from 'socket.io';
+const bodyParser = require('body-parser');
 
-import * as bodyParser from 'body-parser';
-
-import * as SocketHandler from './socketApi/handler';
+const SocketHandler = require('./socketApi/handler.js');
 
 
 class WServer {
 
-    private log: WSLog;
-    private config: WSConfig;
+    _log;
+    _config;
 
-    constructor(WSMainServer: WSMainServer) {
+    constructor(WSMainServer = new WSMainServer) {
         this.log = WSMainServer.log;
         this.config = WSMainServer.config;
     }
 
-    private app: Express.Application;
-    private server: Server;
-    private io: SocketIO.Server;
+    _app;
+    _server;
+    _io;
 
     /**
      * init
      */
-    public init() {
+    init() {
         this.app = Express();
 
-        this.server = createServer(this.app);
+        this.server = http.createServer(this.app);
         this.io = SocketIO(this.server);
 
         this.server.listen(this.config.webPort, () => {
             this.log.info('Running server on port: ' + this.config.webPort);
         });
 
-        this.webhost();
-        this.socketHandler();
+        this._webhost();
+        this._socketHandler();
     }
 
 
     /**
      * handler for the webfiles 
      */
-    private webhost() {
+    _webhost() {
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.get("/login", (req, res) => {
             res.sendFile('./login.html', { root: this.config.webpageFolder });
         })
-        this.app.post("/login/request", (req: Request, res: Response) => {
+        this.app.post("/login/request", (req, res) => {
 
             //authenticate and redirect
             /**
@@ -68,7 +58,7 @@ class WServer {
             res.redirect(302, "../")
         })
         this.app.get("/", (req, res) => {
-            let cookies = this.parseCookies(req);
+            let cookies = this._parseCookies(req);
             if ((cookies["wscore"])) {//check if cookie is present and redirect if is not
                 res.sendFile('./home.html', { root: this.config.webpageFolder });
             } else {
@@ -83,7 +73,7 @@ class WServer {
      * @param request Request from client
      * @description Return client cookies from request
      */
-    private parseCookies(request) {
+    _parseCookies(request) {
         let list = {},
             rc = request.headers.cookie;
         rc && rc.split(';').forEach(function (cookie) {
@@ -98,11 +88,10 @@ class WServer {
     /**
      * handler for auth and parser to events
      */
-    private socketHandler() {
-        SocketHandler.socketHandler(this.io)
+    _socketHandler() {
+        //SocketHandler.socketHandler(this.io)
     }
 
 }
 
-
-export { WServer };
+module.exports = { WServer }

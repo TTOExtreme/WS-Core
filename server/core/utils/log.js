@@ -2,16 +2,16 @@
  * log handler as console handler
  */
 
-import { appendFile, existsSync, mkdirSync, writeFileSync, appendFileSync } from 'fs';
-import { join } from 'path';
-import * as colors from 'colors';
+const fs = require('fs');
+const path = require('path');
+const colors = require('colors');
 
 class WSLog {
 
-    private logFolder: string = join(__dirname + "/../../../logs");
-    private InfoFile = join(this.logFolder + "/" + "log-" + Date.now() + ".log");
-    private logOnConsole = false;
-    public logLevel = 3;
+    logFolder = path.join("./../../../logs");
+    InfoFile = path.join(this.logFolder + "/" + "log-" + Date.now() + ".log");
+    logOnConsole = false;
+    logLevel = 3;
     //-1 - no log
     // 0 - only Errors
     // 1 - Errors and Warnings
@@ -19,7 +19,7 @@ class WSLog {
     // 3 - Verbose log
 
 
-    constructor(logOnConsole: boolean, logLevel: number) {
+    constructor(logOnConsole = false, logLevel = -1) {
         this.logOnConsole = logOnConsole;
         this.logLevel = logLevel;
     }
@@ -27,23 +27,23 @@ class WSLog {
     /**
      * init
      */
-    public setLogOnConsole(logOnConsole: boolean) {
+    setLogOnConsole(logOnConsole) {
         this.logOnConsole = logOnConsole;
         this.info("Change log on console to: " + this.logOnConsole);
     }
-    public getLogOnConsole() {
+    getLogOnConsole() {
         return this.logOnConsole;
     }
 
     /**
      * info writer
      */
-    public info(msg: string) {
+    info(msg) {
         if (this.logLevel >= 2) {
             if (this.logOnConsole) {
                 console.log(colors.gray("[" + Date.now() + "]") + colors.green("[INFO]") + colors.white(":\t" + msg));
             } else {
-                this.checkFile(this.InfoFile);
+                this._checkFile(this.InfoFile);
                 appendFileSync(this.InfoFile, "\n[" + Date.now() + "][INFO]:\t" + msg);
             }
         }
@@ -52,12 +52,12 @@ class WSLog {
     /**
      * warning writer
      */
-    public warning(msg: string) {
+    warning(msg) {
         if (this.logLevel >= 1) {
             if (this.logOnConsole) {
                 console.log(colors.gray("[" + Date.now() + "]") + colors.yellow("[WARN]") + colors.white(":\t" + msg));
             } else {
-                this.checkFile(this.InfoFile);
+                this._checkFile(this.InfoFile);
                 appendFileSync(this.InfoFile, "\n[" + Date.now() + "][WARN]:\t" + msg);
             }
         }
@@ -66,18 +66,18 @@ class WSLog {
     /**
      * ERROR writer
      */
-    public error(msg: string) {
+    error(msg) {
         if (this.logLevel >= 0) {
             if (this.logOnConsole) {
                 console.log(colors.gray("[" + Date.now() + "]") + colors.red("[ERROR]") + colors.white(":\t" + msg));
             } else {
-                this.checkFile(this.InfoFile);
+                this._checkFile(this.InfoFile);
                 appendFileSync(this.InfoFile, "\n[" + Date.now() + "][ERROR]:\t" + msg);
             }
         }
     }
 
-    private checkFile(filePath: string) {
+    _checkFile(filePath) {
         if (!existsSync(this.logFolder)) {
             mkdirSync(this.logFolder);
         }
@@ -86,4 +86,4 @@ class WSLog {
     }
 }
 
-export { WSLog };
+module.exports = { WSLog }
