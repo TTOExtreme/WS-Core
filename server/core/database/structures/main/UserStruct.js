@@ -1,3 +1,22 @@
+/**
+ * @class
+ * @alias UserStruct
+ * @property {number} id
+ * @property {string} name
+ * @property {string} username
+ * @property {string} password
+ * @property {string} uuid
+ * @property {timestamp} createdIn
+ * @property {number} createdBy
+ * @property {timestamp} deactivatedIn
+ * @property {number} deactivatedBy
+ * @property {boolean} active
+ * @property {boolean} connected
+ * @property {timestamp} lastConnection
+ * @property {timestamp} lastTry
+ * @property {string} lastIp
+ */
+
 class UserStruct {
     id;
     name;
