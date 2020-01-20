@@ -3,6 +3,7 @@
  */
 const UserStruct = require('../structures/main/UserStruct').UserStruct;
 const WSMainServer = require('../../../main');
+const Bcypher = require("../../utils/bcypher").Bcypher;
 
 /**
  * @class User
@@ -15,6 +16,8 @@ class User {
     User(WSMain) {
         this.db = WSMain.db;
         this.log = WSMain.log;
+        this.cfg = WSMain.cfg;
+        this.bcypher = new Bcypher();
     }
 
     myself = new UserStruct();
@@ -25,13 +28,23 @@ class User {
      * @param {string} pass 
      */
     findme(username, pass) {
-        if (this.log.logLevel == 3) this.log.info("Searching user: <" + username + "> in database.");
+        this.log.info("Searching user: <" + username + "> in database.");
+        this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE 'username'='" + username + ";").then((result) => {
 
-        //this.db.query()
+            return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE 'username'='" + username + "' AND 'password'='" + this.bcypher.crypt(key, pass) + "'")
+                .catch((err) => {
+                    this.log.warning("Wrong Password: <" + username + ">.");
+                })
 
-        if (this.log.logLevel == 3) this.log.warning("Not Found user: <" + username + "> in database.");
+        }).catch((err) => {
+            this.log.warning("Not Found user: <" + username + "> in database.");
 
-        if (this.log.logLevel == 3) this.log.info("Found user: <" + username + "> in database.");
+        }).then((result) => {
+            this.log.info("Found user: <" + username + "> in database.");
+            this.log.info(result)
+        })
+
+
     }
 
     /**
@@ -42,7 +55,7 @@ class User {
     changePass(oldPass, newPass) {
         // TODO
 
-        if (this.log.logLevel == 3) this.log.info("User change Password User: <" + username + ">.");
+        this.log.info("User change Password User: <" + username + ">.");
     }
 
     /**
@@ -57,7 +70,7 @@ class User {
      * Function to load preferences from database
      * @param {JSON} preferences 
      */
-    loadPreferences(preferences) {
+    loadPreferences() {
 
     }
 

@@ -2,9 +2,12 @@ const mysql = require('mysql');
 
 class DBConnector {
 
+    /**@const {mysql} db */
     db;
-    connected = false;
+    /**@const {WSLog} log */
     log;
+    /** @const {String} DatabaseName Nome da Database  */
+    DatabaseName;
 
     /**
      * connect: connect to the database
@@ -12,6 +15,7 @@ class DBConnector {
     connect(WSMain) {
         this.db = mysql.createConnection(WSMain.config.DB);
         this.log = WSMain.log;
+        this.DatabaseName = "WS_CORE_" + WSMain.config.version.replace(".", "_").replace(".", "_").replace(".", "_");
     }
 
     /**

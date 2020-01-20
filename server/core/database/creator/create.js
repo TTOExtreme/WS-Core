@@ -36,7 +36,7 @@ class DatabaseCreator {
     _CreateTables() {
         let structs = fs.readdirSync(__dirname + '/../structures/main/')
         structs.forEach((table) => {
-            let tablename = "_" + table.replace(".ts", "").replace(".js", "").replace("Struct", "");
+            let tablename = "_" + table.replace(".js", "").replace("Struct", "");
             let sql = "CREATE TABLE IF NOT EXISTS " + this.databasename + "." + tablename + " (";
 
             this.log.info("Reading Structure From : " + table);
@@ -64,7 +64,7 @@ class DatabaseCreator {
     _CreateRelationsTables() {
         let structs = fs.readdirSync(__dirname + '/../structures/relations/')
         structs.forEach((table) => {
-            let tablename = "rlt_" + table.replace(".ts", "").replace(".js", "").replace("Struct", "");
+            let tablename = "rlt_" + table.replace(".js", "").replace("Struct", "");
             let sql = "CREATE TABLE IF NOT EXISTS " + this.databasename + "." + tablename + " (";
 
             this.log.info("Reading Structure From : " + table);
@@ -92,7 +92,7 @@ class DatabaseCreator {
     _PopulateDatabase() {
         let datas = fs.readdirSync(__dirname + '/../structures/data/')
         datas.forEach((table) => {
-            let tablename = "" + table.replace(".ts", "").replace(".js", "").replace("Struct", "");
+            let tablename = "" + table.replace(".js", "").replace("Struct", "");
             let sql = "CREATE TABLE IF NOT EXISTS " + this.databasename + "." + tablename + " (";
 
             this.log.info("Reading Structure From : " + table);

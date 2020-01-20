@@ -22,6 +22,7 @@ class UserStruct {
     name;
     username;
     password;
+    salt;
     uuid;
     createdIn;
     createdBy;
@@ -39,6 +40,7 @@ const _DB = {
     name: "VARCHAR(200)",
     username: "VARCHAR(200)",
     password: "VARCHAR(4096)",
+    salt: "VARCHAR(4096)",
     uuid: "VARCHAR(4096)",
     preferences: "MEDIUMTEXT",
     createdIn: "BIGINT",
