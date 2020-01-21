@@ -1,5 +1,6 @@
 
 const _DB = {
+    id: "INT PRIMARY KEY AUTO_INCREMENT",
     id_User: "INT",
     id_Permission: "INT",
     createdIn: "BIGINT",

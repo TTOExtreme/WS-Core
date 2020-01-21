@@ -13,9 +13,10 @@ class WServer {
     _log;
     _config;
 
-    constructor(WSMainServer = new WSMainServer) {
+    constructor(WSMainServer) {
         this.log = WSMainServer.log;
         this.config = WSMainServer.config;
+        this.User = new (require("../database/_user/class_user")).User(WSMainServer);
     }
 
     _app;
@@ -45,17 +46,33 @@ class WServer {
      */
     _webhost() {
         this.app.use(bodyParser.urlencoded({ extended: false }));
+        this.app.use(bodyParser.json());
         this.app.get("/login", (req, res) => {
             res.sendFile('./login.html', { root: this.config.webpageFolder });
         })
         this.app.post("/login/request", (req, res) => {
 
             //authenticate and redirect
-            /**
-             * TODO: Create Database and store User UUID for Each Session
-             */
-            res.cookie('wscore', "UUID", { expire: Date.now() + (24 * 60 * 60 * 1000) })
-            res.redirect(302, "../")
+            this.log.info(JSON.stringify(req.body))
+
+            if (req.body.username && req.body.password) {
+                this.User.findme(req.body.username, req.body.password).then((user) => {
+                    res.cookie('wscore', user.uuid, { expire: Date.now() + (24 * 60 * 60 * 1000) }) //create 24H Cookie
+                    res.redirect(302, "../")
+                }).catch(() => {
+                    this.log.warning("Usuário ou Senha Invalido")
+                    res.status(401).send("Erro Usuario ou Senha Invalido")
+                })
+            } else if (req.body.uuid) {
+                this.User.findmeuuid(req.body.uuid).then((user) => {
+                    res.cookie('wscore', user.uuid, { expire: Date.now() + (24 * 60 * 60 * 1000) }) //create 24H Cookie
+                    res.redirect(302, "../")
+                }).catch(() => {
+                    this.log.warning("Usuário uuid Invalido")
+                    res.status(401).send("Erro Usuario uuid Invalido")
+                })
+            }
+
         })
         this.app.get("/", (req, res) => {
             let cookies = this._parseCookies(req);

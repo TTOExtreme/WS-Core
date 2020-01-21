@@ -1,0 +1,9 @@
+.login-msgbox.show{
+    opacity: 1;
+    transition: 0s opacity;
+}
+
+.login-msgbox{
+    opacity: 0;
+    transition: 1s opacity;
+}

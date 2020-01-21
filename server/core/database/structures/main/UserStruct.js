@@ -33,6 +33,51 @@ class UserStruct {
     lastConnection;
     lastTry;
     lastIp;
+
+    /**
+     * converte um JSON para o objeto USER
+     * @param {JSON} user JSON contendo os items do usuário 
+     */
+    construct(user) {
+        if (user.id) { this.id = user.id }
+        if (user.name) { this.name = user.name }
+        if (user.username) { this.username = user.username }
+        if (user.password) { this.password = user.password }
+        if (user.salt) { this.salt = user.salt }
+        if (user.uuid) { this.uuid = user.uuid }
+        if (user.createdIn) { this.createdIn = user.createdIn }
+        if (user.createdBy) { this.createdBy = user.createdBy }
+        if (user.deactivatedIn) { this.deactivatedIn = user.deactivatedIn }
+        if (user.deactivatedBy) { this.deactivatedBy = user.deactivatedBy }
+        if (user.active) { this.active = user.active }
+        if (user.connected) { this.connected = user.connected }
+        if (user.lastConnection) { this.lastConnection = user.lastConnection }
+        if (user.lastTry) { this.lastTry = user.lastTry }
+        if (user.lastIp) { this.lastIp = user.lastIp }
+    }
+
+    /**
+     * Converte Em String o Objeto USER
+     */
+    toString() {
+        return JSON.stringify({
+            id: this.id,
+            name: this.name,
+            username: this.username,
+            password: this.password,
+            salt: this.salt,
+            uuid: this.uuid,
+            createdIn: this.createdIn,
+            createdBy: this.createdBy,
+            deactivatedIn: this.deactivatedIn,
+            deactivatedBy: this.deactivatedBy,
+            active: this.active,
+            connected: this.connected,
+            lastConnection: this.lastConnection,
+            lastTry: this.lastTry,
+            lastIp: this.lastIp
+        })
+    }
 }
 
 const _DB = {

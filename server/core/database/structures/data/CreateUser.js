@@ -1,4 +1,4 @@
-export const data = [
+const _DB = [
     {
         id: 1,
         name: "Administrador",
@@ -7,3 +7,5 @@ export const data = [
         active: 1
     }
 ]
+
+module.exports = { _DB }

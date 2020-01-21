@@ -13,11 +13,12 @@
 </style>
 
 <body class="background_root" id="body">
-    <form action="/login/request" method="POST">
-        <input type="text" name="username" placeholder="Username">
-        <input type="text" name="password" placeholder="Password">
-        <input type="submit" name="submit" value="logar">
-    </form>
+    <div>
+        <input type="text" id="username" placeholder="Username">
+        <input type="text" id="password" placeholder="Password">
+        <input type="button" id="submit" value="logar">
+        <p id="login-msgbox" class="login-msgbox"></p>
+    </div>
 </body>
 
 </html>
