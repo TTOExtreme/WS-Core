@@ -29,7 +29,7 @@ class UserServer {
      */
 
     createUserJson(user) {
-        return this.createUser(user.id, user.name, user.username, user.pass, user.active)
+        return this.createUser(user.id, user.name, user.username, user.password, user.active)
     }
 
     /**
@@ -43,11 +43,12 @@ class UserServer {
      */
     createUser(id = undefined, name, username, pass, active = true) {
         const salt = this.bcypher.generate_salt();
+        this.log.warning("User With SHA512 Pass: " + this.bcypher.sha512(pass))
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._User" +
             " (" + ((id != undefined) ? "id," : "") + "name,username,password,salt,active,createdBy,createdIn)" +
             " VALUES " +
-            " (" + ((id != undefined) ? id + "," : "") + "'" + name + "','" + username + "','" + this.bcypher.crypt(salt, this.bcypher.sha512(pass)) + "','" + salt + "'," + ((active) ? 1 : 0) + ",1," + Date.now() + ");");
+            " (" + ((id != undefined) ? id + "," : "") + "'" + name + "','" + username + "','" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "','" + salt + "'," + ((active) ? 1 : 0) + ",1," + Date.now() + ");");
     }
 
     /**

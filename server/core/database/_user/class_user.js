@@ -45,33 +45,30 @@ class User {
         this.log.info("Searching user: <" + username + "> in database.");
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "';").then((result) => {
             const salt = result[0].salt;
-            return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE 'username'='" + username + "' AND 'password'='" + this.bcypher.crypt(salt, pass) + "'")
+            return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "' AND password='" + this.bcypher.sha512(salt + pass) + "';")
                 .catch((err) => {
-                    this.log.warning("Wrong Password: <" + username + ">.");
+                    return Promise.reject("Wrong Password: <" + username + ">.");
                 }).then((result) => {
-                    if (!result[0]) {
+                    if (result[0]) {
                         this.myself.construct(result[0]);
-                        this.log.warning(this.myself.toString())
                         return this.resetUUID()
                             .then(() => {
                                 return Promise.resolve(this.myself)
                             }).catch((err) => {
-                                this.log.warning("Not Able to reset UUID for user: <" + username + "> in database.");
                                 this.log.error(err);
-                                return Promise.reject("Not Found user: <" + username + "> in database.");
+                                return Promise.reject("Not Able to reset UUID for user: <" + username + "> in database.");
                             })
                     } else {
                         return Promise.reject();
                     }
                 })
-
-        }).then((result) => {
-            this.log.info("Found user: <" + username + "> in database.");
-            this.log.info(result)
         }).catch((err) => {
-            this.log.warning("Not Found user: <" + username + "> in database.");
+            if (!err) this.log.warning("Not Found user: <" + username + "> in database.");
             if (err) this.log.error(err);
             return Promise.reject("Not Found user: <" + username + "> in database.");
+        }).then((result) => {
+            this.log.info("Found user: <" + username + "> in database.");
+            return Promise.resolve(result)
         })
     }
 
@@ -88,7 +85,11 @@ class User {
         }
         this.log.info("Searching user by uuid: <" + uuid + "> in database.");
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE uuid='" + uuid + "';")
-            .then((result) => {
+            .catch((err) => {
+                this.log.warning("Not Found user uuid: <" + uuid + "> in database.");
+                if (err) this.log.error(err);
+                return Promise.reject("Not Found user uuid: <" + uuid + "> in database.");
+            }).then((result) => {
                 if (!result[0]) {
                     this.myself.construct(result[0])
                     return this.resetUUID()
@@ -101,10 +102,7 @@ class User {
             }).then((result) => {
                 this.log.info("Found user uuid: <" + uuid + "> in database.");
                 this.log.info(result)
-            }).catch((err) => {
-                this.log.warning("Not Found user uuid: <" + uuid + "> in database.");
-                if (err) this.log.error(err);
-                return Promise.reject("Not Found user uuid: <" + uuid + "> in database.");
+                return Promise.resolve();
             })
     }
 
@@ -144,8 +142,8 @@ class User {
             const nUUID = this.bcypher.generate_crypt()
             return new Promise((resolve, reject) => {
                 this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
-                    " SET 'UUID'='" + nUUID +
-                    " WHERE 'id'=" + this.myself.id + ";").then(() => {
+                    " SET UUID='" + nUUID + "'" +
+                    " WHERE id=" + this.myself.id + ";").then(() => {
                         this.myself.uuid = nUUID;
                         resolve(nUUID);
                     }).catch(err => {

@@ -1,0 +1,62 @@
+body{
+    background-image: url('../img/bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    padding:0;
+}
+
+/*  Left Menu   */
+
+.LeftMenuClose{
+    width: 30px;
+    background-color: black;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1;
+    color: #808080;
+}
+@media only screen and (max-width: 600px) {
+    .LeftMenuClose{
+        left: -30px;
+    }
+}
+
+.LeftMenu{
+    width: 200px;
+    background-color: black;
+    position: absolute;
+    top: 0;
+    left: -200px;
+    height: 100vh;
+    z-index: 2;
+    color: #808080;
+    transition: left 1s;
+}
+
+.LeftMenuOpen{
+    left: 0;
+}
+
+.LeftMenuClose td{
+    height: 30px;
+    width: 30px;
+    margin: 0;
+    border: 0;
+    cursor: pointer;
+    font-size: 16pt;
+}
+.LeftMenu td{
+    height: 30px;
+    width: 30px;
+    margin: 0;
+    border: 0;
+    cursor: pointer;
+    font-size: 16pt;
+}
+
+.LeftMenuTable{
+    border-collapse: collapse;
+}

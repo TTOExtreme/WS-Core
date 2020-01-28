@@ -15,7 +15,7 @@
     }
 </style>
 
-<body class="background_root" id="body">
+<body>
     <header>
         <nav>
             <div id='topMenu' class='topMenu'>
@@ -30,35 +30,26 @@
     </section>
 
     <aside>
-        <nav id="aside_nav">
-
+        <nav class="LeftMenuClose">
+            <table id="LeftMenuTable">
+                <tr>
+                    <td id="openLeftMenu">&#9776;</td>
+                </tr>
+            </table>
+        </nav>
+        <nav class="LeftMenu" , id="leftMenuHolder">
+            <table id="LeftMenuTable" style="float: right;">
+                <tr>
+                    <td id="closeLeftMenu">&#x2716;</td>
+                </tr>
+            </table>
         </nav>
     </aside>
 
-    <footer onclick="credits()">
-        <p>Criado e desenvolvido por Departamento de T.I./S.A.I. PMV - 2019</p>
+    <footer id="Credits_Holder">
+        <p>Criado e desenvolvido por Departamento de T.I./S.A.I. PMV - 2020</p>
     </footer>
 
-    <div id="credits_holderbg" class="credits_holderbg noselect">
-        <div id="credits_holder" class="credits_holder noselect">
-            <div id="credits" class="credits">
-                <h2>
-                    <p style="color: #ffffff;">Responsaveis pelo Projeto:</p>
-                </h2>
-                <p>Wilton L. Borges (Secretario)</p>
-                <p>Paulo C. Marostica (Diretor do Departamento)</p>
-                <p>Fernando R. Poli (Chefe de Secção)</p>
-                <p>Lucas R. Camarotto (Desenvolvedor)</p>
-            </div>
-        </div>
-    </div>
-    <div class="loader_holderbg noselect" id="loaderHolderBG">
-        <div class="loader_holder noselect" id="loaderHolder">
-            <svg class="loader" id='loader'>
-
-            </svg>
-        </div>
-    </div>
     <div>
         <center>
             <table id='sub_menu_over' class='sub_menu_over_holder'></table>

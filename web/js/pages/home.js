@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/utils/socket.js",
         "./js/libs/crypto-js.js",
         "./js/libs/bcypher.js",
+        "./js/screen/credits.js",
+        "./js/screen/sideMenu.js"
     ]).then(() => {
         console.log("Finished Loading")
         ClientEvents.emit("Page_Loaded");
