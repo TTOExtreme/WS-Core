@@ -49,14 +49,67 @@ body{
     font-size: 16pt;
 }
 .LeftMenu td{
-    height: 30px;
-    width: 30px;
+    max-height: 40px;
     margin: 0;
     border: 0;
+    padding: 0;
     cursor: pointer;
     font-size: 16pt;
 }
 
-.LeftMenuTable{
+.LeftMenuTable {
     border-collapse: collapse;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 75px);
+    margin-top: 40px;
+    width: 100%;
+}
+
+.LMI{
+    border-collapse: collapse;
+    width: calc(100% - 20px);
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+.LMIHidden{
+    display: none;
+}
+
+.LMI-img {
+    border: 1px solid;
+    width: 40px;
+    height: 40px;
+}
+.LMI-img-td {
+    width: 70px;
+}
+.LMI tr td p{
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-collapse: collapse;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 11pt;
+    margin-left: 5px;
+}
+
+.LMI-Item{
+    background-color: var(--menu-item-bg);
+    color: var(--menu-item-text);
+    transition: 0.5s;
+    height: 46px;
+}
+.LMI-Item td{
+    padding-left: 20px;
+}
+.LMI-Item:hover{
+    background-color: var(--menu-item-bg-hover);
+    color: var(--menu-item-text-hover);
+    transform: translateX(-20px);
 }

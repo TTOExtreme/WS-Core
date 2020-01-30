@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./css/index.css",
         "./css/home.css",
         "./css/screen/loading.css",
+        "./css/themes/theme-dark.css",
         "./js/screen/loading.js",
         "./js/libs/socket.io.js",
         "./js/utils/socket.js",
