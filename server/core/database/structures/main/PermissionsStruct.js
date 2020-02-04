@@ -1,5 +1,4 @@
 class PermissionsStruct {
-    id;
     name;
     description;
     code;
@@ -7,10 +6,9 @@ class PermissionsStruct {
 }
 
 const _DB = {
-    id: "INT",
     name: "VARCHAR(200)",
     description: "VARCHAR(200)",
-    code: "VARCHAR(200)",
+    code: "VARCHAR(200) PRIMARY KEY",
     type: "VARCHAR(200)",
     defaltAdd: "INT(1)"
 }

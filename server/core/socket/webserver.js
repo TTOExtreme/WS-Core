@@ -5,18 +5,23 @@ const SocketIO = require('socket.io');
 
 const bodyParser = require('body-parser');
 
-const SocketHandler = require('./socketApi/handler.js');
+const SocketHandler = require('./socketApi/handler.js').SocketHandler;
 
+const fs = require("fs");
+const path = require("path").join;
 
 class WServer {
 
     _log;
     _config;
+    _User;
+    _SocketHandler;
 
     constructor(WSMainServer) {
-        this.log = WSMainServer.log;
-        this.config = WSMainServer.config;
-        this.User = new (require("../database/_user/class_user")).User(WSMainServer);
+        this._log = WSMainServer.log;
+        this._config = WSMainServer.config;
+        this._User = new (require("../database/_user/class_user")).User(WSMainServer);
+        this._SocketHandler = new SocketHandler(WSMainServer);
     }
 
     _app;
@@ -27,13 +32,13 @@ class WServer {
      * init
      */
     init() {
-        this.app = Express();
+        this._app = Express();
 
-        this.server = http.createServer(this.app);
-        this.io = SocketIO(this.server);
+        this._server = http.createServer(this._app);
+        this._io = SocketIO(this._server);
 
-        this.server.listen(this.config.webPort, () => {
-            this.log.info('Running server on port: ' + this.config.webPort);
+        this._server.listen(this._config.webPort, () => {
+            this._log.info('Running server on port: ' + this._config.webPort);
         });
 
         this._webhost();
@@ -45,46 +50,68 @@ class WServer {
      * handler for the webfiles 
      */
     _webhost() {
-        this.app.use(bodyParser.urlencoded({ extended: false }));
-        this.app.use(bodyParser.json());
-        this.app.get("/login", (req, res) => {
-            res.sendFile('./login.html', { root: this.config.webpageFolder });
+        this._app.use(bodyParser.urlencoded({ extended: false }));
+        this._app.use(bodyParser.json());
+        this._app.get("/login", (req, res) => {
+            res.sendFile('./login.html', { root: this._config.webpageFolder });
         })
-        this.app.post("/login/request", (req, res) => {
+        this._app.post("/login/request", (req, res) => {
 
             //authenticate and redirect
-            this.log.info(JSON.stringify(req.body))
+            this._log.info(JSON.stringify(req.body))
+
+            let expiretime = Date.now() + (24 * 60 * 60 * 1000);//create 24H Cookie
 
             if (req.body.username && req.body.password) {
-                this.User.findme(req.body.username, req.body.password).then((user) => {
-                    res.cookie('wscore', user.uuid, { expire: Date.now() + (24 * 60 * 60 * 1000) }) //create 24H Cookie
-                    res.redirect(302, "../")
-                }).catch(() => {
-                    this.log.warning("Usuário ou Senha Invalido")
-                    res.status(401).send("Erro Usuario ou Senha Invalido")
-                })
-            } else if (req.body.uuid) {
-                this.User.findmeuuid(req.body.uuid).then((user) => {
-                    res.cookie('wscore', user.uuid, { expire: Date.now() + (24 * 60 * 60 * 1000) }) //create 24H Cookie
-                    res.redirect(302, "../")
-                }).catch(() => {
-                    this.log.warning("Usuário uuid Invalido")
-                    res.status(401).send("Erro Usuario uuid Invalido")
+                this._User.findme(req.body.username, req.body.password).then((user) => {
+                    return this._User.checkPermission("def/usr/login").then(() => {
+                        this._log.info(JSON.stringify(this._User.myself.permissions))
+                        res.cookie('wscore', user.uuid, { expire: expiretime }) //create 24H Cookie
+                        res.redirect(302, "../")
+                    }).catch((err) => {
+                        if (err) {
+                            this._log.info(err);
+                            return Promise.reject(err);
+                        } else {
+                            this._log.info("Usuário sem permissão");
+                            return Promise.reject("Usuário sem permissão");
+                        }
+                    })
+                }).catch((err) => {
+                    if (err) {
+                        this._log.info(err);
+                        res.status(401).send(err);
+                    } else {
+                        this._log.info("Usuário ou Senha Incorreto");
+                        res.status(401).send("Erro Usuario ou Senha Incorreto");
+                    }
                 })
             }
-
         })
-        this.app.get("/", (req, res) => {
+        this._app.get("/", (req, res) => {
             let cookies = this._parseCookies(req);
             if ((cookies["wscore"])) {//check if cookie is present and redirect if is not
-                res.sendFile('./home.html', { root: this.config.webpageFolder });
+                res.sendFile('./home.html', { root: this._config.webpageFolder });
             } else {
                 res.redirect(302, "./login")
             }
         })
-        this.app.use(Express.static(this.config.webpageFolder))
+        this._app.use(Express.static(this._config.webpageFolder))
+        this._hostModules();
     }
 
+    /**
+     * @description Host all web folders from modules folder
+     */
+    _hostModules() {
+        let modulesList = fs.readdirSync(path(__dirname + "../../../modules/"));
+        modulesList.forEach(mod => {
+            if (fs.existsSync(path(__dirname + "../../../modules/" + mod + "/web"))) {
+                this._log.info("Loaded Module: " + mod);
+                this._app.use("/module/" + mod + "/", Express.static(path(__dirname + "../../../modules/" + mod + "/web")));
+            }
+        })
+    }
 
     /**
      * @param request Request from client
@@ -106,7 +133,7 @@ class WServer {
      * handler for auth and parser to events
      */
     _socketHandler() {
-        //SocketHandler.socketHandler(this.io)
+        this._SocketHandler.socket(this._io);
     }
 
 }

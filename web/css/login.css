@@ -35,7 +35,15 @@ body{
     margin-top: 150px;
     transform:translate(0 ,-50%)
 }
+
 input[type="text"]{
+    width: 142px;
+    height: 22px;
+    padding: 4px;
+    margin: 0;
+    border: none;
+}
+input[type="password"]{
     width: 142px;
     height: 22px;
     padding: 4px;

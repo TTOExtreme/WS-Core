@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     ]).then(() => {
         console.log("Finished Loading");
         ClientEvents.emit("Page_Loaded");
+        document.getElementById("password").addEventListener("keyup", loginEnter);
         document.getElementById("submit").onclick = function (ev) {
             //ClientEvents.emit("startLoader");
             fetch('/login/request', {
@@ -54,4 +55,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
     })
 })
 
-
+function loginEnter(e) {
+    var key = e.which || e.keyCode;
+    if (key == 13) {
+        document.getElementById("submit").click();
+    }
+}

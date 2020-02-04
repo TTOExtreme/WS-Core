@@ -1,5 +1,3 @@
-
-
 function init_loading() {
     //add the element to page
     if (document.getElementById("loading_holder") == undefined) {
@@ -42,8 +40,8 @@ function init_loading() {
 }
 
 ClientEvents.on("startLoader", () => {
-    console.log("start Loading SVG")
-    let svg = document.getElementById('loading_holderBg')
+    let svg = document.getElementById('loading_holderBg');
+    if (!svg) { setTimeout(() => { ClientEvents.emit("startLoader") }); return; }
     svg.style.opacity = 1;
     svg.style.top = "0";
     svg.style.left = "0";
@@ -53,7 +51,8 @@ ClientEvents.on("startLoader", () => {
 })
 
 ClientEvents.on("stopLoader", () => {
-    let svg = document.getElementById('loading_holderBg')
+    let svg = document.getElementById('loading_holderBg');
+    if (!svg) { setTimeout(() => { ClientEvents.emit("stopLoader") }); return; }
     svg.style.opacity = 0;
     svg.style.top = "-200px";
     svg.style.left = "calc(50vw - 50px)";
@@ -62,7 +61,7 @@ ClientEvents.on("stopLoader", () => {
     svg.style.height = "100px";
 });
 
-ClientInitializers.push(new Promise((resolve, reject) => {
+ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
     console.log("initializing Loader")
     init_loading();
     resolve();

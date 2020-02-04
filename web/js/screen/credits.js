@@ -4,7 +4,7 @@ let cr = document.getElementById("Credits_Holder");
 cr.addEventListener("click", (ev) => {
     ClientEvents.emit("CreditsToggle");
 });
-ClientInitializers.push(new Promise((res, rej) => {
+ClientEvents.on("Page_Loaded", new Promise((res, rej) => {
     let credits = document.createElement("div");
     credits.innerHTML =
         "<div id='credits_holderbg' class='credits_holderbg noselect'>" +
@@ -29,4 +29,4 @@ ClientInitializers.push(new Promise((res, rej) => {
 
 ClientEvents.on("CreditsToggle", () => {
     document.getElementById("credits_holderbg").classList.toggle("CreditsShow");
-});
+})

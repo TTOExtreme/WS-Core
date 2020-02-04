@@ -14,21 +14,23 @@ ClientEvents.on("LeftMenuClose", () => {
             lm.classList.toggle("LeftMenuOpen")
         }
     }
+    ClientEvents.emit("LeftMenu-ToggleUserMenu", false);
 })
 
-
-ClientInitializers.push(new Promise((resolve, reject) => {
+ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
     document.getElementById("openLeftMenu").onclick = () => {
         ClientEvents.emit("LeftMenuOpen");
     }
     document.getElementById("closeLeftMenu").onclick = () => {
         ClientEvents.emit("LeftMenuClose");
     }
+    document.getElementById("LMI-UserButton").onclick = () => {
+        ClientEvents.emit("LeftMenu-ToggleUserMenu");
+    }
     resolve();
 }));
 
 ClientEvents.on("LeftMenu-SetItems", (items) => {
-
     if (items) {
         let LeftMenuTable = document.getElementById("LeftMenuTable");
         LeftMenuTable.innerHTML = "";
@@ -40,6 +42,35 @@ ClientEvents.on("LeftMenu-SetItems", (items) => {
             }
         });
     }
+})
+
+
+ClientEvents.on("LeftMenu-ToggleUserMenu", (state) => {
+    let lm = document.getElementById("LeftMenu-UserMenu");
+    if (state != undefined) {
+        if (state) {
+            if (lm.classList.contains("LMUserMenuShow")) {
+                lm.classList.toggle("LMUserMenuShow")
+            }
+        } else {
+            if (!lm.classList.contains("LMUserMenuShow")) {
+                lm.classList.toggle("LMUserMenuShow")
+            }
+        }
+    }
+    lm.classList.toggle("LMUserMenuShow");
+})
+
+ClientEvents.on("LMU-SetInfo", (info) => {
+    console.log(info);
+    if (info.username) document.getElementById("LMU-Name").innerText = info.username;
+    if (info.name) document.getElementById("LMU-Username").innerText = info.name;
+    if (info.ip) document.getElementById("LMU-Ip").innerText = info.ip;
+    if (info.lastLogin) document.getElementById("LMU-LastLogin").innerText = info.lastLogin;
+})
+
+ClientEvents.on("Logged", (myself) => {
+    ClientEvents.emit("LMU-SetInfo", myself);
 })
 
 function ToggleLeftMenuItem(obj) {

@@ -41,7 +41,7 @@
     "nodemon": "^1.19.4"
   },
   "scripts": {
-    "install": "nodemon _install.js",
+    "install": "node _install.js",
     "debug": "node --inspect-brk=9229 server.js",
     "start": "nodemon _server.js"
   },

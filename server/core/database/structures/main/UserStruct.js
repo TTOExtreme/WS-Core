@@ -1,3 +1,5 @@
+const PermissionsStruct = require('../relations/User_Permissions').UserPermissionsStruct;
+
 /**
  * @class
  * @alias UserStruct
@@ -6,6 +8,7 @@
  * @property {string} username
  * @property {string} password
  * @property {string} uuid
+ * @property {string} preferences
  * @property {timestamp} createdIn
  * @property {number} createdBy
  * @property {timestamp} deactivatedIn
@@ -15,6 +18,7 @@
  * @property {timestamp} lastConnection
  * @property {timestamp} lastTry
  * @property {string} lastIp
+ * @property {string} permissions
  */
 
 class UserStruct {
@@ -24,6 +28,7 @@ class UserStruct {
     password;
     salt;
     uuid;
+    preferences;
     createdIn;
     createdBy;
     deactivatedIn;
@@ -33,27 +38,31 @@ class UserStruct {
     lastConnection;
     lastTry;
     lastIp;
+    permissions = [new PermissionsStruct()];
 
     /**
      * converte um JSON para o objeto USER
      * @param {JSON} user JSON contendo os items do usuário 
      */
-    construct(user) {
-        if (user.id) { this.id = user.id }
-        if (user.name) { this.name = user.name }
-        if (user.username) { this.username = user.username }
-        if (user.password) { this.password = user.password }
-        if (user.salt) { this.salt = user.salt }
-        if (user.uuid) { this.uuid = user.uuid }
-        if (user.createdIn) { this.createdIn = user.createdIn }
-        if (user.createdBy) { this.createdBy = user.createdBy }
-        if (user.deactivatedIn) { this.deactivatedIn = user.deactivatedIn }
-        if (user.deactivatedBy) { this.deactivatedBy = user.deactivatedBy }
-        if (user.active) { this.active = user.active }
-        if (user.connected) { this.connected = user.connected }
-        if (user.lastConnection) { this.lastConnection = user.lastConnection }
-        if (user.lastTry) { this.lastTry = user.lastTry }
-        if (user.lastIp) { this.lastIp = user.lastIp }
+    constructor(user) {
+        if (user) {
+            if (user.id) { this.id = user.id }
+            if (user.name) { this.name = user.name }
+            if (user.username) { this.username = user.username }
+            if (user.password) { this.password = user.password }
+            if (user.salt) { this.salt = user.salt }
+            if (user.uuid) { this.uuid = user.uuid }
+            if (user.preferences) { this.preferences = user.preferences }
+            if (user.createdIn) { this.createdIn = user.createdIn }
+            if (user.createdBy) { this.createdBy = user.createdBy }
+            if (user.deactivatedIn) { this.deactivatedIn = user.deactivatedIn }
+            if (user.deactivatedBy) { this.deactivatedBy = user.deactivatedBy }
+            if (user.active) { this.active = user.active }
+            if (user.connected) { this.connected = user.connected }
+            if (user.lastConnection) { this.lastConnection = user.lastConnection }
+            if (user.lastTry) { this.lastTry = user.lastTry }
+            if (user.lastIp) { this.lastIp = user.lastIp }
+        }
     }
 
     /**
@@ -67,6 +76,7 @@ class UserStruct {
             password: this.password,
             salt: this.salt,
             uuid: this.uuid,
+            preferences: this.preferences,
             createdIn: this.createdIn,
             createdBy: this.createdBy,
             deactivatedIn: this.deactivatedIn,

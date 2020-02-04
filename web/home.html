@@ -38,9 +38,14 @@
             </table>
         </nav>
         <nav class="LeftMenu" id="leftMenuHolder">
-            <table style="float: right;">
+            <table style="float: right;" class="LeftMenuUserBar">
                 <tr>
-                    <td id="closeLeftMenu">&#x2716;</td>
+                    <td id="LMI-UserButton">
+                        <img class="LeftMenuUserBar-item" src="./img/user.png">
+                    </td>
+                    <td id="closeLeftMenu">
+                        <img class="LeftMenuUserBar-item" src="./img/cross.png">
+                    </td>
                 </tr>
             </table>
             <div class="LeftMenuTable">
@@ -48,6 +53,26 @@
                 </table>
             </div>
         </nav>
+        <div id="LeftMenu-UserMenu" class="LeftMenu-UserMenu">
+            <Table>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">Usuário:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-Username"></td>
+                </tr>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">Nome:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-Name"></td>
+                </tr>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">IP:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-Ip"></td>
+                </tr>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">Ultimo Login:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-LastLogin"></td>
+                </tr>
+            </Table>
+        </div>
     </aside>
 
     <footer id="Credits_Holder">

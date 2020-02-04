@@ -50,9 +50,10 @@ class User {
                     return Promise.reject("Wrong Password: <" + username + ">.");
                 }).then((result) => {
                     if (result[0]) {
-                        this.myself.construct(result[0]);
+                        this.myself = new UserStruct(result[0]);
                         return this.resetUUID()
                             .then(() => {
+                                return this._loadPermissions();
                                 return Promise.resolve(this.myself)
                             }).catch((err) => {
                                 this.log.error(err);
@@ -63,7 +64,7 @@ class User {
                     }
                 })
         }).catch((err) => {
-            if (!err) this.log.warning("Not Found user: <" + username + "> in database.");
+            if (!err) this.log.info("Not Found user: <" + username + "> in database.");
             if (err) this.log.error(err);
             return Promise.reject("Not Found user: <" + username + "> in database.");
         }).then((result) => {
@@ -80,30 +81,40 @@ class User {
      */
     findmeuuid(uuid) {
         if (!uuid) {
-            this.log.warning("User not has an uuid");
-            return Promise.reject("Usuário UUID esta em branco")
+            this.log.warning("UUID is Null");
+            return Promise.reject("UUID esta em branco")
         }
-        this.log.info("Searching user by uuid: <" + uuid + "> in database.");
-        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE uuid='" + uuid + "';")
+        this.log.info("Searching user UUID: <" + uuid + "> in database.");
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE UUID='" + uuid + "';")
             .catch((err) => {
-                this.log.warning("Not Found user uuid: <" + uuid + "> in database.");
+                if (!err) this.log.warning("Not Found user UUID: <" + uuid + "> in database.");
                 if (err) this.log.error(err);
-                return Promise.reject("Not Found user uuid: <" + uuid + "> in database.");
+                return Promise.reject("Not Found user UUID: <" + uuid + "> in database.");
             }).then((result) => {
-                if (!result[0]) {
-                    this.myself.construct(result[0])
-                    return this.resetUUID()
-                        .then(() => {
-                            return Promise.resolve(this.myself)
-                        })
+                if (result[0]) {
+                    this.myself = new UserStruct(result[0]);
+                    return this._loadPermissions();
                 } else {
-                    return Promise.reject("")
+                    return Promise.reject("Not Found user UUID: <" + username + "> in database.");
                 }
-            }).then((result) => {
-                this.log.info("Found user uuid: <" + uuid + "> in database.");
-                this.log.info(result)
-                return Promise.resolve();
             })
+    }
+
+    /**
+     * @returns {UserStruct} User data for Client
+     */
+    getUserClientData() {
+        let ud = JSON.parse(this.myself.toString());
+        delete ud.password;
+        delete ud.salt;
+        delete ud.createdBy;
+        delete ud.deactivatedBy;
+        delete ud.deactivatedIn;
+        delete ud.active;
+        delete ud.connected;
+        delete ud.id;
+        delete ud.permissions;
+        return (ud);
     }
 
     /**
@@ -153,6 +164,42 @@ class User {
         } else {
             this.log.error("User not defined to Reset UUID\n" + this.myself.toString())
             return Promise.reject("User not defined to Reset UUID")
+        }
+    }
+
+    checkPermission(permissionCode) {
+        if (this.myself.permissions) {
+            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode))[0] != undefined
+                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system"))[0] != undefined) {
+                return Promise.resolve();
+            }
+        }
+        return Promise.reject("Usuário sem permissão para a ação");
+    }
+
+    /**
+     * Function to load permissions from database
+     * @param {JSON} preferences 
+     */
+    _loadPermissions() {
+        if (this.myself.id) {
+            return new Promise((resolve, reject) => {
+                this.db.query("SELECT *  FROM " + this.db.DatabaseName + ".rlt_User_Permissions" +
+                    " WHERE id_User=" + this.myself.id + ";").then((result) => {
+                        if (result[0]) {
+                            this.myself.permissions = result;
+                            resolve(this.myself)
+                        } else {
+                            return Promise.reject();
+                        }
+                    }).catch(() => {
+                        this.log.error("User Without Any Permissions " + this.myself.toString())
+                        reject("User Without Any Permissions");
+                    })
+            });
+        } else {
+            this.log.error("User not defined to load Permissions\n" + this.myself.toString())
+            return Promise.reject("User not defined to load Permissions");
         }
     }
 
