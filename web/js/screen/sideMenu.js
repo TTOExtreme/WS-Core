@@ -1,3 +1,5 @@
+
+ClientEvents.setCoreEvent("LeftMenuOpen")
 ClientEvents.on("LeftMenuOpen", () => {
 
     let lm = document.getElementById("leftMenuHolder")
@@ -7,6 +9,8 @@ ClientEvents.on("LeftMenuOpen", () => {
         }
     }
 })
+
+ClientEvents.setCoreEvent("LeftMenuClose")
 ClientEvents.on("LeftMenuClose", () => {
     let lm = document.getElementById("leftMenuHolder")
     if (lm) {
@@ -17,6 +21,7 @@ ClientEvents.on("LeftMenuClose", () => {
     ClientEvents.emit("LeftMenu-ToggleUserMenu", false);
 })
 
+ClientEvents.setCoreEvent("Page_Loaded")
 ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
     document.getElementById("openLeftMenu").onclick = () => {
         ClientEvents.emit("LeftMenuOpen");
@@ -30,6 +35,7 @@ ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
     resolve();
 }));
 
+ClientEvents.setCoreEvent("LeftMenu-SetItems")
 ClientEvents.on("LeftMenu-SetItems", (items) => {
     if (items) {
         let LeftMenuTable = document.getElementById("LeftMenuTable");
@@ -44,7 +50,7 @@ ClientEvents.on("LeftMenu-SetItems", (items) => {
     }
 })
 
-
+ClientEvents.setCoreEvent("LeftMenu-ToggleUserMenu");
 ClientEvents.on("LeftMenu-ToggleUserMenu", (state) => {
     let lm = document.getElementById("LeftMenu-UserMenu");
     if (state != undefined) {
@@ -61,14 +67,15 @@ ClientEvents.on("LeftMenu-ToggleUserMenu", (state) => {
     lm.classList.toggle("LMUserMenuShow");
 })
 
+ClientEvents.setCoreEvent("LMU-SetInfo")
 ClientEvents.on("LMU-SetInfo", (info) => {
-    console.log(info);
     if (info.username) document.getElementById("LMU-Name").innerText = info.username;
     if (info.name) document.getElementById("LMU-Username").innerText = info.name;
     if (info.ip) document.getElementById("LMU-Ip").innerText = info.ip;
     if (info.lastLogin) document.getElementById("LMU-LastLogin").innerText = info.lastLogin;
 })
 
+ClientEvents.setCoreEvent("Logged")
 ClientEvents.on("Logged", (myself) => {
     ClientEvents.emit("LMU-SetInfo", myself);
 })
@@ -121,60 +128,3 @@ class LeftMenuItem {
         return si2
     }
 }
-
-setTimeout(() => {
-    let m = new LeftMenuItem();
-    m.Name = "Menu 1";
-    m.Id = "menu1-0";
-    m.Event = (obj) => {
-        console.log(obj);
-    }
-    m.SubItems = [];
-    let n = new LeftMenuItem();
-    n.Name = "Menu 1-1";
-    n.Id = "menu1-1";
-    n.Event = (obj) => {
-        console.log(obj);
-    }
-    m.SubItems.push(n)
-    m.SubItems.push(n)
-    m.SubItems.push(n)
-
-
-    let o = new LeftMenuItem();
-    o.Name = "Menu 2";
-    o.Id = "menu2-0";
-    o.Event = (obj) => {
-        console.log(obj);
-    }
-    o.SubItems = [];
-    n = new LeftMenuItem();
-    n.Name = "Menu 2-1";
-    n.Id = "menu2-1";
-    n.Event = (obj) => {
-        console.log(obj);
-    }
-    o.SubItems.push(n)
-    o.SubItems.push(n)
-    o.SubItems.push(n)
-
-
-    let p = new LeftMenuItem();
-    p.Name = "Menu 3";
-    p.Id = "menu3-0";
-    p.Event = (obj) => {
-        console.log(obj);
-    }
-    p.SubItems = [];
-    n = new LeftMenuItem();
-    n.Name = "Menu 3-1";
-    n.Id = "menu3-1";
-    n.Event = (obj) => {
-        console.log(obj);
-    }
-    p.SubItems.push(n)
-    p.SubItems.push(n)
-    p.SubItems.push(n)
-
-    ClientEvents.emit("LeftMenu-SetItems", [m, o, p]);
-}, 1000)

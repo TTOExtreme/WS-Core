@@ -1,19 +1,20 @@
 
 document.addEventListener("DOMContentLoaded", function (event) {
     loadExternalFiles([
-        "./js/libs/EventEmitter.min.js",
         "./js/utils/eventHandler.js",
-        "./js/screen/loading.js",
         "./js/libs/socket.io.js",
-        "./js/utils/socket.js",
         "./js/libs/crypto-js.js",
+        "./js/screen/loading.js",
+        "./js/screen/systemMessage.js",
+        "./js/utils/socket.js",
         "./js/libs/bcypher.js",
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js"
     ]).then(() => {
         ClientEvents.emit("Page_Loaded");
-    }).catch(() => {
+    }).catch((err) => {
         console.log("An error ocurred when loading external files\nAre you disconnected from internet?")
+        console.log(err);
     })
 })
 
@@ -24,6 +25,7 @@ loadExternalFiles([
     "./css/screen/loading.css",
     "./css/themes/theme-dark.css"
 ]).then(() => {
-}).catch(() => {
-    console.log("An error ocurred when loading external files\nAre you disconnected from internet?")
+}).catch((err) => {
+    console.log("An error ocurred when loading external css\nAre you disconnected from internet?")
+    console.log(err);
 })

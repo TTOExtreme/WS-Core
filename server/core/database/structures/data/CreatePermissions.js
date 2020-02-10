@@ -47,6 +47,41 @@ const _DB = [
         code: "scr/usr/seename",
         type: "screen",
         defaltAdd: 1
+    },
+    {
+        name: "Listar Usuários",
+        description: "Abrir o Menu de Lista de Usuários",
+        code: "adm/usr/lst",
+        type: "adm",
+        defaltAdd: 1
+    },
+    {
+        name: "Criar Usuários",
+        description: "Abrir o Menu de Criação de Usuários",
+        code: "adm/usr/crt",
+        type: "adm",
+        defaltAdd: 1
+    },
+    {
+        name: "Editar Usuários",
+        description: "Abrir o Menu de Edição de Usuários",
+        code: "adm/usr/edt",
+        type: "adm",
+        defaltAdd: 1
+    },
+    {
+        name: "Excluir Usuários",
+        description: "Abrir o Menu de Exclusão de Usuários",
+        code: "adm/usr/del",
+        type: "adm",
+        defaltAdd: 1
+    },
+    {
+        name: "Ativar/Desativar Usuários",
+        description: "Abrir o Menu de Ativar/Desativar Usuários",
+        code: "adm/usr/ativar",
+        type: "adm",
+        defaltAdd: 1
     }
 ]
 

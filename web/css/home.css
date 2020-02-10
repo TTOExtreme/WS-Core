@@ -5,3 +5,37 @@ body{
     margin: 0;
     padding:0;
 }
+
+.MainScreen{
+    position: absolute;
+    top:30px;
+    left: 20px;
+    background-color: #30303030;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 30px);
+}
+
+/*system messages*/
+.system_message_holder{
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 50;
+  }
+  .system_message{
+  }
+     
+  .system_message_div{
+    width: calc(100vw - 266px);
+    border-radius: 5px;
+    border: 1px solid var(--message-border);
+    margin-top: 100px;
+    height: 30px;
+    opacity: 0;
+    transition: .5s opacity , .5s margin;
+  }
+  .systemmess_data_table{
+    float: right;
+    align-self: middle;
+    margin-right: 10px;
+  }

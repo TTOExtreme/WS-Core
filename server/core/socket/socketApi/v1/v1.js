@@ -2,6 +2,7 @@
 const SocketIO = require('socket.io');
 const CookieIO = require('cookie');
 const UserClass = require('../../../database/_user/class_user').User;
+const fs = require('fs');
 
 class v1 {
 
@@ -62,8 +63,24 @@ class v1 {
         })
     }
 
-    _loadModules(socket) {
-
+    /**
+     * Load all Modules from ./core and from ../../../../modules/server/socket
+     * @param {SocketIO} socket 
+     * @param {UserClass} Myself 
+     */
+    _loadModules(socket, Myself) {
+        //load core modules
+        fs.readdirSync(__dirname + './core/').forEach((mod) => {
+            let modSocket = new (require(__dirname + './core/' + mod)).Socket(this._WSMainServer);
+            modSocket.socket(socket, Myself);
+        })
+        //load addons modules
+        fs.readdirSync(__dirname + '../../../../modules/').forEach((mod) => {
+            if (fs.existsSync(__dirname + '../../../../modules/' + mod + '/server/socket/socket_v1.js')) {
+                let modSocket = new (require(__dirname + '../../../../modules/' + mod + '/server/socket/socket_v1.js')).Socket(this._WSMainServer);
+                modSocket.socket(socket, Myself);
+            }
+        })
     }
 }
 

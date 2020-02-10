@@ -1,18 +1,4 @@
 let socket;
-let socketCfg = {
-    routes: {},
-    connected: false,
-    ReconnectionTimes: [5, 10, 20, 30, 60],
-    ReconnectionIndex: 0,
-}
-let socketStatus = {
-    logged: false,
-    connected: false,
-    reconnecting: false,
-}
-
-let myself;
-
 
 class UserStruct {
     name;
@@ -41,157 +27,140 @@ class UserStruct {
 
 }
 
-ClientEvents.on("Page_Loaded", () => {
-    console.log("Start Socket")
-    socketCfg.connected = false;
-    socket = io.connect(window.location.origin + "/websocket/v1", {
-        reconnection: false,
-        transports: ['websocket'],
-        cookie: "wscore"
-    });
+class Socket {
+    socket;
+    socketCfg = {
+        routes: {},
+        connected: false,
+        ReconnectionTimes: [5, 10, 20, 30, 60],
+        ReconnectionIndex: 0,
+    }
+    socketStatus = {
+        logged: false,
+        connected: false,
+        reconnecting: false,
+    }
 
-    //let locationSocket = document.location.hostname + ":" + (parseInt(document.location.port));
-    socket.on('connect', function () {
-        socket.on("auth-ok", function (data) {
-            myself = new UserStruct(data);
-            ClientEvents.emit("Logged", myself);
-            if (socketStatus.reconnecting) {
-                ClientEvents.emit("system_mess", { status: "OK", mess: "Conectado", time: 1000 })
-            }
-            socketStatus.logged = true;
-            socketStatus.reconnecting = true;
+    myself;
+
+    constructor() {
+
+        this.socketCfg.connected = false;
+        this.socket = io.connect(window.location.origin + "/websocket/v1", {
+            reconnection: false,
+            transports: ['websocket'],
+            cookie: "wscore"
         });
-        socket.on("auth-err", function (data) {
-            if (data.errmess != undefined) {
-                loginMess(data.errmess)
-            }
+        this.socketInit(this);
+    }
+
+    socketInit(SocketClass) {
+        //let locationSocket = document.location.hostname + ":" + (parseInt(document.location.port));
+        SocketClass.socket.on('connect', function () {
+            SocketClass.socket.on("auth-ok", function (data) {
+
+                SocketClass.myself = new UserStruct(data);
+                ClientEvents.emit("Logged", SocketClass.myself);
+                if (SocketClass.socketStatus.reconnecting) {
+                    ClientEvents.emit("system_mess", { status: "OK", mess: "Conectado", time: 1000 })
+                }
+
+                ClientEvents.on("SendSocket", (event, data) => {
+                    SocketClass._send(event, data);
+                })
+
+                SocketClass.socket.on("ClientEvents", (data) => {
+                    if (data) {
+                        if (data.event != undefined) {
+                            ClientEvents.emit(data.event, data.data);
+                        }
+                    }
+                })
+
+                SocketClass.socketStatus.logged = true;
+                SocketClass.socketStatus.reconnecting = true;
+            });
+            SocketClass.socket.on("auth-err", function (data) {
+                if (data.errmess != undefined) {
+                    loginMess(data.errmess)
+                }
+            });
+            SocketClass.socket.on("data", function (data) {
+                let udata = uncrypt(indb.login.UUID.substring(0, 16), data);
+                //executeRoute(JSON.parse(udata));
+                ck_new();
+
+            });
+            SocketClass.socket.on("logout", function () {
+                window.location.assign("./login");
+            })
+            SocketClass.socket.on('disconnect', function () {
+                SocketClass.socketStatus.connected = false;
+                SocketClass.socketStatus.logged = false;
+                ClientEvents.emit("system_mess", { status: "ERROR", mess: "Desconectado", time: 1000 })
+                ClientEvents.emit("system_mess", {
+                    status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
+                }, reconnect)
+            })
+            SocketClass.socket.emit("auth");
         });
-        socket.on("data", function (data) {
-            let udata = uncrypt(indb.login.UUID.substring(0, 16), data);
-            //executeRoute(JSON.parse(udata));
-            ck_new();
-        });
-        socket.on("logout", function () {
-            window.location.assign("./login");
-        })
-        socket.on('disconnect', function () {
-            socketStatus.connected = false;
-            socketStatus.logged = false;
-            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Desconectado", time: 1000 })
+        SocketClass.socket.on('connect_failed', function () {
+            SocketClass.socketCfg.ReconnectionIndex++;
+            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Conectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((ReconnectionIndex < ReconnectionTimes.length) ? ReconnectionTimes[ReconnectionIndex] : ReconnectionTimes[ReconnectionTimes.length - 1])
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
             }, reconnect)
         })
-        socket.emit("auth");
-    });
-    socket.on('connect_failed', function () {
-        ReconnectionIndex++;
-        ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Conectar", time: 1000 })
-        ClientEvents.emit("system_mess", {
-            status: "INFO", mess: "Tentando Reconectar em", countdown: ((ReconnectionIndex < ReconnectionTimes.length) ? ReconnectionTimes[ReconnectionIndex] : ReconnectionTimes[ReconnectionTimes.length - 1])
-        }, reconnect)
-    })
-    socket.on("connect_error", function () {
-        ReconnectionIndex++;
-        ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
-        ClientEvents.emit("system_mess", {
-            status: "INFO", mess: "Tentando Reconectar em", countdown: ((ReconnectionIndex < ReconnectionTimes.length) ? ReconnectionTimes[ReconnectionIndex] : ReconnectionTimes[ReconnectionTimes.length - 1])
-        }, reconnect)
-    })
-    socket.on("reconnect_failed", function () {
-        ReconnectionIndex++;
-        ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
-        ClientEvents.emit("system_mess", {
-            status: "INFO", mess: "Tentando Reconectar em", countdown: ((ReconnectionIndex < ReconnectionTimes.length) ? ReconnectionTimes[ReconnectionIndex] : ReconnectionTimes[ReconnectionTimes.length - 1])
-        }, reconnect)
-    })
-    socket.on("reconnect_error", function () {
-        ReconnectionIndex++;
-        ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
-        ClientEvents.emit("system_mess", {
-            status: "INFO", mess: "Tentando Reconectar em", countdown: ((ReconnectionIndex < ReconnectionTimes.length) ? ReconnectionTimes[ReconnectionIndex] : ReconnectionTimes[ReconnectionTimes.length - 1])
-        }, reconnect)
-    })
+        SocketClass.socket.on("connect_error", function () {
+            SocketClass.socketCfg.ReconnectionIndex++;
+            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
+            ClientEvents.emit("system_mess", {
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
+            }, reconnect)
+        })
+        SocketClass.socket.on("reconnect_failed", function () {
+            SocketClass.socketCfg.ReconnectionIndex++;
+            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
+            ClientEvents.emit("system_mess", {
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
+            }, reconnect)
+        })
+        SocketClass.socket.on("reconnect_error", function () {
+            SocketClass.socketCfg.ReconnectionIndex++;
+            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
+            ClientEvents.emit("system_mess", {
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
+            }, reconnect)
+        })
+    }
+
+    _reconnect() {
+        if (SocketClass.socketStatus.reconnecting) {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Reconectando", time: 1000 })
+        }
+        SocketClass.SocketClass.socket.off();
+        initSocket();
+    }
+
+    _connectSocket() {
+        if (!SocketClass.socketStatus.logged) {
+            SocketClass.socket.emit('auth', indb.login);
+        }
+    }
+
+    _send(event, data) {
+        SocketClass.socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
+    }
+
+    _appendRoute(route, callback) {
+        routes[route] = callback;
+    }
+}
+
+ClientEvents.on("Page_Loaded", () => {
+    socket = new Socket();
 })
 
-function reconnect() {
-    if (socketStatus.reconnecting) {
-        ClientEvents.emit("system_mess", { status: "OK", mess: "Reconectando", time: 1000 })
-    }
-    socket.off();
-    initSocket();
-}
-
-function connectSocket() {
-    if (!socketStatus.logged) {
-        socket.emit('auth', indb.login);
-    }
-}
-
-function send(route, data) {
-    socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
-}
-
-function appendRoute(route, callback) {
-    routes[route] = callback;
-}
-
-/*
-function executeRoute(u) {
-    //console.log(u)
-    if (u != undefined) {
-        if (u.route != undefined) {
-            if (routes[u.route] != undefined) {
-                routes[u.route](u.data);
-            }
-        }
-    }
-}
-//*/
-
-/*
-appendRoute("login", (retrive) => {
-    if (retrive != undefined) {
-        let jr = JSON.parse(retrive);
-        if (jr.username != undefined) {
-            indb.login.username = jr.username;
-        }
-        if (jr.id_user != undefined) {
-            indb.login.id = jr.id_user;
-        }
-        if (jr.UUID != undefined) {
-            indb.login.UUID = jr.UUID;
-        }
-        if (jr.lastLogin != undefined) {
-            indb.login.lastLogin = jr.lastLogin;
-        }
-        if (jr.addedIn != undefined) {
-            indb.login.addedIn = jr.addedIn;
-        }
-        socketStatus.logged = true;
-        ck_new();
-
-        if (window.location.pathname == "/login/") {
-            window.location.replace(rootLocation + "");
-        } else {
-            loadScript("comum/screen/side_menu.js");
-            loadScript("comum/screen/top_menu.js");
-        }
-        //login_out();
-    }
-})
-//*/
-
-function wait_Connect(callback) {
-    if (!socketStatus.connected) {
-        setTimeout(() => { wait_Connect(callback) }, 500);
-    } else { callback(); }
-}
-
-function system_redirect(data) {
-    console.log(data)
-    //window.location = data.location;
-}
 /*
 appendRoute("system/redirect", system_redirect);
 appendRoute("system/ok", system_mess);

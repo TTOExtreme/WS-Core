@@ -52,6 +52,25 @@ class UserServer {
     }
 
     /**
+     * List all Users
+     */
+    listUser() {
+        return this.db.query("SELECT " +
+            "id," +
+            "name," +
+            "username," +
+            "createdIn," +
+            "createdBy," +
+            "deactivatedIn," +
+            "deactivatedBy," +
+            "active," +
+            "connected," +
+            "lastConnection," +
+            "lastTry," +
+            "lastIp FROM " + this.db.DatabaseName + "._User;");
+    }
+
+    /**
      * Attrib permission to user
      * @param {Int} userID UserId a ser adicionado
      * @param {Int} permissionID 

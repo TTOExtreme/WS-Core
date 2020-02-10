@@ -38,7 +38,7 @@ function init_loading() {
 
     svg.style.strokeDasharray = rd;
 }
-
+ClientEvents.setCoreEvent("startLoader")
 ClientEvents.on("startLoader", () => {
     let svg = document.getElementById('loading_holderBg');
     if (!svg) { setTimeout(() => { ClientEvents.emit("startLoader") }); return; }
@@ -49,7 +49,7 @@ ClientEvents.on("startLoader", () => {
     svg.style.width = "100vw";
     svg.style.height = "100vh";
 })
-
+ClientEvents.setCoreEvent("stopLoader");
 ClientEvents.on("stopLoader", () => {
     let svg = document.getElementById('loading_holderBg');
     if (!svg) { setTimeout(() => { ClientEvents.emit("stopLoader") }); return; }
@@ -61,6 +61,7 @@ ClientEvents.on("stopLoader", () => {
     svg.style.height = "100px";
 });
 
+ClientEvents.setCoreEvent("Page_Loaded")
 ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
     console.log("initializing Loader")
     init_loading();

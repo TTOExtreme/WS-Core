@@ -1,5 +1,6 @@
 class ClientEvent {
-    events = {};
+    _events = {};
+    _coreEvents = [];
 
     /**
      * 
@@ -8,10 +9,10 @@ class ClientEvent {
      * @description Create Events with name append if exists
      */
     on(name, call) {
-        if (!this.events[name]) {
-            this.events[name] = [];
+        if (!this._events[name]) {
+            this._events[name] = [];
         }
-        this.events[name].push(call);
+        this._events[name].push(call);
     }
 
     /**
@@ -21,8 +22,8 @@ class ClientEvent {
      * @description Call all events with name and arguments 
      */
     emit(name, ...args) {
-        if (this.events[name]) {
-            this.events[name].forEach(event => {
+        if (this._events[name]) {
+            this._events[name].forEach(event => {
                 if (typeof (event.then) === 'function') {
                     Promise.all([event]).then().catch();
                 } else {
@@ -36,9 +37,35 @@ class ClientEvent {
         }
     }
 
+    /**
+     * Clear all listerners for specified Event Name
+     * @param {String} name 
+     */
     clear(name) {
-        if (this.events[name]) {
-            delete this.events[name];
+        if (this._events[name]) {
+            delete this._events[name];
+        }
+    }
+
+    /**
+     * Clear all listerners Except for Core Events
+     * @param {String} name 
+     */
+    clearAll() {
+        Object.keys(this._events).forEach(name => {
+            if (this._coreEvents.find(e => e == name) == undefined) {
+                delete this._events[name];
+            }
+        })
+    }
+
+    /**
+     * Set as Core Event Listener that locks clearing 
+     * @param {String} name 
+     */
+    setCoreEvent(name) {
+        if (this._coreEvents.find(e => e == name) == undefined) {
+            this._coreEvents.push(name);
         }
     }
 }

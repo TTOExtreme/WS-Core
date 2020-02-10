@@ -4,6 +4,8 @@ let cr = document.getElementById("Credits_Holder");
 cr.addEventListener("click", (ev) => {
     ClientEvents.emit("CreditsToggle");
 });
+
+ClientEvents.setCoreEvent("Page_Loaded");
 ClientEvents.on("Page_Loaded", new Promise((res, rej) => {
     let credits = document.createElement("div");
     credits.innerHTML =
@@ -27,6 +29,7 @@ ClientEvents.on("Page_Loaded", new Promise((res, rej) => {
     res();
 }));
 
+ClientEvents.setCoreEvent("CreditsToggle");
 ClientEvents.on("CreditsToggle", () => {
     document.getElementById("credits_holderbg").classList.toggle("CreditsShow");
 })
