@@ -4,7 +4,7 @@ const WSCfg = require('./core/utils/cfg.js').WSCfg;
 const WSConfigStruct = require('./core/utils/cfgStruct.js').WSConfigStruct;
 const WServer = require('./core/socket/webserver.js').WServer;
 const DBConnector = require('./core/database/connector.js').DBConnector;
-const EventEmitter = require('events');
+const EventEmitter = require("./core/utils/EventsClient").ClientEvent;
 
 /**
  * @class WSMainServer

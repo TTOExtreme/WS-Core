@@ -9,7 +9,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/utils/socket.js",
         "./js/libs/bcypher.js",
         "./js/screen/credits.js",
-        "./js/screen/sideMenu.js"
+        "./js/screen/sideMenu.js",
+        "./js/screen/topMenu.js"
     ]).then(() => {
         ClientEvents.emit("Page_Loaded");
     }).catch((err) => {
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 loadExternalFiles([
     "./css/index.css",
     "./css/home.css",
+    "./css/screen/TopMenu.css",
     "./css/screen/LeftMenu.css",
     "./css/screen/loading.css",
     "./css/themes/theme-dark.css"

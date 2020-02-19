@@ -92,17 +92,26 @@ function ToggleLeftMenuItem(obj) {
 }
 
 class LeftMenuItem {
+
+    /**@const {string} Name Name to show */
     Name;
-    Icon;
-    Event;
-    SubItems;
+    /**@const {string} Id  Id for the item */
     Id;
+    /**@const {string} Icon  Path o icon */
+    Icon;
+    /**@const {Function} Event Event on Click */
+    Event
+    /**@const {ClientMenus} SubItems Child Items */
+    SubItems;
+    /**@const {ClientMenus} TopItems */
+    TopItems;
+
     constructor(obj) {
         Object.assign(this, obj);
     }
     getItem() {
         let si = document.createElement("tr");
-        si.onclick = () => { ToggleLeftMenuItem(this) };
+        si.onclick = () => { if (typeof (this.Event) === "function") { this.Event(); } else { ToggleLeftMenuItem(this); } };
         si.setAttribute("class", "LMI-Item")
         si.innerHTML =
             ((this.Icon) ? "<td class='LMI-img-td'><img class='LMI-img' src='" + this.Icon + "'></td>" : "") + "" +

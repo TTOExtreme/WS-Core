@@ -1,0 +1,125 @@
+
+.TopMenu{
+    width: calc(100vw - 30px);
+    background-color: #303030f0;
+    position: absolute;
+    top: 0;
+    left: 30px;
+    height: 30px;
+    z-index: 2;
+    color: #808080;
+    overflow: hidden;
+}
+
+.TopMenu td{
+    margin: 0;
+    cursor: pointer;
+    font-size: 16pt;
+}
+
+.TopMenuTable {
+    border-collapse: collapse;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 75px);
+    margin-top: 40px;
+    width: 100%;
+}
+
+.TMI{
+    border-collapse: collapse;
+    width: calc(100% - 20px);
+    padding: 0;
+    margin: 0;
+    border: 0;
+    margin-left: 20px;
+    overflow: hidden;
+}
+
+.TMI tr td p{
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-collapse: collapse;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 11pt;
+    margin-left: 5px;
+}
+
+.TMI-Item{
+    background-color: var(--menu-item-bg);
+    color: var(--menu-item-text);
+    transition: 0.5s;
+    height: 30px;
+    border: 1px solid #888;
+    border-radius: 8px 8px 0 0;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.TMI-Item p{
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.TMI-Item td{
+    padding-left: 20px;
+}
+.TMI-Item:hover{
+    background-color: var(--menu-item-bg-hover);
+    color: var(--menu-item-text-hover);
+    transform: translateY(-5px);
+}
+
+.TopMenuUserBar{
+    max-width: 20px;
+    max-height: 20px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.TopMenuUserBar-item{
+    width: 20px;
+    height: 20px;
+}
+
+.TopMenu-UserMenu{
+    position: absolute;
+    top:40px;
+    left: 10px;
+    width: 168px;
+    background-color: #303030;
+    border-radius: 0px;
+    border: none;
+    height: 0;
+    opacity: 0;
+    transition: .8s;
+    overflow: hidden;
+    border-radius: 1px;
+    border: 1px solid #292929;
+    z-index: 2;
+    padding: 10px;
+    color: #a0a0a0;
+}
+.TopMenu-UserMenu table,
+.TopMenu-UserMenu td,
+.TopMenu-UserMenu tr{
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.TopMenu-UserMenu-info{
+    font-size:9pt;
+    padding-left: 5px;
+}
+.TopMenu-UserMenu-title{
+    font-size:10pt;
+    float: right;
+}
+
+.TMUserMenuShow{
+    opacity: 1;
+    height: 100px;
+    border-radius: 25px;
+}

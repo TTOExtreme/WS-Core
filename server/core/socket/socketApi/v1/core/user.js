@@ -7,6 +7,7 @@ class Socket {
     _config;
     _WSMainServer;
     _myself;
+    _events;
 
     /**
      * Constructor for User Class
@@ -16,6 +17,7 @@ class Socket {
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
         this._WSMainServer = WSMainServer;
+        this._events = WSMainServer.events;
         this._userServer = new userManipulator(WSMainServer);
         this._myself = new class_user(WSMainServer);
     }
@@ -27,6 +29,10 @@ class Socket {
      */
     socket(socket, Myself) {
         this._myself = Myself;
+        this._events.emit("usr/lst/menu", this._myself);
+        /**
+         * User list 
+         */
         socket.on("userList", (data) => {
             this._myself.checkPermission("adm/usr/lst").then(() => {
                 this._userServer.listUser().then((data) => {
@@ -36,7 +42,16 @@ class Socket {
                 })
             })
         })
+
+        /**
+         * User menus
+         */
+        socket.on("usr/lst/menu", (data) => {
+            socket.emit("ClientEvents", { event: "usr/lst/menu", data: data })
+        })
     }
+
+
 }
 
 module.exports = { Socket };

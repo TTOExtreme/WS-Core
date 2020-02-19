@@ -16,13 +16,15 @@ class User {
     cfg;
     /**@const {DBConnector} db */
     db;
-
+    /**@param {ClientMenus} Menus */
+    Menus;
 
     /**
      * Constructor for User Class
      * @param {WSMainServer} WSMain
      */
     constructor(WSMain) {
+        this.Menus = [new ClientMenus()]
         this.db = WSMain.db;
         this.log = WSMain.log;
         this.cfg = WSMain.cfg;
@@ -203,6 +205,29 @@ class User {
         }
     }
 
+    /**
+     * Function to append menus
+     * @param {JSON} menus 
+     */
+    AppendMenus(menus) {
+        this.Menus = this.Menus.concat(this.Menus, menus);
+    }
+
 }
 
-module.exports = { User };
+class ClientMenus {
+    /**@const {string} Name Name to show */
+    Name;
+    /**@const {string} Id  Id for the item */
+    Id;
+    /**@const {string} Icon  Path o icon */
+    Icon;
+    /**@const {Function} Event Event on Click */
+    Event
+    /**@const {ClientMenus} SubItems Child Items */
+    SubItems;
+    /**@const {ClientMenus} TopItems Items on top menu */
+    TopItems;
+}
+
+module.exports = { User, ClientMenus };
