@@ -15,7 +15,7 @@ const DatabaseCreatorModules = require("./core/database/creator/createModules").
  */
 class WSMainServerInstaller {
     /**@const {JSON} config */
-    config
+    config;
     /**@const {WSLog} log */
     log;
     /**@const {WSCfg} cfg */
