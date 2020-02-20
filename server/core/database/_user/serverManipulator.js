@@ -108,6 +108,13 @@ class UserServer {
             " WHERE 'id_User'=" + userID + " AND 'id_Permission'=" + permissionID + ";");
     }
 
+    /**
+     * load into user, all the menus
+     * @param {UserStructure} myself
+     */
+    getMenus(myself = new UserStructure) {
+        myself.
+    }
 
 }
 

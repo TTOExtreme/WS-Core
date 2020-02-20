@@ -213,6 +213,14 @@ class User {
         this.Menus = this.Menus.concat(this.Menus, menus);
     }
 
+    /**
+     * Function to get list of menus
+     * @param {JSON} menus 
+     */
+    GedMenus(menus) {
+        return this.Menus;
+    }
+
 }
 
 class ClientMenus {
