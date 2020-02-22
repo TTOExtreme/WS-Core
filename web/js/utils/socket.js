@@ -59,23 +59,25 @@ class Socket {
         SocketClass.socket.on('connect', function () {
             SocketClass.socket.on("auth-ok", function (data) {
 
-                SocketClass.myself = new UserStruct(data);
-                ClientEvents.emit("Logged", SocketClass.myself);
-                if (SocketClass.socketStatus.reconnecting) {
-                    ClientEvents.emit("system_mess", { status: "OK", mess: "Conectado", time: 1000 })
-                }
-
-                ClientEvents.on("SendSocket", (event, data) => {
-                    SocketClass._send(event, data);
+                ClientEvents.setCoreEvent("SendSocket");
+                ClientEvents.on("SendSocket", (ename, data) => {
+                    SocketClass._send(ename, data);
                 })
 
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
+                        console.log(data)
                         if (data.event != undefined) {
                             ClientEvents.emit(data.event, data.data);
                         }
                     }
                 })
+
+                SocketClass.myself = new UserStruct(data);
+                ClientEvents.emit("Logged", SocketClass.myself);
+                if (SocketClass.socketStatus.reconnecting) {
+                    ClientEvents.emit("system_mess", { status: "OK", mess: "Conectado", time: 1000 })
+                }
 
                 SocketClass.socketStatus.logged = true;
                 SocketClass.socketStatus.reconnecting = true;
@@ -86,9 +88,9 @@ class Socket {
                 }
             });
             SocketClass.socket.on("data", function (data) {
-                let udata = uncrypt(indb.login.UUID.substring(0, 16), data);
+                //let udata = uncrypt(indb.login.UUID.substring(0, 16), data);
                 //executeRoute(JSON.parse(udata));
-                ck_new();
+                //ck_new();
 
             });
             SocketClass.socket.on("logout", function () {
@@ -135,21 +137,23 @@ class Socket {
     }
 
     _reconnect() {
-        if (SocketClass.socketStatus.reconnecting) {
+        if (this.socketStatus.reconnecting) {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Reconectando", time: 1000 })
         }
-        SocketClass.SocketClass.socket.off();
+        this.socket.off();
         initSocket();
     }
 
     _connectSocket() {
-        if (!SocketClass.socketStatus.logged) {
-            SocketClass.socket.emit('auth', indb.login);
+        if (!this.socketStatus.logged) {
+            this.socket.emit('auth', indb.login);
         }
     }
 
-    _send(event, data) {
-        SocketClass.socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
+    _send(ename, ...data) {
+        console.log("Send: " + ename);
+        this.socket.emit(ename, data);
+        //this.socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
     }
 
     _appendRoute(route, callback) {

@@ -1,5 +1,7 @@
 
+
 document.addEventListener("DOMContentLoaded", function (event) {
+    document.body.style.opacity = 0;
     loadExternalFiles([
         "./js/utils/eventHandler.js",
         "./js/libs/socket.io.js",
@@ -13,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/screen/topMenu.js"
     ]).then(() => {
         ClientEvents.emit("Page_Loaded");
+        document.body.style.opacity = 1;
     }).catch((err) => {
         console.log("An error ocurred when loading external files\nAre you disconnected from internet?")
         console.log(err);

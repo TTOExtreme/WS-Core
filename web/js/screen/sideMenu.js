@@ -35,12 +35,15 @@ ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
     resolve();
 }));
 
+let MenuItems = [];
+
 ClientEvents.setCoreEvent("LeftMenu-SetItems")
 ClientEvents.on("LeftMenu-SetItems", (items) => {
     if (items) {
+        MenuItems = items;
         let LeftMenuTable = document.getElementById("LeftMenuTable");
         LeftMenuTable.innerHTML = "";
-        items.forEach(item => {
+        MenuItems.forEach(item => {
             let mitem = new LeftMenuItem(item)
             if (mitem) {
                 LeftMenuTable.appendChild(mitem.getItem());
@@ -78,16 +81,39 @@ ClientEvents.on("LMU-SetInfo", (info) => {
 ClientEvents.setCoreEvent("Logged")
 ClientEvents.on("Logged", (myself) => {
     ClientEvents.emit("LMU-SetInfo", myself);
+    ClientEvents.emit("SendSocket", "usr/lst/menu", {});
+})
+
+ClientEvents.setCoreEvent("LMI-CloseAll")
+ClientEvents.on("LMI-CloseAll", () => {
+    MenuItems.forEach(item => {
+        if (item.SubItems) {
+            if (!document.getElementById("sub_" + item.Id).classList.contains("LMIHidden"))
+                document.getElementById("sub_" + item.Id).classList.toggle("LMIHidden");
+        }
+    })
 })
 
 function ToggleLeftMenuItem(obj) {
     let item = new LeftMenuItem(obj);
     if (item.SubItems) {
-        console.log("sub_" + item.Id);
+
+        if (document.getElementById("sub_" + item.Id).classList.contains("LMIHidden")) {
+            ClientEvents.emit("LMI-CloseAll");
+        }
         document.getElementById("sub_" + item.Id).classList.toggle("LMIHidden");
         return;
     } else {
-        item.Event(item);
+        if (typeof (item.Event) === "function") {
+            item.Event(item);
+        } else {
+            if (item.EventCall && item.EventData) {
+                ClientEvents.emit(item.EventCall, item.EventData);
+            }
+        }
+        if (item.TopItems.length > 0) {
+            ClientEvents.emit("TopMenu-SetItems", item.TopItems);
+        }
     }
 }
 
@@ -99,8 +125,12 @@ class LeftMenuItem {
     Id;
     /**@const {string} Icon  Path o icon */
     Icon;
+    /**@const {string} EventCall Event name to call on Client events */
+    EventCall;
+    /**@const {string} EventData Event data to call */
+    EventData;
     /**@const {Function} Event Event on Click */
-    Event
+    Event;
     /**@const {ClientMenus} SubItems Child Items */
     SubItems;
     /**@const {ClientMenus} TopItems */

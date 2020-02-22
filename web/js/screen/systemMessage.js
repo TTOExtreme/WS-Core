@@ -87,8 +87,10 @@ class SystemMess {
 
 new SystemMess();
 
+/*
 setTimeout(() => {
     ClientEvents.emit("system_mess", { status: "INFO", mess: "Teste", time: 1000, countdown: 10 })
     ClientEvents.emit("system_mess", { status: "OK", mess: "Teste", time: 2000 })
     ClientEvents.emit("system_mess", { status: "ERROR", mess: "Teste", time: 3000 })
 }, 3000)
+//*/

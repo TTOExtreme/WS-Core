@@ -30,10 +30,11 @@ class ClientEvent {
                     if (args.length == 1) {
                         event(args[0]);
                     } else {
-                        event(args[1]);
+                        event(...args);
                     }
                 }
             });
+
         }
     }
 
@@ -71,3 +72,12 @@ class ClientEvent {
 }
 
 let ClientEvents = new ClientEvent();
+
+ClientEvents.setCoreEvent("Load");
+ClientEvents.on("Load", (file) => {
+    loadExternal(file).then(() => {
+    }).catch((err) => {
+        console.log("An error ocurred when loading external css\nAre you disconnected from internet?")
+        console.log(err);
+    })
+})

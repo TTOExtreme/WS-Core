@@ -49,39 +49,81 @@ const _DB = [
         defaltAdd: 1
     },
     {
-        name: "Listar Usuários",
-        description: "Abrir o Menu de Lista de Usuários",
-        code: "adm/usr/lst",
+        name: "Menu Administrativo",
+        description: "Abrir o Menu Administração",
+        code: "menu/adm",
         type: "adm",
-        defaltAdd: 1
+        defaltAdd: 0
     },
     {
-        name: "Criar Usuários",
-        description: "Abrir o Menu de Criação de Usuários",
-        code: "adm/usr/crt",
+        name: "Menu Adm > Usuários",
+        description: "Abrir o Menu Usuários",
+        code: "menu/adm/usr",
         type: "adm",
-        defaltAdd: 1
+        defaltAdd: 0
     },
     {
-        name: "Editar Usuários",
-        description: "Abrir o Menu de Edição de Usuários",
+        name: "Adm > Usuários > Editar",
+        description: "Editar Usuários",
         code: "adm/usr/edt",
         type: "adm",
-        defaltAdd: 1
+        defaltAdd: 0
     },
     {
-        name: "Excluir Usuários",
-        description: "Abrir o Menu de Exclusão de Usuários",
-        code: "adm/usr/del",
+        name: "Adm > Usuários > Desativar",
+        description: "Desativar Usuários",
+        code: "adm/usr/disable",
         type: "adm",
-        defaltAdd: 1
+        defaltAdd: 0
     },
     {
-        name: "Ativar/Desativar Usuários",
-        description: "Abrir o Menu de Ativar/Desativar Usuários",
-        code: "adm/usr/ativar",
+        name: "Adm > Usuários > Adicionar",
+        description: "Adicionar Usuários",
+        code: "menu/adm/usr/add",
         type: "adm",
-        defaltAdd: 1
+        defaltAdd: 0
+    },
+    {
+        name: "Adm > Usuários > Permissões",
+        description: "Modificar Permissões",
+        code: "adm/usr/perm",
+        type: "adm",
+        defaltAdd: 0
+    },
+    {
+        name: "Menu Adm > Grupos",
+        description: "Abrir o Menu Grupos",
+        code: "menu/adm/grp",
+        type: "adm",
+        defaltAdd: 0
+    },
+    {
+        name: "Adm > Grupos > Editar",
+        description: "Editar Grupos",
+        code: "adm/grp/edt",
+        type: "adm",
+        defaltAdd: 0
+    },
+    {
+        name: "Adm > Grupos > Desativar",
+        description: "Desativar Grupos",
+        code: "adm/grp/disable",
+        type: "adm",
+        defaltAdd: 0
+    },
+    {
+        name: "Adm > Grupos > Adicionar",
+        description: "Adicionar Grupos",
+        code: "menu/adm/grp/add",
+        type: "adm",
+        defaltAdd: 0
+    },
+    {
+        name: "Adm > Grupos > Permissões",
+        description: "Modificar Permissões",
+        code: "adm/grp/perm",
+        type: "adm",
+        defaltAdd: 0
     }
 ]
 

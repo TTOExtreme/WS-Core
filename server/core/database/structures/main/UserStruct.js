@@ -1,8 +1,7 @@
 const PermissionsStruct = require('../relations/User_Permissions').UserPermissionsStruct;
 
 /**
- * @class
- * @alias UserStruct
+ * @typedef {UserStruct} UserStruct
  * @property {number} id
  * @property {string} name
  * @property {string} username
@@ -20,6 +19,7 @@ const PermissionsStruct = require('../relations/User_Permissions').UserPermissio
  * @property {string} lastIp
  * @property {string} permissions
  */
+
 
 class UserStruct {
     id;

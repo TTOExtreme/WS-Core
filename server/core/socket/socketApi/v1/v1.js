@@ -3,6 +3,7 @@ const SocketIO = require('socket.io');
 const CookieIO = require('cookie');
 const UserClass = require('../../../database/_user/class_user').User;
 const fs = require('fs');
+const path = require('path').join;
 
 class v1 {
 
@@ -38,9 +39,11 @@ class v1 {
                         //check in database for userID
                         Myself.findmeuuid(cookies.wscore).then(() => {
                             return Myself.checkPermission("def/usr/login").then(() => {
-                                socket.emit("auth-ok", Myself.getUserClientData());
                                 _socket = socket;
                                 this._loadModules(_socket, Myself);
+
+                                socket.emit("auth-ok", Myself.getUserClientData());
+                                return Promise.resolve();
                             })
                         }).catch(() => {
                             socket.emit("auth-err", "UUID Invalido");
@@ -70,17 +73,21 @@ class v1 {
      */
     _loadModules(socket, Myself) {
         //load core modules
-        fs.readdirSync(__dirname + './core/').forEach((mod) => {
-            let modSocket = new (require(__dirname + './core/' + mod)).Socket(this._WSMainServer);
-            modSocket.socket(socket, Myself);
+        fs.readdirSync(path(__dirname + '/core/')).forEach((mod) => {
+            let modSocket = require(__dirname + '/core/' + mod)
+            let modClass = new modSocket.Socket(this._WSMainServer);
+            modClass.socket(socket, Myself);
         })
+        /*
         //load addons modules
-        fs.readdirSync(__dirname + '../../../../modules/').forEach((mod) => {
-            if (fs.existsSync(__dirname + '../../../../modules/' + mod + '/server/socket/socket_v1.js')) {
-                let modSocket = new (require(__dirname + '../../../../modules/' + mod + '/server/socket/socket_v1.js')).Socket(this._WSMainServer);
+        fs.readdirSync(path(__dirname + '/../../../../modules/')).forEach((mod) => {
+            if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/socket_v1.js'))) {
+                let modSocket = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/socket_v1.js'))).Socket(this._WSMainServer);
                 modSocket.socket(socket, Myself);
             }
         })
+        //*/
+
     }
 }
 

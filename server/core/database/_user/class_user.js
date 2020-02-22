@@ -6,7 +6,7 @@ const WSMainServer = require('../../../main');
 const Bcypher = require("../../utils/bcypher").Bcypher;
 
 /**
- * @class User
+ * @typedef User
  */
 class User {
 
@@ -29,6 +29,7 @@ class User {
         this.log = WSMain.log;
         this.cfg = WSMain.cfg;
         this.bcypher = new Bcypher();
+        this._events = WSMain.events;
     }
 
     myself = new UserStruct();
@@ -169,6 +170,10 @@ class User {
         }
     }
 
+    /**
+     * Function to Check if user has certain permission;
+     * @param {String} permissionCode 
+     */
     checkPermission(permissionCode) {
         if (this.myself.permissions) {
             if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode))[0] != undefined
@@ -177,6 +182,20 @@ class User {
             }
         }
         return Promise.reject("Usuário sem permissão para a ação");
+    }
+
+    /**
+     * Function to Check if user has certain permission Sync;
+     * @param {String} permissionCode 
+     */
+    checkPermissionSync(permissionCode) {
+        if (this.myself.permissions) {
+            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode))[0] != undefined
+                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system"))[0] != undefined) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -190,6 +209,7 @@ class User {
                     " WHERE id_User=" + this.myself.id + ";").then((result) => {
                         if (result[0]) {
                             this.myself.permissions = result;
+                            this._generateMenus();
                             resolve(this.myself)
                         } else {
                             return Promise.reject();
@@ -217,8 +237,34 @@ class User {
      * Function to get list of menus
      * @param {JSON} menus 
      */
-    GedMenus(menus) {
+    GetMenus() {
         return this.Menus;
+    }
+
+
+    _generateMenus() {
+        try {
+            let _AdmMenus = AdmMenus;
+            _AdmMenus.forEach((Menu, index, arr) => {
+                if (this.checkPermissionSync(Menu.Id)) {
+                    Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
+                        if (this.checkPermissionSync(SubMenu.Id)) {
+                            SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
+                                if (this.checkPermissionSync(TopMenu.Id)) {
+                                } else { Toparr.splice(Topindex, 1); }
+                            });
+                        } else { Subarr.splice(Subindex, 1); }
+                    });
+                    Menu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
+                        if (this.checkPermissionSync(TopMenu.Id)) {
+                        } else { Toparr.splice(Topindex, 1); }
+                    });
+                } else { arr.splice(index, 1); }
+            })
+            this.Menus = _AdmMenus;
+        } catch (err) {
+            this.log.error(err)
+        }
     }
 
 }
@@ -237,5 +283,48 @@ class ClientMenus {
     /**@const {ClientMenus} TopItems Items on top menu */
     TopItems;
 }
+
+let AdmMenus = [
+    {
+        Name: "Administração",
+        Id: "menu/adm",
+        Icon: "",
+        Event: () => { },
+        SubItems: [
+            {
+                Name: "Usuários",
+                Id: "menu/adm/usr",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./js/core/user/list.js",
+                TopItems: [
+                    {
+                        Name: "Adicionar",
+                        Id: "menu/adm/usr/add",
+                        EventCall: "Load",
+                        EventData: "./js/core/user/add.js",
+                    }
+                ],
+            },
+            {
+                Name: "Grupos",
+                Id: "menu/adm/grp",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./js/core/group/list.js",
+                TopItems: [
+                    {
+                        Name: "Adicionar",
+                        Id: "menu/adm/grp/add",
+                        EventCall: "Load",
+                        EventData: "./js/core/group/add.js",
+                    }
+                ],
+            }
+        ],
+        TopItems: [
+        ],
+    }
+]
 
 module.exports = { User, ClientMenus };

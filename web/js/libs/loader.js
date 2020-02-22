@@ -17,7 +17,6 @@ function loadExternalFiles(list) {
 /**
  * 
  * @param {string} path 
- * @param {function} callback 
  */
 function loadExternal(path) {
     return new Promise(function (resolve, reject) {

@@ -47,9 +47,9 @@ class Socket {
          * User menus
          */
         socket.on("usr/lst/menu", (data) => {
-
-            socket.emit("ClientEvents", { event: "usr/lst/menu", data: this._myself.getMenus() })
+            socket.emit("ClientEvents", { event: "LeftMenu-SetItems", data: this._myself.GetMenus() })
         })
+
     }
 
 

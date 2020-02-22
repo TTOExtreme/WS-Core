@@ -6,9 +6,6 @@ const User = require("./class_user");
 const UserStructure = require("../structures/main/UserStruct")
 const Bcypher = require("../../utils/bcypher").Bcypher;
 
-/**
- * @class UserServer
- */
 class UserServer {
 
     /**
@@ -21,6 +18,7 @@ class UserServer {
         this.cfg = WSMain.cfg;
         this.bcypher = new Bcypher();
     }
+
 
     /**
      * Create User from JSON Struct
@@ -107,15 +105,6 @@ class UserServer {
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Permissions" +
             " WHERE 'id_User'=" + userID + " AND 'id_Permission'=" + permissionID + ";");
     }
-
-    /**
-     * load into user, all the menus
-     * @param {UserStructure} myself
-     */
-    getMenus(myself = new UserStructure) {
-        myself.
-    }
-
 }
 
 module.exports = { UserServer }
