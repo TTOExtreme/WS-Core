@@ -199,6 +199,33 @@ class User {
     }
 
     /**
+     * Function to update database with user status
+     */
+    LogOut() {
+        this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+            " SET connected =0 " +
+            "WHERE id=" + this.myself.id + " " +
+            ";")
+    }
+
+    /**
+     * Function to update database with user status
+     */
+    LogIn(data) {
+        this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+            " SET connected =1 ," +
+            " lastIp='" + data.ip + "' ," +
+            " lastConnection='" + Date.now() + "' " +
+            "WHERE id=" + this.myself.id + " " +
+            ";").then(() => {
+                this.log.info("User Logged In")
+            }).catch((err) => {
+                this.log.error("On Login Set Status");
+                this.log.error(err);
+            })
+    }
+
+    /**
      * Function to load permissions from database
      * @param {JSON} preferences 
      */

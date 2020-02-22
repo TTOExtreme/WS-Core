@@ -15,16 +15,17 @@ class UserStruct {
      * @param {JSON} user JSON contendo os items do usuário 
      */
     constructor(user) {
-        if (user.name) { this.name = user.name }
-        if (user.username) { this.username = user.username }
-        if (user.uuid) { this.uuid = user.uuid }
-        if (user.preferences) { this.preferences = user.preferences }
-        if (user.createdIn) { this.createdIn = user.createdIn }
-        if (user.lastConnection) { this.lastConnection = user.lastConnection }
-        if (user.lastTry) { this.lastTry = user.lastTry }
-        if (user.lastIp) { this.lastIp = user.lastIp }
+        if (user) {
+            if (user.name) { this.name = user.name }
+            if (user.username) { this.username = user.username }
+            if (user.uuid) { this.uuid = user.uuid }
+            if (user.preferences) { this.preferences = user.preferences }
+            if (user.createdIn) { this.createdIn = user.createdIn }
+            if (user.lastConnection) { this.lastConnection = user.lastConnection }
+            if (user.lastTry) { this.lastTry = user.lastTry }
+            if (user.lastIp) { this.lastIp = user.lastIp }
+        }
     }
-
 }
 
 class Socket {

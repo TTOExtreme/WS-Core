@@ -43,6 +43,9 @@ class v1 {
                                 this._loadModules(_socket, Myself);
 
                                 socket.emit("auth-ok", Myself.getUserClientData());
+
+                                var address = socket.handshake.address;
+                                Myself.LogIn({ ip: clearIpv6(address) });
                                 return Promise.resolve();
                             })
                         }).catch(() => {
@@ -62,6 +65,7 @@ class v1 {
 
             socket.on('disconnect', () => {
                 this._log.info('Client disconnected');
+                Myself.LogOut();
             });
         })
     }
@@ -89,6 +93,11 @@ class v1 {
         //*/
 
     }
+}
+
+
+function clearIpv6(address) {
+    return address.replace("::ffff:", "");
 }
 
 module.exports = { v1 }
