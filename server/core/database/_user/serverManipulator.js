@@ -54,18 +54,22 @@ class UserServer {
      */
     listUser() {
         return this.db.query("SELECT " +
-            "id," +
-            "name," +
-            "username," +
-            "createdIn," +
-            "createdBy," +
-            "deactivatedIn," +
-            "deactivatedBy," +
-            "active," +
-            "connected," +
-            "lastConnection," +
-            "lastTry," +
-            "lastIp FROM " + this.db.DatabaseName + "._User;");
+            "U1.id," +
+            "U1.name," +
+            "U1.username," +
+            "U1.createdIn," +
+            "U2.username as createdBy," +
+            "U1.deactivatedIn," +
+            "U1.deactivatedBy," +
+            "U1.active," +
+            "U1.connected," +
+            "U1.lastConnection," +
+            "U1.lastTry," +
+            "U1.lastIp " +
+            "FROM " + this.db.DatabaseName + "._User as U1 LEFT JOIN " +
+            " " + this.db.DatabaseName + "._User as U2 " +
+            "ON U1.createdBy = U2.id " +
+            " ;");
     }
 
     /**

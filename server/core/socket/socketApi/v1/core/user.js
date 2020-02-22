@@ -31,10 +31,11 @@ class Socket {
         this._myself = Myself;
         this._events.emit("usr/lst/menu", this._myself);
         /**
-         * User list 
+         * List all Users
          */
-        socket.on("userList", (data) => {
-            this._myself.checkPermission("adm/usr/lst").then(() => {
+        socket.on("adm/user/lst", (data) => {
+            this._log.warning("List User")
+            this._myself.checkPermission("menu/adm/usr").then(() => {
                 this._userServer.listUser().then((data) => {
                     socket.emit("ClientEvents", { event: "adm/usr/lst", data: data })
                 }).catch((err) => {

@@ -7,9 +7,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/libs/socket.io.js",
         "./js/libs/crypto-js.js",
         "./js/screen/loading.js",
+        "./js/utils/formaters.js",
         "./js/screen/systemMessage.js",
         "./js/utils/socket.js",
         "./js/libs/bcypher.js",
+        "./js/libs/tabulator.min.js",
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js",
         "./js/screen/topMenu.js"
@@ -26,6 +28,7 @@ loadExternalFiles([
     "./css/index.css",
     "./css/home.css",
     "./css/screen/TopMenu.css",
+    "./css/screen/tabulator.css",
     "./css/screen/LeftMenu.css",
     "./css/screen/loading.css",
     "./css/themes/theme-dark.css"

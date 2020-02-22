@@ -65,10 +65,16 @@ class SystemMess {
                         tr.style.marginTop = "3px";
                         if (data.countdown != undefined) {
                             this._system_mess_contdown(id, data.countdown, () => {
+                                if (data.callback) {
+                                    data.callback();
+                                }
                             });
                         } else {
                             setTimeout(() => {
                                 this._system_mess_out(tr);
+                                if (data.callback) {
+                                    data.callback();
+                                }
                             }, (data.time != undefined) ? data.time : 1000);
                         }
                     }, 10);

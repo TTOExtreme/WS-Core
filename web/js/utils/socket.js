@@ -44,7 +44,9 @@ class Socket {
     myself;
 
     constructor() {
-
+        this._init();
+    }
+    _init() {
         this.socketCfg.connected = false;
         this.socket = io.connect(window.location.origin + "/websocket/v1", {
             reconnection: false,
@@ -101,8 +103,9 @@ class Socket {
                 SocketClass.socketStatus.logged = false;
                 ClientEvents.emit("system_mess", { status: "ERROR", mess: "Desconectado", time: 1000 })
                 ClientEvents.emit("system_mess", {
-                    status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
-                }, reconnect)
+                    status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                    callback: () => { SocketClass._reconnect() }
+                })
             })
             SocketClass.socket.emit("auth");
         });
@@ -110,38 +113,42 @@ class Socket {
             SocketClass.socketCfg.ReconnectionIndex++;
             ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Conectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
-            }, reconnect)
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => { SocketClass._reconnect() }
+            })
+
         })
         SocketClass.socket.on("connect_error", function () {
             SocketClass.socketCfg.ReconnectionIndex++;
             ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
-            }, reconnect)
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => { SocketClass._reconnect() }
+            })
         })
         SocketClass.socket.on("reconnect_failed", function () {
             SocketClass.socketCfg.ReconnectionIndex++;
             ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
-            }, reconnect)
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => { SocketClass._reconnect() }
+            })
         })
         SocketClass.socket.on("reconnect_error", function () {
             SocketClass.socketCfg.ReconnectionIndex++;
             ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1])
-            }, reconnect)
+                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => { SocketClass._reconnect() }
+            })
         })
     }
 
     _reconnect() {
-        if (this.socketStatus.reconnecting) {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Reconectando", time: 1000 })
-        }
-        this.socket.off();
-        initSocket();
+        this.socketStatus.reconnecting = true;
+        ClientEvents.emit("system_mess", { status: "OK", mess: "Reconectando", time: 1000 })
+        //this.socket.off();
+        this._init();
     }
 
     _connectSocket() {
