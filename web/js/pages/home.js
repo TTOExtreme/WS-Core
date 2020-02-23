@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/libs/tabulator.min.js",
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js",
-        "./js/screen/topMenu.js"
+        "./js/screen/topMenu.js",
+        "./js/screen/contextCreator.js"
     ]).then(() => {
         ClientEvents.emit("Page_Loaded");
         document.body.style.opacity = 1;
@@ -31,6 +32,7 @@ loadExternalFiles([
     "./css/screen/tabulator.css",
     "./css/screen/LeftMenu.css",
     "./css/screen/loading.css",
+    "./css/screen/contextCreator.css",
     "./css/themes/theme-dark.css"
 ]).then(() => {
 }).catch((err) => {

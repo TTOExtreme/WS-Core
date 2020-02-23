@@ -28,6 +28,8 @@ class UserStruct {
     }
 }
 
+let Myself = new UserStruct();
+
 class Socket {
     socket;
     socketCfg = {
@@ -42,7 +44,6 @@ class Socket {
         reconnecting: false,
     }
 
-    myself;
 
     constructor() {
         this._init();
@@ -64,11 +65,14 @@ class Socket {
 
                 ClientEvents.setCoreEvent("SendSocket");
                 ClientEvents.on("SendSocket", (ename, data) => {
+                    console.log("Socket Send Data:")
+                    console.log(data);
                     SocketClass._send(ename, data);
                 })
 
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
+                        console.log("ClientEvents")
                         console.log(data)
                         if (data.event != undefined) {
                             ClientEvents.emit(data.event, data.data);
@@ -76,8 +80,8 @@ class Socket {
                     }
                 })
 
-                SocketClass.myself = new UserStruct(data);
-                ClientEvents.emit("Logged", SocketClass.myself);
+                Myself = new UserStruct(data);
+                ClientEvents.emit("Logged", Myself);
                 if (SocketClass.socketStatus.reconnecting) {
                     ClientEvents.emit("system_mess", { status: "OK", mess: "Conectado", time: 1000 })
                 }

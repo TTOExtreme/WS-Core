@@ -19,6 +19,13 @@ window.UserList = class UserList {
     actionOptions = [];
     actionRowFormatter = (data) => { };
     UserListData = [];
+    rowContext = (ev, row) => {
+        console.log(ev);
+        ClientEvents.emit("SendSocket", "adm/ust/lst/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
+
+        ev.preventDefault(); // prevent the browsers default context menu form appearing.
+    }
+
     main_table;
 
     newCollums = [
@@ -77,7 +84,8 @@ window.UserList = class UserList {
             paginationSizeSelector: [10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
             movableColumns: true,
             layout: "fitColumns",
-            rowFormatter: this.actionRowFormatter
+            rowFormatter: this.actionRowFormatter,
+            rowContext: this.rowContext
         });
         this._init();
         ClientEvents.emit("SendSocket", "adm/user/lst");
@@ -102,6 +110,9 @@ window.UserList = class UserList {
         ClientEvents.on("system/disabled/users", () => { system_get_users(); ClientEvents.emit("system_mess", { status: "OK", mess: "Usuário Desabilitado com Exito", time: 1000 }); });
         ClientEvents.on("system/enabled/users", () => { system_get_users(); ClientEvents.emit("system_mess", { status: "OK", mess: "Usuário Habilitado com Exito", time: 1000 }); });
 
+        ClientEvents.on("adm/u  sr/edt", (data) => {
+
+        })
     }
 
     createActionField(row) {

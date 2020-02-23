@@ -34,7 +34,6 @@ class Socket {
          * List all Users
          */
         socket.on("adm/user/lst", (data) => {
-            this._log.warning("List User")
             this._myself.checkPermission("menu/adm/usr").then(() => {
                 this._userServer.listUser().then((data) => {
                     socket.emit("ClientEvents", { event: "adm/usr/lst", data: data })
@@ -50,6 +49,30 @@ class Socket {
         socket.on("usr/lst/menu", (data) => {
             socket.emit("ClientEvents", { event: "LeftMenu-SetItems", data: this._myself.GetMenus() })
         })
+
+        /**
+         * Context Menu List items with it calls
+         */
+        socket.on("adm/ust/lst/ctx", (data) => {
+            let itemList = [];
+            if (this._myself.checkPermissionSync("adm/usr/edt")) {
+                itemList.push({ name: "Editar", event: () => { ClientEvents.emit("usr/edt", data); } });
+            }
+            if (this._myself.checkPermissionSync("adm/usr/disable")) {
+                console.log(data);
+                itemList.push({ name: ((data.active == 1) ? "Desativar" : "Ativar"), event: function () { ClientEvents.emit("usr/disable", data); } });
+            }
+            if (this._myself.checkPermissionSync("adm/usr/perm")) {
+                itemList.push({ name: "Permissões", event: () => { ClientEvents.emit("usr/perm", data); } });
+            }
+            if (this._myself.checkPermissionSync("adm/usr/grp")) {
+                itemList.push({ name: "Grupos", event: () => { ClientEvents.emit("usr/grp", data); } });
+            }
+            console.log(itemList);
+
+
+            socket.emit("ClientEvents", { event: "CreateContext", data: { data: data, items: itemList } })
+        });
 
     }
 

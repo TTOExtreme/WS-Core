@@ -91,6 +91,13 @@ const _DB = [
         defaltAdd: 0
     },
     {
+        name: "Adm > Usuários > Grupos",
+        description: "Modificar Grupos do Usuário",
+        code: "adm/usr/grp",
+        type: "adm",
+        defaltAdd: 0
+    },
+    {
         name: "Menu Adm > Grupos",
         description: "Abrir o Menu Grupos",
         code: "menu/adm/grp",
