@@ -3,6 +3,15 @@ ClientEvents.clearAll();
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
+ClientEvents.emit("LoadExternal", [
+    "./js/core/user/edt.js",
+    "./js/core/user/perm.js",
+    "./js/core/user/disable.js",
+    "./js/core/user/edt.js",
+    "./js/core/user/grp.js",
+    "./css/core/user/index.css"
+], () => { }, false)
+
 if (window.UserList) {
     window.UserList = null;
 }
@@ -20,7 +29,7 @@ window.UserList = class UserList {
     actionRowFormatter = (data) => { };
     UserListData = [];
     rowContext = (ev, row) => {
-        console.log(ev);
+        //console.log(ev);
         ClientEvents.emit("SendSocket", "adm/ust/lst/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.

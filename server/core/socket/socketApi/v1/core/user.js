@@ -56,19 +56,25 @@ class Socket {
         socket.on("adm/ust/lst/ctx", (data) => {
             let itemList = [];
             if (this._myself.checkPermissionSync("adm/usr/edt")) {
-                itemList.push({ name: "Editar", event: () => { ClientEvents.emit("usr/edt", data); } });
+                itemList.push({ name: "Editar", active: true, event: { call: "usr/edt", data: data[0].row } });
+            } else {
+                itemList.push({ name: "Editar", active: false });
             }
             if (this._myself.checkPermissionSync("adm/usr/disable")) {
-                console.log(data);
-                itemList.push({ name: ((data.active == 1) ? "Desativar" : "Ativar"), event: function () { ClientEvents.emit("usr/disable", data); } });
+                itemList.push({ name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"), event: { call: "usr/disable", data: data[0].row } });
+            } else {
+                itemList.push({ name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"), active: false });
             }
             if (this._myself.checkPermissionSync("adm/usr/perm")) {
-                itemList.push({ name: "Permissões", event: () => { ClientEvents.emit("usr/perm", data); } });
+                itemList.push({ name: "Permissões", event: { call: "usr/perm", data: data[0].row } });
+            } else {
+                itemList.push({ name: "Permissões", active: false });
             }
             if (this._myself.checkPermissionSync("adm/usr/grp")) {
-                itemList.push({ name: "Grupos", event: () => { ClientEvents.emit("usr/grp", data); } });
+                itemList.push({ name: "Grupos", event: { call: "usr/grp", data: data[0].row } });
+            } else {
+                itemList.push({ name: "Grupos", active: false });
             }
-            console.log(itemList);
 
 
             socket.emit("ClientEvents", { event: "CreateContext", data: { data: data, items: itemList } })

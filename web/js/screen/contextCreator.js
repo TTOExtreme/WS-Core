@@ -1,7 +1,8 @@
 ClientEvents.setCoreEvent("CreateContext");
 let ContextScreens = [];
 ClientEvents.on("CreateContext", (data) => {
-    if (ContextScreens.length > 5) {
+    //console.log(data);
+    if (ContextScreens.length > 0) {
         ClientEvents.emit("RemoveContext", ContextScreens[0]);
     }
     if (data.data[0].x && data.data[0].y && data.items) {
@@ -25,11 +26,13 @@ ClientEvents.on("CreateContext", (data) => {
 
         data.items.forEach(item => {
             let tr = document.createElement("tr");
-            tr.innerHTML = "<td><p>" + item.name + "</p></td>";
-            tr.onclick = () => {
-                ClientEvents.emit("RemoveContext", id);
-                if (typeof (item.event) === "function") {
-                    item.event();
+            tr.innerHTML = "<td><p " + ((item.active) ? "" : "class='ctx-item-disabled'") + ">" + item.name + "</p></td>";
+            if (item.active) {
+                tr.onclick = () => {
+                    ClientEvents.emit("RemoveContext", id);
+                    if (item.event.call) {
+                        ClientEvents.emit(item.event.call, item.event.data);
+                    }
                 }
             }
             table.appendChild(tr);

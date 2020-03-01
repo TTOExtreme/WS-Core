@@ -1,4 +1,6 @@
 :root {
+    --input-disabled-bg:#a0a0a0;
+    --input-disabled-text: #000000;
     --main-color: #30303050;
     --message-bg-err:#a55b5b;
     --message-bg-ok:#69b867;

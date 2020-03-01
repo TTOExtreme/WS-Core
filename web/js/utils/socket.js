@@ -65,15 +65,11 @@ class Socket {
 
                 ClientEvents.setCoreEvent("SendSocket");
                 ClientEvents.on("SendSocket", (ename, data) => {
-                    console.log("Socket Send Data:")
-                    console.log(data);
                     SocketClass._send(ename, data);
                 })
 
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
-                        console.log("ClientEvents")
-                        console.log(data)
                         if (data.event != undefined) {
                             ClientEvents.emit(data.event, data.data);
                         }
@@ -163,7 +159,7 @@ class Socket {
     }
 
     _send(ename, ...data) {
-        console.log("Send: " + ename);
+        //console.log("Send: " + ename);
         this.socket.emit(ename, data);
         //this.socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
     }

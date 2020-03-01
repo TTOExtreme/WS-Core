@@ -17,11 +17,31 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/screen/topMenu.js",
         "./js/screen/contextCreator.js"
     ]).then(() => {
+        ClientEvents.setCoreEvent("LoadExternal");
+        ClientEvents.on("LoadExternal", (list, callback, refreshOnError = true, index = 5) => {
+            loadExternalFiles(list).then(() => {
+                callback();
+            }).catch((err) => {
+                console.log("An error ocurred when loading external css\nAre you disconnected from internet?")
+                console.log(err);
+                if (index <= 0) {
+                    if (refreshOnError) {
+                        window.location.reload();
+                    }
+                } else {
+                    setTimeout(() => {
+                        ClientEvents.emit("LoadExternal", callback, index - 1);
+                    })
+                }
+            })
+
+        })
         ClientEvents.emit("Page_Loaded");
         document.body.style.opacity = 1;
     }).catch((err) => {
         console.log("An error ocurred when loading external files\nAre you disconnected from internet?")
         console.log(err);
+        setTimeout(() => { window.location.reload(); }, 1000);
     })
 })
 
@@ -38,4 +58,5 @@ loadExternalFiles([
 }).catch((err) => {
     console.log("An error ocurred when loading external css\nAre you disconnected from internet?")
     console.log(err);
+    setTimeout(() => { window.location.reload(); }, 1000);
 })
