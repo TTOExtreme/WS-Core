@@ -2,6 +2,7 @@
 const http = require('http');
 const Express = require('express');
 const SocketIO = require('socket.io');
+const colors = require('colors');  
 
 const bodyParser = require('body-parser');
 
@@ -32,13 +33,14 @@ class WServer {
      * init
      */
     init() {
+        this._log.task("webserver","Inicializing Webserver",0);
         this._app = Express();
 
         this._server = http.createServer(this._app);
         this._io = SocketIO(this._server);
 
         this._server.listen(this._config.webPort, () => {
-            this._log.info('Running server on port: ' + this._config.webPort);
+            this._log.task("webserver","Webserver on Port: " + colors.green(this._config.webPort),1);
         });
 
         this._webhost();
@@ -106,8 +108,9 @@ class WServer {
     _hostModules() {
         let modulesList = fs.readdirSync(path(__dirname + "../../../modules/"));
         modulesList.forEach(mod => {
+            this._log.task("loading-"+mod,"Loading Module: " + mod,0);
             if (fs.existsSync(path(__dirname + "../../../modules/" + mod + "/web"))) {
-                this._log.info("Loaded Module: " + mod);
+                this._log.task("loading-"+mod,"Loaded Module: " + mod,1);
                 this._app.use("/module/" + mod + "/", Express.static(path(__dirname + "../../../modules/" + mod + "/web")));
             }
         })

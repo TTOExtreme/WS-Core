@@ -17,7 +17,7 @@ class WSCfg {
     }
 
     LoadConfig() {
-        this.log.info("Loading config ")
+        this.log.task("loading-config","Loading config ",0);
         if (!fs.existsSync(this.configFile)) {
             this.SaveConfig();
         } else {
@@ -27,14 +27,14 @@ class WSCfg {
             } else {
                 this.SaveConfig();
             }
-            this.log.info("Config Loaded: " + JSON.stringify(this.config))
+            this.log.task("loading-config","Config Loaded ",1);
         }
         return this.config;
     }
 
     SaveConfig() {
-        this.log.warning("Config not Found on folder: " + this.configFile);
-        this.log.warning("Creating new One");
+        this.log.task("loading-config","Config Not Found ",2);
+        this.log.warning("Creating Config File");
 
 
         const rl = readline.createInterface({
@@ -62,6 +62,7 @@ class WSCfg {
                             if (!fs.existsSync(this.configFolder))
                                 fs.mkdirSync(this.configFolder);
                             fs.writeFileSync(this.configFile, JSON.stringify(this.config))
+                            process.exit(1);
                         });
                     });
                 });
