@@ -7,7 +7,7 @@ const WSConfigStruct = require('./cfgStruct').WSConfigStruct;
 class WSCfg {
 
     log;
-    configFolder = path.join("./../../cfg");
+    configFolder = path.join(__dirname + "/../../cfg");
     configFile = path.join(this.configFolder + "/server.json");
 
     config = new WSConfigStruct();
@@ -17,7 +17,7 @@ class WSCfg {
     }
 
     LoadConfig() {
-        this.log.task("loading-config","Loading config ",0);
+        this.log.task("loading-config", "Loading config ", 0);
         if (!fs.existsSync(this.configFile)) {
             this.SaveConfig();
         } else {
@@ -27,13 +27,13 @@ class WSCfg {
             } else {
                 this.SaveConfig();
             }
-            this.log.task("loading-config","Config Loaded ",1);
+            this.log.task("loading-config", "Config Loaded ", 1);
         }
         return this.config;
     }
 
     SaveConfig() {
-        this.log.task("loading-config","Config Not Found ",2);
+        this.log.task("loading-config", "Config Not Found ", 2);
         this.log.warning("Creating Config File");
 
 

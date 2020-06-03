@@ -5,3 +5,5 @@ output-ts/
 _old-files/*
 
 logs/
+
+server/cfg/server.json

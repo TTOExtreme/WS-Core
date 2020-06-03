@@ -11,6 +11,7 @@ class WSLog {
     logFolder = path.join("./../../../logs");
     InfoFile = path.join(this.logFolder + "/" + "log-" + Date.now() + ".log");
     logOnConsole = false;
+    GUI = false;
     logLevel = 3;
     //-1 - no log
     // 0 - only Errors
@@ -46,10 +47,10 @@ class WSLog {
      *          3 - Error
      */
     tasksIcon = {
-        0:colors.blue('ℹ'),
-        1:colors.green('✔'),
-        2:colors.yellow('⚠'),
-        3:colors.red('✖')
+        0: colors.blue('ℹ'),
+        1: colors.green('✔'),
+        2: colors.yellow('⚠'),
+        3: colors.red('✖')
     }
 
     /**
@@ -59,9 +60,13 @@ class WSLog {
      */
     tasks = {}
 
-    task(name, text, status = 0){
-        this.tasks[name] = {text:text,status:status}
-        this._writeTasks(); 
+    task(name, text, status = 0) {
+        if (this.GUI) {
+            this.tasks[name] = { text: text, status: status }
+            this._writeTasks();
+        } else {
+            console.log(this.tasksIcon[status] + " " + text);
+        }
     }
 
 
@@ -71,10 +76,14 @@ class WSLog {
     info(msg) {
         if (this.logLevel >= 2) {
             if (this.logOnConsole) {
-                (colors.gray("[" + Date.now() + "]") + colors.green("[INFO]") + colors.white(":" + msg)).split('\n').forEach(line=>{
-                    this.logText.push(line);
-                })
-                this._writeLog();
+                if (this.GUI) {
+                    (colors.gray("[" + Date.now() + "]") + colors.green("[INFO]") + colors.white(":" + msg)).split('\n').forEach(line => {
+                        this.logText.push(line);
+                    })
+                    this._writeLog();
+                } else {
+                    console.log(colors.gray("[" + Date.now() + "]") + colors.green("[INFO]") + colors.white(":" + msg));
+                }
             } else {
                 this._checkFile(this.InfoFile);
                 appendFileSync(this.InfoFile, "\n[" + Date.now() + "][INFO]:" + msg);
@@ -88,10 +97,14 @@ class WSLog {
     warning(msg) {
         if (this.logLevel >= 1) {
             if (this.logOnConsole) {
-                (colors.gray("[" + Date.now() + "]") + colors.yellow("[WARN]") + colors.white(":" + msg)).split('\n').forEach(line=>{
-                    this.logText.push(line);
-                })
-                this._writeLog();
+                if (this.GUI) {
+                    (colors.gray("[" + Date.now() + "]") + colors.yellow("[WARN]") + colors.white(":" + msg)).split('\n').forEach(line => {
+                        this.logText.push(line);
+                    })
+                    this._writeLog();
+                } else {
+                    console.log(colors.gray("[" + Date.now() + "]") + colors.yellow("[WARN]") + colors.white(":" + msg));
+                }
             } else {
                 this._checkFile(this.InfoFile);
                 appendFileSync(this.InfoFile, "\n[" + Date.now() + "][WARN]:" + msg);
@@ -105,10 +118,14 @@ class WSLog {
     error(msg) {
         if (this.logLevel >= 0) {
             if (this.logOnConsole) {
-                (colors.gray("[" + Date.now() + "]") + colors.red("[ERROR]") + colors.white(":" + msg)).split('\n').forEach(line=>{
-                    this.logText.push(line);
-                })
-                this._writeLog();
+                if (this.GUI) {
+                    (colors.gray("[" + Date.now() + "]") + colors.red("[ERROR]") + colors.white(":" + msg)).split('\n').forEach(line => {
+                        this.logText.push(line);
+                    })
+                    this._writeLog();
+                } else {
+                    console.log(colors.gray("[" + Date.now() + "]") + colors.red("[ERROR]") + colors.white(":" + msg));
+                }
             } else {
                 this._checkFile(this.InfoFile);
                 appendFileSync(this.InfoFile, "\n[" + Date.now() + "][ERROR]:" + msg);
@@ -128,11 +145,11 @@ class WSLog {
     width = 30;
     taskSpacer = 15;
 
-    _init(){
-        if(this.logOnConsole){
+    _init() {
+        if (this.logOnConsole & this.GUI) {
             this.heigth = process.stdout.rows || 30;
-            this.width  = process.stdout.columns || 30; 
-            this.taskSpacer = Math.round(this.width/3);
+            this.width = process.stdout.columns || 30;
+            this.taskSpacer = Math.round(this.width / 3);
             this._splitter();
         }
     }
@@ -151,11 +168,11 @@ class WSLog {
     //process.stdout.write("\\033[s"); // save pos
     //process.stdout.write("\\033[u"); // restore pos
 
-    _splitter(){
+    _splitter() {
         process.stdout.write('\x1B[?25l'); //disable cursor
         console.clear()
-        for(let i=0;i<this.heigth;i++){
-            process.stdout.cursorTo(this.taskSpacer - 0,i)
+        for (let i = 0; i < this.heigth; i++) {
+            process.stdout.cursorTo(this.taskSpacer - 0, i)
             process.stdout.write('||');
         }
         process.stdout.write("\x1B[?25h")//enable corsor
@@ -165,23 +182,23 @@ class WSLog {
     /**
      *  Write the text to terminal
      */
-    _writeLog(){
-        if(this.logText.length>this.heigth -2){ this.logText.pop(); }
-        for(let i=0; i<this.logText.length;i++){
-            process.stdout.cursorTo(this.taskSpacer + 2,i +1);
-            process.stdout.write((this.logText[i].length < ((this.width + 19) - this.taskSpacer))?this.logText[i]:this.logText[i].substr(0,((this.width + 19) - this.taskSpacer)) + "..." );
+    _writeLog() {
+        if (this.logText.length > this.heigth - 2) { this.logText.pop(); }
+        for (let i = 0; i < this.logText.length; i++) {
+            process.stdout.cursorTo(this.taskSpacer + 2, i + 1);
+            process.stdout.write((this.logText[i].length < ((this.width + 19) - this.taskSpacer)) ? this.logText[i] : this.logText[i].substr(0, ((this.width + 19) - this.taskSpacer)) + "...");
         }
     }
 
     /**
      *  Write Tasks
      */
-    _writeTasks(){
+    _writeTasks() {
         let i = 0;
-        Object.keys(this.tasks).forEach(task=>{
-            process.stdout.cursorTo(1,i +1);
+        Object.keys(this.tasks).forEach(task => {
+            process.stdout.cursorTo(1, i + 1);
             process.stdout.write(this.tasksIcon[this.tasks[task]["status"] || 0])
-            process.stdout.cursorTo(3,i+1);
+            process.stdout.cursorTo(3, i + 1);
             process.stdout.write(this.tasks[task]["text"] || "<>")
             i++;
         })
