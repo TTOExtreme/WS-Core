@@ -92,16 +92,17 @@ class WServer {
         })
 
         this._app.get("/", (req, res) => { res.sendFile('./home.html', { root: path(this._config.webpageFolder + "/root") }); })
-        this._app.get("/Administrativo", (req, res) => {
+        this._app.get("/Administrativo", (req, res) => { res.redirect(302, "/Administrativo/") })
+        this._app.get("/Administrativo/", (req, res) => {
             let cookies = this._parseCookies(req);
             if ((cookies["wscore"])) {//check if cookie is present and redirect if is not
                 res.sendFile('./home.html', { root: path(this._config.webpageFolder + "/Administrativo") });
             } else {
-                res.redirect(302, "./login")
+                res.redirect(302, "/Administrativo/login")
             }
         })
         this._app.use(Express.static(path(this._config.webpageFolder + "/root")))
-        this._app.use("/Administrativo", Express.static(path(this._config.webpageFolder + "/Administrativo")))
+        this._app.use("/Administrativo/", Express.static(path(this._config.webpageFolder + "/Administrativo")))
         this._hostModules();
     }
 
