@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/utils/socket.js",
         "./js/libs/bcypher.js",
         "./js/libs/tabulator.min.js",
+        "./js/screen/menuDragger.js",
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js",
         "./js/screen/topMenu.js",

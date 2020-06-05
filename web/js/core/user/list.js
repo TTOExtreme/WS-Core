@@ -119,7 +119,7 @@ window.UserList = class UserList {
         ClientEvents.on("system/disabled/users", () => { system_get_users(); ClientEvents.emit("system_mess", { status: "OK", mess: "Usuário Desabilitado com Exito", time: 1000 }); });
         ClientEvents.on("system/enabled/users", () => { system_get_users(); ClientEvents.emit("system_mess", { status: "OK", mess: "Usuário Habilitado com Exito", time: 1000 }); });
 
-        ClientEvents.on("adm/u  sr/edt", (data) => {
+        ClientEvents.on("adm/usr/edt", (data) => {
 
         })
     }
