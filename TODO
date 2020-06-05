@@ -1,11 +1,13 @@
 // Menu Lateral
     OK -- Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
     OK -- Adicionar barra para abrir menu lateral
+    -- mostrar informação completa (Falta IP e data do ultimo login)
 
 // Pagina de Configuração do sistema
     -- Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
     -- Criar aba de Grupos
         -- criar logica de hierarquia dos grupos / Permissões
+    -- criar troca de senha usuario
 
 // Pagina de gerencia de Redes
     -- Criar log de alteração de Dados MAC, ...

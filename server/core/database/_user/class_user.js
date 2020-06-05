@@ -95,10 +95,12 @@ class User {
                 return Promise.reject("Not Found user UUID: <" + uuid + "> in database.");
             }).then((result) => {
                 if (result[0]) {
+                    this.log.info("Login In: <" + uuid + ">.");
                     this.myself = new UserStruct(result[0]);
                     return this._loadPermissions();
                 } else {
-                    return Promise.reject("Not Found user UUID: <" + username + "> in database.");
+                    this.log.warning("Not Found user UUID: <" + uuid + "> in database.");
+                    return Promise.reject("Not Found user UUID: <" + uuid + "> in database.");
                 }
             })
     }
@@ -202,10 +204,11 @@ class User {
      * Function to update database with user status
      */
     LogOut() {
-        this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
-            " SET connected =0 " +
-            "WHERE id=" + this.myself.id + " " +
-            ";")
+        if (this.myself.id)
+            this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+                " SET connected = 0 " +
+                "WHERE id=" + this.myself.id + " " +
+                ";")
     }
 
     /**
@@ -213,12 +216,12 @@ class User {
      */
     LogIn(data) {
         this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
-            " SET connected =1 ," +
+            " SET connected = 1 ," +
             " lastIp='" + data.ip + "' ," +
             " lastConnection='" + Date.now() + "' " +
             "WHERE id=" + this.myself.id + " " +
             ";").then(() => {
-                this.log.info("User Logged In")
+                this.log.info("User <" + this.myself.username + "> Logged In")
             }).catch((err) => {
                 this.log.error("On Login Set Status");
                 this.log.error(err);

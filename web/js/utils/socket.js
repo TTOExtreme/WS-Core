@@ -86,6 +86,7 @@ class Socket {
                 SocketClass.socketStatus.reconnecting = true;
             });
             SocketClass.socket.on("auth-err", function (data) {
+                SocketClass._clearCookies();
                 if (data.errmess != undefined) {
                     loginMess(data.errmess)
                 }
@@ -166,6 +167,15 @@ class Socket {
 
     _appendRoute(route, callback) {
         routes[route] = callback;
+    }
+    _clearCookies() {
+        var cookies = document.cookie.split(";");
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
     }
 }
 

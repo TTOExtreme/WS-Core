@@ -46,6 +46,7 @@ class v1 {
 
                                 var address = socket.handshake.address;
                                 Myself.LogIn({ ip: clearIpv6(address) });
+
                                 return Promise.resolve();
                             })
                         }).catch(() => {
@@ -65,6 +66,7 @@ class v1 {
 
             socket.on('disconnect', () => {
                 this._log.info('Client disconnected');
+                console.log(Myself.myself)
                 Myself.LogOut();
             });
         })
