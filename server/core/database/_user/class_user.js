@@ -19,6 +19,15 @@ class User {
     /**@param {ClientMenus} Menus */
     Menus;
 
+    //data da ultima atualização de permissões
+    lastPermLoad;
+
+    /**
+     * delay for reload permissions in milliseconds
+     * for reload permissions is necessary to create an action from client
+     */
+    delayPermLoad = 10 * 1000;
+
     /**
      * Constructor for User Class
      * @param {WSMainServer} WSMain
@@ -188,11 +197,11 @@ class User {
                 this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
                     " SET UUID='" + nUUID + "'" +
                     " WHERE id=" + this.myself.id + ";").then(() => {
-                        this.myself.uuid = nUUID;
-                        resolve(nUUID);
-                    }).catch(err => {
-                        this.log.error("Cannot Set UUID:\n" + (err).toString());
-                    })
+                    this.myself.uuid = nUUID;
+                    resolve(nUUID);
+                }).catch(err => {
+                    this.log.error("Cannot Set UUID:\n" + (err).toString());
+                })
             })
         } else {
             this.log.error("User not defined to Reset UUID\n" + this.myself.toString())
@@ -205,13 +214,21 @@ class User {
      * @param {String} permissionCode 
      */
     checkPermission(permissionCode) {
-        if (this.myself.permissions) {
-            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined
-                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
+        if (this.lastPermLoad + this.delayPermLoad < Date.now()) {
+            this.lastPermLoad = Date.now() + this.delayPermLoad;
+            this._loadPermissions().then(() => {
+                return this.checkPermission(permissionCode);
+            })
+        } else {
+            if (this.checkPermissionSync(permissionCode)) {
                 return Promise.resolve();
+            } else {
+                if (!this.checkPermissionSync("dev/usr/login")) {
+                    this.LogOut(); //create a logout in case the user is blocked
+                }
+                return Promise.reject("Usuário sem permissão para a ação");
             }
         }
-        return Promise.reject("Usuário sem permissão para a ação");
     }
 
     /**
@@ -220,8 +237,8 @@ class User {
      */
     checkPermissionSync(permissionCode) {
         if (this.myself.permissions) {
-            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined
-                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
+            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined ||
+                this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
                 return true;
             }
         }
@@ -232,11 +249,25 @@ class User {
      * Function to update database with user status
      */
     LogOut() {
-        if (this.myself.id)
+        if (this.myself.id) {
+            this.myself.connected = 0;
             this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
                 " SET connected = 0 " +
                 "WHERE id=" + this.myself.id + " " +
-                ";")
+                ";").then(() => {
+                this.log.info("User <" + this.myself.username + "> Logged Out")
+            }).catch((err) => {
+                this.log.error("On LogOut Set Status");
+                this.log.error(err);
+            })
+        }
+    }
+
+    /**
+     * verify user status if is logged or not 
+     */
+    isLogged() {
+        return (this.myself.connected == 1);
     }
 
     /**
@@ -249,14 +280,23 @@ class User {
             " lastConnection='" + Date.now() + "' " +
             "WHERE id=" + this.myself.id + " " +
             ";").then(() => {
-                this.log.info("User <" + this.myself.username + "> Logged In")
-            }).catch((err) => {
-                this.log.error("On Login Set Status");
-                this.log.error(err);
-            })
+            this.log.info("User <" + this.myself.username + "> Logged In")
+        }).catch((err) => {
+            this.log.error("On Login Set Status");
+            this.log.error(err);
+        })
     }
 
     /**
+        SELECT * FROM WS_CORE_1_3_1._Permissions AS P 
+        LEFT JOIN (SELECT 
+        ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User
+        FROM WS_CORE_1_3_1.rlt_User_Permissions as up1 
+        LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id
+        LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id
+        WHERE id_User = 1) AS UP 
+        ON P.code = UP.code_Permission;
+     * 
      * Function to load permissions from database
      * @param {JSON} preferences 
      */
@@ -264,10 +304,14 @@ class User {
         if (this.myself.id) {
             return new Promise((resolve, reject) => {
                 this.db.query("SELECT *  FROM " + this.db.DatabaseName + "._Permissions AS P" +
-                    " LEFT JOIN  (SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Permissions " +
-                    " WHERE id_User=" + this.myself.id +
-                    " ) AS UP" +
-                    " ON P.code = UP.code_Permission "
+                    " LEFT JOIN " +
+                    " (SELECT " +
+                    " ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User" +
+                    " FROM " + this.db.DatabaseName + ".rlt_User_Permissions as up1" +
+                    " LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id" +
+                    " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
+                    " WHERE id_User=" + this.myself.id + " ) AS UP" +
+                    " ON P.code = UP.code_Permission;"
                 ).then((result) => {
                     if (result[0]) {
                         this.myself.permissions = result;
@@ -319,16 +363,22 @@ class User {
                     Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
                         if (this.checkPermissionSync(SubMenu.Id)) {
                             SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
-                                if (this.checkPermissionSync(TopMenu.Id)) {
-                                } else { Toparr.splice(Topindex, 1); }
+                                if (this.checkPermissionSync(TopMenu.Id)) {} else {
+                                    Toparr.splice(Topindex, 1);
+                                }
                             });
-                        } else { Subarr.splice(Subindex, 1); }
+                        } else {
+                            Subarr.splice(Subindex, 1);
+                        }
                     });
                     Menu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
-                        if (this.checkPermissionSync(TopMenu.Id)) {
-                        } else { Toparr.splice(Topindex, 1); }
+                        if (this.checkPermissionSync(TopMenu.Id)) {} else {
+                            Toparr.splice(Topindex, 1);
+                        }
                     });
-                } else { arr.splice(index, 1); }
+                } else {
+                    arr.splice(index, 1);
+                }
             })
             this.Menus = _AdmMenus;
         } catch (err) {
@@ -353,47 +403,42 @@ class ClientMenus {
     TopItems;
 }
 
-let AdmMenus = [
-    {
-        Name: "Administração",
-        Id: "menu/adm",
-        Icon: "",
-        Event: () => { },
-        SubItems: [
-            {
-                Name: "Usuários",
-                Id: "menu/adm/usr",
-                Icon: "",
+let AdmMenus = [{
+    Name: "Administração",
+    Id: "menu/adm",
+    Icon: "",
+    Event: () => {},
+    SubItems: [{
+            Name: "Usuários",
+            Id: "menu/adm/usr",
+            Icon: "",
+            EventCall: "Load",
+            EventData: "./js/core/user/list.js",
+            TopItems: [{
+                Name: "Adicionar",
+                Id: "menu/adm/usr/add",
                 EventCall: "Load",
-                EventData: "./js/core/user/list.js",
-                TopItems: [
-                    {
-                        Name: "Adicionar",
-                        Id: "menu/adm/usr/add",
-                        EventCall: "Load",
-                        EventData: "./js/core/user/add.js",
-                    }
-                ],
-            },
-            {
-                Name: "Grupos",
-                Id: "menu/adm/grp",
-                Icon: "",
+                EventData: "./js/core/user/add.js",
+            }],
+        },
+        {
+            Name: "Grupos",
+            Id: "menu/adm/grp",
+            Icon: "",
+            EventCall: "Load",
+            EventData: "./js/core/group/list.js",
+            TopItems: [{
+                Name: "Adicionar",
+                Id: "menu/adm/grp/add",
                 EventCall: "Load",
-                EventData: "./js/core/group/list.js",
-                TopItems: [
-                    {
-                        Name: "Adicionar",
-                        Id: "menu/adm/grp/add",
-                        EventCall: "Load",
-                        EventData: "./js/core/group/add.js",
-                    }
-                ],
-            }
-        ],
-        TopItems: [
-        ],
-    }
-]
+                EventData: "./js/core/group/add.js",
+            }],
+        }
+    ],
+    TopItems: [],
+}]
 
-module.exports = { User, ClientMenus };
+module.exports = {
+    User,
+    ClientMenus
+};

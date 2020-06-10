@@ -30,7 +30,6 @@ class Socket {
     socket(socket, Myself) {
         this._log.task("api-mod-user", "Api User Loaded", 1);
         this._myself = Myself;
-        //this._events.emit("usr/lst/menu", this._myself);
         /**
          * List all Users
          */
@@ -42,6 +41,9 @@ class Socket {
                         data: data
                     })
                 }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -66,13 +68,27 @@ class Socket {
 
         /**
          * User permissions
+         * Get list of permissions from certain user
          */
         socket.on("adm/usr/perm/data", (data) => {
-            let search_user = new class_user(this._WSMainServer);
-            search_user.findmeid(data[0].id).then(() => {
+            this._myself.checkPermission("adm/usr/perm").then(() => {
+                let search_user = new class_user(this._WSMainServer);
+                search_user.findmeid(data[0].id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "adm/usr/perm/data",
+                        data: search_user.listPermissions()
+                    })
+                })
+            }).catch(() => {
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
                 socket.emit("ClientEvents", {
-                    event: "adm/usr/perm/data",
-                    data: search_user.listPermissions()
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
                 })
             })
 
@@ -82,21 +98,32 @@ class Socket {
          * User permissions set (server)
          */
         socket.on("adm/usr/perm/set", (data) => {
-            this._userServer.attribPermissions(data[0].id_user, data[0].code, this._myself.myself.id, data[0].active).then(() => {
+            this._myself.checkPermission("adm/usr/perm").then(() => {
+                this._userServer.attribPermissions(data[0].id_user, data[0].code, this._myself.myself.id, data[0].active).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Alterado com sucesso",
+                            status: "OK"
+                        }
+                    })
+                })
+            }).catch(() => {
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
-                        mess: "Alterado com sucesso",
-                        status: "OK"
+                        mess: "Acesso Negado",
+                        status: "ERROR"
                     }
                 })
-                console.log("set");
             })
-
         })
 
         /**
-         * Context Menu List items with it calls
+         * Context Menu List items with it calls for list of users
          */
         socket.on("adm/usr/lst/ctx", (data) => {
             let itemList = [];

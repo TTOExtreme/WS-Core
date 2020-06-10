@@ -1,7 +1,14 @@
+// FIX
+
+// Mudanças
+    - [x] Alterado consulta de Permissões dos usuarios para mostrar o nome do que alterou
+    - [x] Adicionado verificação de permissão na hora de fazer alteração
+    - [x] Alterado layout da janela de permissioes para px pois em porcentagem de tamanho de tela estava deixando desfocado a lista
+
 // Menu Lateral
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
     - [x] Adicionar barra para abrir menu lateral
-    - [] mostrar informação completa (Falta IP e data do ultimo login)
+    - [] Mostrar informação completa (Falta IP e data do ultimo login)
 
 // Pagina de Configuração do sistema
     - [] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
@@ -21,18 +28,15 @@
     - [x] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
     - [] Reiniciar / parar instancia apos configurar
 
-//Janelas
+// Janelas
     - [x] posicionamento dinamico parra multiplas Janelas
 
-//Geral
+// Geral
     - [] Mudar senha de usuario
     - [] carregar preferencias de usuario
     - [] salvar preferencias do usuario
-    
-//fix 
-    - [x] User not loading permissions corretas (não carrega os menus)
 
-//Ideias
+// Ideias
     - [] Criar gerencia de sites
         - [] Gerenciar redirecionamentos
         - [] Informações de acesso (numero de acessos)

@@ -85,14 +85,13 @@ class UserServer {
                 return this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_User_Permissions" +
                     " (id_User,code_Permission,deactivatedBy,deactivatedIn,active) VALUES (" + userID + ",'" + permissionCode + "'," + myId + "," + Date.now() + "," + active + ");");
             } else {
-                return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_User_Permissions" +
-                    " WHERE id_User = " + userID + " AND code_Permission = '" + permissionCode + "' SET " +
-                    (active == 1) ?
-                    " active=1, deactivatedBy=-1, createdBy=" + myId + ", createdIn=" + Date.now() + ", deactivatedIn=-1;" :
-                    " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now() + ";"
+                return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_User_Permissions SET " +
+                    ((active == 1) ?
+                        " active=1, deactivatedBy=NULL, createdBy=" + myId + ", createdIn=" + Date.now() + ", deactivatedIn=NULL" :
+                        " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now()) +
+                    " WHERE id_User = " + userID + " AND code_Permission = '" + permissionCode + "';"
                 );
             }
-
         });
     }
 
