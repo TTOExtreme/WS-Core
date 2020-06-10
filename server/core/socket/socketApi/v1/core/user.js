@@ -28,17 +28,28 @@ class Socket {
      * @param {class_user} Myself
      */
     socket(socket, Myself) {
+        this._log.task("api-mod-user", "Api User Loaded", 1);
         this._myself = Myself;
-        this._events.emit("usr/lst/menu", this._myself);
+        //this._events.emit("usr/lst/menu", this._myself);
         /**
          * List all Users
          */
         socket.on("adm/user/lst", (data) => {
             this._myself.checkPermission("menu/adm/usr").then(() => {
                 this._userServer.listUser().then((data) => {
-                    socket.emit("ClientEvents", { event: "adm/usr/lst", data: data })
+                    socket.emit("ClientEvents", {
+                        event: "adm/usr/lst",
+                        data: data
+                    })
                 }).catch((err) => {
-                    socket.emit("ClientEvents", { event: "system_mess", data: { status: "ERROR", mess: err, time: 1000 } })
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
                 })
             })
         })
@@ -47,37 +58,115 @@ class Socket {
          * User menus
          */
         socket.on("usr/lst/menu", (data) => {
-            socket.emit("ClientEvents", { event: "LeftMenu-SetItems", data: this._myself.GetMenus() })
+            socket.emit("ClientEvents", {
+                event: "LeftMenu-SetItems",
+                data: this._myself.GetMenus()
+            })
+        })
+
+        /**
+         * User permissions
+         */
+        socket.on("adm/usr/perm/data", (data) => {
+            let search_user = new class_user(this._WSMainServer);
+            search_user.findmeid(data[0].id).then(() => {
+                socket.emit("ClientEvents", {
+                    event: "adm/usr/perm/data",
+                    data: search_user.listPermissions()
+                })
+            })
+
+        })
+
+        /**
+         * User permissions set (server)
+         */
+        socket.on("adm/usr/perm/set", (data) => {
+            this._userServer.attribPermissions(data[0].id_user, data[0].code, this._myself.myself.id, data[0].active).then(() => {
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Alterado com sucesso",
+                        status: "OK"
+                    }
+                })
+                console.log("set");
+            })
+
         })
 
         /**
          * Context Menu List items with it calls
          */
-        socket.on("adm/ust/lst/ctx", (data) => {
+        socket.on("adm/usr/lst/ctx", (data) => {
             let itemList = [];
             if (this._myself.checkPermissionSync("adm/usr/edt")) {
-                itemList.push({ name: "Editar", active: true, event: { call: "usr/edt", data: data[0].row } });
+                itemList.push({
+                    name: "Editar",
+                    active: true,
+                    event: {
+                        call: "usr/edt",
+                        data: data[0].row
+                    }
+                });
             } else {
-                itemList.push({ name: "Editar", active: false });
+                itemList.push({
+                    name: "Editar",
+                    active: false
+                });
             }
             if (this._myself.checkPermissionSync("adm/usr/disable")) {
-                itemList.push({ name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"), event: { call: "usr/disable", data: data[0].row } });
+                itemList.push({
+                    name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
+                    event: {
+                        call: "usr/disable",
+                        data: data[0].row
+                    }
+                });
             } else {
-                itemList.push({ name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"), active: false });
+                itemList.push({
+                    name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
+                    active: false
+                });
             }
             if (this._myself.checkPermissionSync("adm/usr/perm")) {
-                itemList.push({ name: "Permissões", event: { call: "usr/perm", data: data[0].row } });
+                itemList.push({
+                    name: "Permissões",
+                    active: true,
+                    event: {
+                        call: "usr/perm",
+                        data: data[0].row
+                    }
+                });
             } else {
-                itemList.push({ name: "Permissões", active: false });
+                itemList.push({
+                    name: "Permissões",
+                    active: false
+                });
             }
             if (this._myself.checkPermissionSync("adm/usr/grp")) {
-                itemList.push({ name: "Grupos", event: { call: "usr/grp", data: data[0].row } });
+                itemList.push({
+                    name: "Grupos",
+                    event: {
+                        call: "usr/grp",
+                        data: data[0].row
+                    }
+                });
             } else {
-                itemList.push({ name: "Grupos", active: false });
+                itemList.push({
+                    name: "Grupos",
+                    active: false
+                });
             }
 
 
-            socket.emit("ClientEvents", { event: "CreateContext", data: { data: data, items: itemList } })
+            socket.emit("ClientEvents", {
+                event: "CreateContext",
+                data: {
+                    data: data,
+                    items: itemList
+                }
+            })
         });
 
     }
@@ -85,4 +174,6 @@ class Socket {
 
 }
 
-module.exports = { Socket };
+module.exports = {
+    Socket
+};

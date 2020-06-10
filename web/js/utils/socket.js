@@ -16,14 +16,30 @@ class UserStruct {
      */
     constructor(user) {
         if (user) {
-            if (user.name) { this.name = user.name }
-            if (user.username) { this.username = user.username }
-            if (user.uuid) { this.uuid = user.uuid }
-            if (user.preferences) { this.preferences = user.preferences }
-            if (user.createdIn) { this.createdIn = user.createdIn }
-            if (user.lastConnection) { this.lastConnection = user.lastConnection }
-            if (user.lastTry) { this.lastTry = user.lastTry }
-            if (user.lastIp) { this.lastIp = user.lastIp }
+            if (user.name) {
+                this.name = user.name
+            }
+            if (user.username) {
+                this.username = user.username
+            }
+            if (user.uuid) {
+                this.uuid = user.uuid
+            }
+            if (user.preferences) {
+                this.preferences = user.preferences
+            }
+            if (user.createdIn) {
+                this.createdIn = user.createdIn
+            }
+            if (user.lastConnection) {
+                this.lastConnection = user.lastConnection
+            }
+            if (user.lastTry) {
+                this.lastTry = user.lastTry
+            }
+            if (user.lastIp) {
+                this.lastIp = user.lastIp
+            }
         }
     }
 }
@@ -71,6 +87,7 @@ class Socket {
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
                         if (data.event != undefined) {
+                            console.log(data.event)
                             ClientEvents.emit(data.event, data.data);
                         }
                     }
@@ -79,76 +96,118 @@ class Socket {
                 Myself = new UserStruct(data);
                 ClientEvents.emit("Logged", Myself);
                 if (SocketClass.socketStatus.reconnecting) {
-                    ClientEvents.emit("system_mess", { status: "OK", mess: "Conectado", time: 1000 })
+                    ClientEvents.emit("system_mess", {
+                        status: "OK",
+                        mess: "Conectado",
+                        time: 1000
+                    })
                 }
 
                 SocketClass.socketStatus.logged = true;
                 SocketClass.socketStatus.reconnecting = true;
             });
             SocketClass.socket.on("auth-err", function (data) {
-                SocketClass._clearCookies();
                 if (data.errmess != undefined) {
                     loginMess(data.errmess)
                 }
             });
-            SocketClass.socket.on("data", function (data) {
-                //let udata = uncrypt(indb.login.UUID.substring(0, 16), data);
-                //executeRoute(JSON.parse(udata));
-                //ck_new();
-
-            });
             SocketClass.socket.on("logout", function () {
+                SocketClass._clearCookies();
                 window.location.assign("./login");
             })
             SocketClass.socket.on('disconnect', function () {
                 SocketClass.socketStatus.connected = false;
                 SocketClass.socketStatus.logged = false;
-                ClientEvents.emit("system_mess", { status: "ERROR", mess: "Desconectado", time: 1000 })
                 ClientEvents.emit("system_mess", {
-                    status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
-                    callback: () => { SocketClass._reconnect() }
+                    status: "ERROR",
+                    mess: "Desconectado",
+                    time: 1000
+                })
+                ClientEvents.emit("system_mess", {
+                    status: "INFO",
+                    mess: "Tentando Reconectar em",
+                    countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                    callback: () => {
+                        SocketClass._reconnect()
+                    }
                 })
             })
             SocketClass.socket.emit("auth");
         });
         SocketClass.socket.on('connect_failed', function () {
             SocketClass.socketCfg.ReconnectionIndex++;
-            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Conectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
-                callback: () => { SocketClass._reconnect() }
+                status: "ERROR",
+                mess: "Falha ao Conectar",
+                time: 1000
+            })
+            ClientEvents.emit("system_mess", {
+                status: "INFO",
+                mess: "Tentando Reconectar em",
+                countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => {
+                    SocketClass._reconnect()
+                }
             })
 
         })
         SocketClass.socket.on("connect_error", function () {
             SocketClass.socketCfg.ReconnectionIndex++;
-            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
-                callback: () => { SocketClass._reconnect() }
+                status: "ERROR",
+                mess: "Falha ao Reconectar",
+                time: 1000
+            })
+            ClientEvents.emit("system_mess", {
+                status: "INFO",
+                mess: "Tentando Reconectar em",
+                countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => {
+                    SocketClass._reconnect()
+                }
             })
         })
         SocketClass.socket.on("reconnect_failed", function () {
             SocketClass.socketCfg.ReconnectionIndex++;
-            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
-                callback: () => { SocketClass._reconnect() }
+                status: "ERROR",
+                mess: "Falha ao Reconectar",
+                time: 1000
+            })
+            ClientEvents.emit("system_mess", {
+                status: "INFO",
+                mess: "Tentando Reconectar em",
+                countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => {
+                    SocketClass._reconnect()
+                }
             })
         })
         SocketClass.socket.on("reconnect_error", function () {
             SocketClass.socketCfg.ReconnectionIndex++;
-            ClientEvents.emit("system_mess", { status: "ERROR", mess: "Falha ao Reconectar", time: 1000 })
             ClientEvents.emit("system_mess", {
-                status: "INFO", mess: "Tentando Reconectar em", countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
-                callback: () => { SocketClass._reconnect() }
+                status: "ERROR",
+                mess: "Falha ao Reconectar",
+                time: 1000
+            })
+            ClientEvents.emit("system_mess", {
+                status: "INFO",
+                mess: "Tentando Reconectar em",
+                countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
+                callback: () => {
+                    SocketClass._reconnect()
+                }
             })
         })
     }
 
     _reconnect() {
         this.socketStatus.reconnecting = true;
-        ClientEvents.emit("system_mess", { status: "OK", mess: "Reconectando", time: 1000 })
+        ClientEvents.emit("system_mess", {
+            status: "OK",
+            mess: "Reconectando",
+            time: 1000
+        })
         //this.socket.off();
         this._init();
     }
@@ -160,7 +219,7 @@ class Socket {
     }
 
     _send(ename, ...data) {
-        //console.log("Send: " + ename);
+        console.log("Send: " + ename);
         this.socket.emit(ename, data);
         //this.socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
     }
@@ -169,6 +228,7 @@ class Socket {
         routes[route] = callback;
     }
     _clearCookies() {
+        /*
         var cookies = document.cookie.split(";");
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i];
@@ -176,6 +236,7 @@ class Socket {
             var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
             document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
         }
+        //*/
     }
 }
 

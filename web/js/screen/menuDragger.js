@@ -12,8 +12,6 @@ ClientEvents.on("move_menu_up", (div, ev) => {
 ClientEvents.setCoreEvent("move_menu");
 ClientEvents.on("move_menu", (ev, div) => {
     let d = document.getElementById(div);
-    console.log(d);
-    console.log(d.offsetHeight);
     d.style.top = "calc(" + (ev.screenY - 20 - 110) + "px)";
     d.style.left = "calc(" + (ev.screenX - 20) + "px)";
     d.style.transform = "translate(0px,0px)";

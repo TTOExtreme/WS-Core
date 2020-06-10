@@ -1,4 +1,3 @@
-
 const SocketIO = require('socket.io');
 const CookieIO = require('cookie');
 const UserClass = require('../../../database/_user/class_user').User;
@@ -34,7 +33,7 @@ class v1 {
                 try {
                     //this._log.info(socket.request.headers)
                     var cookies = CookieIO.parse(socket.handshake.headers.cookie);
-                    this._log.info(JSON.stringify(cookies));
+                    //this._log.info(JSON.stringify(cookies));
                     if (cookies.wscore) {
                         //check in database for userID
                         Myself.findmeuuid(cookies.wscore).then(() => {
@@ -45,7 +44,9 @@ class v1 {
                                 socket.emit("auth-ok", Myself.getUserClientData());
 
                                 var address = socket.handshake.address;
-                                Myself.LogIn({ ip: clearIpv6(address) });
+                                Myself.LogIn({
+                                    ip: clearIpv6(address)
+                                });
 
                                 return Promise.resolve();
                             })
@@ -57,16 +58,15 @@ class v1 {
                     }
                 } catch (err) {
 
-                    this._log.info(socket.handshake)
+                    //this._log.info(socket.handshake)
                     socket.handshake.headers["Set-Cookie"] = CookieIO.serialize("wscore", "String")
-                    this._log.info("Set-Cookie");
-                    this._log.info(socket.handshake)
+                    //this._log.info("Set-Cookie");
+                    //this._log.info(socket.handshake)
                 }
             })
 
             socket.on('disconnect', () => {
                 this._log.info('Client disconnected');
-                console.log(Myself.myself)
                 Myself.LogOut();
             });
         })
@@ -80,9 +80,15 @@ class v1 {
     _loadModules(socket, Myself) {
         //load core modules
         fs.readdirSync(path(__dirname + '/core/')).forEach((mod) => {
-            let modSocket = require(__dirname + '/core/' + mod)
-            let modClass = new modSocket.Socket(this._WSMainServer);
-            modClass.socket(socket, Myself);
+            try {
+                this._log.task("api-mod-" + mod.replace(".js", ""), "Loading API " + mod.replace(".js", ""), 0);
+                let modSocket = require(__dirname + '/core/' + mod)
+                let modClass = new modSocket.Socket(this._WSMainServer);
+                modClass.socket(socket, Myself);
+            } catch (err) {
+                this._log.task("api-mod-" + mod.replace(".js", ""), "Api " + mod.replace(".js", "") + " Failed to Load", 3);
+                this._log.error(err);
+            }
         })
         /*
         //load addons modules
@@ -102,4 +108,6 @@ function clearIpv6(address) {
     return address.replace("::ffff:", "");
 }
 
-module.exports = { v1 }
+module.exports = {
+    v1
+}

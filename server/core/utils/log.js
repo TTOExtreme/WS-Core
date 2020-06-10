@@ -70,10 +70,15 @@ class WSLog {
     }
 
 
+    getErrorObject() {
+        try { throw Error('') } catch (err) { return err; }
+    }
+
     /**
      * info writer
      */
     info(msg) {
+        //console.log(this.getErrorObject());
         if (this.logLevel >= 2) {
             if (this.logOnConsole) {
                 if (this.GUI) {

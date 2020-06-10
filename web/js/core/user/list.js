@@ -30,7 +30,7 @@ window.UserList = class UserList {
     UserListData = [];
     rowContext = (ev, row) => {
         //console.log(ev);
-        ClientEvents.emit("SendSocket", "adm/ust/lst/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
+        ClientEvents.emit("SendSocket", "adm/usr/lst/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
     }

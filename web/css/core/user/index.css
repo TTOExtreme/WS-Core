@@ -50,12 +50,3 @@ input[type="text"]:disabled{
     background: var(--input-disabled-bg);
     color: var(--input-disabled-text);
 }
-
-.move_menu{
-    user-select: none;
-    color: whitesmoke;
-    cursor: grab;
-}
-.move_menu:active{
-    cursor: grabbing;
-}

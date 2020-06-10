@@ -9,9 +9,9 @@ const Bcypher = require("../../utils/bcypher").Bcypher;
 class UserServer {
 
     /**
-    * Constructor for UserServer Class
-    * @param {WSMainServer} WSMain
-    */
+     * Constructor for UserServer Class
+     * @param {WSMainServer} WSMain
+     */
     constructor(WSMain) {
         this.db = WSMain.db;
         this.log = WSMain.log;
@@ -73,42 +73,35 @@ class UserServer {
     }
 
     /**
-     * Attrib permission to user
-     * @param {Int} userID UserId a ser adicionado
-     * @param {Int} permissionID 
-     * @param {Int} myId UserID que adicionou a permissão
-     * @returns {Promise}
-     */
-    attribPermissions(userID, permissionID, myId) {
-        return this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_User_Permissions" +
-            " (id_User,id_Permission,createdBy,createdIn,active) VALUES (" + userID + "," + permissionID + "," + myId + "," + Date.now() + ",1));");
-
-    }
-
-    /**
      * Deactivated permission to user
      * @param {Int} userID UserId a ser adicionado
      * @param {Int} permissionID 
      * @param {Int} myId UserID que adicionou a permissão
      * @returns {Promise}
      */
-    attribPermissions(userID, permissionID, myId) {
-        return this.checkPermissionUser(userID, permissionID).then(res => {
+    attribPermissions(userID, permissionCode, myId, active) {
+        return this.checkPermissionUser(userID, permissionCode).then(res => {
             if (res.length == 0) {
-                this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_User_Permissions" +
-                    " (id_User,id_Permission,deactivatedBy,deactivatedIn,active) VALUES (" + userID + "," + permissionID + "," + myId + "," + Date.now() + ",0));");
+                return this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_User_Permissions" +
+                    " (id_User,code_Permission,deactivatedBy,deactivatedIn,active) VALUES (" + userID + ",'" + permissionCode + "'," + myId + "," + Date.now() + "," + active + ");");
             } else {
-                this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_User_Permissions" +
-                    " WHERE id_User,id_Permission,deactivatedBy,deactivatedIn,active) VALUES (" + userID + "," + permissionID + "," + myId + "," + Date.now() + ",0));");
+                return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_User_Permissions" +
+                    " WHERE id_User = " + userID + " AND code_Permission = '" + permissionCode + "' SET " +
+                    (active == 1) ?
+                    " active=1, deactivatedBy=-1, createdBy=" + myId + ", createdIn=" + Date.now() + ", deactivatedIn=-1;" :
+                    " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now() + ";"
+                );
             }
-        });
 
+        });
     }
 
-    checkPermissionUser(userID, permissionID) {
+    checkPermissionUser(userID, permissionCode) {
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Permissions" +
-            " WHERE 'id_User'=" + userID + " AND 'id_Permission'=" + permissionID + ";");
+            " WHERE id_User=" + userID + " AND code_Permission='" + permissionCode + "';");
     }
 }
 
-module.exports = { UserServer }
+module.exports = {
+    UserServer
+}

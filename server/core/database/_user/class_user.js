@@ -106,6 +106,34 @@ class User {
     }
 
     /**
+     * Function for finding user in database from ID
+     * @param {string} id
+     * @returns {Promise}
+     */
+    findmeid(id) {
+        if (!id) {
+            this.log.warning("ID is Null");
+            return Promise.reject("ID esta em branco")
+        }
+        this.log.info("Searching user ID: <" + id + "> in database.");
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE id='" + id + "';")
+            .catch((err) => {
+                if (!err) this.log.warning("Not Found user ID: <" + id + "> in database.");
+                if (err) this.log.error(err);
+                return Promise.reject("Not Found user ID: <" + id + "> in database.");
+            }).then((result) => {
+                if (result[0]) {
+                    this.log.info("Found User with ID: <" + id + "> in database.");
+                    this.myself = new UserStruct(result[0]);
+                    return this._loadPermissions();
+                } else {
+                    this.log.warning("Not Found user ID: <" + id + "> in database.");
+                    return Promise.reject("Not Found user ID: <" + id + "> in database.");
+                }
+            })
+    }
+
+    /**
      * @returns {UserStruct} User data for Client
      */
     getUserClientData() {
@@ -178,8 +206,8 @@ class User {
      */
     checkPermission(permissionCode) {
         if (this.myself.permissions) {
-            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode))[0] != undefined
-                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system"))[0] != undefined) {
+            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined
+                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
                 return Promise.resolve();
             }
         }
@@ -192,8 +220,8 @@ class User {
      */
     checkPermissionSync(permissionCode) {
         if (this.myself.permissions) {
-            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode))[0] != undefined
-                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system"))[0] != undefined) {
+            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined
+                || this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
                 return true;
             }
         }
@@ -235,24 +263,35 @@ class User {
     _loadPermissions() {
         if (this.myself.id) {
             return new Promise((resolve, reject) => {
-                this.db.query("SELECT *  FROM " + this.db.DatabaseName + ".rlt_User_Permissions" +
-                    " WHERE id_User=" + this.myself.id + ";").then((result) => {
-                        if (result[0]) {
-                            this.myself.permissions = result;
-                            this._generateMenus();
-                            resolve(this.myself)
-                        } else {
-                            return Promise.reject();
-                        }
-                    }).catch(() => {
-                        this.log.error("User Without Any Permissions " + this.myself.toString())
-                        reject("User Without Any Permissions");
-                    })
+                this.db.query("SELECT *  FROM " + this.db.DatabaseName + "._Permissions AS P" +
+                    " LEFT JOIN  (SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Permissions " +
+                    " WHERE id_User=" + this.myself.id +
+                    " ) AS UP" +
+                    " ON P.code = UP.code_Permission "
+                ).then((result) => {
+                    if (result[0]) {
+                        this.myself.permissions = result;
+                        this._generateMenus();
+                        resolve(this.myself)
+                    } else {
+                        return Promise.reject();
+                    }
+                }).catch(() => {
+                    this.log.error("User Without Any Permissions " + this.myself.toString())
+                    reject("User Without Any Permissions");
+                })
             });
         } else {
             this.log.error("User not defined to load Permissions\n" + this.myself.toString())
             return Promise.reject("User not defined to load Permissions");
         }
+    }
+
+    /**
+     * Return list of permissions enabled for user 
+     */
+    listPermissions() {
+        return this.myself.permissions;
     }
 
     /**
