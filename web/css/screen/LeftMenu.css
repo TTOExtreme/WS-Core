@@ -1,7 +1,6 @@
-
 /*  Left Menu   */
 
-.LeftMenuClose{
+.LeftMenuClose {
     width: 30px;
     background-color: black;
     position: fixed;
@@ -11,13 +10,14 @@
     z-index: 1;
     color: #808080;
 }
+
 @media only screen and (max-width: 600px) {
-    .LeftMenuClose{
+    .LeftMenuClose {
         left: -30px;
     }
 }
 
-.LeftMenu{
+.LeftMenu {
     width: 200px;
     background-color: black;
     position: absolute;
@@ -29,11 +29,11 @@
     transition: left 1s;
 }
 
-.LeftMenuOpen{
+.LeftMenuOpen {
     left: 0;
 }
 
-.LeftMenuClose td{
+.LeftMenuClose td {
     height: 30px;
     width: 30px;
     margin: 0;
@@ -41,7 +41,8 @@
     cursor: pointer;
     font-size: 16pt;
 }
-.LeftMenu td{
+
+.LeftMenu td {
     max-height: 40px;
     margin: 0;
     border: 0;
@@ -59,7 +60,7 @@
     width: 100%;
 }
 
-.LMI{
+.LMI {
     border-collapse: collapse;
     width: calc(100% - 20px);
     padding: 0;
@@ -69,7 +70,7 @@
     overflow: hidden;
 }
 
-.LMIHidden{
+.LMIHidden {
     display: none;
 }
 
@@ -78,10 +79,12 @@
     width: 40px;
     height: 40px;
 }
+
 .LMI-img-td {
     width: 70px;
 }
-.LMI tr td p{
+
+.LMI tr td p {
     padding: 0;
     margin: 0;
     border: 0;
@@ -92,38 +95,39 @@
     margin-left: 5px;
 }
 
-.LMI-Item{
+.LMI-Item {
     background-color: var(--menu-item-bg);
     color: var(--menu-item-text);
     transition: 0.5s;
     height: 46px;
 }
-.LMI-Item td{
+
+.LMI-Item td {
     padding-left: 20px;
 }
-.LMI-Item:hover{
+
+.LMI-Item:hover {
     background-color: var(--menu-item-bg-hover);
     color: var(--menu-item-text-hover);
     transform: translateX(-20px);
 }
 
-.LeftMenuUserBar{
+.LeftMenuUserBar {
     max-width: 20px;
     max-height: 20px;
     margin-top: 6px;
     overflow: hidden;
 }
 
-.LeftMenuUserBar-item{
+.LeftMenuUserBar-item {
     width: 20px;
     height: 20px;
 }
 
-.LeftMenu-UserMenu{
+.LeftMenu-UserMenu {
     position: absolute;
     top: -40px;
     left: 10px;
-    width: 168px;
     background-color: #303030;
     border-radius: 0px;
     border: none;
@@ -137,25 +141,27 @@
     padding: 10px;
     color: #a0a0a0;
 }
+
 .LeftMenu-UserMenu table,
 .LeftMenu-UserMenu td,
-.LeftMenu-UserMenu tr{
+.LeftMenu-UserMenu tr {
     border-collapse: collapse;
     margin: 0;
 }
 
-.LeftMenu-UserMenu-info{
-    font-size:9pt;
+.LeftMenu-UserMenu-info {
+    font-size: 9pt;
     padding-left: 5px;
 }
-.LeftMenu-UserMenu-title{
-    font-size:10pt;
+
+.LeftMenu-UserMenu-title {
+    font-size: 10pt;
     float: right;
 }
 
-.LMUserMenuShow{
+.LMUserMenuShow {
     opacity: 1;
-    height: 100px;
+    height: 75px;
     border-radius: 25px;
     top: 40px;
 }

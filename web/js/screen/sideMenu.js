@@ -1,4 +1,3 @@
-
 ClientEvents.setCoreEvent("LeftMenuOpen")
 ClientEvents.on("LeftMenuOpen", () => {
 
@@ -74,8 +73,8 @@ ClientEvents.setCoreEvent("LMU-SetInfo")
 ClientEvents.on("LMU-SetInfo", (info) => {
     if (info.username) document.getElementById("LMU-Name").innerText = info.username;
     if (info.name) document.getElementById("LMU-Username").innerText = info.name;
-    if (info.ip) document.getElementById("LMU-Ip").innerText = info.ip;
-    if (info.lastLogin) document.getElementById("LMU-LastLogin").innerText = info.lastLogin;
+    if (info.lastIp) document.getElementById("LMU-Ip").innerText = info.lastIp;
+    if (info.lastConnection) document.getElementById("LMU-LastLogin").innerText = formatTime(info.lastConnection);
 })
 
 ClientEvents.setCoreEvent("Logged")
@@ -141,7 +140,13 @@ class LeftMenuItem {
     }
     getItem() {
         let si = document.createElement("tr");
-        si.onclick = () => { if (typeof (this.Event) === "function") { this.Event(); } else { ToggleLeftMenuItem(this); } };
+        si.onclick = () => {
+            if (typeof (this.Event) === "function") {
+                this.Event();
+            } else {
+                ToggleLeftMenuItem(this);
+            }
+        };
         si.setAttribute("class", "LMI-Item")
         si.innerHTML =
             ((this.Icon) ? "<td class='LMI-img-td'><img class='LMI-img' src='" + this.Icon + "'></td>" : "") + "" +

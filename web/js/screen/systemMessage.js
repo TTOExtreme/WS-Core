@@ -1,4 +1,3 @@
-
 class SystemMess {
 
     systemMessageIndex = 0;
@@ -45,7 +44,7 @@ class SystemMess {
                     } else {
                         if (data.status == "ERROR") {
                             ClientEvents.emit("stopLoader");
-                            console.log(data);
+                            //console.log(data);
                             data.mess = "[Erro]";
                             attr += "background-color:var(--message-bg-err);";
                         } else {

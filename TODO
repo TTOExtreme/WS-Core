@@ -1,17 +1,16 @@
 // FIX
 
 // Mudanças
-    - [x] Alterado consulta de Permissões dos usuarios para mostrar o nome do que alterou
-    - [x] Adicionado verificação de permissão na hora de fazer alteração
-    - [x] Alterado layout da janela de permissioes para px pois em porcentagem de tamanho de tela estava deixando desfocado a lista
+    - [x] Mostrar informação completa (Falta IP e data do ultimo login)
 
 // Menu Lateral
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
     - [x] Adicionar barra para abrir menu lateral
-    - [] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [x] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [] Botão de Logout
 
 // Pagina de Configuração do sistema
-    - [] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
+    - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
     - [] Criar aba de Grupos
         - [] criar logica de hierarquia dos grupos / Permissões
     - [] criar troca de senha usuario

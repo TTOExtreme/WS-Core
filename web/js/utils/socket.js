@@ -87,7 +87,7 @@ class Socket {
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
                         if (data.event != undefined) {
-                            console.log(data.event)
+                            //console.log(data.event)
                             ClientEvents.emit(data.event, data.data);
                         }
                     }
@@ -219,7 +219,7 @@ class Socket {
     }
 
     _send(ename, ...data) {
-        console.log("Send: " + ename);
+        //console.log("Send: " + ename);
         this.socket.emit(ename, data);
         //this.socket.emit("data", crypt(indb.login.UUID.substring(32, 48), JSON.stringify({ route: route, data: data })));
     }
