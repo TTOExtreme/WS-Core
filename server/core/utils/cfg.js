@@ -56,24 +56,27 @@ class WSCfg {
             this.config.webpageFolder = path.join(__dirname + "/../../../web");
             rl.question('Please insert the location of webpageFolder [' + this.config.webpageFolder + ']: ', (answer) => {
                 this.config.webpageFolder = answer || this.config.webpageFolder;
-                rl.question('Please insert the location of database [' + this.config.DB.host + ']: ', (answer) => {
-                    this.config.DB.host = answer || this.config.DB.host;
-                    rl.question('Please insert the user to connect on DB [' + this.config.DB.user + ']: ', (answer) => {
-                        this.config.DB.user = answer || this.config.DB.user;
-                        rl.question('Please insert the password of the DB [' + this.config.DB.password + ']: ', (answer) => {
-                            this.config.DB.password = answer || this.config.DB.password;
-                            this.log.info("Configuration seted: " + JSON.stringify(this.config));
-                            if (!fs.existsSync(this.configFolder))
-                                fs.mkdirSync(this.configFolder);
-                            fs.writeFileSync(this.configFile, JSON.stringify(this.config))
+                rl.question('Please insert the location of Administration Page [' + this.config.adminPage + ']: ', (answer) => {
+                    this.config.adminPage = answer || this.config.adminPage;
+                    rl.question('Please insert the location of database [' + this.config.DB.host + ']: ', (answer) => {
+                        this.config.DB.host = answer || this.config.DB.host;
+                        rl.question('Please insert the user to connect on DB [' + this.config.DB.user + ']: ', (answer) => {
+                            this.config.DB.user = answer || this.config.DB.user;
+                            rl.question('Please insert the password of the DB [' + this.config.DB.password + ']: ', (answer) => {
+                                this.config.DB.password = answer || this.config.DB.password;
+                                this.log.info("Configuration seted: " + JSON.stringify(this.config));
+                                if (!fs.existsSync(this.configFolder))
+                                    fs.mkdirSync(this.configFolder);
+                                fs.writeFileSync(this.configFile, JSON.stringify(this.config))
 
-                            rl.question('Would you like to initiate the Database [Yes/No]: ', (answer) => {
-                                rl.close();
-                                if ((answer || "n").indexOf("y") > -1) {
-                                    require("../../../_install");
-                                } else {
-                                    process.exit(1);
-                                }
+                                rl.question('Would you like to initiate the Database [Yes/No]: ', (answer) => {
+                                    rl.close();
+                                    if ((answer || "n").indexOf("y") > -1) {
+                                        require("../../../_install");
+                                    } else {
+                                        process.exit(1);
+                                    }
+                                });
                             });
                         });
                     });

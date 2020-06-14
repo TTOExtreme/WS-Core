@@ -1,6 +1,7 @@
 {
     "webPort": 8080,
     "webpageFolder":"/opt/WS-Core/web/",
+    "adminPage":"/",
     "DB": {
         "host": "localhost",
         "user": "WSCore",

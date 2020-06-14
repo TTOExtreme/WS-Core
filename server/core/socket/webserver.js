@@ -54,10 +54,10 @@ class WServer {
     _webhost() {
         this._app.use(bodyParser.urlencoded({ extended: false }));
         this._app.use(bodyParser.json());
-        this._app.get("/login", (req, res) => {
+        this._app.get(path(this._config.adminPage + "/login"), (req, res) => {
             res.sendFile('./login.html', { root: this._config.webpageFolder });
         })
-        this._app.post("/login/request", (req, res) => {
+        this._app.post(path(this._config.adminPage + "/login/request"), (req, res) => {
 
             //authenticate and redirect
             this._log.info(JSON.stringify(req.body))
@@ -89,16 +89,27 @@ class WServer {
                 })
             }
         })
-        this._app.get("/", (req, res) => {
-            let cookies = this._parseCookies(req);
-            if ((cookies["wscore"])) {//check if cookie is present and redirect if is not
-                res.sendFile('./home.html', { root: this._config.webpageFolder });
+
+        this._app.get(path(this._config.adminPage + "/"), (req, res) => {
+            if (req.url == this._config.adminPage) {
+                res.redirect(302, "../Administrativo/")
             } else {
-                res.redirect(302, "./login")
+                let cookies = this._parseCookies(req);
+                if ((cookies["wscore"])) {//check if cookie is present and redirect if is not
+                    res.sendFile('./home.html', { root: this._config.webpageFolder });
+                } else {
+                    res.redirect(302, "./login")
+                }
             }
         })
-        this._app.use(Express.static(this._config.webpageFolder))
+
+        this._app.use(path(this._config.adminPage + "/"), Express.static(this._config.webpageFolder))
         this._hostModules();
+
+        this._app.get("*", (req, res) => {
+            res.sendFile('./404.html', { root: this._config.webpageFolder });
+        })
+
     }
 
     /**
