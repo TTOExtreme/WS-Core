@@ -17,19 +17,24 @@ class WSCfg {
     }
 
     LoadConfig() {
-        this.log.task("loading-config", "Loading config ", 0);
-        if (!fs.existsSync(this.configFile)) {
-            this.SaveConfig();
-        } else {
-            let c = JSON.parse(fs.readFileSync(this.configFile, "utf-8"));
-            if (this.checkConfigFileStruct(c)) {
-                this.config = c;
-            } else {
+        return new Promise((resolve, reject) => {
+            this.log.task("loading-config", "Loading config ", 0);
+            if (!fs.existsSync(this.configFile)) {
                 this.SaveConfig();
+                reject();
+            } else {
+                let c = JSON.parse(fs.readFileSync(this.configFile, "utf-8"));
+                if (this.checkConfigFileStruct(c)) {
+                    this.config = c;
+                    this.log.task("loading-config", "Config Loaded ", 1);
+                    resolve(this.config);
+                } else {
+                    this.SaveConfig();
+                    reject();
+                }
             }
-            this.log.task("loading-config", "Config Loaded ", 1);
-        }
-        return this.config;
+            reject();
+        })
     }
 
     SaveConfig() {
@@ -48,6 +53,7 @@ class WSCfg {
             } catch (err) {
                 this.config.webPort = 8000;
             }
+            this.config.webpageFolder = path.join(__dirname + "/../../../web");
             rl.question('Please insert the location of webpageFolder [' + this.config.webpageFolder + ']: ', (answer) => {
                 this.config.webpageFolder = answer || this.config.webpageFolder;
                 rl.question('Please insert the location of database [' + this.config.DB.host + ']: ', (answer) => {
@@ -56,13 +62,19 @@ class WSCfg {
                         this.config.DB.user = answer || this.config.DB.user;
                         rl.question('Please insert the password of the DB [' + this.config.DB.password + ']: ', (answer) => {
                             this.config.DB.password = answer || this.config.DB.password;
-                            rl.close();
-                            console.log("");
                             this.log.info("Configuration seted: " + JSON.stringify(this.config));
                             if (!fs.existsSync(this.configFolder))
                                 fs.mkdirSync(this.configFolder);
                             fs.writeFileSync(this.configFile, JSON.stringify(this.config))
-                            process.exit(1);
+
+                            rl.question('Would you like to initiate the Database [Yes/No]: ', (answer) => {
+                                rl.close();
+                                if ((answer || "n").indexOf("y") > -1) {
+                                    require("../../../_install");
+                                } else {
+                                    process.exit(1);
+                                }
+                            });
                         });
                     });
                 });

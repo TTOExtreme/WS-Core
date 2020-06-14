@@ -40,18 +40,21 @@ class WSMainServerInstaller {
         this.db = new DBConnector();
 
         this.log.setLogOnConsole(logOnConsole);
-        this.config = this.cfg.LoadConfig();
-        this.db.connect(this);
-        let DBCreator = new DatabaseCreator(this);
-        let DBCreatorModules = new DatabaseCreatorModules(this);
-        DBCreator.creatDatabase().then(() => {
-            this.log.info("Core Creation Done!")
-            return DBCreatorModules.creatDatabase().then(() => {
-                process.exit(0);
-            })
-        }).catch(() => {
-            process.exit(1);
-        });
+        this.cfg.LoadConfig().then((config) => {
+            this.config = config;
+            this.db.connect(this);
+
+            let DBCreator = new DatabaseCreator(this);
+            let DBCreatorModules = new DatabaseCreatorModules(this);
+            DBCreator.creatDatabase().then(() => {
+                this.log.info("Core Creation Done!")
+                return DBCreatorModules.creatDatabase().then(() => {
+                    process.exit(0);
+                })
+            }).catch(() => {
+                process.exit(1);
+            });
+        }).catch(err => { })
     }
 }
 

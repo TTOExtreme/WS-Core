@@ -40,7 +40,7 @@
     "unirest": "^0.6.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^2.0.4"
   },
   "scripts": {
     "install": "node _install.js",

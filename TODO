@@ -1,7 +1,8 @@
 // FIX
 
 // Mudanças
-    - [x] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [x] Reiniciar / parar instancia apos configurar
+    - [x] Auto instalação apos configuração
 
 // Menu Lateral
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
@@ -25,15 +26,18 @@
 
 // Terminal
     - [x] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
-    - [] Reiniciar / parar instancia apos configurar
+    - [x] Reiniciar / parar instancia apos configurar
 
 // Janelas
     - [x] posicionamento dinamico parra multiplas Janelas
 
-// Geral
+// usuario
     - [] Mudar senha de usuario
     - [] carregar preferencias de usuario
     - [] salvar preferencias do usuario
+
+// Core
+    - [x] Auto instalação apos configuração
 
 // Ideias
     - [] Criar gerencia de sites

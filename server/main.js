@@ -35,11 +35,14 @@ class WSMainServer {
         this.db = new DBConnector();
 
         this.log.setLogOnConsole(logOnConsole);
-        this.config = this.cfg.LoadConfig();
-        this.db.connect(this);
+        this.cfg.LoadConfig().then((config) => {
+            this.config = config;
+            this.db.connect(this);
 
-        this.wserver = new WServer(this);//need to initialize after config loading
-        this.wserver.init();
+            this.wserver = new WServer(this);//need to initialize after config loading
+            this.wserver.init();
+        }).catch(err => {
+        })
     }
 }
 
