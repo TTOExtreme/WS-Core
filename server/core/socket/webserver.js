@@ -127,9 +127,9 @@ class WServer {
     _hostModules() {
         let modulesList = fs.readdirSync(path(__dirname + "../../../modules/"));
         modulesList.forEach(mod => {
-            this._log.task("loading-" + mod, "Loading Module: " + mod, 0);
+            this._log.task("loading-" + mod, "Loading Web Module: " + mod, 0);
             if (fs.existsSync(path(__dirname + "../../../modules/" + mod + "/web"))) {
-                this._log.task("loading-" + mod, "Loaded Module: " + mod, 1);
+                this._log.task("loading-" + mod, "Loaded Web Module: " + mod + " in: /module/" + mod + "/", 1);
                 this._app.use("/module/" + mod + "/", Express.static(path(__dirname + "../../../modules/" + mod + "/web")));
             }
         })

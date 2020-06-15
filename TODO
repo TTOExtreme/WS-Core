@@ -50,7 +50,17 @@
 
 // Ideias
 
+
+//Modulo WPMA
     - [] Criar gerencia de sites
-        - [] Gerenciar redirecionamentos
+        - [] Gerenciar redirecionamentos (subdominio/rota)
         - [] Informações de acesso (numero de acessos)
         - [] Sistema de portal Administrativo do site (estilo wordpress);
+        - [] Pagina de criação de sites
+    ..Estrutura
+        <modulo>/webpages/<site>
+            home.html (pagina inicial)
+            js/
+            css/
+            img/
+            .../(estrutura de pastas de acesso estatico)

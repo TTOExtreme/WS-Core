@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="./js/libs/jquery-3.5.1.min.js"></script>
+    <script src="./js/libs/bootstrap.min.js"></script>
+    <script src="./js/libs/summernote.min.js"></script>
+    <link href="./css/libs/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/libs/summernote.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="editor" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">
+        <div id="summernote">Hello Summernote</div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        $('#summernote').summernote({
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['link', ['link', 'unlink']],
+            ],
+            fontNames: [
+                'Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+                'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande',
+                'Sacramento', 'Times', 'Verdana', 'Geneva', 'Tahoma', 'sans-serif'
+            ],
+            fontNamesIgnoreCheck: ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 'Courier New',
+                'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Sacramento', 'Times',
+                'Verdana', 'Geneva', 'Tahoma', 'sans-serif'
+            ],
+            lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0',
+                '3.0', '4.0', '5.0', '6.0'
+            ]
+        });
+    });
+</script>
+
+</html>
