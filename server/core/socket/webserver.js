@@ -1,4 +1,3 @@
-
 const http = require('http');
 const Express = require('express');
 const SocketIO = require('socket.io');
@@ -21,7 +20,7 @@ class WServer {
     constructor(WSMainServer) {
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
-        this._User = new (require("../database/_user/class_user")).User(WSMainServer);
+        this._User = new(require("../database/_user/class_user")).User(WSMainServer);
         this._SocketHandler = new SocketHandler(WSMainServer);
     }
 
@@ -52,22 +51,28 @@ class WServer {
      * handler for the webfiles 
      */
     _webhost() {
-        this._app.use(bodyParser.urlencoded({ extended: false }));
+        this._app.use(bodyParser.urlencoded({
+            extended: false
+        }));
         this._app.use(bodyParser.json());
         this._app.get(path(this._config.adminPage + "/login"), (req, res) => {
-            res.sendFile('./login.html', { root: this._config.webpageFolder });
+            res.sendFile('./login.html', {
+                root: this._config.webpageFolder
+            });
         })
         this._app.post(path(this._config.adminPage + "/login/request"), (req, res) => {
 
             //authenticate and redirect
             this._log.info(JSON.stringify(req.body))
 
-            let expiretime = Date.now() + (24 * 60 * 60 * 1000);//create 24H Cookie
+            let expiretime = Date.now() + (24 * 60 * 60 * 1000); //create 24H Cookie
 
             if (req.body.username && req.body.password) {
                 this._User.findme(req.body.username, req.body.password).then((user) => {
                     return this._User.checkPermission("def/usr/login").then(() => {
-                        res.cookie('wscore', user.uuid, { expire: expiretime }) //create 24H Cookie
+                        res.cookie('wscore', user.uuid, {
+                            expire: expiretime
+                        }) //create 24H Cookie
                         res.redirect(302, "../")
                     }).catch((err) => {
                         if (err) {
@@ -92,11 +97,13 @@ class WServer {
 
         this._app.get(path(this._config.adminPage + "/"), (req, res) => {
             if (req.url == this._config.adminPage) {
-                res.redirect(302, "../Administrativo/")
+                res.redirect(302, ".." + this._config.adminPage + "/")
             } else {
                 let cookies = this._parseCookies(req);
-                if ((cookies["wscore"])) {//check if cookie is present and redirect if is not
-                    res.sendFile('./home.html', { root: this._config.webpageFolder });
+                if ((cookies["wscore"])) { //check if cookie is present and redirect if is not
+                    res.sendFile('./home.html', {
+                        root: this._config.webpageFolder
+                    });
                 } else {
                     res.redirect(302, "./login")
                 }
@@ -107,7 +114,9 @@ class WServer {
         this._hostModules();
 
         this._app.get("*", (req, res) => {
-            res.sendFile('./404.html', { root: this._config.webpageFolder });
+            res.sendFile('./404.html', {
+                root: this._config.webpageFolder
+            });
         })
 
     }
@@ -151,4 +160,6 @@ class WServer {
 
 }
 
-module.exports = { WServer }
+module.exports = {
+    WServer
+}

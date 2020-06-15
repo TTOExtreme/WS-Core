@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function (event) {
     loadExternalFiles([
         "./js/libs/EventEmitter.min.js",
@@ -15,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         document.getElementById("password").addEventListener("keyup", loginEnter);
         document.getElementById("submit").onclick = function (ev) {
             //ClientEvents.emit("startLoader");
-            fetch('/login/request', {
+            fetch('./login/request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,23 +34,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
                             if (!document.getElementById("login-msgbox").classList.contains("show"))
                                 document.getElementById("login-msgbox").classList.toggle('show');
                             document.getElementById("login-msgbox").innerText = data;
-                        } catch (err) { }
+                        } catch (err) {}
                         setTimeout(() => {
                             try {
                                 if (document.getElementById("login-msgbox").classList.contains("show"))
                                     document.getElementById("login-msgbox").classList.toggle('show');
-                            } catch (err) { }
+                            } catch (err) {}
                         }, 800)
                     })
                 }
-            }).catch(err => {
-            })
+            }).catch(err => {})
 
         }
 
     }).catch((err) => {
         console.log("An error ocurred when loading external files\nAre you disconnected from internet?\n" + err.toString())
-        setTimeout(() => { window.location.reload(true) }, 1000);
+        setTimeout(() => {
+            window.location.reload(true)
+        }, 1000);
     })
 })
 

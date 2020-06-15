@@ -13,6 +13,8 @@
 // Pagina de Configuração do sistema
     - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
     - [] Adicionar usuario
+    - [] Editar usuario
+    - [] Remover/Desativar usuario
     - [] Criar aba de Grupos
         - [] criar logica de hierarquia dos grupos / Permissões
         - [] Adicionar grupos
