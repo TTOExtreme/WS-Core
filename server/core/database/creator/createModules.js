@@ -12,7 +12,6 @@ class DatabaseCreator {
         this.version = WSMain.config.version;
         this.db = WSMain.db;
         this.log = WSMain.log;
-        this.log.info((this.version).replace(".", "_").replace(".", "_").replace(".", "_"))
         this.UserManupulator = new (require("../_user/serverManipulator")).UserServer(WSMain);
     }
 
@@ -123,11 +122,18 @@ class DatabaseCreator {
                     let datas = fs.readdirSync(__dirname + '/../../../modules/' + mod + '/server/structures/data')
                     datas.forEach((table) => {
                         let tablename = "_" + table.replace(".js", "").replace("Create", "");
-                        if (table.indexOf("_") > -1) { tablename = "rlt_" + table.replace(".js", "").replace("Create", "") }
+                        //if (table.indexOf("_") > -1) { tablename = "rlt_" + table.replace(".js", "").replace("Create", "") }
                         let sql = "INSERT INTO " + this.databasename + "." + tablename + " ";
 
-                        this.log.info("Reading Structure From : " + table);
-                        let str = require(__dirname + '/../../../modules/' + mod + '/server/structures/data/' + table)._DB;
+                        this.log.info("Reading Structure From : " + mod + "/" + table);
+                        let str = "";
+                        try {
+                            str = require(__dirname + '/../../../modules/' + mod + '/server/structures/data/' + table)._DB;
+                        } catch (err) {
+                            this.log.error("On reading data struct from file: " + __dirname + '/../../../modules/' + mod + '/server/structures/data/' + table);
+                            this.log.error(err);
+                            return;
+                        }
                         this.log.info("Structure Readed : " + JSON.stringify(str));
                         if (tablename == "_User") {
                             if (str) {
@@ -177,7 +183,9 @@ class DatabaseCreator {
             });
             Promise.all(arr).then(() => {
                 res();
-            }).catch(() => {
+            }).catch(err => {
+                this.log.error("on loading Data to databases")
+                this.log.error(err);
                 rej();
             })
         }).then(() => {

@@ -47,11 +47,19 @@
     - [x] Auto instalação apos configuração
     - [x] Mudar painel Administrativo para /Administrativo
     - [x] Adicionar Pagina 404
+    - [x] Criar estrutura de Execução e inicialização de Modulos
+        .. Estrutura
+            Startup.js <-- Executar ao inicialização do sistema (Carregar permissioes)
+            Running.js <-- Executar ao termino das inicializações
+            Stop.js <-- Executar ao desligar o servidor
+    - [x] Criar cache de dados dos modulos
 
 // Ideias
 
 
 //Modulo WPMA
+    - [x] Criar estrutura de tabelas
+    - [x] Criar carregamento de estrutura dos sites em cache 
     - [] Criar gerencia de sites
         - [] Gerenciar redirecionamentos (subdominio/rota)
         - [] Informações de acesso (numero de acessos)
