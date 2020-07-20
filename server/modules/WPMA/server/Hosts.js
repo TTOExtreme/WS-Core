@@ -1,5 +1,10 @@
 
 const Express = require('express');
+const http = require('http');
+
+const path = require("path").join;
+const proxy = require("express-http-proxy");
+const colors = require("colors")
 
 class Hosts {
 
@@ -7,6 +12,8 @@ class Hosts {
     _log;
     _config;
     _wserver;
+    _modules;
+    _routes;
 
     constructor(WSMainServer) {
         this._log = WSMainServer.log;
@@ -14,14 +21,103 @@ class Hosts {
         this._db = WSMainServer.db;
         this._wserver = WSMainServer.wserver;
 
-        this.Init();
+        this._modules = WSMainServer.modules["WPMA"];
     }
 
     //Inicializar estruturas de Dados (cache das paginas principais)
 
     Init() {
-        //this._wserver._app.get("/WPMA/");
-        this._log.task("loading-host_WPMA", "Initialized WPMA Host Manager", 1);
+        return new Promise((res, rej) => {
+
+            /**{
+                 sites: [
+                    {
+                    id: 1,
+                    name: 'Meu Primeiro Site',
+                    description: 'Site de Exemplo',
+                    createdBy: 1,
+                    createdIn: '0',
+                    modifiedBy: 1,
+                    modifiedIn: '0',
+                    route: '/',
+                    subdomain: 'default.teste:8080',
+                    folder: 'Default/',
+                    log: 1,
+                    active: 1,
+                    deleted: 0
+                    }
+                ]
+                }
+            */
+
+            this._routes = Express.Router();
+
+            let internalPort = 9000;// initial port to each site for internal use only
+
+            if (this._modules.cfg.sites) {
+
+                this._modules.cfg.sites.forEach((part, index) => {
+                    //create each site listener for each port
+                    this._modules.cfg.sites[index]["internalPort"] = internalPort;
+                    this._modules.cfg.sites[index]["app"] = new Express();
+                    this._modules.cfg.sites[index]["http"] = http.createServer(this._modules.cfg.sites[index].app);
+                    this._modules.cfg.sites[index].http.listen(this._modules.cfg.sites[index].internalPort, () => {
+                        this._log.task("site-" + this._modules.cfg.sites[index].subdomain, "Site: " + this._modules.cfg.sites[index].name + " on Port: " + colors.green(this._modules.cfg.sites[index].internalPort), 1);
+                    });
+
+                    //initialize static response for pages
+                    this._modules.cfg.sites[index].app.get("/", (reqest, response) => {
+                        response.sendFile("/index.html", { root: path(__dirname + "/../webpages/" + this._modules.cfg.sites[index].folder) })
+                    })
+
+
+                    //create all proxy passages for each request
+                    this._routes.use(proxy("localhost:" + internalPort, {
+                        filter: (request, response) => {
+                            return (request.headers.host == this._modules.cfg.sites[index].subdomain);
+                        }
+                    }))
+                });
+
+
+                //this._wserver._app.get("*", (require, resolve, next) => this._HostWebPages(this._modules.cfg, require, resolve, next))
+            }
+
+            this._wserver._app.use(this._routes);
+            this._log.task("loading-host_WPMA", "Initialized WPMA Host Manager", 1);
+            res();
+        })
+    }
+
+
+    /**
+     * Processor for all web sites on host
+     */
+    _HostWebPages(cfg, req, res, next) {
+        //domain/subdomain processor
+
+        console.log(req.path);
+        console.log(cfg);
+        let site = cfg.sites.find((elem) => {
+            return (elem.subdomain == req.headers.host);
+        })
+        console.log(site);
+        if (site) {
+            if (req.path == "/") {
+                res.sendFile('./index.html', {
+                    root: path(__dirname + "/../webpages/Default/")
+                });
+            } else {
+                if (fs.existSync(path(__dirname + "/../webpages/" + site.folder + req.path)))
+                    res.sendFile((req.path).substring(req.path.indexOf("/")), {
+                        root: path(__dirname + "/../webpages/" + site.folder + (req.path).substring(0, req.path.lastIndexOf("/")))
+                    });
+            }
+        } else {
+            res.sendFile('./404.html', {
+                root: this._config.webpageFolder
+            });
+        }
     }
 }
 module.exports = { Hosts }

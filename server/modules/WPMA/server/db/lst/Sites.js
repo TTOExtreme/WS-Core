@@ -13,23 +13,16 @@ class lstSites {
 
     ListAll() {
         return new Promise((res, rej) => {
-            var sql = "";
-            sql = "SELECT * FROM" + this.cfg.dbstruct.database + "._WPMA WHERE active=0 AND deleted=0;";
-            this.db.query(sql, function (err, results, fields) {
-                if (err) {
+            var sql = "SELECT * FROM " + this._cfg.dbstruct.database + "._WPMA_Sites WHERE active=1 AND deleted=0;";
+            this._db.query(sql)
+                .then(data => {
+                    res(data);
+                })
+                .catch(err => {
                     this._log.error("on SQL:" + sql);
                     this._log.error(err);
                     rej("on SQL:" + sql);
-                } else {
-                    let data = [];
-
-                    results.forEach(element => {
-                        let e = JSON.parse(JSON.stringify(element));
-                        data.push(e);
-                    });
-                    res(data);
-                }
-            });
+                })
         })
     }
 }

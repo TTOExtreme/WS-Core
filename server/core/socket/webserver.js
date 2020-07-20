@@ -21,7 +21,7 @@ class WServer {
     constructor(WSMainServer) {
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
-        this._User = new(require("../database/_user/class_user")).User(WSMainServer);
+        this._User = new (require("../database/_user/class_user")).User(WSMainServer);
         this._SocketHandler = new SocketHandler(WSMainServer);
         this._Modules = WSMainServer.Modules;
     }
@@ -40,12 +40,21 @@ class WServer {
         this._server = http.createServer(this._app);
         this._io = SocketIO(this._server);
 
+        this._webhost();
+        this._socketHandler();
+    }
+
+    postInit() {
+        /*
+        this._app.get("*", (req, res) => {
+            res.sendFile('./404.html', {
+                root: this._config.webpageFolder
+            });
+        })
+        //*/
         this._server.listen(this._config.webPort, () => {
             this._log.task("webserver", "Webserver on Port: " + colors.green(this._config.webPort), 1);
         });
-
-        this._webhost();
-        this._socketHandler();
     }
 
 
@@ -57,6 +66,7 @@ class WServer {
             extended: false
         }));
         this._app.use(bodyParser.json());
+
         this._app.get(path(this._config.adminPage + "/login"), (req, res) => {
             res.sendFile('./login.html', {
                 root: this._config.webpageFolder
@@ -114,13 +124,6 @@ class WServer {
 
         this._app.use(path(this._config.adminPage + "/"), Express.static(this._config.webpageFolder))
         this._hostModules();
-
-        this._app.get("*", (req, res) => {
-            res.sendFile('./404.html', {
-                root: this._config.webpageFolder
-            });
-        })
-
     }
 
     /**

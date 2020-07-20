@@ -26,6 +26,7 @@ class WSCfg {
                 let c = JSON.parse(fs.readFileSync(this.configFile, "utf-8"));
                 if (this.checkConfigFileStruct(c)) {
                     this.config = c;
+                    this.config["dbstruct"] = { database: "WS_CORE_" + c.version.replace(".", "_").replace(".", "_").replace(".", "_") }
                     this.log.task("loading-config", "Config Loaded ", 1);
                     resolve(this.config);
                 } else {

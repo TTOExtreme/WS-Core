@@ -52,33 +52,107 @@ class WSMainServer {
             this.wserver = new WServer(this);//need to initialize after config loading
             this.wserver.init();
 
-            this._loadModules();
+            this.log.task("all-modules", "Loading all modules", 0);
+            this._startupModules().then(() => {
+                this._hostModules().then(() => {
+                    this._runningModules().then(() => {
+                        this.log.task("all-modules", "Done Loading all modules", 1);
+                        this.wserver.postInit();
+                    }).catch(err => {
+                        this.log.error("On loading Running Modules");
+                        this.log.error(err);
+                    });
+                }).catch(err => {
+                    this.log.error("On loading Host Modules");
+                    this.log.error(err);
+                });
+            }).catch(err => {
+                this.log.error("On loading Startup Modules");
+                this.log.error(err);
+            });
         }).catch(err => {
             this.log.error("in: Loading Main Server");
             this.log.error(err);
         })
     }
 
-    _loadModules() {
+    _startupModules() {
         let modulesList = fs.readdirSync(path(__dirname + "/modules/"));
+        let listPromisses = [];
+
+        modulesList.forEach(mod => {
+
+            this.modules[mod] = { cfg: {}, host: null, startup: null, running: null };
+
+            //check if exist host.js in module (differ Startup structure)
+            if (fs.existsSync(path(__dirname + "/modules/" + mod + "/server/Startup.js"))) {
+                this.log.task("loading-startup_" + mod, "Loading Startup Structure from Module: " + mod + " in: /module/" + mod + "/server/", 0);
+                try {
+                    let host = require(path(__dirname + "/modules/" + mod + "/server/Startup.js")).Startup;
+                    this.modules[mod]["startup"] = new host(this);
+                    listPromisses.push(this.modules[mod]["startup"].Init());
+                } catch (err) {
+                    this.log.error("Loading Startup Structure from Module: " + mod + " in: /module/" + mod + "/");
+                    this.log.error(err);
+                }
+                this.log.task("loading-startup_" + mod, "Loaded Startup Structure from Module: " + mod + " in: /module/" + mod + "/server/", 1);
+
+            } else {
+                this.log.info("Skipping Startup from module: " + mod);
+            }
+        })
+
+        return Promise.all(listPromisses);
+    }
+    _hostModules() {
+        let modulesList = fs.readdirSync(path(__dirname + "/modules/"));
+        let listPromisses = [];
+
         modulesList.forEach(mod => {
             //check if exist host.js in module (differ hosting structure)
             if (fs.existsSync(path(__dirname + "/modules/" + mod + "/server/Hosts.js"))) {
-                this.modules[mod] = {};
                 this.log.task("loading-host_" + mod, "Loading Hosting Structure from Module: " + mod + " in: /module/" + mod + "/server/", 0);
                 try {
                     let host = require(path(__dirname + "/modules/" + mod + "/server/Hosts.js")).Hosts;
-                    this.modules[mod].host = new host(this);
+                    this.modules[mod]["host"] = new host(this);
+                    listPromisses.push(this.modules[mod]["host"].Init());
                 } catch (err) {
                     this.log.error("Loading Hosting Structure from Module: " + mod + " in: /module/" + mod + "/");
                     this.log.error(err);
                 }
-                this.log.task("loading-host_" + mod, "Loaded Hosting Structure from Module: " + mod + " in: /module/" + mod + "/", 1);
+                this.log.task("loading-host_" + mod, "Loaded Hosting Structure from Module: " + mod + " in: /module/" + mod + "/server/", 1);
 
             } else {
                 this.log.info("Skipping Hosts from module: " + mod);
             }
         })
+
+        return Promise.all(listPromisses);
+    }
+    _runningModules() {
+        let modulesList = fs.readdirSync(path(__dirname + "/modules/"));
+        let listPromisses = [];
+
+        modulesList.forEach(mod => {
+            //check if exist host.js in module (differ Running structure)
+            if (fs.existsSync(path(__dirname + "/modules/" + mod + "/server/Running.js"))) {
+                this.log.task("loading-running_" + mod, "Loading Running Structure from Module: " + mod + " in: /module/" + mod + "/server/", 0);
+                try {
+                    let host = require(path(__dirname + "/modules/" + mod + "/server/Running.js")).Running;
+                    this.modules[mod]["running"] = new host(this);
+                    listPromisses.push(this.modules[mod]["running"].Init());
+                } catch (err) {
+                    this.log.error("Loading Running Structure from Module: " + mod + " in: /module/" + mod + "/");
+                    this.log.error(err);
+                }
+                this.log.task("loading-running_" + mod, "Loaded Running Structure from Module: " + mod + " in: /module/" + mod + "/server/", 1);
+
+            } else {
+                this.log.info("Skipping Running from module: " + mod);
+            }
+        })
+
+        return Promise.all(listPromisses);
     }
 }
 

@@ -7,7 +7,7 @@ const _DB = [
         modifiedBy: "1",
         modifiedIn: 0,
         route: "/",
-        subdomain: "teste",
+        subdomain: "default.teste:8080",
         folder: "Default/",
         log: "1",
         active: "1",
