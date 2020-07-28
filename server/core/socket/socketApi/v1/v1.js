@@ -77,7 +77,7 @@ class v1 {
      * @param {SocketIO} socket 
      * @param {UserClass} Myself 
      */
-    _loadModules(socket, Myself) {
+    async _loadModules(socket, Myself) {
         //load core modules
         fs.readdirSync(path(__dirname + '/core/')).forEach((mod) => {
             try {
@@ -90,15 +90,15 @@ class v1 {
                 this._log.error(err);
             }
         })
-        /*
+
         //load addons modules
         fs.readdirSync(path(__dirname + '/../../../../modules/')).forEach((mod) => {
-            if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/socket_v1.js'))) {
-                let modSocket = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/socket_v1.js'))).Socket(this._WSMainServer);
+            //console.log("load: " + mod)
+            if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))) {
+                let modSocket = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
                 modSocket.socket(socket, Myself);
             }
         })
-        //*/
 
     }
 }

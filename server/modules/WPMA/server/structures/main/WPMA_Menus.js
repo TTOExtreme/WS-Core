@@ -6,6 +6,8 @@ class WPMA_Menus {
     createdBy;
     modifiedIn;
     modifiedBy;
+    deactivatedBy;
+    deactivatedIn;
     redirect; //page to redirect on click
     img; //location of image if exists
     father; //id of menu is father of this one 
@@ -24,6 +26,8 @@ const _DB = {
     createdIn: "VARCHAR(30)",
     modifiedBy: "INT(10)",
     modifiedIn: "VARCHAR(30)",
+    deactivatedBy: "INT(10)",
+    deactivatedIn: "VARCHAR(30)",
     redirect: "VARCHAR(600)",
     img: "VARCHAR(600)",
     father: "INT(10)",

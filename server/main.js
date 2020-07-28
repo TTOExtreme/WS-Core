@@ -25,6 +25,9 @@ class WSMainServer {
     /**@const {EventEmitter} events */
     events;
 
+    /**@var {JSON} AdmMenus used to store all menus layout for the adm page */
+    AdmMenus = [];
+
     /**
      * @const {JSON} modules
      * Structure to load each module instance (startup,running,stop,hosts)

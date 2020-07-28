@@ -6,6 +6,8 @@ class WPMA_Sites {
     createdBy;
     modifiedIn;
     modifiedBy;
+    deactivatedBy;
+    deactivatedIn;
     route;
     subdomain;
     folder;
@@ -22,6 +24,8 @@ const _DB = {
     createdIn: "VARCHAR(30)",
     modifiedBy: "INT(10)",
     modifiedIn: "VARCHAR(30)",
+    deactivatedBy: "INT(10)",
+    deactivatedIn: "VARCHAR(30)",
     route: "VARCHAR(600)",
     subdomain: "VARCHAR(600)",
     folder: "VARCHAR(600)",

@@ -77,8 +77,8 @@ class Hosts {
                             return (request.headers.host == this._modules.cfg.sites[index].subdomain);
                         }
                     }))
+                    internalPort++;
                 });
-
 
                 //this._wserver._app.get("*", (require, resolve, next) => this._HostWebPages(this._modules.cfg, require, resolve, next))
             }

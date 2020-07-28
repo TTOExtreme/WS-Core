@@ -87,7 +87,7 @@ class Socket {
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
                         if (data.event != undefined) {
-                            //console.log(data.event)
+                            console.log(data)
                             ClientEvents.emit(data.event, data.data);
                         }
                     }
@@ -107,8 +107,15 @@ class Socket {
                 SocketClass.socketStatus.reconnecting = true;
             });
             SocketClass.socket.on("auth-err", function (data) {
-                if (data.errmess != undefined) {
-                    loginMess(data.errmess)
+                if (data != undefined) {
+                    ClientEvents.emit("system_mess", {
+                        status: "ERROR",
+                        mess: "Falha de autenticação do UUID. Redirecionando para o login.",
+                        countdown: 5,
+                        callback: () => {
+                            window.location.assign("./login");
+                        }
+                    })
                 }
             });
             SocketClass.socket.on("logout", function () {

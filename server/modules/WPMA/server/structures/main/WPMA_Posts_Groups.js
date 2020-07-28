@@ -6,6 +6,8 @@ class WPMA_Posts_Groups {
     createdBy;
     modifiedIn;
     modifiedBy;
+    deactivatedBy;
+    deactivatedIn;
     father; //id of group is father of this one
     log; //bool to generate statistcs for on click
     active;
@@ -20,6 +22,8 @@ const _DB = {
     createdIn: "VARCHAR(30)",
     modifiedBy: "INT(10)",
     modifiedIn: "VARCHAR(30)",
+    deactivatedBy: "INT(10)",
+    deactivatedIn: "VARCHAR(30)",
     redirect: "VARCHAR(600)",
     img: "VARCHAR(600)",
     father: "INT(10)",

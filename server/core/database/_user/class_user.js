@@ -39,6 +39,7 @@ class User {
         this.cfg = WSMain.cfg;
         this.bcypher = new Bcypher();
         this._events = WSMain.events;
+        this._AdmMenus = WSMain.AdmMenus;
     }
 
     myself = new UserStruct();
@@ -175,7 +176,16 @@ class User {
      * @param {JSON} preferences 
      */
     savePreferences(preferences) {
-        //TODO
+        return new Promise((resolve, reject) => {
+            this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+                " SET preferences='" + JSON.stringify(preferences) + "'" +
+                " WHERE id=" + this.myself.id + ";").then(() => {
+                    this.myself.preferences = preferences;
+                    resolve(preferences);
+                }).catch(err => {
+                    this.log.error("Cannot Set Preferences:\n" + (err).toString());
+                })
+        })
     }
 
     /**
@@ -183,7 +193,19 @@ class User {
      * @param {JSON} preferences 
      */
     loadPreferences() {
-        //TODO
+        return new Promise((resolve, reject) => {
+            this.db.query("SELECT preferences FROM " + this.db.DatabaseName + "._User" +
+                " WHERE id=" + this.myself.id + ";").then((result) => {
+                    if (result[0]) {
+                        this.myself.preferences = result[0].preferences;
+                        resolve(this.myself.preferences);
+                    } else {
+                        reject("Cannot Load Preferences: User not Found");
+                    }
+                }).catch(err => {
+                    this.log.error("Cannot Load Preferences:\n" + (err).toString());
+                })
+        })
     }
 
     /**
@@ -197,11 +219,11 @@ class User {
                 this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
                     " SET UUID='" + nUUID + "'" +
                     " WHERE id=" + this.myself.id + ";").then(() => {
-                    this.myself.uuid = nUUID;
-                    resolve(nUUID);
-                }).catch(err => {
-                    this.log.error("Cannot Set UUID:\n" + (err).toString());
-                })
+                        this.myself.uuid = nUUID;
+                        resolve(nUUID);
+                    }).catch(err => {
+                        this.log.error("Cannot Set UUID:\n" + (err).toString());
+                    })
             })
         } else {
             this.log.error("User not defined to Reset UUID\n" + this.myself.toString())
@@ -255,11 +277,11 @@ class User {
                 " SET connected = 0 " +
                 "WHERE id=" + this.myself.id + " " +
                 ";").then(() => {
-                this.log.info("User <" + this.myself.username + "> Logged Out")
-            }).catch((err) => {
-                this.log.error("On LogOut Set Status");
-                this.log.error(err);
-            })
+                    this.log.info("User <" + this.myself.username + "> Logged Out")
+                }).catch((err) => {
+                    this.log.error("On LogOut Set Status");
+                    this.log.error(err);
+                })
         }
     }
 
@@ -280,11 +302,11 @@ class User {
             " lastConnection='" + Date.now() + "' " +
             "WHERE id=" + this.myself.id + " " +
             ";").then(() => {
-            this.log.info("User <" + this.myself.username + "> Logged In")
-        }).catch((err) => {
-            this.log.error("On Login Set Status");
-            this.log.error(err);
-        })
+                this.log.info("User <" + this.myself.username + "> Logged In")
+            }).catch((err) => {
+                this.log.error("On Login Set Status");
+                this.log.error(err);
+            })
     }
 
     /**
@@ -357,13 +379,13 @@ class User {
 
     _generateMenus() {
         try {
-            let _AdmMenus = AdmMenus;
+            let _AdmMenus = this._AdmMenus; //create an separeted Instance for each user
             _AdmMenus.forEach((Menu, index, arr) => {
                 if (this.checkPermissionSync(Menu.Id)) {
                     Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
                         if (this.checkPermissionSync(SubMenu.Id)) {
                             SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
-                                if (this.checkPermissionSync(TopMenu.Id)) {} else {
+                                if (this.checkPermissionSync(TopMenu.Id)) { } else {
                                     Toparr.splice(Topindex, 1);
                                 }
                             });
@@ -372,7 +394,7 @@ class User {
                         }
                     });
                     Menu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
-                        if (this.checkPermissionSync(TopMenu.Id)) {} else {
+                        if (this.checkPermissionSync(TopMenu.Id)) { } else {
                             Toparr.splice(Topindex, 1);
                         }
                     });
@@ -384,6 +406,48 @@ class User {
         } catch (err) {
             this.log.error(err)
         }
+    }
+
+    addAdmMenus() {
+        this._AdmMenus.push({
+            Name: "Administração",
+            Id: "menu/adm",
+            Icon: "",
+            Event: () => { },
+            SubItems: [
+                {
+                    Name: "Usuários",
+                    Id: "menu/adm/usr",
+                    Icon: "",
+                    EventCall: "Load",
+                    EventData: "./js/core/user/list.js",
+                    TopItems: [
+                        {
+                            Name: "Adicionar",
+                            Id: "menu/adm/usr/add",
+                            EventCall: "Load",
+                            EventData: "./js/core/user/add.js",
+                        }
+                    ],
+                },
+                {
+                    Name: "Grupos",
+                    Id: "menu/adm/grp",
+                    Icon: "",
+                    EventCall: "Load",
+                    EventData: "./js/core/group/list.js",
+                    TopItems: [
+                        {
+                            Name: "Adicionar",
+                            Id: "menu/adm/grp/add",
+                            EventCall: "Load",
+                            EventData: "./js/core/group/add.js",
+                        }
+                    ],
+                }
+            ],
+            TopItems: [],
+        })
     }
 
 }
@@ -403,40 +467,7 @@ class ClientMenus {
     TopItems;
 }
 
-let AdmMenus = [{
-    Name: "Administração",
-    Id: "menu/adm",
-    Icon: "",
-    Event: () => {},
-    SubItems: [{
-            Name: "Usuários",
-            Id: "menu/adm/usr",
-            Icon: "",
-            EventCall: "Load",
-            EventData: "./js/core/user/list.js",
-            TopItems: [{
-                Name: "Adicionar",
-                Id: "menu/adm/usr/add",
-                EventCall: "Load",
-                EventData: "./js/core/user/add.js",
-            }],
-        },
-        {
-            Name: "Grupos",
-            Id: "menu/adm/grp",
-            Icon: "",
-            EventCall: "Load",
-            EventData: "./js/core/group/list.js",
-            TopItems: [{
-                Name: "Adicionar",
-                Id: "menu/adm/grp/add",
-                EventCall: "Load",
-                EventData: "./js/core/group/add.js",
-            }],
-        }
-    ],
-    TopItems: [],
-}]
+
 
 module.exports = {
     User,

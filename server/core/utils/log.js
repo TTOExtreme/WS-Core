@@ -130,6 +130,9 @@ class WSLog {
                     this._writeLog();
                 } else {
                     console.log(colors.gray("[" + Date.now() + "]") + colors.red("[ERROR]") + colors.white(":" + msg));
+                    if (msg.stack) {
+                        console.log(msg.stack);
+                    }
                 }
             } else {
                 this._checkFile(this.InfoFile);

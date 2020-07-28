@@ -39,7 +39,7 @@ class UserServer {
      * @param {Boolean} active 
      * @returns {Promise}
      */
-    createUser(id = undefined, name, username, pass, active = true) {
+    createUser(id, name, username, pass, active) {
         const salt = this.bcypher.generate_salt();
         this.log.warning("User With SHA512 Pass: " + this.bcypher.sha512(pass))
 

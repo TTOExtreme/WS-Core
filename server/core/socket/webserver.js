@@ -22,6 +22,9 @@ class WServer {
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
         this._User = new (require("../database/_user/class_user")).User(WSMainServer);
+
+        this._User.addAdmMenus();//Add menus to the instance 
+
         this._SocketHandler = new SocketHandler(WSMainServer);
         this._Modules = WSMainServer.Modules;
     }
@@ -89,6 +92,7 @@ class WServer {
                     }).catch((err) => {
                         if (err) {
                             this._log.info(err);
+                            res.redirect(302, path(this._config.adminPage + "/login"));
                             return Promise.reject(err);
                         } else {
                             this._log.info("Usuário sem permissão");
@@ -135,8 +139,8 @@ class WServer {
             this._log.task("loading-" + mod, "Loading Web Module: " + mod, 0);
             //check if exist Web folder in module
             if (fs.existsSync(path(__dirname + "../../../modules/" + mod + "/web"))) {
-                this._log.task("loading-" + mod, "Loaded Web Module: " + mod + " in: /module/" + mod + "/", 1);
-                this._app.use("/module/" + mod + "/", Express.static(path(__dirname + "../../../modules/" + mod + "/web")));
+                this._log.task("loading-" + mod, "Loaded Web Module: " + mod + " in: " + path(this._config.adminPage + "/module/" + mod + "/"), 1);
+                this._app.use(path(this._config.adminPage + "/module/" + mod + "/"), Express.static(path(__dirname + "../../../modules/" + mod + "/web")));
             }
         })
     }
