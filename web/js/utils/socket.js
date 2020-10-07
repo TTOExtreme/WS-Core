@@ -69,7 +69,8 @@ class Socket {
         this.socket = io.connect(window.location.origin + "/websocket/v1", {
             reconnection: false,
             transports: ['websocket'],
-            cookie: "wscore"
+            cookie: "wscore",
+            forceNew:false
         });
         this.socketInit(this);
     }
@@ -95,6 +96,7 @@ class Socket {
                 Myself = new UserStruct(data);
                 ClientEvents.emit("Logged", Myself);
                 if (SocketClass.socketStatus.reconnecting) {
+                    SocketClass.socketCfg.ReconnectionIndex = 0;
                     ClientEvents.emit("system_mess", {
                         status: "OK",
                         mess: "Conectado",
@@ -134,7 +136,8 @@ class Socket {
                     mess: "Tentando Reconectar em",
                     countdown: ((SocketClass.socketCfg.ReconnectionIndex < SocketClass.socketCfg.ReconnectionTimes.length) ? SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionIndex] : SocketClass.socketCfg.ReconnectionTimes[SocketClass.socketCfg.ReconnectionTimes.length - 1]),
                     callback: () => {
-                        SocketClass._reconnect()
+                        SocketClass._reconnect();
+                        //SocketClass.socket.connect();
                     }
                 })
             })
@@ -214,7 +217,6 @@ class Socket {
             mess: "Reconectando",
             time: 1000
         })
-        //this.socket.off();
         this._init();
     }
 
