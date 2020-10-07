@@ -42,7 +42,7 @@ class Sites {
     }
 
     rem(id, modifiedBy, deleted) {
-        return this._Insert.rem(id, modifiedBy, deleted);
+        return this._Delete.rem(id, modifiedBy, deleted);
     }
 
     /**

@@ -66,26 +66,30 @@
     - [] Criar log de acesso por pagina/site/post/menu
     - [] Criar Abas de Gerencia na área Administrativa
         - [x] Listar sites
-            - [] Mudar context Menu (itens)
+            - [x] Mudar context Menu (itens)
             - [x] Adicionar
                 - [] Reiniciar Host de sites ao adicionar site ativo
             - [x] Editar
-            - [] Deletar
+            - [x] Deletar
+            - [] Desativar
         - [] Gerencia de Menus dos sites
             - [] Mudar context Menu (itens)
             - [] Adicionar
             - [] Editar 
             - [] Excluir
+            - [] Desativar
         - [] Gerencia de Posts dos sites
             - [] Mudar context Menu (itens)
             - [] Adicionar
             - [] Editar 
             - [] Excluir
+            - [] Desativar
         - [] Gerencia de Paginas dos sites
             - [] Mudar context Menu (itens)
             - [] Adicionar
             - [] Editar 
             - [] Excluir
+            - [] Desativar
 
         
     - [] Criar gerencia de sites
@@ -101,5 +105,3 @@
             img/
             .../(estrutura de pastas de acesso estatico)
 
-
-//Fix error on creating a new site

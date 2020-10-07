@@ -25,14 +25,14 @@ class remSites {
      */
     rem(id, modifiedBy, deleted) {
         return new Promise((res, rej) => {
-            var sql = "UPDATE FROM " + this._cfg.dbstruct.database + "._WPMA_Sites SET " +
+            var sql = "UPDATE " + this._cfg.dbstruct.database + "._WPMA_Sites SET " +
                 ((deleted = 1) ?
                     " deactivatedby='" + modifiedBy + "'," +
-                    " deactivatedIn=" + new Date.now() + ","
+                    " deactivatedIn=" + Date.now() + ","
                     : "") +
                 " modifiedBy=" + modifiedBy + "," +
-                " modifiedIn=" + new Date.now() + "," +
-                " deleted=" + deleted + "," +
+                " modifiedIn=" + Date.now() + "," +
+                " deleted=" + deleted + "" +
                 " WHERE id=" + id + ";";
             this._db.query(sql)
                 .then(() => {

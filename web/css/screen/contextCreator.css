@@ -24,3 +24,6 @@
 .contextMenu td{
     border-bottom: 1px solid #ffffff;
 }
+.ctx-item-disabled {
+    color: #9c9c9c;
+}

@@ -48,6 +48,7 @@ class SystemMess {
                             data.mess = "[Erro] " + ((typeof (data.mess) != "string") ? "" : data.mess);
                             attr += "background-color:var(--message-bg-err);";
                         } else {
+                            console.log(data);
                             attr += "background-color:var(--message-bg-info);";
                         }
                     }
@@ -67,12 +68,20 @@ class SystemMess {
                                 if (data.callback) {
                                     data.callback();
                                 }
+                                console.log(data);  
+                                if(data.call != undefined){
+                                    ClientEvents.emit(data.call,data.data)
+                                }
                             });
                         } else {
                             setTimeout(() => {
                                 this._system_mess_out(tr);
                                 if (data.callback) {
                                     data.callback();
+                                }
+                                console.log(data);  
+                                if(data.call != undefined){
+                                    ClientEvents.emit(data.call,data.data)
                                 }
                             }, (data.time != undefined) ? data.time : 1000);
                         }

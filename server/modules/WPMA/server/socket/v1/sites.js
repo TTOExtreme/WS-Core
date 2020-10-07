@@ -84,7 +84,9 @@ class Socket {
                                     data: {
                                         status: "OK",
                                         mess: "Site criado com sucesso",
-                                        time: 1000
+                                        time: 1000,
+                                        call:"SendSocket",
+                                        data: "adm/WPMA/sites/lst"
                                     }
                                 })
                             }).catch(err => {
@@ -157,7 +159,9 @@ class Socket {
                                     data: {
                                         status: "OK",
                                         mess: "Site criado com sucesso",
-                                        time: 1000
+                                        time: 1000,
+                                        call:"SendSocket",
+                                        data: "adm/WPMA/sites/lst"
                                     }
                                 })
                             }).catch(err => {
@@ -222,6 +226,7 @@ class Socket {
                                     }
                                 })
                             }).catch(err => {
+                                console.log(err);
                                 socket.emit("ClientEvents", {
                                     event: "system_mess",
                                     data: {
@@ -242,10 +247,11 @@ class Socket {
                         })
                     }
                 } catch (err) {
+                    console.log(err);
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
-                            status: "INFO",
+                            status: "ERROR",
                             mess: err,
                             time: 1000
                         }
@@ -349,6 +355,7 @@ class Socket {
             if (this._myself.checkPermissionSync("wpma/sites/disable")) {
                 itemList.push({
                     name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
+                    active: true,
                     event: {
                         call: "WPMA/sites/disable",
                         data: data[0].row
@@ -364,6 +371,7 @@ class Socket {
             if (this._myself.checkPermissionSync("wpma/sites/del")) {
                 itemList.push({
                     name: "Remover",
+                    active: true,
                     event: {
                         call: "WPMA/sites/rem",
                         data: data[0].row
@@ -379,6 +387,7 @@ class Socket {
             if (this._myself.checkPermissionSync("adm/WPMA/sites/grp")) {
                 itemList.push({
                     name: "Grupos",
+                    active: true,
                     event: {
                         call: "WPMA/sites/grp",
                         data: data[0].row

@@ -28,7 +28,7 @@ ClientEvents.on("WPMA/sites/rem", (data) => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wpma_sites' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wpma_sites_div_rem')>&#9776;</td><td class='wpma_sites_label'><p class='rem_wpma_sites_closeButton' onclick='ClientEvents.emit(\"WPMA/sites/close_rem\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wpma_sites' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wpma_sites_div_rem')>&#9776;</td><td class='wpma_sites_label'><p class='add_wpma_sites_closeButton' onclick='ClientEvents.emit(\"WPMA/sites/close_rem\")'>X</p></td></tr>" +
         "<tr><td class='wpma_sites_label'>ID:</td><td><input id='wpma_sites_id' type='text' value='" + data.id + "' disabled></td></tr>" +
         "<tr><td class='wpma_sites_label'>Nome:</td><td><input id='wpma_sites_name' type='text' value='" + data.name + "' disabled></td></tr>" +
         "<tr><td class='wpma_sites_label'>Descrição:</td><td><input id='wpma_sites_description' type='text' value='" + data.description + "' disabled></td></tr>" +
