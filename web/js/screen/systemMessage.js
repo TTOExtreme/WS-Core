@@ -44,7 +44,7 @@ class SystemMess {
                     } else {
                         if (data.status == "ERROR") {
                             ClientEvents.emit("stopLoader");
-                            console.log(data.mess);
+                            console.log(data);
                             data.mess = "[Erro] " + ((typeof (data.mess) != "string") ? "" : data.mess);
                             attr += "background-color:var(--message-bg-err);";
                         } else {

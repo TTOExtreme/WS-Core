@@ -51,7 +51,7 @@ const _DB = [
     {
         name: "WPMA - Desabilitar Site",
         description: "Desabilitar Site",
-        code: "wpma/site/sites/disable",
+        code: "wpma/sites/disable",
         type: "WPMA",
         defaltAdd: 0
     },
@@ -65,14 +65,14 @@ const _DB = [
     },
     {
         name: "WPMA - Adicionar Menus",
-        description: "Editar Menus",
+        description: "Adicionar Menus",
         code: "wpma/site/menus/add",
         type: "WPMA",
         defaltAdd: 0
     },
     {
         name: "WPMA - Remover Menus",
-        description: "Editar Menus",
+        description: "Remover Menus",
         code: "wpma/site/menus/del",
         type: "WPMA",
         defaltAdd: 0
@@ -101,14 +101,14 @@ const _DB = [
     },
     {
         name: "WPMA - Adicionar Posts",
-        description: "Editar Posts",
+        description: "Adicionar Posts",
         code: "wpma/site/posts/add",
         type: "WPMA",
         defaltAdd: 0
     },
     {
         name: "WPMA - Remover Posts",
-        description: "Editar Posts",
+        description: "Remover Posts",
         code: "wpma/site/posts/del",
         type: "WPMA",
         defaltAdd: 0

@@ -68,7 +68,8 @@
         - [x] Listar sites
             - [] Mudar context Menu (itens)
             - [x] Adicionar
-            - [] Editar
+                - [] Reiniciar Host de sites ao adicionar site ativo
+            - [x] Editar
             - [] Deletar
         - [] Gerencia de Menus dos sites
             - [] Mudar context Menu (itens)
@@ -99,3 +100,6 @@
             css/
             img/
             .../(estrutura de pastas de acesso estatico)
+
+
+//Fix error on creating a new site

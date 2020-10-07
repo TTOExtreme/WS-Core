@@ -1,5 +1,5 @@
 
-class addSites {
+class remSites {
 
     _db;
     _log;
@@ -12,10 +12,10 @@ class addSites {
     }
 
     /**
-     * Add new Site to the server
+     * rem new Site to the server
      * @param {String} name 
      * @param {String} description 
-     * @param {UserID} createdBy 
+     * @param {UserID} modifiedBy 
      * @param {String} route 
      * @param {String} subdomain 
      * @param {String} folder 
@@ -23,11 +23,17 @@ class addSites {
      * @param {Boolean/INT(1)} active 
      * @param {Boolean/INT(1)} deleted 
      */
-    add(name, description, createdBy, route, subdomain, folder, log, active, deleted) {
+    rem(id, modifiedBy, deleted) {
         return new Promise((res, rej) => {
-            var sql = "INSERT INTO " + this._cfg.dbstruct.database +
-                "._WPMA_Sites (name,description,createdBy,createdIn,route,subdomain,folder,log,active,deleted) VALUES " +
-                "('" + name + "','" + description + "'," + createdBy + ",'" + Date.now() + "','" + route + "','" + subdomain + "','" + folder + "'," + log + "," + active + "," + deleted + ");";
+            var sql = "UPDATE FROM " + this._cfg.dbstruct.database + "._WPMA_Sites SET " +
+                ((deleted = 1) ?
+                    " deactivatedby='" + modifiedBy + "'," +
+                    " deactivatedIn=" + new Date.now() + ","
+                    : "") +
+                " modifiedBy=" + modifiedBy + "," +
+                " modifiedIn=" + new Date.now() + "," +
+                " deleted=" + deleted + "," +
+                " WHERE id=" + id + ";";
             this._db.query(sql)
                 .then(() => {
                     res();
@@ -40,4 +46,4 @@ class addSites {
         })
     }
 }
-module.exports = { addSites }
+module.exports = { remSites }

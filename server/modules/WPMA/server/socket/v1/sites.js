@@ -60,7 +60,7 @@ class Socket {
          * Add Sites
          */
         socket.on("adm/WPMA/sites/add/save", (data) => {
-            this._myself.checkPermission("menu/adm/WPMA/sites").then(() => {
+            this._myself.checkPermission("wpma/sites/add").then(() => {
                 try {
                     if (data[0]) {
                         if (data[0].name == "") { throw "Favor preencher o campo 'Nome'" }
@@ -69,6 +69,82 @@ class Socket {
                         if (data[0].subdomain == "") { throw "Favor preencher o campo 'Subdomínio'" }
                         if (data[0].folder == "") { throw "Favor preencher o campo 'Pasta'" }
                         this._sites.add(data[0].name,
+                            data[0].description,
+                            this._myself.myself.id,
+                            data[0].route,
+                            data[0].subdomain,
+                            data[0].folder,
+                            data[0].log,
+                            data[0].active, 0).then(() => {
+                                if (data[0].active == 1) {
+                                    //TODO Restart Host Instance
+                                }
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "OK",
+                                        mess: "Site criado com sucesso",
+                                        time: 1000
+                                    }
+                                })
+                            }).catch(err => {
+                                console.log(err);
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "ERROR",
+                                        mess: err,
+                                        time: 1000
+                                    }
+                                })
+                            });
+                    } else {
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: "Request Incorreto",
+                                time: 1000
+                            }
+                        })
+                    }
+                } catch (err) {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                }
+            }).catch((err) => {
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+        /**
+         * Editar Sites
+         */
+        socket.on("adm/WPMA/sites/edt/save", (data) => {
+            this._myself.checkPermission("wpma/sites/edt").then(() => {
+                try {
+                    if (data[0]) {
+                        if (data[0].name == "") { throw "Favor preencher o campo 'Nome'" }
+                        if (data[0].description == "") { throw "Favor preencher o campo 'Descrição'" }
+                        if (data[0].route == "") { throw "Favor preencher o campo 'Rota'" }
+                        if (data[0].subdomain == "") { throw "Favor preencher o campo 'Subdomínio'" }
+                        if (data[0].folder == "") { throw "Favor preencher o campo 'Pasta'" }
+                        this._sites.edt(
+                            data[0].id,
+                            data[0].name,
                             data[0].description,
                             this._myself.myself.id,
                             data[0].route,
@@ -127,16 +203,139 @@ class Socket {
         })
 
         /**
+         * Remover Sites
+         */
+        socket.on("adm/WPMA/sites/rem/save", (data) => {
+            this._myself.checkPermission("wpma/sites/del").then(() => {
+                try {
+                    if (data[0]) {
+                        this._sites.rem(
+                            data[0].id,
+                            this._myself.myself.id,
+                            data[0].deleted).then(() => {
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "OK",
+                                        mess: "Site Removido com sucesso",
+                                        time: 1000
+                                    }
+                                })
+                            }).catch(err => {
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "ERROR",
+                                        mess: err,
+                                        time: 1000
+                                    }
+                                })
+                            });
+                    } else {
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: "Request Incorreto",
+                                time: 1000
+                            }
+                        })
+                    }
+                } catch (err) {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                }
+            }).catch((err) => {
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+
+        /**
+         * Ativar/desativar Sites
+         */
+        socket.on("adm/WPMA/sites/disable/save", (data) => {
+            this._myself.checkPermission("wpma/sites/disable").then(() => {
+                try {
+                    if (data[0]) {
+                        this._sites.disable(
+                            data[0].id,
+                            this._myself.myself.id,
+                            data[0].active).then(() => {
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "OK",
+                                        mess: "Site Removido com sucesso",
+                                        time: 1000
+                                    }
+                                })
+                            }).catch(err => {
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "ERROR",
+                                        mess: err,
+                                        time: 1000
+                                    }
+                                })
+                            });
+                    } else {
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: "Request Incorreto",
+                                time: 1000
+                            }
+                        })
+                    }
+                } catch (err) {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                }
+            }).catch((err) => {
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+        /**
          * Context Menu List items with it calls for list of users
          */
         socket.on("adm/WPMA/sites/lst/ctx", (data) => {
             let itemList = [];
-            if (this._myself.checkPermissionSync("wpma/site/edt")) {
+            if (this._myself.checkPermissionSync("wpma/sites/edt")) {
                 itemList.push({
                     name: "Editar",
                     active: true,
                     event: {
-                        call: "sites/edt",
+                        call: "WPMA/sites/edt",
                         data: data[0].row
                     }
                 });
@@ -147,17 +346,32 @@ class Socket {
                 });
             }
 
-            if (this._myself.checkPermissionSync("wpma/site/disable")) {
+            if (this._myself.checkPermissionSync("wpma/sites/disable")) {
                 itemList.push({
                     name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
                     event: {
-                        call: "sites/disable",
+                        call: "WPMA/sites/disable",
                         data: data[0].row
                     }
                 });
             } else {
                 itemList.push({
                     name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
+                    active: false
+                });
+            }
+
+            if (this._myself.checkPermissionSync("wpma/sites/del")) {
+                itemList.push({
+                    name: "Remover",
+                    event: {
+                        call: "WPMA/sites/rem",
+                        data: data[0].row
+                    }
+                });
+            } else {
+                itemList.push({
+                    name: "Remover",
                     active: false
                 });
             }
@@ -166,7 +380,7 @@ class Socket {
                 itemList.push({
                     name: "Grupos",
                     event: {
-                        call: "sites/grp",
+                        call: "WPMA/sites/grp",
                         data: data[0].row
                     }
                 });

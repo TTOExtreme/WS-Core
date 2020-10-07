@@ -1,6 +1,6 @@
 
 ClientEvents.on("WPMA/sites/add", () => {
-    ClientEvents.emit("WPMA/sites/close");
+    ClientEvents.emit("WPMA/sites/close_add");
     let data = {
         name: "",
         description: "",
@@ -30,11 +30,11 @@ ClientEvents.on("WPMA/sites/add", () => {
      */
     let div = document.createElement("div");
     div.setAttribute("class", "wpma_sites_div");
-    div.setAttribute("id", "wpma_sites_div");
+    div.setAttribute("id", "wpma_sites_div_add");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wpma_sites' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wpma_sites_div')>&#9776;</td><td class='wpma_sites_label'><p class='add_wpma_sites_closeButton' onclick='ClientEvents.emit(\"WPMA/sites/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wpma_sites' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wpma_sites_div_add')>&#9776;</td><td class='wpma_sites_label'><p class='add_wpma_sites_closeButton' onclick='ClientEvents.emit(\"WPMA/sites/close_add\")'>X</p></td></tr>" +
         "<tr><td class='wpma_sites_label'>Nome:</td><td><input id='wpma_sites_name' type='text' value='Teste'></td></tr>" +
         "<tr><td class='wpma_sites_label'>Descrição:</td><td><input id='wpma_sites_description' type='text' value='Site de Teste'></td></tr>" +
         "<tr><td class='wpma_sites_label'>Rota:</td><td><input id='wpma_sites_route' type='text' value='/'></td></tr>" +
@@ -48,9 +48,9 @@ ClientEvents.on("WPMA/sites/add", () => {
     document.body.appendChild(div);
 });
 
-ClientEvents.on("WPMA/sites/close", () => {
-    if (document.getElementById("wpma_sites_div")) {
-        document.body.removeChild(document.getElementById("wpma_sites_div"));
+ClientEvents.on("WPMA/sites/close_add", () => {
+    if (document.getElementById("wpma_sites_div_add")) {
+        document.body.removeChild(document.getElementById("wpma_sites_div_add"));
     }
 });
 ClientEvents.on("WPMA/sites/add/success", () => {

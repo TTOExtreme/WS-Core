@@ -92,6 +92,7 @@ class Hosts {
 
     /**
      * Processor for all web sites on host
+     * @deprecated
      */
     _HostWebPages(cfg, req, res, next) {
         //domain/subdomain processor
@@ -118,6 +119,27 @@ class Hosts {
                 root: this._config.webpageFolder
             });
         }
+    }
+
+    /**
+     * Restart the hosting of sites
+     */
+    _Restart() {
+        this._log.task("reloading-wpma", "Module WPMA Reloading", 0);
+        this._modules.cfg.sites.forEach((part, index) => {
+            if (this._modules.cfg.sites[index].http) {
+                this._modules.cfg.sites[index].http.close();
+            }
+            this._log.task("stop-site-" + this._modules.cfg.sites[index].subdomain, "Stopping Site: " + this._modules.cfg.sites[index].name + " on Port: " + colors.green(this._modules.cfg.sites[index].internalPort), 1);
+        });
+        this.Init().then(() => {
+            this._log.task("reloading-wpma", "Module WPMA Reloaded Done", 1);
+
+        }).catch((err) => {
+            this._log.task("reloading-wpma", "Module WPMA Reloading Error", 3);
+            this._log.error("On Reloading Webpages");
+            this._log.error(err);
+        })
     }
 }
 module.exports = { Hosts }

@@ -87,7 +87,6 @@ class Socket {
                 SocketClass.socket.on("ClientEvents", (data) => {
                     if (data) {
                         if (data.event != undefined) {
-                            console.log(data)
                             ClientEvents.emit(data.event, data.data);
                         }
                     }

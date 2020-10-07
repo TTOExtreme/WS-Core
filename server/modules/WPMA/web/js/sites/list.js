@@ -6,7 +6,7 @@ ClientEvents.emit("LMI-CloseAll");
 ClientEvents.emit("LoadExternal", [
     "./module/WPMA/js/sites/edt.js",
     "./module/WPMA/js/sites/disable.js",
-    "./module/WPMA/js/sites/edt.js",
+    "./module/WPMA/js/sites/rem.js",
     "./module/WPMA/js/sites/grp.js",
     "./module/WPMA/css/sites/index.css"
 ], () => { }, false)
@@ -58,6 +58,7 @@ window.DataTableList = class SiteList {
                 }
             }, visible: !(this.actionName == "")
         },
+        { title: 'ID', field: 'id', headerFilter: "input" },
         { title: 'Nome', field: 'name', headerFilter: "input" },
         { title: 'Descrição', field: 'description', headerFilter: "input" },
         { title: 'Rota', field: 'route', headerFilter: "input" },

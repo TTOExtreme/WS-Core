@@ -1,5 +1,8 @@
 const listSites = require("../lst/Sites").lstSites;
 const addSites = require("../add/Sites").addSites;
+const remSites = require("../rem/Sites").remSites;
+const edtSites = require("../edt/Sites").edtSites;
+const disableSites = require("../disable/Sites").disableSites;
 
 class Sites {
 
@@ -10,6 +13,8 @@ class Sites {
 
         this._Select = new listSites(this._db, this._cfg, this._log);
         this._Insert = new addSites(this._db, this._cfg, this._log);
+        this._Update = new edtSites(this._db, this._cfg, this._log);
+        this._Delete = new remSites(this._db, this._cfg, this._log);
     }
 
     /**
@@ -26,6 +31,18 @@ class Sites {
      */
     add(name, description, createdBy, route, subdomain, folder, log, active, deleted) {
         return this._Insert.add(name, description, createdBy, route, subdomain, folder, log, active, deleted);
+    }
+
+    edt(name, description, createdBy, route, subdomain, folder, log, active, deleted) {
+        return this._Insert.add(name, description, createdBy, route, subdomain, folder, log, active, deleted);
+    }
+
+    edt(id, modifiedBy, disabled) {
+        return this._Disabled.disabled(id, modifiedBy, disabled);
+    }
+
+    rem(id, modifiedBy, deleted) {
+        return this._Insert.rem(id, modifiedBy, deleted);
     }
 
     /**
