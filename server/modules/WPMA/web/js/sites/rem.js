@@ -1,5 +1,3 @@
-console.log("Loaded Rem Site ")
-
 ClientEvents.on("WPMA/sites/rem", (data) => {   
     console.log("Remover site: ");
     console.log(data);

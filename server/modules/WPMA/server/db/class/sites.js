@@ -15,6 +15,7 @@ class Sites {
         this._Insert = new addSites(this._db, this._cfg, this._log);
         this._Update = new edtSites(this._db, this._cfg, this._log);
         this._Delete = new remSites(this._db, this._cfg, this._log);
+        this._Disable = new disableSites(this._db, this._cfg, this._log);
     }
 
     /**
@@ -43,6 +44,10 @@ class Sites {
 
     rem(id, modifiedBy, deleted) {
         return this._Delete.rem(id, modifiedBy, deleted);
+    }
+
+    disable(id, modifiedBy, disable) {
+        return this._Disable.disable(id, modifiedBy, disable);
     }
 
     /**

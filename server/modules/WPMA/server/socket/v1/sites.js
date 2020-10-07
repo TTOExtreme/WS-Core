@@ -158,7 +158,7 @@ class Socket {
                                     event: "system_mess",
                                     data: {
                                         status: "OK",
-                                        mess: "Site criado com sucesso",
+                                        mess: "Site editado com sucesso",
                                         time: 1000,
                                         call:"SendSocket",
                                         data: "adm/WPMA/sites/lst"
@@ -221,8 +221,10 @@ class Socket {
                                     event: "system_mess",
                                     data: {
                                         status: "OK",
-                                        mess: "Site Removido com sucesso",
-                                        time: 1000
+                                        mess: "Site removido com sucesso",
+                                        time: 1000,
+                                        call:"SendSocket",
+                                        data: "adm/WPMA/sites/lst"
                                     }
                                 })
                             }).catch(err => {
@@ -285,11 +287,14 @@ class Socket {
                                     event: "system_mess",
                                     data: {
                                         status: "OK",
-                                        mess: "Site Removido com sucesso",
-                                        time: 1000
+                                        mess: "Site "+ ((data[0].active==0)?"desativado":"ativado")+" com sucesso",
+                                        time: 1000,
+                                        call:"SendSocket",
+                                        data: "adm/WPMA/sites/lst"
                                     }
                                 })
                             }).catch(err => {
+                                console.log(err);
                                 socket.emit("ClientEvents", {
                                     event: "system_mess",
                                     data: {
@@ -310,10 +315,11 @@ class Socket {
                         })
                     }
                 } catch (err) {
+                    console.log(err);
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
-                            status: "INFO",
+                            status: "ERROR",
                             mess: err,
                             time: 1000
                         }
