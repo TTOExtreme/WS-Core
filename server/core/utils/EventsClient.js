@@ -22,6 +22,8 @@ class ClientEvent {
      * @description Call all events with name and arguments 
      */
     emit(name, ...args) {
+        console.log(name)
+        console.log(this._events)
         if (this._events[name]) {
             this._events[name].forEach(event => {
                 if (typeof (event.then) === 'function') {

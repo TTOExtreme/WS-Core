@@ -20,6 +20,7 @@ class Hosts {
         this._config = WSMainServer.config;
         this._db = WSMainServer.db;
         this._wserver = WSMainServer.wserver;
+        this._events = WSMainServer.events;
 
         this._modules = WSMainServer.modules["WPMA"];
     }
@@ -28,6 +29,10 @@ class Hosts {
 
     Init() {
         return new Promise((res, rej) => {
+            this._events.on("WPMA/restartHosts",()=>{
+                this._Restart();
+            })
+            this._events.setCoreEvent("WPMA/restartHosts")
 
             /**{
                  sites: [

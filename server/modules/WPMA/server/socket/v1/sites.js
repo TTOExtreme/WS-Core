@@ -76,9 +76,7 @@ class Socket {
                             data[0].folder,
                             data[0].log,
                             data[0].active, 0).then(() => {
-                                if (data[0].active == 1) {
-                                    //TODO Restart Host Instance
-                                }
+                                this._events.emit("WPMA/restartHosts",{});
                                 socket.emit("ClientEvents", {
                                     event: "system_mess",
                                     data: {
@@ -154,6 +152,7 @@ class Socket {
                             data[0].folder,
                             data[0].log,
                             data[0].active, 0).then(() => {
+                                this._events.emit("WPMA/restartHosts",{});
                                 socket.emit("ClientEvents", {
                                     event: "system_mess",
                                     data: {
@@ -217,6 +216,7 @@ class Socket {
                             data[0].id,
                             this._myself.myself.id,
                             data[0].deleted).then(() => {
+                                this._events.emit("WPMA/restartHosts",{});
                                 socket.emit("ClientEvents", {
                                     event: "system_mess",
                                     data: {
@@ -283,6 +283,7 @@ class Socket {
                             data[0].id,
                             this._myself.myself.id,
                             data[0].active).then(() => {
+                                this._events.emit("WPMA/restartHosts",{});
                                 socket.emit("ClientEvents", {
                                     event: "system_mess",
                                     data: {
