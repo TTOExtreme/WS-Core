@@ -1,0 +1,110 @@
+// FIX
+    - [x] Nao redireciona para o login se o usuario não é encontrado
+    - [x] Log de erro não printa o stacktrace
+
+// Mudanças
+    - [x] Mudar painel Administrativo para /Administrativo
+    - [x] Adicionar Pagina 404
+
+// Menu Lateral
+    - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
+    - [x] Adicionar barra para abrir menu lateral
+    - [x] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [] Botão de Logout
+
+// Pagina de Configuração do sistema
+    - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
+    - [] Adicionar usuario
+    - [] Editar usuario
+    - [] Remover/Desativar usuario
+    - [] Criar aba de Grupos
+        - [] criar logica de hierarquia dos grupos / Permissões
+        - [] Adicionar grupos
+        - [] Editar grupos
+        - [] Atribuir grupos
+        - [] Atribuir permissioes
+    - [] criar troca de senha usuario
+    - [] Criar menu de permissioes do usuario (Administrativo)
+    - [] Criar menu de grupos do usuario
+
+
+
+// Terminal
+    - [x] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
+    - [x] Reiniciar / parar instancia apos configurar
+
+// Janelas
+    - [x] posicionamento dinamico parra multiplas Janelas
+
+// usuario
+    - [] Mudar senha de usuario
+    - [x] carregar preferencias de usuario
+    - [x] salvar preferencias do usuario
+    - [] Criar tela de preferencias de usuario
+
+// Core
+    - [x] Auto instalação apos configuração
+    - [x] Mudar painel Administrativo para /Administrativo
+    - [x] Adicionar Pagina 404
+    - [x] Criar estrutura de Execução e inicialização de Modulos
+        .. Estrutura
+            Startup.js <-- Executar ao inicialização do sistema (Carregar permissioes)
+            Running.js <-- Executar ao termino das inicializações
+            Stop.js <-- Executar ao desligar o servidor
+    - [x] Criar cache de dados dos modulos
+
+// Ideias
+
+//Modulo IPMA
+    // Pagina de gerencia de Redes
+        - [] Criar log de alteração de Dados MAC, ...
+        - [] Testar Nmap
+        - [] Testar Scan ARP
+
+//Modulo WPMA
+    - [x] Criar estrutura de tabelas
+    - [x] Criar carregamento de estrutura dos sites em cache 
+    - [] Criar log de acesso por pagina/site/post/menu
+    - [] Criar Abas de Gerencia na área Administrativa
+        - [x] Listar sites
+            - [x] Mudar context Menu (itens)
+            - [x] Adicionar
+                - [x] Reiniciar Host de sites ao adicionar site ativo
+            - [x] Editar
+            - [x] Deletar
+                - [x] Reiniciar Host de sites
+            - [x] Desativar
+                - [x] Reiniciar Host de sites
+        - [] Gerencia de Menus dos sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+            - [] Editar 
+            - [] Excluir
+            - [] Desativar
+        - [] Gerencia de Posts dos sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+            - [] Editar 
+            - [] Excluir
+            - [] Desativar
+        - [] Gerencia de Paginas dos sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+            - [] Editar 
+            - [] Excluir
+            - [] Desativar
+
+        
+    - [] Criar gerencia de sites
+        - [x] Gerenciar redirecionamentos (subdominio/rota)
+        - [] Informações de acesso (numero de acessos)
+        - [] Sistema de portal Administrativo do site (estilo wordpress);
+        - [] Pagina de criação de sites
+    ..Estrutura
+        <modulo>/webpages/<site>
+            home.html (pagina inicial)
+            js/
+            css/
+            img/
+            .../(estrutura de pastas de acesso estatico)
+
