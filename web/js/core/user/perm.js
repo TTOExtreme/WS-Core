@@ -51,74 +51,73 @@ ClientEvents.on("usr/perm", (data) => {
         dataTree: true,
         dataTreeStartExpanded: false,
         columns: [{
-                title: 'Status',
-                field: 'active',
-                formatter: "tickCross",
-                headerFilter: "select",
-                headerFilterParams: [{
-                    label: "-",
-                    value: ""
-                }, {
-                    label: "Permitido",
-                    value: "1"
-                }, {
-                    label: "Negado",
-                    value: "0"
-                }],
-                cellClick: function (e, cell) {
-                    var row = cell.getData();
-                    console.log(row);
-                    if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " a Permissão ao Usuário: " + data.username + "\nVoce tem certeza disso?")) {
+            title: 'Status',
+            field: 'active',
+            formatter: "tickCross",
+            headerFilter: "select",
+            headerFilterParams: [{
+                label: "-",
+                value: ""
+            }, {
+                label: "Permitido",
+                value: "1"
+            }, {
+                label: "Negado",
+                value: "0"
+            }],
+            cellClick: function (e, cell) {
+                var row = cell.getData();
+                if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " a Permissão ao Usuário: " + data.username + "\nVoce tem certeza disso?")) {
 
-                        ClientEvents.emit("SendSocket", "adm/usr/perm/set", {
-                            id_user: data.id,
-                            code: row.code,
-                            active: ((row.active == 1) ? 0 : 1)
-                        });
-                        //reload the table
-                        ClientEvents.emit("SendSocket", "adm/usr/perm/data", data);
-                    }
-
+                    ClientEvents.emit("SendSocket", "adm/usr/perm/set", {
+                        id_user: data.id,
+                        code: row.code,
+                        active: ((row.active == 1) ? 0 : 1)
+                    });
+                    //reload the table
+                    ClientEvents.emit("SendSocket", "adm/usr/perm/data", data);
                 }
-            },
-            {
-                title: 'Code',
-                field: 'code',
-                headerFilter: "input"
-            },
-            {
-                title: 'Permissão',
-                field: 'name',
-                headerFilter: "input"
-            },
-            {
-                title: 'Descrição',
-                field: 'description',
-                headerFilter: "input"
-            },
 
-            {
-                title: 'Adicionado Em',
-                field: 'createdIn',
-                formatter: ((data) => formatTime(data.getRow().getData().createdIn)),
-                headerFilter: "input"
-            },
-            {
-                title: 'Adicionado Por',
-                field: 'createdBy',
-                headerFilter: "input"
-            },
-            {
-                title: 'Desativado Em',
-                field: 'deactivatedIn',
-                formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)),
-                headerFilter: "input"
-            },
-            {
-                title: 'Desativado Por',
-                field: 'deactivatedBy',
-                headerFilter: "input"
             }
+        },
+        {
+            title: 'Code',
+            field: 'code',
+            headerFilter: "input"
+        },
+        {
+            title: 'Permissão',
+            field: 'name',
+            headerFilter: "input"
+        },
+        {
+            title: 'Descrição',
+            field: 'description',
+            headerFilter: "input"
+        },
+
+        {
+            title: 'Adicionado Em',
+            field: 'createdIn',
+            formatter: ((data) => formatTime(data.getRow().getData().createdIn)),
+            headerFilter: "input"
+        },
+        {
+            title: 'Adicionado Por',
+            field: 'createdBy',
+            headerFilter: "input"
+        },
+        {
+            title: 'Desativado Em',
+            field: 'deactivatedIn',
+            formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)),
+            headerFilter: "input"
+        },
+        {
+            title: 'Desativado Por',
+            field: 'deactivatedBy',
+            headerFilter: "input"
+        }
         ],
         paginationButtonCount: 3,
         pagination: "local",
