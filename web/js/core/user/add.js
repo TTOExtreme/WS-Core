@@ -36,6 +36,7 @@ ClientEvents.on("usr/add/add", () => {
         "<tr><td class='usr_edt_label'>Usuário:</td><td><input id='usr_add_username' type='text' value='" + data.username + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Senha:</td><td><input id='usr_add_pass' type='text' value='" + data.pass + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Ativo:</td><td><input id='usr_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
+        "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"usr/add/save\")'></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
@@ -50,9 +51,11 @@ ClientEvents.on("usr/add/close", () => {
 });
 
 ClientEvents.on("usr/add/save", () => {
-    ClientEvents.emit("SendSocket", "adm/ust/lst/ctx", {
-        id: document.getElementById("usraddid").value,
-        name: document.getElementById("usraddname").value,
+    ClientEvents.emit("SendSocket", "adm/usr/add/save", {
+        name: document.getElementById("usr_add_name").value,
+        username: document.getElementById("usr_add_username").value,
+        pass: document.getElementById("usr_add_pass").value,
+        active: document.getElementById("usr_add_pass").checked,
     });
     /**
      * save data and closes the page if success

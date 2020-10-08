@@ -56,9 +56,9 @@ class User {
             return Promise.reject("Usuário ou Senha esta em branco")
         }
         this.log.info("Searching user: <" + username + "> in database.");
-        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "';").then((result) => {
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "' AND active=1;").then((result) => {
             const salt = result[0].salt;
-            return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "' AND password='" + this.bcypher.sha512(salt + pass) + "';")
+            return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "' AND password='" + this.bcypher.sha512(salt + pass) + "' AND active=1;")
                 .catch((err) => {
                     return Promise.reject("Wrong Password: <" + username + ">.");
                 }).then((result) => {
@@ -79,7 +79,7 @@ class User {
         }).catch((err) => {
             if (!err) this.log.info("Not Found user: <" + username + "> in database.");
             if (err) this.log.error(err);
-            return Promise.reject("Not Found user: <" + username + "> in database.");
+            return Promise.reject("Usuario ou senha incorreto");
         }).then((result) => {
             this.log.info("Found user: <" + username + "> in database.");
             return Promise.resolve(result)

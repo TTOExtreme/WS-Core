@@ -37,16 +37,17 @@ class UserServer {
      * @param {String} username 
      * @param {String} pass 
      * @param {Boolean} active 
+     * @param {Int} myselfID 
      * @returns {Promise}
      */
-    createUser(id, name, username, pass, active) {
+    createUser(id, name, username, pass, active, myselfID = 1) {
         const salt = this.bcypher.generate_salt();
         this.log.warning("User With SHA512 Pass: " + this.bcypher.sha512(pass))
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._User" +
             " (" + ((id != undefined) ? "id," : "") + "name,username,password,salt,active,createdBy,createdIn)" +
             " VALUES " +
-            " (" + ((id != undefined) ? id + "," : "") + "'" + name + "','" + username + "','" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "','" + salt + "'," + ((active) ? 1 : 0) + ",1," + Date.now() + ");");
+            " (" + ((id != undefined) ? id + "," : "") + "'" + name + "','" + username + "','" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "','" + salt + "'," + ((active) ? 1 : 0) + "," + myselfID + "," + Date.now() + ");");
     }
 
     /**

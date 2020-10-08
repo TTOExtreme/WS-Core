@@ -38,6 +38,7 @@ ClientEvents.on("usr/edt", (data) => {
         "<tr><td class='usr_edt_label'>Ultimo Login:</td><td><input type='text' disabled value='" + formatTime(data.lastConnection) + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Ultima Tentativa:</td><td><input type='text' disabled value='" + formatTime(data.lastTry) + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Ultimo IP:</td><td><input type='text' disabled value='" + data.lastIp + "'></td></tr>" +
+        "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"usr/edt/save\")'></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
