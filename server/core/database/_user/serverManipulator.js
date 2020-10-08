@@ -51,6 +51,22 @@ class UserServer {
     }
 
     /**
+     * Edit user
+     * @param {Int} id 
+     * @param {String} name 
+     * @param {String} pass 
+     * @param {Boolean} active 
+     * @param {Int} myselfID 
+     * @returns {Promise}
+     */
+    edtUser(id, name, pass, active, myselfID = 1) {
+
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+            " SET name='" + name + ((active != undefined) ? "', active=" + ((active) ? 1 : 0) : "") + ", modifiedBy=" + myselfID + ", modifiedIn=" + Date.now() + "" +
+            " WHERE id=" + id + "");
+    }
+
+    /**
      * List all Users
      */
     listUser() {
@@ -60,6 +76,8 @@ class UserServer {
             "U1.username," +
             "U1.createdIn," +
             "U2.username as createdBy," +
+            "U1.modifiedIn," +
+            "U3.username as modifiedBy," +
             "U1.deactivatedIn," +
             "U1.deactivatedBy," +
             "U1.active," +
@@ -67,9 +85,11 @@ class UserServer {
             "U1.lastConnection," +
             "U1.lastTry," +
             "U1.lastIp " +
-            "FROM " + this.db.DatabaseName + "._User as U1 LEFT JOIN " +
-            " " + this.db.DatabaseName + "._User as U2 " +
+            "FROM " + this.db.DatabaseName + "._User as U1 " +
+            "LEFT JOIN " + this.db.DatabaseName + "._User as U2 " +
             "ON U1.createdBy = U2.id " +
+            "LEFT JOIN " + this.db.DatabaseName + "._User as U3 " +
+            "ON U1.modifiedBy = U3.id " +
             " ;");
     }
 

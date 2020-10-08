@@ -153,6 +153,36 @@ class Socket {
             })
         })
 
+        /**
+         * User edt
+         */
+        socket.on("adm/usr/edt/save", (data) => {
+            this._myself.checkPermission("adm/usr/edt").then(() => {
+                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Editado com sucesso",
+                            status: "OK",
+                            call: "SendSocket",
+                            data: "adm/user/lst"
+                        }
+                    })
+                })
+            }).catch(() => {
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
 
         /**
          * Context Menu List items with it calls for list of users

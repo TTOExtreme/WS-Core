@@ -1,5 +1,6 @@
 
 ClientEvents.on("usr/edt", (data) => {
+    console.log(data);
     ClientEvents.emit("usr/edt/close");
     /**
      * id
@@ -32,12 +33,14 @@ ClientEvents.on("usr/edt", (data) => {
         "<tr><td class='usr_edt_label'>Criado Em:</td><td><input type='text' disabled value='" + formatTime(data.createdIn) + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Criado Por:</td><td><input type='text' disabled value='" + data.createdBy + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Desativado Em:</td><td><input type='text' disabled value='" + formatTime(data.deactivatedIn) + "'></td></tr>" +
-        "<tr><td class='usr_edt_label'>Desativado Por:</td><td><input type='text' disabled value='" + ((data.deactivatedBy == "null") ? data.deactivatedBy : "-") + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Desativado Por:</td><td><input type='text' disabled value='" + ((data.deactivatedBy != null) ? data.deactivatedBy : "-") + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Modificado Em:</td><td><input type='text' disabled value='" + formatTime(data.modifiedIn) + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Modificado Por:</td><td><input type='text' disabled value='" + ((data.modifiedBy != null) ? data.modifiedBy : "-") + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Ativo:</td><td><input type='text' disabled value='" + ((data.active == 1) ? "Sim" : "Não") + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Conectado:</td><td><input type='text' disabled value='" + ((data.connected == 1) ? "Sim" : "Não") + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Ultimo Login:</td><td><input type='text' disabled value='" + formatTime(data.lastConnection) + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Ultima Tentativa:</td><td><input type='text' disabled value='" + formatTime(data.lastTry) + "'></td></tr>" +
-        "<tr><td class='usr_edt_label'>Ultimo IP:</td><td><input type='text' disabled value='" + data.lastIp + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Ultimo IP:</td><td><input type='text' disabled value='" + ((data.lastIp != null) ? data.lastIp : "-") + "'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"usr/edt/save\")'></td></tr>" +
         "</table>";
 
@@ -51,9 +54,9 @@ ClientEvents.on("usr/edt/close", () => {
 });
 
 ClientEvents.on("usr/edt/save", () => {
-    ClientEvents.emit("SendSocket", "adm/ust/lst/ctx", {
-        id: document.getElementById("usredtid").value,
-        name: document.getElementById("usredtname").value,
+    ClientEvents.emit("SendSocket", "adm/usr/edt/save", {
+        id_user: document.getElementById("usredtid").value,
+        name: document.getElementById("usredtname").value
     });
     /**
      * save data and closes the page if success
