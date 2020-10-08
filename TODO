@@ -28,10 +28,6 @@
     - [] Criar menu de grupos do usuario
 
 
-// Pagina de gerencia de Redes
-    - [] Criar log de alteração de Dados MAC, ...
-    - [] Testar Nmap
-    - [] Testar Scan ARP
 
 // Terminal
     - [x] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
@@ -59,6 +55,11 @@
 
 // Ideias
 
+//Modulo IPMA
+    // Pagina de gerencia de Redes
+        - [] Criar log de alteração de Dados MAC, ...
+        - [] Testar Nmap
+        - [] Testar Scan ARP
 
 //Modulo WPMA
     - [x] Criar estrutura de tabelas
