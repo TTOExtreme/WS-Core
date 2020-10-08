@@ -22,6 +22,10 @@ ClientEvents.on("LeftMenuClose", () => {
 
 ClientEvents.setCoreEvent("Page_Loaded")
 ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
+    
+    document.getElementById("LMI-LogoutButton").onclick = () => {
+        ClientEvents.emit("Logout");
+    }
     document.getElementById("openLeftMenu").onclick = () => {
         ClientEvents.emit("LeftMenuOpen");
     }

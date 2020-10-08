@@ -119,6 +119,10 @@ class Socket {
                     })
                 }
             });
+            ClientEvents.on("Logout",()=>{
+                SocketClass._clearCookies();
+                window.location.assign("./login");
+            })
             SocketClass.socket.on("logout", function () {
                 SocketClass._clearCookies();
                 window.location.assign("./login");
@@ -236,14 +240,8 @@ class Socket {
         routes[route] = callback;
     }
     _clearCookies() {
-        /*
-        var cookies = document.cookie.split(";");
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i];
-            var eqPos = cookie.indexOf("=");
-            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
+        
+        document.cookie = "wscore=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         //*/
     }
 }
