@@ -25,7 +25,7 @@ ClientEvents.on("usr/edt", (data) => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_usr_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'usr_edt_div')>&#9776;</td><td class='usr_edt_label'><p class='edt_usr_closeButton' onclick='ClientEvents.emit(\"usr/edt/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_usr_edt' style='width:120px' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'usr_edt_div')>&#9776;</td><td class='usr_edt_label'><p class='edt_usr_closeButton' onclick='ClientEvents.emit(\"usr/edt/close\")'>X</p></td></tr>" +
         "<tr><td class='usr_edt_label'>ID:</td><td><input id='usredtid' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Nome:</td><td><input id='usredtname' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Usuário:</td><td><input type='text' disabled value='" + data.username + "'></td></tr>" +
