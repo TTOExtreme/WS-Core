@@ -122,6 +122,99 @@ class Socket {
             })
         })
 
+
+        /**
+         * User Add
+         */
+        socket.on("adm/usr/add/save", (data) => {
+            this._myself.checkPermission("adm/usr/add").then(() => {
+                this._userServer.createUser(data[0].id_user, data[0].name, data[0].username, data[0].pass, data[0].active, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Adicionado com sucesso",
+                            status: "OK",
+                            call: "SendSocket",
+                            data: "adm/user/lst"
+                        }
+                    })
+                })
+            }).catch(() => {
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User edt
+         */
+        socket.on("adm/usr/edt/save", (data) => {
+            this._myself.checkPermission("adm/usr/edt").then(() => {
+                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Editado com sucesso",
+                            status: "OK",
+                            call: "SendSocket",
+                            data: "adm/user/lst"
+                        }
+                    })
+                })
+            }).catch(() => {
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User Disable
+         */
+        socket.on("adm/usr/disable/save", (data) => {
+            this._myself.checkPermission("adm/usr/disable").then(() => {
+                this._userServer.edtUser(data[0].id_user, undefined, undefined, data[0].active, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: ((data[0].active) ? "Ativado" : "Desativado") + " com sucesso",
+                            status: "OK",
+                            call: "SendSocket",
+                            data: "adm/user/lst"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+
         /**
          * Context Menu List items with it calls for list of users
          */
@@ -142,9 +235,11 @@ class Socket {
                     active: false
                 });
             }
+
             if (this._myself.checkPermissionSync("adm/usr/disable")) {
                 itemList.push({
                     name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
+                    active: true,
                     event: {
                         call: "usr/disable",
                         data: data[0].row
@@ -156,6 +251,7 @@ class Socket {
                     active: false
                 });
             }
+            //*/
             if (this._myself.checkPermissionSync("adm/usr/perm")) {
                 itemList.push({
                     name: "Permissões",

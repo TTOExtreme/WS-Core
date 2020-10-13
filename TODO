@@ -1,7 +1,3 @@
-// FIX
-    - [x] Nao redireciona para o login se o usuario não é encontrado
-    - [x] Log de erro não printa o stacktrace
-
 // Mudanças
     - [x] Mudar painel Administrativo para /Administrativo
     - [x] Adicionar Pagina 404
@@ -10,7 +6,7 @@
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
     - [x] Adicionar barra para abrir menu lateral
     - [x] Mostrar informação completa (Falta IP e data do ultimo login)
-    - [] Botão de Logout
+    - [x] Botão de Logout
 
 // Pagina de Configuração do sistema
     - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)

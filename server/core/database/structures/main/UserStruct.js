@@ -33,6 +33,8 @@ class UserStruct {
     createdBy;
     deactivatedIn;
     deactivatedBy;
+    modifiedIn;
+    modifiedBy;
     active;
     connected;
     lastConnection;
@@ -57,6 +59,8 @@ class UserStruct {
             if (user.createdBy) { this.createdBy = user.createdBy }
             if (user.deactivatedIn) { this.deactivatedIn = user.deactivatedIn }
             if (user.deactivatedBy) { this.deactivatedBy = user.deactivatedBy }
+            if (user.modifiedIn) { this.modifiedIn = user.modifiedIn }
+            if (user.modifiedBy) { this.modifiedBy = user.modifiedBy }
             if (user.active) { this.active = user.active }
             if (user.connected) { this.connected = user.connected }
             if (user.lastConnection) { this.lastConnection = user.lastConnection }
@@ -81,6 +85,8 @@ class UserStruct {
             createdBy: this.createdBy,
             deactivatedIn: this.deactivatedIn,
             deactivatedBy: this.deactivatedBy,
+            modifiedIn: this.modifiedIn,
+            modifiedBy: this.modifiedBy,
             active: this.active,
             connected: this.connected,
             lastConnection: this.lastConnection,
@@ -102,6 +108,8 @@ const _DB = {
     createdBy: "INT",
     deactivatedIn: "BIGINT",
     deactivatedBy: "INT",
+    modifiedIn: "BIGINT",
+    modifiedBy: "INT",
     active: "INT(1)",
     connected: "INT(1)",
     lastConnection: "BIGINT",

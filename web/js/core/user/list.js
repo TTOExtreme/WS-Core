@@ -67,7 +67,7 @@ window.UserList = class UserList {
         {
             title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
                 "1": "Ativo",
-                "0": "Inativo"
+                "0": "Desativado"
             }
         },
         { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },

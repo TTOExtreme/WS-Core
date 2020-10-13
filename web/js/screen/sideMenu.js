@@ -22,6 +22,10 @@ ClientEvents.on("LeftMenuClose", () => {
 
 ClientEvents.setCoreEvent("Page_Loaded")
 ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
+    
+    document.getElementById("LMI-LogoutButton").onclick = () => {
+        ClientEvents.emit("Logout");
+    }
     document.getElementById("openLeftMenu").onclick = () => {
         ClientEvents.emit("LeftMenuOpen");
     }
@@ -71,8 +75,8 @@ ClientEvents.on("LeftMenu-ToggleUserMenu", (state) => {
 
 ClientEvents.setCoreEvent("LMU-SetInfo")
 ClientEvents.on("LMU-SetInfo", (info) => {
-    if (info.username) document.getElementById("LMU-Name").innerText = info.username;
-    if (info.name) document.getElementById("LMU-Username").innerText = info.name;
+    if (info.username) document.getElementById("LMU-Name").innerText = info.name;
+    if (info.name) document.getElementById("LMU-Username").innerText = info.username;
     if (info.lastIp) document.getElementById("LMU-Ip").innerText = info.lastIp;
     if (info.lastConnection) document.getElementById("LMU-LastLogin").innerText = formatTime(info.lastConnection);
 })
