@@ -1,3 +1,9 @@
+//Working done on commit
+    - [x] Adicionado condicional para inserir data de inserção de dados no banco na instalação
+    - [x] Adicionado Grupos
+    - [x] Adicionado Permissões de Grupos
+    - [x] Adicionado Grupos de Grupos
+
 // Mudanças
     - [x] Mudar painel Administrativo para /Administrativo
     - [x] Adicionar Pagina 404
@@ -10,17 +16,18 @@
 
 // Pagina de Configuração do sistema
     - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
-    - [] Adicionar usuario
-    - [] Editar usuario
-    - [] Remover/Desativar usuario
+    - [x] Adicionar usuario
+    - [x] Editar usuario
+    - [x] Remover/Desativar usuario
     - [] Criar aba de Grupos
         - [] criar logica de hierarquia dos grupos / Permissões
         - [] Adicionar grupos
         - [] Editar grupos
         - [] Atribuir grupos
-        - [] Atribuir permissioes
+        - [] Atribuir permissioes   
+        - [] Lista de usuários no grupo
     - [] criar troca de senha usuario
-    - [] Criar menu de permissioes do usuario (Administrativo)
+    - [x] Criar menu de permissioes do usuario (Administrativo)
     - [] Criar menu de grupos do usuario
 
 
