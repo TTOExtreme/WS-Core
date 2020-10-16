@@ -120,6 +120,11 @@ class UserServer {
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Permissions" +
             " WHERE id_User=" + userID + " AND code_Permission='" + permissionCode + "';");
     }
+
+    checkGroupUser(groupID, Id_Group) {
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Group" +
+            " WHERE id_Group_Father=" + groupID + " AND id_Group_Child='" + Id_Group + "';");
+    }
 }
 
 module.exports = {

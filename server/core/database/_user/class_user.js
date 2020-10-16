@@ -326,7 +326,7 @@ class User {
         if (this.myself.id) {
             return new Promise((resolve, reject) => {
                 this.db.query("SELECT *  FROM " + this.db.DatabaseName + "._Permissions AS P" +
-                    " LEFT JOIN " +
+                    " RIGHT JOIN " +
                     " (SELECT " +
                     " ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User" +
                     " FROM " + this.db.DatabaseName + ".rlt_User_Permissions as up1" +
@@ -338,6 +338,7 @@ class User {
                     if (result[0]) {
                         this.myself.permissions = result;
                         this._generateMenus();
+                        console.log(this.myself.permissions)
                         resolve(this.myself)
                     } else {
                         return Promise.reject();

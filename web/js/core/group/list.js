@@ -59,11 +59,6 @@ window.UserList = class UserList {
             }, visible: !(this.actionName == "")
         },
         { title: 'Nome', field: 'name', headerFilter: "input" },
-        { title: 'Login', field: 'username', headerFilter: "input" },
-        { title: 'Conectado', field: 'connected', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] },
-        { title: 'Ultimo Login', field: 'lastConnection', formatter: ((data) => formatTime(data.getRow().getData().lastConnection)), headerFilter: "input" },
-        //{ title: 'Ultima Tentativa', field: 'lastTry', formatter: ((data) => formatTime(data.getRow().getData().lastTry)), headerFilter: "input" },
-        { title: 'Ultimo IP', field: 'lastIp', headerFilter: "input" },
         {
             title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
                 "1": "Ativo",
@@ -97,7 +92,7 @@ window.UserList = class UserList {
             rowContext: this.rowContext
         });
         this._init();
-        ClientEvents.emit("SendSocket", "adm/user/lst");
+        ClientEvents.emit("SendSocket", "adm/grp/lst");
     }
 
     _init() {

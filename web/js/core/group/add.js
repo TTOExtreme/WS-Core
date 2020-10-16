@@ -33,8 +33,6 @@ ClientEvents.on("grp/add/add", () => {
         "<table>" +
         "<tr><td id='move_menu_grp_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'grp_add_div')>&#9776;</td><td class='grp_edt_label'><p class='add_grp_closeButton' onclick='ClientEvents.emit(\"grp/add/close\")'>X</p></td></tr>" +
         "<tr><td class='grp_edt_label'>Nome:</td><td><input id='grp_add_name' type='text' value='" + data.name + "'></td></tr>" +
-        "<tr><td class='grp_edt_label'>Usuário:</td><td><input id='grp_add_username' type='text' value='" + data.username + "'></td></tr>" +
-        "<tr><td class='grp_edt_label'>Senha:</td><td><input id='grp_add_pass' type='text' value='" + data.pass + "'></td></tr>" +
         "<tr><td class='grp_edt_label'>Ativo:</td><td><input id='grp_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"grp/add/save\")'></td></tr>" +
         "</table>";
@@ -53,9 +51,7 @@ ClientEvents.on("grp/add/close", () => {
 ClientEvents.on("grp/add/save", () => {
     ClientEvents.emit("SendSocket", "adm/grp/add/save", {
         name: document.getElementById("grp_add_name").value,
-        username: document.getElementById("grp_add_username").value,
-        pass: document.getElementById("grp_add_pass").value,
-        active: document.getElementById("grp_add_pass").checked,
+        active: document.getElementById("grp_add_active").checked,
     });
     /**
      * save data and closes the page if success

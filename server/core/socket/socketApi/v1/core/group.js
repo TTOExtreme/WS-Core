@@ -1,5 +1,5 @@
-const userManipulator = require('../../../../database/_group/serverManipulator').UserServer;
-const class_user = require('../../../../database/_group/class_group').Group;
+const groupManipulator = require('../../../../database/_group/serverManipulator').GroupServer;
+const class_group = require('../../../../database/_group/class_group').Group;
 
 class Socket {
 
@@ -10,7 +10,7 @@ class Socket {
     _events;
 
     /**
-     * Constructor for User Class
+     * Constructor for group Class
      * @param {WSMainServer} WSMain
      */
     constructor(WSMainServer) {
@@ -18,26 +18,26 @@ class Socket {
         this._config = WSMainServer.config;
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
-        this._userServer = new userManipulator(WSMainServer);
-        this._myself = new class_user(WSMainServer);
+        this._groupServer = new groupManipulator(WSMainServer);
+        this._myself = new class_group(WSMainServer);
     }
 
     /**
      * Create Listeners for Socket
      * @param {SocketIO} io 
-     * @param {class_user} Myself
+     * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-user", "Api User Loaded", 1);
+        this._log.task("api-mod-group", "Api Groups Loaded", 1);
         this._myself = Myself;
         /**
-         * List all Users
+         * List all groups
          */
-        socket.on("adm/user/lst", (data) => {
-            this._myself.checkPermission("menu/adm/usr").then(() => {
-                this._userServer.listUser().then((data) => {
+        socket.on("adm/grp/lst", (data) => {
+            this._myself.checkPermission("menu/adm/grp").then(() => {
+                this._groupServer.listGroup().then((data) => {
                     socket.emit("ClientEvents", {
-                        event: "adm/usr/lst",
+                        event: "adm/grp/lst",
                         data: data
                     })
                 }).catch((err) => {
@@ -57,29 +57,20 @@ class Socket {
         })
 
         /**
-         * User menus
+         * Group permissions
+         * Get list of permissions from certain group
          */
-        socket.on("usr/lst/menu", (data) => {
-            socket.emit("ClientEvents", {
-                event: "LeftMenu-SetItems",
-                data: this._myself.GetMenus()
-            })
-        })
-
-        /**
-         * User permissions
-         * Get list of permissions from certain user
-         */
-        socket.on("adm/usr/perm/data", (data) => {
-            this._myself.checkPermission("adm/usr/perm").then(() => {
-                let search_user = new class_user(this._WSMainServer);
-                search_user.findmeid(data[0].id).then(() => {
+        socket.on("adm/grp/perm/data", (data) => {
+            this._myself.checkPermission("adm/grp/perm").then(() => {
+                let search_group = new class_group(this._WSMainServer);
+                search_group.findmeid(data[0].id).then(() => {
                     socket.emit("ClientEvents", {
-                        event: "adm/usr/perm/data",
-                        data: search_user.listPermissions()
+                        event: "adm/grp/perm/data",
+                        data: search_group.listPermissions()
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -95,11 +86,11 @@ class Socket {
         })
 
         /**
-         * User permissions set (server)
+         * group permissions set (server)
          */
-        socket.on("adm/usr/perm/set", (data) => {
-            this._myself.checkPermission("adm/usr/perm").then(() => {
-                this._userServer.attribPermissions(data[0].id_user, data[0].code, this._myself.myself.id, data[0].active).then(() => {
+        socket.on("adm/grp/perm/set", (data) => {
+            this._myself.checkPermission("adm/grp/perm").then(() => {
+                this._groupServer.attribPermissions(data[0].id_group, data[0].code, this._myself.myself.id, data[0].active).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -124,18 +115,18 @@ class Socket {
 
 
         /**
-         * User Add
+         * group Add
          */
-        socket.on("adm/usr/add/save", (data) => {
-            this._myself.checkPermission("adm/usr/add").then(() => {
-                this._userServer.createUser(data[0].id_user, data[0].name, data[0].username, data[0].pass, data[0].active, this._myself.myself.id).then(() => {
+        socket.on("adm/grp/add/save", (data) => {
+            this._myself.checkPermission("adm/grp/add").then(() => {
+                this._groupServer.createGroup(data[0].id_group, data[0].name, data[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
                             mess: "Adicionado com sucesso",
                             status: "OK",
                             call: "SendSocket",
-                            data: "adm/user/lst"
+                            data: "adm/grp/lst"
                         }
                     })
                 })
@@ -154,22 +145,23 @@ class Socket {
         })
 
         /**
-         * User edt
+         * group edt
          */
-        socket.on("adm/usr/edt/save", (data) => {
-            this._myself.checkPermission("adm/usr/edt").then(() => {
-                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, this._myself.myself.id).then(() => {
+        socket.on("adm/grp/edt/save", (data) => {
+            this._myself.checkPermission("adm/grp/edt").then(() => {
+                this._groupServer.edtGroup(data[0].id_group, data[0].name, data[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
                             mess: "Editado com sucesso",
                             status: "OK",
                             call: "SendSocket",
-                            data: "adm/user/lst"
+                            data: "adm/grp/lst"
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                console.log(err)
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -184,18 +176,18 @@ class Socket {
         })
 
         /**
-         * User Disable
+         * Group Disable
          */
-        socket.on("adm/usr/disable/save", (data) => {
-            this._myself.checkPermission("adm/usr/disable").then(() => {
-                this._userServer.edtUser(data[0].id_user, undefined, undefined, data[0].active, this._myself.myself.id).then(() => {
+        socket.on("adm/grp/disable/save", (data) => {
+            this._myself.checkPermission("adm/grp/disable").then(() => {
+                this._groupServer.edtGroup(data[0].id_group, undefined, data[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
                             mess: ((data[0].active) ? "Ativado" : "Desativado") + " com sucesso",
                             status: "OK",
                             call: "SendSocket",
-                            data: "adm/user/lst"
+                            data: "adm/grp/lst"
                         }
                     })
                 })
@@ -216,16 +208,16 @@ class Socket {
 
 
         /**
-         * Context Menu List items with it calls for list of users
+         * Context Menu List items with it calls for list of groups
          */
-        socket.on("adm/usr/lst/ctx", (data) => {
+        socket.on("adm/grp/lst/ctx", (data) => {
             let itemList = [];
             if (this._myself.checkPermissionSync("adm/usr/edt")) {
                 itemList.push({
                     name: "Editar",
                     active: true,
                     event: {
-                        call: "usr/edt",
+                        call: "grp/edt",
                         data: data[0].row
                     }
                 });
@@ -236,12 +228,12 @@ class Socket {
                 });
             }
 
-            if (this._myself.checkPermissionSync("adm/usr/disable")) {
+            if (this._myself.checkPermissionSync("adm/grp/disable")) {
                 itemList.push({
                     name: ((data[0].row.active == 1) ? "Desativar" : "Ativar"),
                     active: true,
                     event: {
-                        call: "usr/disable",
+                        call: "grp/disable",
                         data: data[0].row
                     }
                 });
@@ -252,12 +244,12 @@ class Socket {
                 });
             }
             //*/
-            if (this._myself.checkPermissionSync("adm/usr/perm")) {
+            if (this._myself.checkPermissionSync("adm/grp/perm")) {
                 itemList.push({
                     name: "Permissões",
                     active: true,
                     event: {
-                        call: "usr/perm",
+                        call: "grp/perm",
                         data: data[0].row
                     }
                 });
@@ -267,11 +259,11 @@ class Socket {
                     active: false
                 });
             }
-            if (this._myself.checkPermissionSync("adm/usr/grp")) {
+            if (this._myself.checkPermissionSync("adm/grp/grp")) {
                 itemList.push({
                     name: "Grupos",
                     event: {
-                        call: "usr/grp",
+                        call: "grp/grp",
                         data: data[0].row
                     }
                 });

@@ -1,8 +1,5 @@
 //Working done on commit
-    - [x] Adicionado condicional para inserir data de inserção de dados no banco na instalação
-    - [x] Adicionado Grupos
-    - [x] Adicionado Permissões de Grupos
-    - [x] Adicionado Grupos de Grupos
+    - [x] Fix Falso carregamento das permissioes
 
 // Mudanças
     - [x] Mudar painel Administrativo para /Administrativo
@@ -21,10 +18,10 @@
     - [x] Remover/Desativar usuario
     - [] Criar aba de Grupos
         - [] criar logica de hierarquia dos grupos / Permissões
-        - [] Adicionar grupos
-        - [] Editar grupos
+        - [x] Adicionar grupos
+        - [x] Editar grupos
         - [] Atribuir grupos
-        - [] Atribuir permissioes   
+        - [x] Atribuir permissioes   
         - [] Lista de usuários no grupo
     - [] criar troca de senha usuario
     - [x] Criar menu de permissioes do usuario (Administrativo)

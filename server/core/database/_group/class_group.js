@@ -30,11 +30,9 @@ class Group {
      * @param {WSMainServer} WSMain
      */
     constructor(WSMain) {
-        this.Menus = [new ClientMenus()]
         this.db = WSMain.db;
         this.log = WSMain.log;
         this.cfg = WSMain.cfg;
-        this.bcypher = new Bcypher();
         this._events = WSMain.events;
         this._AdmMenus = WSMain.AdmMenus;
     }
@@ -42,39 +40,30 @@ class Group {
     myself = new GroupStruct();
 
 
-    findme(groupID) {
+    findmeid(groupID) {
         if (!groupID) {
             this.log.warning("Group ID is Null");
             return Promise.reject("ID do Grupo é nulo")
         }
-        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._Group WHERE ID_group='" + username + "' AND active=1;").then((result) => {
-            const salt = result[0].salt;
-            return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._User WHERE username='" + username + "' AND password='" + this.bcypher.sha512(salt + pass) + "' AND active=1;")
-                .catch((err) => {
-                    return Promise.reject("Wrong Password: <" + username + ">.");
-                }).then((result) => {
-                    if (result[0]) {
-                        this.myself = new UserStruct(result[0]);
-                        return this.resetUUID()
-                            .then(() => {
-                                return this._loadPermissions();
-                                return Promise.resolve(this.myself)
-                            }).catch((err) => {
-                                this.log.error(err);
-                                return Promise.reject("Not Able to reset UUID for user: <" + username + "> in database.");
-                            })
-                    } else {
-                        return Promise.reject();
-                    }
-                })
-        }).catch((err) => {
-            if (!err) this.log.info("Not Found user: <" + username + "> in database.");
-            if (err) this.log.error(err);
-            return Promise.reject("Usuario ou senha incorreto");
-        }).then((result) => {
-            this.log.info("Found user: <" + username + "> in database.");
-            return Promise.resolve(result)
-        })
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._Group WHERE id='" + groupID + "' AND active=1;")
+            .catch((err) => {
+                return Promise.reject("Wrong GroupID: <" + groupID + ">.");
+            }).then((result) => {
+                if (result[0]) {
+                    this.myself = new GroupStruct(result[0]);
+                    return this._loadPermissions();
+                } else {
+                    return Promise.reject();
+                }
+            }).catch((err) => {
+                if (!err) this.log.info("Not Found group: <" + groupID + "> in database.");
+                if (err) this.log.error(err);
+                return Promise.reject("ID do Grupo Incorreto");
+            }).then((result) => {
+                this.log.info("Found user: <" + groupID + "> in database.");
+                return Promise.resolve(result)
+            })
+
     }
 
     /**
@@ -114,15 +103,6 @@ class Group {
     }
 
     /**
-        SELECT * FROM WS_CORE_1_3_1._Permissions AS P 
-        LEFT JOIN (SELECT 
-        ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User
-        FROM WS_CORE_1_3_1.rlt_User_Permissions as up1 
-        LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id
-        LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id
-        WHERE id_User = 1) AS UP 
-        ON P.code = UP.code_Permission;
-     * 
      * Function to load permissions from database
      * @param {JSON} preferences 
      */
@@ -132,28 +112,75 @@ class Group {
                 this.db.query("SELECT *  FROM " + this.db.DatabaseName + "._Permissions AS P" +
                     " LEFT JOIN " +
                     " (SELECT " +
-                    " ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User" +
-                    " FROM " + this.db.DatabaseName + ".rlt_User_Permissions as up1" +
+                    " ut1.username as createdBy," +
+                    " ut2.username as deactivatedBy," +
+                    " up1.active," +
+                    " up1.code_Permission," +
+                    " up1.createdIn," +
+                    " up1.deactivatedIn," +
+                    " up1.id_group" +
+                    " FROM " + this.db.DatabaseName + ".rlt_Group_Permissions as up1" +
                     " LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id" +
                     " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
-                    " WHERE id_User=" + this.myself.id + " ) AS UP" +
+                    " WHERE id_Group=" + this.myself.id + " ) AS UP" +
                     " ON P.code = UP.code_Permission;"
                 ).then((result) => {
                     if (result[0]) {
                         this.myself.permissions = result;
-                        this._generateMenus();
                         resolve(this.myself)
                     } else {
                         return Promise.reject();
                     }
                 }).catch(() => {
-                    this.log.error("User Without Any Permissions " + this.myself.toString())
-                    reject("User Without Any Permissions");
+                    this.log.error("Group Without Any Permissions " + this.myself.toString())
+                    reject("Group Without Any Permissions");
                 })
             });
         } else {
-            this.log.error("User not defined to load Permissions\n" + this.myself.toString())
-            return Promise.reject("User not defined to load Permissions");
+            this.log.error("Group not defined to load Permissions\n" + this.myself.toString())
+            return Promise.reject("Group not defined to load Permissions");
+        }
+    }
+
+    /**
+     * Function to load permissions from database
+     * @param {JSON} preferences 
+     */
+    _loadGroupTree(id) {
+        if (id || this.myself.id) {
+            return new Promise((resolve, reject) => {
+                this.db.query("SELECT" +
+                    " G.id_Group_Father," +
+                    " G.id_Group_Child," +
+                    " G.active," +
+                    " GP.code_Permission," +
+                    " GP.id_Group as ID_grp_Perm" +
+                    " FROM " + this.db.DatabaseName + ".rlt_Group_Group as G" +
+                    " LEFT JOIN " + this.db.DatabaseName + ".rlt_Group_Permissions as GP" +
+                    " ON G.id_Group_Child = GP.id_Group" +
+                    " WHERE G.id_Group_Child = " + ((id != null) ? id : this.myself.id) + ";"
+                ).then((result) => {
+                    if (result[0]) {
+                        result.forEach(group => {
+                            if (!this.myself.groups.find(gpind => (gpind.id == group["id_Group_Child"]))) {
+                                console.log("added: " + subgroupPerm.id);
+                                subgroupPerm.permissions = this._loadPermissions(subgroupPerm.id);
+                                this.myself.groups.push(subgroupPerm);
+                            }
+                        });
+                        this.myself.permissions = result;
+                        resolve(this.myself)
+                    } else {
+                        return Promise.resolve();
+                    }
+                }).catch(() => {
+                    this.log.error("Group Without Any Permissions " + this.myself.toString())
+                    reject("Group Without Any Permissions");
+                })
+            });
+        } else {
+            this.log.error("Group not defined to load Permissions\n" + this.myself.toString())
+            return Promise.reject("Group not defined to load Permissions");
         }
     }
 
@@ -164,9 +191,15 @@ class Group {
         return this.myself.permissions;
     }
 
+    /**
+     * Return list of permissions enabled for user 
+     */
+    listGroups() {
+        return this.myself.groups;
+    }
+
 }
 
 module.exports = {
-    Group,
-    ClientMenus
+    Group
 };
