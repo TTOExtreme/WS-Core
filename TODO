@@ -13,22 +13,32 @@
     - [x] Botão de Logout
 
 // Pagina de Configuração do sistema
-    - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
-    - [x] Adicionar usuario
-    - [x] Editar usuario
-    - [x] Remover/Desativar usuario
-    - [x] Criar aba de Grupos
-        - [x] criar logica de hierarquia dos grupos / Permissões
-        - [x] Adicionar grupos
-        - [x] Editar grupos
-        - [] Atribuir grupos
-        - [x] Atribuir permissioes  
+    - [x] Aba Usuário
+        - [x] Criar
+        - [x] Atribuir Permissão
+        - [x] Editar
+        - [x] Desativar
+        - [x] Remover
+        - [] Atribuir Grupo
+        - [] Alterar senha
+    - [x] Aba Grupos
+        - [x] Criar
+        - [x] Atribuir Permissão
             - [x] Mostrar Permissão herdada de quem
             - [x] Bloquear edição de permissao herdada 
+        - [x] Editar
+        - [x] Desativar
+        - [x] Remover
+        - [] Atribuir Grupo
+        - [x] Logica de hierarquia
         - [] Lista de usuários no grupo
-    - [] criar troca de senha usuario
-    - [x] Criar menu de permissioes do usuario (Administrativo)
-    - [] Criar menu de grupos do usuario
+    - [] Interface Cliente
+        - [] Trocar a propria senha
+        - [] Ultimo Ip Conectado
+        - [] Ultimo login
+        - [] Preferencias
+        - [] Acesso Rapido / Favoritos
+
 
 
 
@@ -38,12 +48,6 @@
 
 // Janelas
     - [x] posicionamento dinamico parra multiplas Janelas
-
-// usuario
-    - [] Mudar senha de usuario
-    - [x] carregar preferencias de usuario
-    - [x] salvar preferencias do usuario
-    - [] Criar tela de preferencias de usuario
 
 // Core
     - [x] Auto instalação apos configuração
@@ -56,7 +60,6 @@
             Stop.js <-- Executar ao desligar o servidor
     - [x] Criar cache de dados dos modulos
 
-// Ideias
 
 //Modulo IPMA
     // Pagina de gerencia de Redes
