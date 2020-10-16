@@ -66,17 +66,20 @@ ClientEvents.on("grp/perm", (data) => {
             }],
             cellClick: function (e, cell) {
                 var row = cell.getData();
-                if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " a Permissão ao Grupo: " + data.name + "\nVoce tem certeza disso?")) {
+                if (row.id_origin == row.id_group || row.id_group == null) {
+                    if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " a Permissão ao Grupo: " + data.name + "\nVoce tem certeza disso?")) {
 
-                    ClientEvents.emit("SendSocket", "adm/grp/perm/set", {
-                        id_group: data.id,
-                        code: row.code,
-                        active: ((row.active == 1) ? 0 : 1)
-                    });
-                    //reload the table
-                    ClientEvents.emit("SendSocket", "adm/grp/perm/data", data);
+                        ClientEvents.emit("SendSocket", "adm/grp/perm/set", {
+                            id_group: data.id,
+                            code: row.code,
+                            active: ((row.active == 1) ? 0 : 1)
+                        });
+                        //reload the table
+                        ClientEvents.emit("SendSocket", "adm/grp/perm/data", data);
+                    }
+                } else {
+                    confirm("Essa permissão faz parte de uma Hierarquia de grupo.\n E não pode ser desativada por um filho.");
                 }
-
             }
         },
         {
@@ -94,7 +97,21 @@ ClientEvents.on("grp/perm", (data) => {
             field: 'description',
             headerFilter: "input"
         },
+        {
+            title: 'Origem',
+            field: 'id_Group',
+            formatter: ((data) => {
+                let info = data.getRow().getData().group_Name;
+                if (info == undefined) {
+                    info = "-";
+                } else {
+                    info = "Grupo: " + info;
+                }
 
+                return info;
+            }),
+            headerFilter: "input"
+        },
         {
             title: 'Adicionado Em',
             field: 'createdIn',

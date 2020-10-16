@@ -1,5 +1,6 @@
 //Working done on commit
-    - [x] Fix Falso carregamento das permissioes
+    - [x] Mostrar Permissão herdada de quem
+    - [x] Bloquear edição de permissao herdada 
 
 // Mudanças
     - [x] Mudar painel Administrativo para /Administrativo
@@ -16,12 +17,14 @@
     - [x] Adicionar usuario
     - [x] Editar usuario
     - [x] Remover/Desativar usuario
-    - [] Criar aba de Grupos
-        - [] criar logica de hierarquia dos grupos / Permissões
+    - [x] Criar aba de Grupos
+        - [x] criar logica de hierarquia dos grupos / Permissões
         - [x] Adicionar grupos
         - [x] Editar grupos
         - [] Atribuir grupos
-        - [x] Atribuir permissioes   
+        - [x] Atribuir permissioes  
+            - [x] Mostrar Permissão herdada de quem
+            - [x] Bloquear edição de permissao herdada 
         - [] Lista de usuários no grupo
     - [] criar troca de senha usuario
     - [x] Criar menu de permissioes do usuario (Administrativo)

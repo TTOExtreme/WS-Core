@@ -338,7 +338,6 @@ class User {
                     if (result[0]) {
                         this.myself.permissions = result;
                         this._generateMenus();
-                        console.log(this.myself.permissions)
                         resolve(this.myself)
                     } else {
                         return Promise.reject();

@@ -51,7 +51,7 @@ class Group {
             }).then((result) => {
                 if (result[0]) {
                     this.myself = new GroupStruct(result[0]);
-                    return this._loadPermissions();
+                    return this._loadHierarchyPermissions();
                 } else {
                     return Promise.reject();
                 }
@@ -109,22 +109,7 @@ class Group {
     _loadPermissions() {
         if (this.myself.id) {
             return new Promise((resolve, reject) => {
-                this.db.query("SELECT *  FROM " + this.db.DatabaseName + "._Permissions AS P" +
-                    " LEFT JOIN " +
-                    " (SELECT " +
-                    " ut1.username as createdBy," +
-                    " ut2.username as deactivatedBy," +
-                    " up1.active," +
-                    " up1.code_Permission," +
-                    " up1.createdIn," +
-                    " up1.deactivatedIn," +
-                    " up1.id_group" +
-                    " FROM " + this.db.DatabaseName + ".rlt_Group_Permissions as up1" +
-                    " LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id" +
-                    " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
-                    " WHERE id_Group=" + this.myself.id + " ) AS UP" +
-                    " ON P.code = UP.code_Permission;"
-                ).then((result) => {
+                this.getPermissionsOfGroup(this.myself.id).then((result) => {
                     if (result[0]) {
                         this.myself.permissions = result;
                         resolve(this.myself)
@@ -146,35 +131,116 @@ class Group {
      * Function to load permissions from database
      * @param {JSON} preferences 
      */
-    _loadGroupTree(id) {
-        if (id || this.myself.id) {
+    _loadHierarchyPermissions() {
+        if (this.myself.id) {
             return new Promise((resolve, reject) => {
-                this.db.query("SELECT" +
-                    " G.id_Group_Father," +
-                    " G.id_Group_Child," +
-                    " G.active," +
-                    " GP.code_Permission," +
-                    " GP.id_Group as ID_grp_Perm" +
-                    " FROM " + this.db.DatabaseName + ".rlt_Group_Group as G" +
-                    " LEFT JOIN " + this.db.DatabaseName + ".rlt_Group_Permissions as GP" +
-                    " ON G.id_Group_Child = GP.id_Group" +
-                    " WHERE G.id_Group_Child = " + ((id != null) ? id : this.myself.id) + ";"
-                ).then((result) => {
+                this.getPermissionsOfGroup(this.myself.id).then((result) => {
                     if (result[0]) {
-                        result.forEach(group => {
-                            if (!this.myself.groups.find(gpind => (gpind.id == group["id_Group_Child"]))) {
-                                console.log("added: " + subgroupPerm.id);
-                                subgroupPerm.permissions = this._loadPermissions(subgroupPerm.id);
-                                this.myself.groups.push(subgroupPerm);
-                            }
-                        });
                         this.myself.permissions = result;
-                        resolve(this.myself)
+                        console.log(this.myself.permissions)
+                        console.log("Get pure")
+                        this._loadGroupTree(this.myself.id).then(() => {
+                            this.myself.permissions.map((data) => { data["id_origin"] = this.myself.id; return data; })
+                            console.log(this.myself.permissions)
+                            resolve(this.myself)
+                        }).catch(err => {
+                            this.log.error("Error Loading Group Hierarchy from Group ID: " + this.myself.id);
+                            this.log.error(err);
+                            reject("Group hierarchy Error");
+                        })
                     } else {
-                        return Promise.resolve();
+                        return Promise.reject();
                     }
                 }).catch(() => {
                     this.log.error("Group Without Any Permissions " + this.myself.toString())
+                    reject("Group Without Any Permissions");
+                })
+            });
+        } else {
+            this.log.error("Group not defined to load Permissions\n" + this.myself.toString())
+            return Promise.reject("Group not defined to load Permissions");
+        }
+    }
+
+    getPermissionsOfGroup(id) {
+        return this.db.query("SELECT *  FROM " + this.db.DatabaseName + "._Permissions AS P" +
+            " LEFT JOIN " +
+            " (SELECT " +
+            " g1.name as group_Name," +
+            " ut1.username as createdBy," +
+            " ut2.username as deactivatedBy," +
+            " up1.active," +
+            " up1.code_Permission," +
+            " up1.createdIn," +
+            " up1.deactivatedIn," +
+            " up1.id_group" +
+            " FROM " + this.db.DatabaseName + ".rlt_Group_Permissions as up1" +
+            " LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id" +
+            " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
+            " LEFT JOIN WS_CORE_1_3_1._Group as g1 on up1.id_Group=g1.id" +
+            " WHERE up1.id_Group=" + id + " ) AS UP" +
+            " ON P.code = UP.code_Permission;"
+        );
+    }
+
+    getGroupFathers(id) {
+        return this.db.query("SELECT" +
+            " id_Group_Father," +
+            " id_Group_Child," +
+            " active" +
+            " FROM " + this.db.DatabaseName + ".rlt_Group_Group " +
+            " WHERE id_Group_Child = " + id + " and active = 1;"
+        );
+    }
+
+
+    /**
+     * Function to load permissions from database
+     * @param {JSON} preferences 
+     */
+    _loadGroupTree(id) {
+        if (id) {
+            return new Promise((resolve, reject) => {
+                this.getGroupFathers(id).then((result) => {
+                    if (result[0]) {
+                        result.forEach(group => {
+                            if (!this.myself.groups["_" + group.id_Group_Father]) {
+                                this.myself.groups["_" + group.id_Group_Father] = true;
+
+
+                                this.getPermissionsOfGroup(group.id_Group_Child).then(resultPerms => {
+
+                                    resultPerms.map((value) => {
+                                        this.myself.permissions.map((value1, index1, array1) => {
+                                            if (value.code == value1.code && value.id_group != null) {
+                                                array1[index1] = value;
+                                                console.log("Update: " + value.code + " From " + value.id_group)
+                                                return value;
+                                            }
+                                            return value1;
+                                        })
+                                        return value
+                                    })
+                                    //this.myself.permissions.concat(resultPerms.filter((item) => this.myself.permissions.indexOf(item) < 0));
+                                });
+
+                                this._loadGroupTree(group.id_Group_Father).then(() => {
+                                    resolve();
+                                }).catch(err => {
+                                    this.log.error("Loading hierarchy of " + group.id_Group_Father)
+                                    this.log.error(err);
+                                    reject("Group Without Any Permissions");
+                                });
+                            }
+                        });
+                    } else {
+                        console.log("Fim da pesquisa de hierarquia");
+                        //console.log(this.myself.permissions);
+                        resolve(this.myself.permissions);
+                    }
+                }).catch((err) => {
+                    this.log.error("Group Without Any Permissions " + this.myself.toString())
+                    this.log.error(err);
                     reject("Group Without Any Permissions");
                 })
             });
