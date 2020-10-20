@@ -33,7 +33,9 @@ class GroupStruct {
     modifiedBy;
     active;
     permissions = [new PermissionsStruct()];
-    groups = {};
+    groups = [];
+    groupList = [];
+    allgroups = [];
 
     /**
      * converte um JSON para o objeto GROUP

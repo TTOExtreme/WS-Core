@@ -1,6 +1,5 @@
 //Working done on commit
-    - [x] Mostrar Permissão herdada de quem
-    - [x] Bloquear edição de permissao herdada 
+    - [x] Grupos de grupos completo
 
 // Mudanças
     - [x] Mudar painel Administrativo para /Administrativo
@@ -29,7 +28,7 @@
         - [x] Editar
         - [x] Desativar
         - [x] Remover
-        - [] Atribuir Grupo
+        - [x] Atribuir Grupo
         - [x] Logica de hierarquia
         - [] Lista de usuários no grupo
     - [] Interface Cliente

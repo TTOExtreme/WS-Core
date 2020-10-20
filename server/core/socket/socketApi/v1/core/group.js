@@ -82,7 +82,46 @@ class Socket {
                     }
                 })
             })
+        })
 
+        /**
+         * Group Groups
+         * Get list of permissions from certain group
+         */
+        socket.on("adm/grp/grp/data", (data) => {
+            this._myself.checkPermission("adm/grp/grp").then(() => {
+                let search_group = new class_group(this._WSMainServer);
+                search_group.findmeid(data[0].id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "adm/grp/grp/data",
+                        data: search_group.listGroups()
+                    })
+                }).catch((err) => {
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Acesso Negado",
+                            status: "ERROR"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
         })
 
         /**
@@ -91,6 +130,34 @@ class Socket {
         socket.on("adm/grp/perm/set", (data) => {
             this._myself.checkPermission("adm/grp/perm").then(() => {
                 this._groupServer.attribPermissions(data[0].id_group, data[0].code, this._myself.myself.id, data[0].active).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Alterado com sucesso",
+                            status: "OK"
+                        }
+                    })
+                })
+            }).catch(() => {
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * group Group set (server)
+         */
+        socket.on("adm/grp/grp/set", (data) => {
+            this._myself.checkPermission("adm/grp/grp").then(() => {
+                this._groupServer.attribGroup(data[0].id_origin, data[0].id_group, this._myself.myself.id, data[0].active).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -262,6 +329,7 @@ class Socket {
             if (this._myself.checkPermissionSync("adm/grp/grp")) {
                 itemList.push({
                     name: "Grupos",
+                    active: true,
                     event: {
                         call: "grp/grp",
                         data: data[0].row

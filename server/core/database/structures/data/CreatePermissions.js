@@ -131,7 +131,14 @@ const _DB = [
         code: "adm/grp/perm",
         type: "adm",
         defaltAdd: 0
-    }
+    },
+    {
+        name: "Adm > Grupos > Grupos",
+        description: "Modificar Grupos do Grupo",
+        code: "adm/grp/grp",
+        type: "adm",
+        defaltAdd: 0
+    },
 ]
 
 module.exports = { _DB }
