@@ -1,4 +1,4 @@
-let table_grp_perm;
+window.table_grp_perm = null;
 
 ClientEvents.on("grp/perm", (data) => {
     ClientEvents.emit("grp/lst/perm/close");
@@ -44,7 +44,7 @@ ClientEvents.on("grp/perm", (data) => {
         //*/
 
     /**Initialize  Table */
-    table_grp_perm = new Tabulator("#perm_table", {
+    window.table_grp_perm = new Tabulator("#perm_table", {
         headerFilterPlaceholder: "Filtrar",
         index: "id",
         dataTree: true,
@@ -163,7 +163,7 @@ ClientEvents.on("adm/grp/perm/data", (data) => {
     /**
      * Add data to table
      */
-    if (table_grp_perm) {
-        table_grp_perm.setData(data);
+    if (window.table_grp_perm) {
+        window.table_grp_perm.setData(data);
     }
 })

@@ -1,4 +1,5 @@
-let table_usr_perm;
+
+window.table_usr_perm = null;
 
 ClientEvents.on("usr/perm", (data) => {
     ClientEvents.emit("usr/lst/perm/close");
@@ -45,7 +46,7 @@ ClientEvents.on("usr/perm", (data) => {
         //*/
 
     /**Initialize  Table */
-    table_usr_perm = new Tabulator("#perm_table", {
+    window.table_usr_perm = new Tabulator("#perm_table", {
         headerFilterPlaceholder: "Filtrar",
         index: "id",
         dataTree: true,
@@ -147,7 +148,7 @@ ClientEvents.on("adm/usr/perm/data", (data) => {
     /**
      * Add data to table
      */
-    if (table_usr_perm) {
-        table_usr_perm.setData(data);
+    if (window.table_usr_perm) {
+        window.table_usr_perm.setData(data);
     }
 })

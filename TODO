@@ -1,9 +1,7 @@
 //Working done on commit
-    - [x] Grupos de grupos completo
-
-// Mudanças
-    - [x] Mudar painel Administrativo para /Administrativo
-    - [x] Adicionar Pagina 404
+    Fixed error on reloading same page (user/grp, user/perm, grp/grp,grp/perm)
+    Added grp manager for user
+    Added Col for modified permission associated to group
 
 // Menu Lateral
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
@@ -18,7 +16,7 @@
         - [x] Editar
         - [x] Desativar
         - [x] Remover
-        - [] Atribuir Grupo
+        - [x] Atribuir Grupo
         - [] Alterar senha
     - [x] Aba Grupos
         - [x] Criar

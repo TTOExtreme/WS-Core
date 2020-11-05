@@ -110,14 +110,16 @@ class GroupServer {
      * Deactivated permission to group
      * @param {Int} groupID id do grupo Pai
      * @param {Int} Id_Group id do grupo Filho 
-     * @param {Int} myId UserID que adicionou a permissão
+     * @param {Int} myId UserID que adicionou o Grupo
      * @returns {Promise}
      */
     attribGroup(groupID, Id_Group, myId, active) {
         return this.checkGroupGroup(groupID, Id_Group).then(res => {
             if (res.length == 0) {
-                return this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_Group_Group" +
-                    " (id_Group_Father,id_Group_Child,deactivatedBy,deactivatedIn,active) VALUES (" + Id_Group + ",'" + groupID + "'," + myId + "," + Date.now() + "," + active + ");");
+                return this.db.query(
+                    "INSERT INTO " + this.db.DatabaseName + ".rlt_Group_Group" +
+                    " (id_Group_Father,id_Group_Child,deactivatedBy,deactivatedIn,active) VALUES (" +
+                    Id_Group + ",'" + groupID + "'," + myId + "," + Date.now() + "," + active + ");");
             } else {
                 return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_Group_Group SET " +
                     ((active == 1) ?
@@ -136,7 +138,7 @@ class GroupServer {
 
     checkGroupGroup(groupID, Id_Group) {
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_Group_Group" +
-            " WHERE id_Group_Father=" + groupID + " AND id_Group_Child='" + Id_Group + "';");
+            " WHERE id_Group_Father=" + Id_Group + " AND id_Group_Child='" + groupID + "';");
     }
 }
 

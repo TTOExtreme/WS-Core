@@ -1,6 +1,6 @@
-window.table_grp_grp = null;
+window.table_usr_grp = null;
 
-ClientEvents.on("grp/grp", (data) => {
+ClientEvents.on("usr/grp", (data) => {
     ClientEvents.emit("grp/lst/grp/close");
     /**
      * id
@@ -20,22 +20,22 @@ ClientEvents.on("grp/grp", (data) => {
      * create Show Page for group info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "grp_edt_div");
+    div.setAttribute("class", "usr_edt_div");
     div.setAttribute("id", "grp_edt_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_grp_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'grp_edt_div')>&#9776;</td><td class='grp_edt_label'><p class='edt_grp_closeButton' onclick='ClientEvents.emit(\"grp/lst/grp/close\")'>X</p></td></tr>" +
-        "<tr><td></td><td colspan='2' style='float:none' class='grp_edt_label'><center>Grupo: " + data.name + "<center></td></tr>" +
+        "<tr><td id='move_menu_usr_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'grp_edt_div')>&#9776;</td><td class='usr_edt_label'><p class='edt_grp_closeButton' onclick='ClientEvents.emit(\"grp/lst/grp/close\")'>X</p></td></tr>" +
+        "<tr><td></td><td colspan='2' style='float:none' class='usr_edt_label'><center>Usuário: " + data.name + "<center></td></tr>" +
         "<tr><td colspan=2><div id='perm_table' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
 
-    ClientEvents.emit("SendSocket", "adm/grp/grp/data", data);
+    ClientEvents.emit("SendSocket", "adm/usr/grp/data", data);
 
     /**
-        actionFunction = "system/get/grp/grp";
+        actionFunction = "system/get/usr/grp";
         actionName = "Abrir";
         actionIcon = "buttonTick";
         confirmExecution = false;
@@ -45,21 +45,13 @@ ClientEvents.on("grp/grp", (data) => {
 
     /**Initialize  Table */
 
-    window.table_grp_grp = new Tabulator("#perm_table", {
+    window.table_usr_grp = new Tabulator("#perm_table", {
         headerFilterPlaceholder: "Filtrar",
         index: "id",
         dataTree: true,
         dataTreeStartExpanded: [true, true, true, true, false],
         columns: [{
             title: "Actions",
-            headerMenu: [
-                {
-                    label: "Criar novo Grupo",
-                    action: function (e, column) {
-
-                    }
-                },
-            ],
             columns: [{
                 title: 'Status',
                 field: 'active',
@@ -77,16 +69,15 @@ ClientEvents.on("grp/grp", (data) => {
                 }],
                 cellClick: function (e, cell) {
                     var row = cell.getData();
-                    if (row.id_origin == row.id_Group_Child) {
-                        if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " o Grupo ao Grupo: " + data.name + "\nVoce tem certeza disso?")) {
-                            console.log(row)
-                            ClientEvents.emit("SendSocket", "adm/grp/grp/set", {
-                                id_origin: data.id,
+                    if (row.id_origin == row.id || row.id_origin == undefined) {
+                        if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " o Usuário ao Grupo: " + data.name + "\nVoce tem certeza disso?")) {
+                            ClientEvents.emit("SendSocket", "adm/usr/grp/set", {
+                                id_user: data.id,
                                 id_group: row.id,
                                 active: ((row.active == 1) ? 0 : 1)
                             });
                             //reload the table
-                            ClientEvents.emit("SendSocket", "adm/grp/grp/data", data);
+                            ClientEvents.emit("SendSocket", "adm/usr/grp/data", data);
                         }
                     } else {
                         confirm("Esse Grupo faz parte de uma Hierarquia de grupo.\n E não pode ser desativada por um filho.");
@@ -95,7 +86,7 @@ ClientEvents.on("grp/grp", (data) => {
             },
             {
                 title: 'ID',
-                field: 'id_Group_Father',
+                field: 'id',
                 headerFilter: "input"
             },
             {
@@ -135,6 +126,7 @@ ClientEvents.on("grp/grp", (data) => {
         rowFormatter: this.actionRowFormatter,
         rowContext: this.rowContext
     });
+
 });
 
 ClientEvents.on("grp/lst/grp/close", () => {
@@ -143,24 +135,24 @@ ClientEvents.on("grp/lst/grp/close", () => {
     }
 });
 
-ClientEvents.on("adm/grp/grp/set", (data) => {
-    /**
-     * save data and closes the page if success
-     * closing part from server command
-     */
+/**
+ * save data and closes the page if success
+ * closing part from server command
+ */
+ClientEvents.on("adm/usr/grp/set", () => {
 })
 
-ClientEvents.on("adm/grp/grp/data", (data) => {
+ClientEvents.on("adm/usr/grp/data", (data) => {
     /**
      * Add data to table
      */
-    if (window.table_grp_grp) {
+    if (window.table_usr_grp) {
         data = freeHierarchy(
             data,
             "_children",
             { active: 0, name: "limite da tabela", createdIn: null, createdBy: null, modifiedIn: null, modifiedBy: null, deactivatedIn: null, deactivatedBy: null },
             7)
-        window.table_grp_grp.setData(data);
+        window.table_usr_grp.setData(data);
     }
 })
 

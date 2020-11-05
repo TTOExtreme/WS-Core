@@ -1,4 +1,5 @@
 const groupManipulator = require('../../../../database/_group/serverManipulator').GroupServer;
+const class_user = require('../../../../database/_user/class_user').User;
 const class_group = require('../../../../database/_group/class_group').Group;
 
 class Socket {
@@ -19,7 +20,8 @@ class Socket {
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
         this._groupServer = new groupManipulator(WSMainServer);
-        this._myself = new class_group(WSMainServer);
+        this._myself = new class_user(WSMainServer);
+        this._grupself = new class_user(WSMainServer);
     }
 
     /**
@@ -86,7 +88,7 @@ class Socket {
 
         /**
          * Group Groups
-         * Get list of permissions from certain group
+         * Get list of group hierarchy
          */
         socket.on("adm/grp/grp/data", (data) => {
             this._myself.checkPermission("adm/grp/grp").then(() => {
@@ -157,29 +159,58 @@ class Socket {
          */
         socket.on("adm/grp/grp/set", (data) => {
             this._myself.checkPermission("adm/grp/grp").then(() => {
-                this._groupServer.attribGroup(data[0].id_origin, data[0].id_group, this._myself.myself.id, data[0].active).then(() => {
+                if (data[0].id_origin != undefined || data[0].id_group != undefined) {
+                    this._groupServer.attribGroup(data[0].id_origin, data[0].id_group, this._myself.myself.id, data[0].active).then(() => {
+                        let group_search = new class_group(this._WSMainServer)
+                        group_search.checkRecursive(data[0].id_origin).then(() => {
+
+                            socket.emit("ClientEvents", {
+                                event: "system_mess",
+                                data: {
+                                    mess: "Alterado com sucesso",
+                                    status: "OK"
+                                }
+                            })
+                        }).catch(() => {
+                            console.log(data);
+                            this._groupServer.attribGroup(data[0].id_origin, data[0].id_group, this._myself.myself.id, ((data[0].active == 0) ? 1 : 0)).then(() => {
+
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        mess: "Erro de Recursividade, Favor checar se não existe loop de hierarquia.",
+                                        status: "ERROR"
+                                    }
+                                })
+                            })
+                        })
+                    }).catch(() => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                mess: "Acesso Negado",
+                                status: "ERROR"
+                            }
+                        })
+
+                    })
+                } else {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
-                            mess: "Alterado com sucesso",
-                            status: "OK"
+                            mess: "Erro de dados .",
+                            status: "ERROR"
                         }
                     })
-                })
-            }).catch(() => {
-                if (!this._myself.isLogged()) {
-                    socket.emit("logout", "");
                 }
-                socket.emit("ClientEvents", {
-                    event: "system_mess",
-                    data: {
-                        mess: "Acesso Negado",
-                        status: "ERROR"
-                    }
-                })
             })
-        })
-
+        });
 
         /**
          * group Add

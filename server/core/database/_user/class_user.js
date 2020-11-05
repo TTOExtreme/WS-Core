@@ -4,6 +4,7 @@
 const UserStruct = require('../structures/main/UserStruct').UserStruct;
 const WSMainServer = require('../../../main');
 const Bcypher = require("../../utils/bcypher").Bcypher;
+const Group_Server = require("../_group/class_group");
 
 /**
  * @typedef User
@@ -33,6 +34,7 @@ class User {
      * @param {WSMainServer} WSMain
      */
     constructor(WSMain) {
+        this._WSMainServer = WSMain;
         this.Menus = [new ClientMenus()]
         this.db = WSMain.db;
         this.log = WSMain.log;
@@ -344,12 +346,101 @@ class User {
                     }
                 }).catch(() => {
                     this.log.error("User Without Any Permissions " + this.myself.toString())
+                    this.log.error(err)
                     reject("User Without Any Permissions");
                 })
             });
         } else {
             this.log.error("User not defined to load Permissions\n" + this.myself.toString())
             return Promise.reject("User not defined to load Permissions");
+        }
+    }
+
+
+    /**
+        SELECT * FROM WS_CORE_1_3_1._Permissions AS P 
+        LEFT JOIN (SELECT 
+        ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User
+        FROM WS_CORE_1_3_1.rlt_User_Permissions as up1 
+        LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id
+        LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id
+        WHERE id_User = 1) AS UP 
+        ON P.code = UP.code_Permission;
+     * 
+     * Function to load permissions from database
+     * @param {JSON} preferences 
+     */
+    _loadHierarchyGroups() {
+        if (this.myself.id) {
+            return new Promise((resolve, reject) => {
+                let gs = new Group_Server.Group(this._WSMainServer)
+                return gs.findmeidFromUser(this.myself.id).then(() => {
+                    this.myself.groups = gs.listGroups();
+                    //console.log(this.myself.groups)
+                    resolve(this.myself);
+                })
+                /*
+                                this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Group" +
+                                    " WHERE id_User=" + this.myself.id + ";"
+                                ).then((result) => {
+                                    if (result[0]) {
+                                        let listGrooupsHierarchy = []
+                                        result.forEach(group => {
+                                            let gs = new Group_Server.Group(this._WSMainServer)
+                                            listGrooupsHierarchy.push(gs.findmeidItself(group.id_Group).then(() => {
+                                                return gs.listGroups();
+                                            }))
+                                        })
+                                        return Promise.all(listGrooupsHierarchy).then(res => {
+                                            if (res) {
+                                                res.forEach(r => {
+                                                    this.myself.groups = this.myself.groups.concat(r);
+                                                })
+                                                //filter for only active types
+                                                let array = this.myself.groups.filter((value, index) => {
+                                                    if (value.active == 1) {
+                                                        return value;
+                                                    }
+                                                })
+                                                let array3 = this.myself.groups.map((value, index, self) => {
+                                                    if (self.filter((v) => {
+                                                        return v.id === value.id;
+                                                    }).length == 2) {
+                                                        console.log(value.id);
+                                                        self[index] = {};
+                                                        if (value.active == 0)
+                                                            return value;
+                                                    } else {
+                                                        self[index] = {};
+                                                        //return value;
+                                                    }
+                                                })
+                
+                
+                                                this.myself.groups = array.concat(array3);
+                                                this.myself.groups = this.myself.groups.filter(v => { if (v) { return v.id != undefined } return false; })
+                                            }
+                                        }).finally(() => {
+                                            //console.log(this.myself.groups)
+                                            resolve(this.myself)
+                                        })
+                                        console.log(listGrooupsHierarchy);
+                                        this.myself.groups = listGrooupsHierarchy;
+                                        resolve(this.myself)
+                                    } else {
+                
+                                        return Promise.reject([]);
+                                    }
+                                }).catch((err) => {
+                                    this.log.error("User Error on requesting Groups " + this.myself.toString())
+                                    this.log.error(err)
+                                    reject("User Error on requesting Groups");
+                                })
+                                //*/
+            });
+        } else {
+            this.log.error("User not defined to load Groups\n" + this.myself.toString())
+            return Promise.reject("User not defined to load Groups");
         }
     }
 
@@ -374,6 +465,14 @@ class User {
      */
     GetMenus() {
         return this.Menus;
+    }
+
+    /**
+     * Function to get list of groups associated with user
+     * @param {JSON} menus 
+     */
+    GetGroups() {
+        return this.myself.groups;
     }
 
 

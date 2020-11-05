@@ -1,5 +1,6 @@
 const userManipulator = require('../../../../database/_user/serverManipulator').UserServer;
 const class_user = require('../../../../database/_user/class_user').User;
+const class_group = require('../../../../database/_group/class_group').Group;
 
 class Socket {
 
@@ -95,6 +96,51 @@ class Socket {
         })
 
         /**
+         * User Groups
+         * Get list of group hierarchy
+         */
+        socket.on("adm/usr/grp/data", (data) => {
+            this._myself.checkPermission("adm/usr/grp").then(() => {
+                let search_user = new class_user(this._WSMainServer);
+                search_user.findmeid(data[0].id).then(() => {
+                    return search_user._loadHierarchyGroups().then((user) => {
+                        socket.emit("ClientEvents", {
+                            event: "adm/usr/grp/data",
+                            data: search_user.GetGroups()
+                        })
+                    }).catch(err => {
+                        this._log.error("error on loading groups from user")
+                    })
+                }).catch((err) => {
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Acesso Negado",
+                            status: "ERROR"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+
+        /**
          * User permissions set (server)
          */
         socket.on("adm/usr/perm/set", (data) => {
@@ -108,7 +154,37 @@ class Socket {
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User Group set (server)
+         */
+        socket.on("adm/usr/grp/set", (data) => {
+            this._myself.checkPermission("adm/usr/grp").then(() => {
+                this._userServer.attribGroup(data[0].id_user, data[0].id_group, this._myself.myself.id, data[0].active).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Alterado com sucesso",
+                            status: "OK"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -139,7 +215,8 @@ class Socket {
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -169,7 +246,8 @@ class Socket {
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -270,6 +348,7 @@ class Socket {
             if (this._myself.checkPermissionSync("adm/usr/grp")) {
                 itemList.push({
                     name: "Grupos",
+                    active: true,
                     event: {
                         call: "usr/grp",
                         data: data[0].row

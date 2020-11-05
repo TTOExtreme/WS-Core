@@ -17,7 +17,8 @@ const PermissionsStruct = require('../relations/User_Permissions').UserPermissio
  * @property {timestamp} lastConnection
  * @property {timestamp} lastTry
  * @property {string} lastIp
- * @property {string} permissions
+ * @property {JSON} permissions
+ * @property {JSON} groups
  */
 
 
@@ -40,7 +41,8 @@ class UserStruct {
     lastConnection;
     lastTry;
     lastIp;
-    permissions = [new PermissionsStruct()];
+    permissions = [];
+    groups = [];
 
     /**
      * converte um JSON para o objeto USER
