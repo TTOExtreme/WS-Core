@@ -94,12 +94,13 @@ class GroupServer {
         return this.checkPermissionGroup(groupID, permissionCode).then(res => {
             if (res.length == 0) {
                 return this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_Group_Permissions" +
-                    " (id_Group,code_Permission,deactivatedBy,deactivatedIn,active) VALUES (" + groupID + ",'" + permissionCode + "'," + myId + "," + Date.now() + "," + active + ");");
+                    " (id_Group,code_Permission,createdBy,createdIn,active) VALUES (" + groupID + ",'" + permissionCode + "'," + myId + "," + Date.now() + "," + active + ");");
             } else {
                 return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_Group_Permissions SET " +
                     ((active == 1) ?
                         " active=1, deactivatedBy=NULL, createdBy=" + myId + ", createdIn=" + Date.now() + ", deactivatedIn=NULL" :
                         " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now()) +
+                    ", modifiedBy=" + myId + ", modifiedIn=" + Date.now() +
                     " WHERE id_Group = " + groupID + " AND code_Permission = '" + permissionCode + "';"
                 );
             }
@@ -125,6 +126,7 @@ class GroupServer {
                     ((active == 1) ?
                         " active=1, deactivatedBy=NULL, createdBy=" + myId + ", createdIn=" + Date.now() + ", deactivatedIn=NULL" :
                         " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now()) +
+                    ", modifiedBy=" + myId + ", modifiedIn=" + Date.now() +
                     " WHERE id_Group_Child = " + groupID + " AND id_Group_Father = '" + Id_Group + "';"
                 );
             }
@@ -132,7 +134,7 @@ class GroupServer {
     }
 
     checkPermissionGroup(groupID, permissionCode) {
-        return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_Group_Group" +
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_Group_Permissions" +
             " WHERE id_Group=" + groupID + " AND code_Permission='" + permissionCode + "';");
     }
 

@@ -94,9 +94,11 @@ class Socket {
             this._myself.checkPermission("adm/grp/grp").then(() => {
                 let search_group = new class_group(this._WSMainServer);
                 search_group.findmeid(data[0].id).then(() => {
-                    socket.emit("ClientEvents", {
-                        event: "adm/grp/grp/data",
-                        data: search_group.listGroups()
+                    return search_group.getGroups(data[0].id).then(grps => {
+                        socket.emit("ClientEvents", {
+                            event: "adm/grp/grp/data",
+                            data: grps
+                        })
                     })
                 }).catch((err) => {
                     this._log.error(err);

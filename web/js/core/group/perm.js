@@ -164,6 +164,7 @@ ClientEvents.on("adm/grp/perm/data", (data) => {
      * Add data to table
      */
     if (window.table_grp_perm) {
+        console.log(data)
         window.table_grp_perm.setData(data);
     }
 })

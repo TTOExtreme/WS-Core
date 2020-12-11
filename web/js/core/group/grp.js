@@ -51,6 +51,7 @@ ClientEvents.on("grp/grp", (data) => {
         dataTree: true,
         dataTreeStartExpanded: [true, true, true, true, false],
         columns: [{
+            /*
             title: "Actions",
             headerMenu: [
                 {
@@ -60,6 +61,7 @@ ClientEvents.on("grp/grp", (data) => {
                     }
                 },
             ],
+            //*/
             columns: [{
                 title: 'Status',
                 field: 'active',
@@ -77,9 +79,9 @@ ClientEvents.on("grp/grp", (data) => {
                 }],
                 cellClick: function (e, cell) {
                     var row = cell.getData();
-                    if (row.id_origin == row.id_Group_Child) {
-                        if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " o Grupo ao Grupo: " + data.name + "\nVoce tem certeza disso?")) {
-                            console.log(row)
+                    if (row.id_origin == data.id) {
+                        if (confirm("Voce esta prestes a " + ((row['active'] == 1) ? "Desvincular" : "Vincular") + " o Grupo: " + row.id + " do Grupo: " + data.name + "\nVoce tem certeza disso?")) {
+                            //console.log(row)
                             ClientEvents.emit("SendSocket", "adm/grp/grp/set", {
                                 id_origin: data.id,
                                 id_group: row.id,
@@ -160,6 +162,7 @@ ClientEvents.on("adm/grp/grp/data", (data) => {
             "_children",
             { active: 0, name: "limite da tabela", createdIn: null, createdBy: null, modifiedIn: null, modifiedBy: null, deactivatedIn: null, deactivatedBy: null },
             7)
+        console.log(data);
         window.table_grp_grp.setData(data);
     }
 })
@@ -170,7 +173,8 @@ function freeHierarchy(array, nameOfChild, override = {}, nLevels) {
             return [override];
         } else {
             array.forEach((item, index, arr) => {
-                array[index][nameOfChild] = freeHierarchy(item[nameOfChild], nameOfChild, override, nLevels - 1);
+                if (array[index] != null)
+                    array[index][nameOfChild] = freeHierarchy(item[nameOfChild], nameOfChild, override, nLevels - 1);
             })
             return array;
         }

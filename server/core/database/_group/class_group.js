@@ -2,9 +2,7 @@
  * Group Data Instance
  */
 const GroupStruct = require('../structures/main/GroupStruct').GroupStruct;
-const { resolve } = require('path');
 const WSMainServer = require('../../../main');
-const { User } = require('../_user/class_user');
 
 /**
  * @typedef Group
@@ -52,7 +50,9 @@ class Group {
             }).then((result) => {
                 if (result[0]) {
                     this.myself = new GroupStruct(result[0]);
-                    return this._loadHierarchyPermissions();
+                    return this._loadPermissions().then(() => {
+                        return Promise.resolve(this.myself);
+                    })
                 } else {
                     return Promise.reject();
                 }
@@ -67,13 +67,13 @@ class Group {
 
     }
     /**
-     * faz a pesquisa de hierarquia com ele mesmo como inicial
+     * Carrega as premissoes para o usuario
      * @param {id} groupID 
      */
     findmeidFromUser(UserId) {
         if (!UserId) {
-            this.log.warning("Group ID is Null");
-            return Promise.reject("ID do Grupo é nulo")
+            this.log.warning("UserID is Null, on researching group permissions");
+            return Promise.reject("ID do Usuário é nulo")
         }
         return this.db.query("SELECT G.* FROM " + this.db.DatabaseName + "._User AS U " +
             " LEFT JOIN " + this.db.DatabaseName + ".rlt_User_Group AS UG ON UG.id_User = U.id" +
@@ -82,19 +82,11 @@ class Group {
             .catch((err) => {
                 return Promise.reject("Wrong UserId: <" + UserId + ">.");
             }).then((result) => {
-                if (result[0]) {
-                    this.myself = new GroupStruct(result[0]);
-                    return this._loadItselfHierarchyPermissions(result);
-                } else {
-                    return Promise.reject();
-                }
+                return this.getGroupsFromUser(result);
             }).catch((err) => {
-                if (!err) this.log.info("Not Found User: <" + UserId + "> in database. When searching users Group");
+                if (!err) this.log.info("Not Found groups for User: <" + UserId + "> in database. When searching users Group");
                 if (err) this.log.error(err);
                 return Promise.reject("ID do Grupo Incorreto");
-            }).then((result) => {
-                //this.log.info("Found group: <" + groupID + "> in database.");
-                return Promise.resolve(result)
             })
 
     }
@@ -161,131 +153,128 @@ class Group {
     }
 
     /**
-     * Function to load permissions from database
-     * @param {JSON} preferences 
+     * Carrega as permissoes de maneira recursiva para um grupo especifico
+     * @param {Int} ChildID 
      */
-    _loadHierarchyPermissions() {
-        this.getAllGroups()
-            .then(allgroups => { this.myself.allgroups = allgroups })
-            .catch(err => {
-                this.log.error("Loading list of groups");
-                this.log.error(err);
-                return Promise.reject("Loading list of groups");
-            })
-        if (this.myself.id) {
+    recLFLimit = 100;
+    recLFCount = 0;
+    _recLoadFatherPermissions(ChildID) {
+        this.recLFCount++;
+        if (this.recLFLimit > this.recLFCount) {
             return new Promise((resolve, reject) => {
-                this.getPermissionsOfGroup(this.myself.id).then((result) => {
-                    if (result[0]) {
-                        this.myself.permissions = result;
-                        this._loadGroupTree(this.myself.id).then((GroupHierarchy) => {
-                            this.myself.groups = GroupHierarchy;
-                            this.myself.permissions.map((data) => { data["id_origin"] = this.myself.id; return data; })
-                            this.myself.groups.map((data) => { data["id_origin"] = this.myself.id; return data; })
-                            this.myself.allgroups = this.myself.allgroups.filter(data => data.id != this.myself.id)
-
-                            return this.recursiveLoadGroupHierarchy(0).then(data => {
-                                resolve(this.myself);
+                let perm = []
+                this.getPermissionsOfGroup(ChildID).then(result => {
+                    perm = perm.concat(result);
+                    this.getGroupFathers(ChildID).then(fathers => {
+                        if (fathers[0]) {
+                            let allprom = []
+                            fathers.forEach(group => {
+                                this._recLoadFatherPermissions(group.id).then(FFPerm => {
+                                    perm = perm.concat(FFPerm)
+                                })
                             })
-                        }).catch(err => {
-                            this.log.error("Error Loading Group Hierarchy from Group ID: " + this.myself.id);
-                            this.log.error(err);
-                            reject("Group hierarchy Error");
-                        })
-                    } else {
-                        return Promise.reject();
-                    }
-                }).catch(() => {
-                    this.log.error("Group Without Any Permissions " + this.myself.toString())
-                    reject("Group Without Any Permissions");
-                })
+
+                            return Promise.all(allprom).finally(() => {
+                                this.recLFCount = 0;
+                                resolve(perm);
+                            })
+                        }
+                    });
+
+                });
             });
         } else {
-            this.log.error("Group not defined to load Permissions\n" + this.myself.toString())
-            return Promise.reject("Group not defined to load Permissions");
+            this.recLFCount = 0;
+            return Promise.resolve([]);
         }
     }
 
     /**
-     * Function to load permissions from database including Itself
+     * Carrega os grupos pais e os coloca em estrutura hierarquica
+     * @param {Int} ChildID 
+     */
+    _recLoadFatherGroups(ChildID) {
+        //this.recLFCount++;
+        if (this.recLFLimit > this.recLFCount) {
+            return new Promise((resolve, reject) => {
+                let groups = []
+                this.getGroupFathers(ChildID).then(fathers => {
+                    if (fathers[0]) {
+                        let allprom = []
+                        fathers.forEach(group => {
+                            //retira o grupo pai da lista global de grupos (usado na listagem de grupos associados)
+                            this.myself.allgroups = this.myself.allgroups.filter((grp) => { return grp.id != group.id });
+                            allprom.push(
+                                new Promise((res, rej) => {
+                                    let g = group;
+                                    return this._recLoadFatherGroups(group.id).then(FFGroup => {
+                                        g["_children"] = FFGroup;
+                                        //
+                                        res(g);
+                                    })
+                                })
+                            );
+                        })
+
+                        return Promise.all(allprom).then((group) => {
+                            this.recLFCount = 0;
+                            groups = groups.concat(group);
+                        }).finally(() => {
+                            groups = groups.filter((grp) => { return grp != undefined });
+                            resolve(groups);
+                        })
+                    } else {
+                        resolve([]);
+                    }
+                });
+            });
+        } else {
+            this.log.warning("Estouro de processamento de grupos")
+            this.recLFCount = 0;
+            return Promise.resolve([]);
+        }
+    }
+
+    /**
+     * Carrega todas as permissoes para o usuario em questão
      * @param {JSON} preferences 
      */
-    _loadItselfHierarchyPermissions(ListGroups) {
-        this.getAllGroups()
-            .then(allgroups => { this.myself.allgroups = allgroups })
-            .catch(err => {
-                this.log.error("Loading list of groups");
-                this.log.error(err);
-                return Promise.reject("Loading list of groups");
-            })
+    _loadPermissionsForUser(ListGroups) {
+        //carrega cada hierarquia de grupo
         if (ListGroups[0]) {
             this.myself.groups = [];
             this.myself.permissions = [];
             let listProm = [];
             ListGroups.forEach(groupItem => {
+                console.log("processando grupo: " + groupItem.id)
                 listProm.push(new Promise((resolve, reject) => {
                     this.getPermissionsOfGroup(groupItem.id).then((result) => {
                         if (result[0]) {
-                            this.myself.permissions.push(result);
-                            this._loadGroupTree(groupItem.id).then((GroupHierarchy) => {
-                                this.myself.groups.push({
-                                    id: groupItem.id,
-                                    name: groupItem.name,
-                                    active: groupItem.active,
-                                    createdBy: groupItem.createdBy,
-                                    createdIn: groupItem.createdIn,
-                                    modifiedBy: groupItem.modifiedBy,
-                                    modifiedIn: groupItem.modifiedIn,
-                                    deactivatedBy: groupItem.deactivatedBy,
-                                    deactivatedIn: groupItem.deactivatedIn,
-                                    _children: GroupHierarchy,
-                                    id_origin: groupItem.id
-                                });
-
-                                this.myself.permissions.map((data) => { data["id_origin"] = groupItem.id; return data; })
-                                this.myself.groups[0]._children.map((data) => { data["id_origin"] = groupItem.id; return data; })
-                                this.myself.allgroups = this.myself.allgroups.filter(data => data != null && data != {} && data != []);
-                                this.myself.allgroups = this.myself.allgroups.filter(data => data.id != groupItem.id)
-
-                                return this.recursiveLoadGroupHierarchy(0).then(data => {
-                                    resolve(this.myself);
-                                })
-                            }).catch(err => {
-                                this.log.error("Error Loading Group Hierarchy from User, with Group ID: " + groupItem.id);
-                                this.log.error(err);
-                                reject("Group hierarchy Error");
+                            //carrega todas as permissoes dos pais acima
+                            return this._recLoadFatherPermissions(groupItem.id).then(perm => {
+                                this.myself.permissions = this.myself.permissions.concat(perm);
+                                resolve();
                             })
                         } else {
                             return Promise.reject();
                         }
-                    }).catch(() => {
+                    }).catch((err) => {
                         this.log.error("Group Without Any Permissions " + this.myself.toString())
+                        this.log.error(err)
                         reject("Group Without Any Permissions");
                     })
                 }));
             })
-            return Promise.all(listProm).then(() => {
+            return Promise.all(listProm).finally(() => {
                 return Promise.resolve(this.myself);
             });
         } else {
             this.log.error("Group not defined to load Permissions\n" + this.myself.toString())
             return Promise.reject("Group not defined to load Permissions");
         }
+        //*/
     }
 
-    recursiveLoadGroupHierarchy(index) {
-        if (index < this.myself.allgroups.length) {
-            return this._loadGroupTree(this.myself.allgroups[index].id).then(data => {
-                this.myself.allgroups[index]["_children"] = data._children;
-                return this.recursiveLoadGroupHierarchy(index + 1)
-            }).catch(err => {
-                this.log.error("Error Loading Group Hierarchy from Group ID: " + this.myself.id);
-                this.log.error(err);
-                return Promise.reject("Error Loading Group Hierarchy from Group ID: " + this.myself.id);
-            })
-        } else {
-            return Promise.resolve();
-        }
-    }
 
     getAllGroups() {
         return this.db.query("SELECT" +
@@ -326,7 +315,7 @@ class Group {
             " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
             " LEFT JOIN WS_CORE_1_3_1._User as ut3 on up1.modifiedBy=ut3.id" +
             " LEFT JOIN WS_CORE_1_3_1._Group as g1 on up1.id_Group=g1.id" +
-            " WHERE up1.id_Group=" + id + " and up1.active=1 and g1.active=1) AS UP" +
+            " WHERE up1.id_Group=" + id + " and g1.active=1) AS UP" +
             " ON P.code = UP.code_Permission;"
         );
     }
@@ -338,6 +327,7 @@ class Group {
             " RGG.active," +
             " G.name," +
             " G.id," +
+            " " + id + " as id_origin," +
             " ut1.username as createdBy," +
             " ut2.username as deactivatedBy," +
             " ut3.username as modifiedBy," +
@@ -353,79 +343,76 @@ class Group {
         );
     }
 
-    _recLoadHierarchy(array, index) {
+    /**
+     * Coleta todos os grupos pais associados junto com os não associados
+     * @param {int} groupID 
+     */
+    getGroups(groupID) {
         return new Promise((resolve, reject) => {
-            if (array) {
-                if (index < array.length) {
-                    this._loadGroupTree(array[index].id).then(data => {
-                        array[index] = data;
-                        this._recLoadHierarchy(array, index + 1).then(ret => {
-                            resolve(ret);
-                        }).catch(err => {
-                            reject(err);
-                        });
+            if (groupID) {
+                return this.getAllGroups().then(allgroups => {
+                    this.myself.allgroups = allgroups;
+                    return this._recLoadFatherGroups(groupID).then(groups => {
+                        //
+                        this.myself.allgroups = this.myself.allgroups.filter((grp) => { return grp.id != groupID });
+                        resolve(groups.concat(this.myself.allgroups));
                     })
-                } else {
-                    resolve(array);
-                }
+                })
             } else {
-                reject("Null Array")
+                reject("GroupID nulo na pesquisa de grupos associados")
             }
         })
     }
 
-    /**
-     * Function to load permissions from database
-     * @param {JSON} preferences 
-     */
-    recursiveLimit = 1000;
-    recursiveCount = 0;
-    _loadGroupTree(id) {
-        if (id) {
-            this.recursiveCount++;
-            if (this.recursiveCount >= this.recursiveLimit) {
-                this.recursiveCount = 0;
-                this.log.warning("Maximum recursive research of group hierarchy reached");
-                return Promise.resolve([]);
-            } else {
-                let GroupHierarchy = [];
-                return new Promise((resolve, reject) => {
-                    this.getGroupFathers(id).then((result) => {
-                        if (result[0]) {
-                            let allprom = []
-                            result.forEach(group => {
-                                allprom.push(
-                                    this._loadGroupTree(group.id_Group_Father).then(GroupHierarchyRet => {
-                                        this.myself.allgroups.map((val, ind, self) => { if (val) if (val.id == group.id) { self[ind] = null; } })// = this.myself.allgroups.filter(data => data.id != group.id);
-                                        group["_children"] = GroupHierarchyRet;
-                                        return Promise.resolve(group);
-                                    })
-                                );
-                            });
 
-                            Promise.all(allprom).then((values) => {
-                                resolve(values);
+    /**
+     * Coleta todos os grupos pais associados ao usuario junto com os não associados
+     * @param {int} groupID 
+     */
+    getGroupsFromUser(ListGroups) {
+        return new Promise((resolve, reject) => {
+            return this.getAllGroups().then(allgroups => {
+                let grps = [];
+                this.myself.allgroups = allgroups;
+
+                if (ListGroups[0]) {
+                    let allProm = [];
+                    ListGroups.forEach(groupItem => {
+                        allProm.push(
+                            this._recLoadFatherGroups(groupItem.id).then(groups => {
+                                //
+                                this.myself.allgroups = this.myself.allgroups.filter((grp) => { return grp.id != groupItem.id });
+                                return Promise.resolve(groups);
                             })
-                        } else {
-                            resolve(GroupHierarchy);
-                        }
-                    }).catch((err) => {
-                        this.log.error("Group Without Any Permissions " + this.myself.toString())
-                        this.log.error(err);
-                        reject("Group Without Any Permissions");
+                        )
                     })
-                });
-            }
-        } else {
-            this.log.error("Group not defined to load Permissions\n" + this.myself.toString())
-            return Promise.reject("Group not defined to load Permissions");
-        }
+                    return Promise.all(allProm)
+                        .then((data) => {
+                            console.log(data);
+                            data.forEach(d => {
+                                grps = d.concat(grps);
+                            })
+                        })
+                        .finally((data) => {
+                            console.log("final");
+                            console.log(grps);
+                            resolve(grps.concat(this.myself.allgroups));
+                        })
+                } else {
+                    resolve(grps.concat(this.myself.allgroups));
+                }
+            })
+        })
     }
+
+
 
     /**
      * Checa a recursividade para ver se ultrapassa o limite
      * @param {*} id 
      */
+    recursiveLimit = 1000;
+    recursiveCount = 0;
     checkRecursive(id) {
         if (id) {
             //this.myself.allgroups = this.myself.allgroups.filter(data => data.id != undefined)
@@ -478,7 +465,7 @@ class Group {
      * Return list of groups Associated and not 
      */
     listGroups() {
-        return this.myself.groups.concat(this.myself.allgroups);
+        return this.myself.groups;
     }
 
 }

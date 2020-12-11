@@ -110,6 +110,7 @@ class Socket {
                         })
                     }).catch(err => {
                         this._log.error("error on loading groups from user")
+                        this._log.error(err)
                     })
                 }).catch((err) => {
                     this._log.error(err);

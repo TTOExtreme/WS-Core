@@ -1,8 +1,8 @@
 ClientEvents.setCoreEvent("CreateContext");
 let ContextScreens = [];
 ClientEvents.on("CreateContext", (data) => {
-    console.log("create Context");
-    console.log(data);
+    //console.log("create Context");
+    //console.log(data);
     if (ContextScreens.length > 0) {
         ClientEvents.emit("RemoveContext", ContextScreens[0]);
     }

@@ -19,6 +19,8 @@
         - [x] Atribuir Grupo
         - [] Alterar senha
     - [x] Aba Grupos
+        // mudar modo de mostrar os grupos (somente o associado como pai)
+        // corrigir hierarchy
         - [x] Criar
         - [x] Atribuir Permissão
             - [x] Mostrar Permissão herdada de quem

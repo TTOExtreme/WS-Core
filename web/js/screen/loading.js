@@ -63,7 +63,7 @@ ClientEvents.on("stopLoader", () => {
 
 ClientEvents.setCoreEvent("Page_Loaded")
 ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
-    console.log("initializing Loader")
+    //console.log("initializing Loader")
     init_loading();
     resolve();
 }));
