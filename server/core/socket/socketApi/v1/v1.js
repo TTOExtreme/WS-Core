@@ -48,6 +48,7 @@ class v1 {
                                     ip: clearIpv6(address)
                                 });
 
+
                                 return Promise.resolve();
                             })
                         }).catch(() => {

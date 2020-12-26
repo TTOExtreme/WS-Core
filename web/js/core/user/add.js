@@ -55,7 +55,7 @@ ClientEvents.on("usr/add/save", () => {
         name: document.getElementById("usr_add_name").value,
         username: document.getElementById("usr_add_username").value,
         pass: document.getElementById("usr_add_pass").value,
-        active: document.getElementById("usr_add_pass").checked,
+        active: document.getElementById("usr_add_active").checked,
     });
     /**
      * save data and closes the page if success

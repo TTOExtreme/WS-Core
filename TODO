@@ -113,3 +113,25 @@
             img/
             .../(estrutura de pastas de acesso estatico)
 
+//Modulo WSOP
+    WebServer Ordem de Produção
+    - [] Clientes
+        - [] Adicionar
+            - [] Pesquisa de CEP
+        - [] Editar
+        - [] Excluir (desativar)
+    - [] Produtos
+    - [] Ordem de Serviço/Produção
+    - [] Emitente
+        - [] Cadastro
+            - [] Pesquisa de CEP
+            - [] Pesquisa de CNPJ
+    - [] OS/OP
+        - [] Adicionar
+        - [] Editar
+        - [] Excluir (desativar)
+        - [] Sistema de Tags
+        - [] Status
+            - [] Listas com cada Status (terminais de Produçao)
+                - [] Botão para enviar pedido para o proximo Status
+            

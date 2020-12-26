@@ -93,7 +93,8 @@ class UserStruct {
             connected: this.connected,
             lastConnection: this.lastConnection,
             lastTry: this.lastTry,
-            lastIp: this.lastIp
+            lastIp: this.lastIp,
+            permissions: this.permissions
         })
     }
 }

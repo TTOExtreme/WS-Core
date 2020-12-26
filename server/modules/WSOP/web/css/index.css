@@ -1,0 +1,59 @@
+.wsop_edt_label{
+    float:right;
+    color:var(--div-text);
+    height: 20px;
+}
+
+.wsop_edt_div{
+    position:absolute;
+    background: var(--menu-bg);
+    top:50vh;
+    left:50vw;
+    transform: translate(-50%,-50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+.edt_usr_closeButton{
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+.wsop_edt_label{
+    float:right;
+    color:var(--div-text);
+    height: 20px;
+}
+.wsop_edt_label_info{
+    color: red;
+    animation: opacity 1s linear;
+}
+
+.wsop_add_div{
+    position:absolute;
+    background: var(--menu-bg);
+    top:50vh;
+    left:50vw;
+    transform: translate(-50%,-50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+.wsop_add_div input[type="text"]{
+    width: 300px;
+}
+.wsop_add_closeButton{
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+input[type="text"]:disabled{
+    background: var(--input-disabled-bg);
+    color: var(--input-disabled-text);
+}

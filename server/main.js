@@ -91,7 +91,7 @@ class WSMainServer {
 
             this.modules[mod] = { cfg: {}, host: null, startup: null, running: null };
 
-            //check if exist host.js in module (differ Startup structure)
+            //check if exist Startup.js in module (differ Startup structure)
             if (fs.existsSync(path(__dirname + "/modules/" + mod + "/server/Startup.js"))) {
                 this.log.task("loading-startup_" + mod, "Loading Startup Structure from Module: " + mod + " in: /module/" + mod + "/server/", 0);
                 try {
@@ -116,7 +116,7 @@ class WSMainServer {
         let listPromisses = [];
 
         modulesList.forEach(mod => {
-            //check if exist host.js in module (differ hosting structure)
+            //check if exist Hosts.js in module (differ hosting structure)
             if (fs.existsSync(path(__dirname + "/modules/" + mod + "/server/Hosts.js"))) {
                 this.log.task("loading-host_" + mod, "Loading Hosting Structure from Module: " + mod + " in: /module/" + mod + "/server/", 0);
                 try {
@@ -141,7 +141,7 @@ class WSMainServer {
         let listPromisses = [];
 
         modulesList.forEach(mod => {
-            //check if exist host.js in module (differ Running structure)
+            //check if exist Running.js in module (differ Running structure)
             if (fs.existsSync(path(__dirname + "/modules/" + mod + "/server/Running.js"))) {
                 this.log.task("loading-running_" + mod, "Loading Running Structure from Module: " + mod + " in: /module/" + mod + "/server/", 0);
                 try {
