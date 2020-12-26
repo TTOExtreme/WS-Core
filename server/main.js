@@ -47,6 +47,10 @@ class WSMainServer {
 
         this.modules = {};
 
+        if (!fs.existsSync(path(__dirname + "/modules/"))) { //Create modules folder if not exists
+            fs.mkdirSync(path(__dirname + "/modules/"));
+        }
+
         this.log.setLogOnConsole(logOnConsole);
         this.cfg.LoadConfig().then((config) => {
             this.config = config;
