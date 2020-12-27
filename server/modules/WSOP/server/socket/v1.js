@@ -1,4 +1,5 @@
 const core = require('./v1/Core').Core;
+const cliente = require('./v1/Cliente').Socket;
 
 class Socket {
 
@@ -7,10 +8,14 @@ class Socket {
     _socket;
     _myself
     _coreModule;
+    _clienteModule
 
     constructor(WSMainServer) {
+        this._WSMainServer = WSMainServer;
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
+
+        this._clienteModule = new cliente(WSMainServer);
     }
 
     /**
@@ -23,6 +28,9 @@ class Socket {
         this._myself = Myself;
 
         this._coreModule = new core(this._socket, this._myself);
+        this._clienteModule.socket(this._socket, this._myself);
+
+        this._log.task("api-mod-WSOP", "Loaded API WSOP", 1);
     }
 }
 module.exports = { Socket }

@@ -116,11 +116,14 @@
 //Modulo WSOP
     WebServer Ordem de Produção
     - [] Clientes
-        - [] Adicionar
-            - [] Pesquisa de CEP
-        - [] Editar
-        - [] Excluir (desativar)
+        - [x] Adicionar
+            - [x] Pesquisa de CNPJ (limitado a 3 por minuto)
+            - [x] Pesquisa de CEP
+        - [x] Editar
+        - [x] Excluir (desativar)
     - [] Produtos
+        - [] Imagem associada
+            - [] Thumbnails com diferentes resoluções
     - [] Ordem de Serviço/Produção
     - [] Emitente
         - [] Cadastro

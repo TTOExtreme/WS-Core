@@ -1,4 +1,4 @@
-const ClienteManipulator = require('./dbManipulator').ClienteManipulator;
+const ProdutosManipulator = require('./dbManipulator').ProdutosManipulator;
 
 class Socket {
 
@@ -17,7 +17,7 @@ class Socket {
         this._config = WSMainServer.config;
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
-        this._ClienteClass = new ClienteManipulator(WSMainServer);
+        this._ProdutosClass = new ProdutosManipulator(WSMainServer);
     }
 
     /**
@@ -26,17 +26,17 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-cliente", "Api wsop-clientes Loaded", 1);
+        this._log.task("api-mod-wsop-produto", "Api wsop-produtos Loaded", 1);
         this._myself = Myself;
 
         /**
-         * List all clientes
+         * List all produtos
          */
-        socket.on("wsop/clientes/lst", (req) => {
-            this._myself.checkPermission("WSOP/menu/cliente").then(() => {
-                this._ClienteClass.ListAll().then((res) => {
+        socket.on("wsop/produtos/lst", (req) => {
+            this._myself.checkPermission("WSOP/menu/produtos").then(() => {
+                this._ProdutosClass.ListAll().then((res) => {
                     socket.emit("ClientEvents", {
-                        event: "wsop/clientes/lst",
+                        event: "wsop/produtos/lst",
                         data: res
                     })
                 }).catch((err) => {
@@ -58,25 +58,19 @@ class Socket {
         /**
          * add cliente
          */
-        socket.on("wsop/clientes/add", (req) => {
-            this._myself.checkPermission("WSOP/cliente/add").then(() => {
-                if (req[0].nome &&
-                    req[0].responsavel &&
-                    req[0].cpf_cnpj &&
-                    req[0].iscnpj &&
-                    req[0].cep &&
-                    req[0].logradouro &&
-                    req[0].numero &&
-                    req[0].bairro &&
-                    req[0].municipio &&
-                    req[0].uf &&
-                    req[0].telefone &&
-                    req[0].email &&
-                    req[0].responsavel
+        socket.on("wsop/produtos/add", (req) => {
+            this._myself.checkPermission("WSOP/produtos/add").then(() => {
+                if (req[0].name &&
+                    req[0].description &&
+                    req[0].barcode &&
+                    req[0].price &&
+                    req[0].cost &&
+                    req[0].img &&
+                    req[0].inventory
                 ) {
-                    this._ClienteClass.createCliente(req[0].nome, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
+                    this._ProdutosClass.createCliente(req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].img, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
-                            event: "system/added/clientes",
+                            event: "system/added/produtos",
                             data: req
                         })
                     }).catch((err) => {
@@ -109,26 +103,20 @@ class Socket {
         /**
          * add cliente
          */
-        socket.on("wsop/clientes/edt", (req) => {
-            this._myself.checkPermission("WSOP/cliente/add").then(() => {
+        socket.on("wsop/produtos/edt", (req) => {
+            this._myself.checkPermission("WSOP/produtos/add").then(() => {
                 if (req[0].id &&
-                    req[0].nome &&
-                    req[0].responsavel &&
-                    req[0].cpf_cnpj &&
-                    req[0].iscnpj &&
-                    req[0].cep &&
-                    req[0].logradouro &&
-                    req[0].numero &&
-                    req[0].bairro &&
-                    req[0].municipio &&
-                    req[0].uf &&
-                    req[0].telefone &&
-                    req[0].email &&
-                    req[0].responsavel
+                    req[0].name &&
+                    req[0].description &&
+                    req[0].barcode &&
+                    req[0].price &&
+                    req[0].cost &&
+                    req[0].img &&
+                    req[0].inventory
                 ) {
-                    this._ClienteClass.editCliente(req[0].id, req[0].nome, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
+                    this._ProdutosClass.editCliente(req[0].id, req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].img, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
-                            event: "system/edited/clientes",
+                            event: "system/edited/produtos",
                             data: req
                         })
                     }).catch((err) => {
@@ -161,11 +149,11 @@ class Socket {
         /**
          * Diable cliente
          */
-        socket.on("wsop/clientes/del", (req) => {
-            this._myself.checkPermission("WSOP/cliente/del").then(() => {
-                this._ClienteClass.disableCliente(req[0].id, req[0].active, this._myself.myself.id).then(() => {
+        socket.on("wsop/produtos/del", (req) => {
+            this._myself.checkPermission("WSOP/produtos/del").then(() => {
+                this._ProdutosClass.disableCliente(req[0].id, req[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
-                        event: "system/removed/clientes",
+                        event: "system/removed/produtos",
                         data: req
                     })
                 }).catch((err) => {
@@ -189,16 +177,16 @@ class Socket {
         /**
          * Context Menu List items with it calls for list of groups
          */
-        socket.on("wsop/lst/clientes/ctx", (req) => {
+        socket.on("wsop/lst/produtos/ctx", (req) => {
             let itemList = [];
 
             //*/
-            if (this._myself.checkPermissionSync("WSOP/cliente/edt")) {
+            if (this._myself.checkPermissionSync("WSOP/produtos/edt")) {
                 itemList.push({
                     name: "Editar",
                     active: true,
                     event: {
-                        call: "wsop/clientes/edt",
+                        call: "wsop/produtos/edt",
                         data: req[0].row
                     }
                 });
@@ -208,12 +196,12 @@ class Socket {
                     active: false
                 });
             }
-            if (this._myself.checkPermissionSync("WSOP/cliente/del")) {
+            if (this._myself.checkPermissionSync("WSOP/produtos/del")) {
                 itemList.push({
                     name: "Excluir",
                     active: true,
                     event: {
-                        call: "wsop/clientes/del",
+                        call: "wsop/produtos/del",
                         data: req[0].row
                     }
                 });

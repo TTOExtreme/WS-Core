@@ -4,10 +4,10 @@ ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
-    "./module/WSOP/js/clientes/add.js",
-    "./module/WSOP/js/utils/consulta.js",
-    "./module/WSOP/js/clientes/del.js",
-    "./module/WSOP/js/clientes/edt.js",
+    "./module/WSOP/js/produtos/add.js",
+    //"./module/WSOP/js/utils/consulta.js",
+    //"./module/WSOP/js/produtos/del.js",
+    //"./module/WSOP/js/produtos/edt.js",
     "./module/WSOP/css/index.css"
 ], () => { }, false)
 
@@ -29,7 +29,7 @@ window.UserList = class UserList {
     UserListData = [];
     rowContext = (ev, row) => {
         //console.log(ev);
-        ClientEvents.emit("SendSocket", "wsop/lst/clientes/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
+        ClientEvents.emit("SendSocket", "wsop/lst/produtos/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
     }
@@ -77,7 +77,7 @@ window.UserList = class UserList {
                 {
                     label: "Cadastrar novo Cliente",
                     action: function (e, column) {
-                        ClientEvents.emit("WSOP/clientes/add");
+                        ClientEvents.emit("WSOP/produtos/add");
                     }
                 })
         }
@@ -100,22 +100,22 @@ window.UserList = class UserList {
             rowContext: this.rowContext
         });
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/clientes/lst");
+        ClientEvents.emit("SendSocket", "wsop/produtos/lst");
     }
 
     _init() {
 
         /**Receive user list and append to Table */
-        ClientEvents.on("wsop/clientes/lst", (data) => {
+        ClientEvents.on("wsop/produtos/lst", (data) => {
             if (data) {
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
             }
         });
 
-        ClientEvents.on("system/added/clientes", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/clientes/lst"); });
-        ClientEvents.on("system/removed/clientes", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/clientes/lst"); });
-        ClientEvents.on("system/edited/clientes", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/clientes/lst"); });
+        ClientEvents.on("system/added/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+        ClientEvents.on("system/removed/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+        ClientEvents.on("system/edited/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
     }
 }
 
