@@ -1,7 +1,7 @@
 
-ClientEvents.on("wsop/clientes/edt", (data) => {
-    ClientEvents.emit("WSOP/clientes/close");
-
+ClientEvents.on("wsop/produtos/edt", (data) => {
+    ClientEvents.emit("WSOP/produtos/close");
+    console.log(data)
     /**
      * create Show Page for user info
      */
@@ -11,48 +11,34 @@ ClientEvents.on("wsop/clientes/edt", (data) => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/clientes/close\")'>X</p></td></tr>" +
-        "<tr><td class='wsop_edt_label'>ID:</td><td><input disabled id='wsop_add_id' type='text' value='" + data.id + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.nome + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Responsável:</td><td><input id='wsop_add_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>CNPJ?:</td><td><input id='wsop_add_iscnpj' type='checkbox' onchange='ClientEvents.emit(\"iscnpjchange\")' " + ((data.iscnpj == 1) ? "Checked" : "") + "></td></tr>" +
-        "<tr id='tr_wsop_add_cnpj' style='display:contents'><td class='wsop_edt_label'>CNPJ:</td><td><input id='wsop_add_cnpj' type='text' onchange='ClientEvents.emit(\"cnpjchange\")' value='" + data.cpf_cnpj + "'></td></tr>" +
-        "<tr id='tr_wsop_add_cpf' style='display:none'><td class='wsop_edt_label'>CPF:</td><td><input id='wsop_add_cpf' type='text' value='" + data.cpf_cnpj + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>CEP:</td><td><input id='wsop_add_cep' type='text' onchange='ClientEvents.emit(\"cepchange\")' value='" + data.cep + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Logradouro:</td><td><input id='wsop_add_logradouro' type='text' value='" + data.logradouro + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Numero:</td><td><input id='wsop_add_numero' type='text' value='" + data.numero + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Bairro:</td><td><input id='wsop_add_bairro' type='text' value='" + data.bairro + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Município:</td><td><input id='wsop_add_municipio' type='text' value='" + data.municipio + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Estado:</td><td><input id='wsop_add_uf' type='text' value='" + data.uf + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Telefone:</td><td><input id='wsop_add_telefone' type='text' value='" + data.telefone + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>E-Mail:</td><td><input id='wsop_add_email' type='text' value='" + data.email + "'></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/produtos/close\")'>X</p></td></tr>" +
+        "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_add_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.name + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_description' type='text' value='" + data.description + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_add_barcode' type='text'value='" + data.barcode + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_add_price' type='text' value='" + data.price + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_add_cost' type='text' value='" + data.cost + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Inventario:</td><td><input id='wsop_add_inventory' type='text' value='" + data.inventory + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_add_img_thumb' class='wsop_add_img_thumb' alt='' src='" + data.img + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_add_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
-        "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"WSOP/clientes/edt\")'></td></tr>" +
+        "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"WSOP/produtos/edt\")' accept='image/gif, image/jpeg, image/png'></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
 });
 
-ClientEvents.on("WSOP/clientes/edt", () => {
-    ClientEvents.emit("SendSocket", "wsop/clientes/edt", {
+ClientEvents.on("WSOP/produtos/edt", () => {
+    ClientEvents.emit("SendSocket", "wsop/produtos/edt", {
         id: document.getElementById("wsop_add_id").value,
-        nome: document.getElementById("wsop_add_name").value,
-        responsavel: document.getElementById("wsop_add_responsavel").value,
-        cpf_cnpj: document.getElementById("wsop_add_cnpj").value || document.getElementById("wsop_add_cpf").value,
-        cep: document.getElementById("wsop_add_cep").value,
-        logradouro: document.getElementById("wsop_add_logradouro").value,
-        numero: document.getElementById("wsop_add_numero").value,
-        bairro: document.getElementById("wsop_add_bairro").value,
-        municipio: document.getElementById("wsop_add_municipio").value,
-        uf: document.getElementById("wsop_add_uf").value,
-        telefone: document.getElementById("wsop_add_telefone").value,
-        email: document.getElementById("wsop_add_email").value,
-        iscnpj: document.getElementById("wsop_add_iscnpj").checked,
+        name: document.getElementById("wsop_add_name").value,
+        description: document.getElementById("wsop_add_description").value,
+        barcode: document.getElementById("wsop_add_barcode").value,
+        price: document.getElementById("wsop_add_price").value,
+        cost: document.getElementById("wsop_add_cost").value,
+        inventory: document.getElementById("wsop_add_inventory").value,
+        img: document.getElementById("wsop_add_img_thumb").src,
         active: document.getElementById("wsop_add_active").checked,
     });
-    /**
-     * save data and closes the page if success
-     * closing part from server command
-     */
 })

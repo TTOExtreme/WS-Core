@@ -31,6 +31,7 @@ class ProdutosStruct {
     deactivatedBy;
     modifiedIn;
     modifiedBy;
+    active;
 
     /**
      * converte um JSON para o objeto GROUP
@@ -52,6 +53,7 @@ class ProdutosStruct {
             if (os.deactivatedBy) { this.deactivatedBy = os.deactivatedBy }
             if (os.modifiedIn) { this.modifiedIn = os.modifiedIn }
             if (os.modifiedBy) { this.modifiedBy = os.modifiedBy }
+            if (os.active) { this.active = os.active }
         }
     }
 
@@ -74,6 +76,7 @@ class ProdutosStruct {
             deactivatedBy: this.deactivatedBy,
             modifiedIn: this.modifiedIn,
             modifiedBy: this.modifiedBy,
+            active: this.active,
         })
     }
 }
@@ -93,6 +96,7 @@ const _DB = {
     deactivatedBy: "INT",
     modifiedIn: "BIGINT",
     modifiedBy: "INT",
+    active: "INT(1)",
 }
 
 

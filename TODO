@@ -121,9 +121,12 @@
             - [x] Pesquisa de CEP
         - [x] Editar
         - [x] Excluir (desativar)
-    - [] Produtos
-        - [] Imagem associada
-            - [] Thumbnails com diferentes resoluções
+    - [x] Produtos
+        - [x] Adicionar
+        - [x] Editar
+        - [x] Excluir (desativar)
+        - [x] Imagem associada
+            - [x] Thumbnails com diferentes resoluções
     - [] Ordem de Serviço/Produção
     - [] Emitente
         - [] Cadastro

@@ -53,7 +53,16 @@
     text-align: center;
 }
 
+input[type="file"]{
+    background: var(--input-bg);
+    color: var(--div-text);
+}
+
 input[type="text"]:disabled{
     background: var(--input-disabled-bg);
     color: var(--input-disabled-text);
+}
+.wsop_add_img_thumb{
+    max-width: 300px;
+    max-height: 300px;
 }

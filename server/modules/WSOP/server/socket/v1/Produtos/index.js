@@ -1,4 +1,7 @@
 const ProdutosManipulator = require('./dbManipulator').ProdutosManipulator;
+const fs = require('fs');
+const path = require('path').join;
+const BCypher = require('../../../../../../core/utils/bcypher').Bcypher;
 
 class Socket {
 
@@ -56,7 +59,7 @@ class Socket {
         })
 
         /**
-         * add cliente
+         * add produto
          */
         socket.on("wsop/produtos/add", (req) => {
             this._myself.checkPermission("WSOP/produtos/add").then(() => {
@@ -68,7 +71,7 @@ class Socket {
                     req[0].img &&
                     req[0].inventory
                 ) {
-                    this._ProdutosClass.createCliente(req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].img, req[0].active, this._myself.myself.id).then(() => {
+                    this._ProdutosClass.createProduto(req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
                             event: "system/added/produtos",
                             data: req
@@ -101,7 +104,58 @@ class Socket {
         })
 
         /**
-         * add cliente
+         * add file
+         */
+        socket.on("wsop/produtos/file", (req) => {
+            this._myself.checkPermission("WSOP/produtos/add").then(() => {
+                try {
+                    let name = new BCypher().generate_salt(48) + req[0].ext;
+                    let filepath = path(__dirname + "/../../../../web/img/produtos/")
+                    while (fs.existsSync(filepath + name)) { // necessario para criar arquivo com nome unico
+                        name = new BCypher().generate_salt(48) + req[0].ext;
+                    }
+
+                    console.log("Start Stream")
+                    fs.writeFileSync(filepath + name, req[0].stream);
+                    console.log("end Stream")
+
+                    if (req[0].ext == ".png" || req[0].ext == ".jpeg" || req[0].ext == ".gif" || req[0].ext == ".bmp" || req[0].ext == ".png") {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/produtos/fileuploaded",
+                            data: {
+                                file: "./module/WSOP/img/produtos/" + name
+                            }
+                        })
+                    } else {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/produtos/fileuploaded",
+                            data: {
+                                file: "./module/WSOP/img/file.png"
+                            }
+                        })
+                    }
+
+                } catch (err) {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    this._log.error("On Uploading file to Product")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                }
+            })
+
+        })
+
+        /**
+         * Editar produto
          */
         socket.on("wsop/produtos/edt", (req) => {
             this._myself.checkPermission("WSOP/produtos/add").then(() => {
@@ -114,7 +168,7 @@ class Socket {
                     req[0].img &&
                     req[0].inventory
                 ) {
-                    this._ProdutosClass.editCliente(req[0].id, req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].img, req[0].active, this._myself.myself.id).then(() => {
+                    this._ProdutosClass.editProduto(req[0].id, req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
                             event: "system/edited/produtos",
                             data: req
@@ -151,7 +205,7 @@ class Socket {
          */
         socket.on("wsop/produtos/del", (req) => {
             this._myself.checkPermission("WSOP/produtos/del").then(() => {
-                this._ProdutosClass.disableCliente(req[0].id, req[0].active, this._myself.myself.id).then(() => {
+                this._ProdutosClass.disableProduto(req[0].id, req[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system/removed/produtos",
                         data: req

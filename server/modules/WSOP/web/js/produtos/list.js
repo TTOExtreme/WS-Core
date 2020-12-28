@@ -5,9 +5,8 @@ ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/produtos/add.js",
-    //"./module/WSOP/js/utils/consulta.js",
-    //"./module/WSOP/js/produtos/del.js",
-    //"./module/WSOP/js/produtos/edt.js",
+    "./module/WSOP/js/produtos/del.js",
+    "./module/WSOP/js/produtos/edt.js",
     "./module/WSOP/css/index.css"
 ], () => { }, false)
 
@@ -60,13 +59,11 @@ window.UserList = class UserList {
                     }
                 }, visible: !(this.actionName == "")
             },
-            { title: 'Nome', field: 'nome', headerFilter: "input" },
-            { title: 'CEP', field: 'cep', headerFilter: "input" },
-            { title: 'CPF/CNPJ', field: 'cpf_cnpj', headerFilter: "input" },
-            { title: 'Telefone', field: 'telefone', headerFilter: "input" },
-            { title: 'E-Mail', field: 'email', headerFilter: "input" },
-            { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
-            { title: 'Criado Por', field: 'createdBy', headerFilter: "input" }
+            { title: 'Codigo', field: 'barcode', headerFilter: "input" },
+            { title: 'Nome', field: 'name', headerFilter: "input" },
+            { title: 'Descrição', field: 'description', headerFilter: "input" },
+            { title: 'Inventario', field: 'inventory', headerFilter: "input" },
+            { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" }
         ]
     }];
 
@@ -75,7 +72,7 @@ window.UserList = class UserList {
         if (Myself.checkPermmision("WSOP/cliente/add")) {
             this.newCollums[0].headerMenu.push(
                 {
-                    label: "Cadastrar novo Cliente",
+                    label: "Cadastrar novo Produto",
                     action: function (e, column) {
                         ClientEvents.emit("WSOP/produtos/add");
                     }
@@ -113,9 +110,9 @@ window.UserList = class UserList {
             }
         });
 
-        ClientEvents.on("system/added/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
-        ClientEvents.on("system/removed/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
-        ClientEvents.on("system/edited/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+        ClientEvents.on("system/added/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+        ClientEvents.on("system/removed/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+        ClientEvents.on("system/edited/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
     }
 }
 

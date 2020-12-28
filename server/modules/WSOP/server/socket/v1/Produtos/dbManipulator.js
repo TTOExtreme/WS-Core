@@ -31,20 +31,20 @@ class ProdutosManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createProduto(name, description, barcode, price, cost, inventory, img, active, UserID) {
+    createProduto(name, description, barcode, price, cost, img, inventory, active, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Produtos" +
-            " (name, description, barcode, price, cost, inventory, active, createdBy, createdIn)" +
+            " (name, description, barcode, price, cost, img, inventory, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + name + "','" + description + "','" + barcode + "','" + price + "','" + cost + "','" + inventory + "','" + img + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + name + "','" + description + "','" + barcode + "','" + price + "','" + cost + "','" + img + "'," + inventory + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
      * Editar cadastro do cliente
      * @param {Number} ID
      * @param {String} name 
-     * @param {String} codigo 
-     * @param {String} cpf_cnpj 
+     * @param {String} description 
+     * @param {String} barcode 
      * @param {Boolean} price 
      * @param {String} cost 
      * @param {String} inventory 
@@ -55,16 +55,16 @@ class ProdutosManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editProduto(ID, name, codigo, cpf_cnpj, price, cost, inventory, img, active, UserID) {
+    editProduto(ID, name, description, barcode, price, cost, img, inventory, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Produtos SET" +
             ((name != "") ? " name='" + name + "'," : " ") +
-            ((codigo != "") ? " codigo='" + codigo + "'," : " ") +
-            ((cpf_cnpj != "") ? " cpf_cnpj='" + cpf_cnpj + "'," : " ") +
+            ((description != "") ? " description='" + description + "'," : " ") +
+            ((barcode != "") ? " barcode='" + barcode + "'," : " ") +
             ((price != "") ? " price='" + price + "'," : " ") +
             ((cost != "") ? " cost='" + cost + "'," : " ") +
-            ((inventory != "") ? " inventory='" + inventory + "'," : " ") +
             ((img != "") ? " img='" + img + "'," : " ") +
+            ((inventory != "") ? " inventory='" + inventory + "'," : " ") +
             " active=" + (active ? 1 : 0) + "," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
             " WHERE id='" + ID + "';");
