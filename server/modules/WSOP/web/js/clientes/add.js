@@ -133,7 +133,7 @@ ClientEvents.on("iscnpjchange", () => {
 
 ClientEvents.on("WSOP/clientes/save", () => {
     ClientEvents.emit("SendSocket", "wsop/clientes/add", {
-        nome: document.getElementById("wsop_add_name").value,
+        name: document.getElementById("wsop_add_name").value,
         responsavel: document.getElementById("wsop_add_responsavel").value,
         cpf_cnpj: document.getElementById("wsop_add_cnpj").value || document.getElementById("wsop_add_cpf").value,
         cep: document.getElementById("wsop_add_cep").value,

@@ -115,28 +115,33 @@
 
 //Modulo WSOP
     WebServer Ordem de Produção
-    - [] Clientes
+    - [x] Clientes
         - [x] Adicionar
             - [x] Pesquisa de CNPJ (limitado a 3 por minuto)
             - [x] Pesquisa de CEP
         - [x] Editar
         - [x] Excluir (desativar)
     - [x] Produtos
+        // para cada modelo e tamanho cadastrar como item diferente EX. Camisa Manga Longa Tamanho P
         - [x] Adicionar
         - [x] Editar
         - [x] Excluir (desativar)
         - [x] Imagem associada
-            - [x] Thumbnails com diferentes resoluções
-    - [] Ordem de Serviço/Produção
+            - [] Thumbnails com diferentes resoluções
+            - [] Fix Endereço salvo no BD para somente nome do arquivo
     - [] Emitente
         - [] Cadastro
             - [] Pesquisa de CEP
             - [] Pesquisa de CNPJ
     - [] OS/OP
-        - [] Adicionar
-        - [] Editar
-        - [] Excluir (desativar)
+        - [x] Adicionar
+        - [x] Editar
+        - [x] Excluir (desativar)
         - [] Sistema de Tags
+        - [] Cores distintas para cada Status
+        - [] campo Expira/ Termino em
+        - [] Anexos
+
         - [] Status
             - [] Listas com cada Status (terminais de Produçao)
                 - [] Botão para enviar pedido para o proximo Status

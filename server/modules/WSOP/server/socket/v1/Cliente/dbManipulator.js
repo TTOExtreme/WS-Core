@@ -22,8 +22,17 @@ class ClienteManipulator {
     }
 
     /**
+     * Lista todos os Clientes cadastrados sem filtro
+     */
+    ListAllOs() {
+        return this.db.query("SELECT C.id, C.name FROM " + this.db.DatabaseName + "._WSOP_Cliente AS C " +
+            " WHERE C.active=1;");
+    }
+
+
+    /**
      * Criar Cliente
-     * @param {String} nome 
+     * @param {String} name 
      * @param {String} responsavel 
      * @param {String} cpf_cnpj 
      * @param {Boolean} iscnpj 
@@ -36,18 +45,18 @@ class ClienteManipulator {
      * @param {String} email 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createCliente(nome, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, UserID) {
+    createCliente(name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Cliente" +
-            " (nome, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, createdBy, createdIn)" +
+            " (name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + nome + "','" + responsavel + "','" + cpf_cnpj + "'," + (iscnpj ? 1 : 0) + ",'" + cep + "','" + logradouro + "','" + numero + "','" + bairro + "','" + municipio + "','" + uf + "','" + telefone + "','" + email + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + name + "','" + responsavel + "','" + cpf_cnpj + "'," + (iscnpj ? 1 : 0) + ",'" + cep + "','" + logradouro + "','" + numero + "','" + bairro + "','" + municipio + "','" + uf + "','" + telefone + "','" + email + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
      * Editar cadastro do cliente
      * @param {Number} ID
-     * @param {String} nome 
+     * @param {String} name 
      * @param {String} responsavel 
      * @param {String} cpf_cnpj 
      * @param {Boolean} iscnpj 
@@ -60,10 +69,10 @@ class ClienteManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editCliente(ID, nome, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, UserID) {
+    editCliente(ID, name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Cliente SET" +
-            ((nome != "") ? " nome='" + nome + "'," : " ") +
+            ((name != "") ? " name='" + name + "'," : " ") +
             ((responsavel != "") ? " responsavel='" + responsavel + "'," : " ") +
             ((cpf_cnpj != "") ? " cpf_cnpj='" + cpf_cnpj + "'," : " ") +
             ((iscnpj != "") ? " iscnpj='" + (iscnpj ? 1 : 0) + "'," : " ") +

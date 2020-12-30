@@ -2,7 +2,7 @@
 /**
  * @typedef {ClienteStruct} ClienteStruct
  * @property {number} id
- * @property {string} nome
+ * @property {string} name
  * @property {string} cpf_cnpj
  * @property {string} iscnpj
  * @property {string} cep
@@ -19,7 +19,7 @@
 
 class ClienteStruct {
     id;
-    nome;
+    name;
     responsavel;
     cpf_cnpj;
     iscnpj;
@@ -46,7 +46,7 @@ class ClienteStruct {
     constructor(os) {
         if (os) {
             if (os.id) { this.id = os.id }
-            if (os.nome) { this.nome = os.nome }
+            if (os.name) { this.name = os.name }
             if (os.responsavel) { this.responsavel = os.responsavel }
             if (os.cpf_cnpj) { this.cpf_cnpj = os.cpf_cnpj }
             if (os.iscnpj) { this.iscnpj = os.iscnpj }
@@ -70,7 +70,7 @@ class ClienteStruct {
 
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
-    nome: "VARCHAR(600)",
+    name: "VARCHAR(600)",
     responsavel: "VARCHAR(600)",
     cpf_cnpj: "VARCHAR(200)",
     iscnpj: "INT(1)",

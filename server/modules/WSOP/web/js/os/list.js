@@ -4,12 +4,14 @@ ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
-    "./module/WSOP/js/clientes/add.js",
-    "./module/WSOP/js/utils/consulta.js",
-    "./module/WSOP/js/clientes/del.js",
-    "./module/WSOP/js/clientes/edt.js",
+    "./module/WSOP/js/utils/osStatus.js",
+    "./module/WSOP/js/os/add.js",
+    "./module/WSOP/js/os/del.js",
+    "./module/WSOP/js/os/edt.js",
     "./module/WSOP/css/index.css"
-], () => { }, false)
+], () => {
+    new window.UserList();
+}, false)
 
 if (window.UserList) { // usa a mesma interface global para todas as listas
     window.UserList = null;
@@ -29,7 +31,7 @@ window.UserList = class UserList {
     UserListData = [];
     rowContext = (ev, row) => {
         //console.log(ev);
-        ClientEvents.emit("SendSocket", "wsop/lst/clientes/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
+        ClientEvents.emit("SendSocket", "wsop/lst/os/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
     }
@@ -44,7 +46,7 @@ window.UserList = class UserList {
                 title: this.actionName, field: this.actionfield, formatter: this.actionIcon, cellClick: function (e, cell) {
                     let data = cell.getData();
                     if (this.confirmExecution) {
-                        if (confirm("Voce esta prestes a " + ((this.actionOptions.length > 0) ? this.actionOptions[data[this.actionfield]] : this.actionName) + " o Cliente: " + data.user + "\nVoce tem certeza disso?")) {
+                        if (confirm("Voce esta prestes a " + ((this.actionOptions.length > 0) ? this.actionOptions[data[this.actionfield]] : this.actionName) + " a OS: " + data.id + "\nVoce tem certeza disso?")) {
                             if (this.actionCallback != null) {
                                 this.actionCallback(data);
                             } else {
@@ -60,24 +62,22 @@ window.UserList = class UserList {
                     }
                 }, visible: !(this.actionName == "")
             },
-            { title: 'Nome', field: 'name', headerFilter: "input" },
-            { title: 'CEP', field: 'cep', headerFilter: "input" },
-            { title: 'CPF/CNPJ', field: 'cpf_cnpj', headerFilter: "input" },
-            { title: 'Telefone', field: 'telefone', headerFilter: "input" },
-            { title: 'E-Mail', field: 'email', headerFilter: "input" },
+            { title: 'ID', field: 'id', headerFilter: "input" },
+            { title: 'Cliente', field: 'cliente', headerFilter: "input" },
+            { title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(), formatter: ((data) => StatusIdToName(data.getRow().getData().status)) },
+            { title: 'Expira Em', field: 'endingIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
-            { title: 'Criado Por', field: 'createdBy', headerFilter: "input" }
         ]
     }];
 
     constructor() {
 
-        if (Myself.checkPermmision("WSOP/cliente/add")) {
+        if (Myself.checkPermmision("WSOP/os/add")) {
             this.newCollums[0].headerMenu.push(
                 {
-                    label: "Cadastrar novo Cliente",
+                    label: "Abrir OS",
                     action: function (e, column) {
-                        ClientEvents.emit("WSOP/clientes/add");
+                        ClientEvents.emit("WSOP/os/add");
                     }
                 })
         }
@@ -100,23 +100,28 @@ window.UserList = class UserList {
             rowContext: this.rowContext
         });
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/clientes/lst");
+        ClientEvents.emit("SendSocket", "wsop/os/lst");
     }
 
     _init() {
 
         /**Receive user list and append to Table */
-        ClientEvents.on("wsop/clientes/lst", (data) => {
+        ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
             }
         });
 
-        ClientEvents.on("system/added/clientes", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/clientes/lst"); });
-        ClientEvents.on("system/removed/clientes", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/clientes/lst"); });
-        ClientEvents.on("system/edited/clientes", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/clientes/lst"); });
+        ClientEvents.on("system/added/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+    }
+    _getStatusFilterParams() {
+        let ret = [{ label: "-", value: "" }]
+        statusIDs.forEach((item, index) => {
+            ret.push({ label: item, value: index })
+        })
+        return ret;
     }
 }
-
-new window.UserList();

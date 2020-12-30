@@ -1,33 +1,31 @@
 
 /**
- * @typedef {OSStruct} OSStruct
+ * @typedef {ProdutosStruct} ProdutosStruct
  * @property {number} id
- * @property {number} id_cliente
- * @property {number} status
- * @property {timestamp} endingIn data limite da os
+ * @property {number} id_os
+ * @property {string} name
+ * @property {string} filename
+ * @property {number} inventory
  * @property {timestamp} createdIn
  * @property {number} createdBy
  * @property {timestamp} deactivatedIn
  * @property {number} deactivatedBy
  * @property {boolean} active
- * @property {string} tags
- * @property {string} description
  */
 
 
-class OSStruct {
+class ProdutosStruct {
     id;
-    id_cliente;
-    status;
-    endingIn;
+    id_os;
+    name;
+    filename;
     createdIn;
     createdBy;
     deactivatedIn;
     deactivatedBy;
     modifiedIn;
     modifiedBy;
-    tags;
-    description;
+    active;
 
     /**
      * converte um JSON para o objeto GROUP
@@ -36,17 +34,15 @@ class OSStruct {
     constructor(os) {
         if (os) {
             if (os.id) { this.id = os.id }
-            if (os.id_cliente) { this.id_cliente = os.id_cliente }
-            if (os.status) { this.status = os.status }
-            if (os.endingIn) { this.endingIn = os.endingIn }
+            if (os.id_os) { this.id_os = os.id_os }
+            if (os.name) { this.name = os.name }
+            if (os.filename) { this.filename = os.filename }
             if (os.createdIn) { this.createdIn = os.createdIn }
             if (os.createdBy) { this.createdBy = os.createdBy }
             if (os.deactivatedIn) { this.deactivatedIn = os.deactivatedIn }
             if (os.deactivatedBy) { this.deactivatedBy = os.deactivatedBy }
             if (os.modifiedIn) { this.modifiedIn = os.modifiedIn }
             if (os.modifiedBy) { this.modifiedBy = os.modifiedBy }
-            if (os.tags) { this.tags = os.tags }
-            if (os.description) { this.description = os.description }
             if (os.active) { this.active = os.active }
         }
     }
@@ -54,20 +50,17 @@ class OSStruct {
 
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
-    id_cliente: "INT",
-    status: "INT",
+    id_os: "INT",
     name: "VARCHAR(200)",
-    endingIn: "BIGINT",
+    filename: "VARCHAR(600)",
     createdIn: "BIGINT",
     createdBy: "INT",
     deactivatedIn: "BIGINT",
     deactivatedBy: "INT",
     modifiedIn: "BIGINT",
     modifiedBy: "INT",
-    tags: "MEDIUMTEXT",
-    description: "MEDIUMTEXT",
-    active: "INT",
+    active: "INT(1)",
 }
 
 
-module.exports = { OSStruct, _DB }
+module.exports = { ProdutosStruct, _DB }

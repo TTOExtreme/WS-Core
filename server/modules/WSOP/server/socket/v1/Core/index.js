@@ -32,7 +32,7 @@ class Core {
                 Permission: "menu/WSOP/OS",
                 Icon: "",
                 EventCall: "Load",
-                EventData: "./module/WSOP/js/OS/list.js",
+                EventData: "./module/WSOP/js/os/list.js",
                 TopItems: [],
             },
             {
@@ -41,7 +41,7 @@ class Core {
                 Permission: "menu/WSOP/OS",
                 Icon: "",
                 EventCall: "Load",
-                EventData: "./module/WSOP/js/OS/list.js",
+                EventData: "./module/WSOP/js/emitente/list.js",
                 TopItems: [],
             }
         ],

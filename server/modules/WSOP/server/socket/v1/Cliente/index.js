@@ -56,6 +56,32 @@ class Socket {
         })
 
         /**
+         * List all clientes para Criação de OS
+         */
+        socket.on("wsop/os/clientes/lst", (req) => {
+            this._myself.checkPermission("WSOP/menu/cliente").then(() => {
+                this._ClienteClass.ListAllOs().then((res) => {
+                    socket.emit("ClientEvents", {
+                        event: "wsop/os/clientes/lst",
+                        data: res
+                    })
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            })
+        })
+
+        /**
          * add cliente
          */
         socket.on("wsop/clientes/add", (req) => {
@@ -63,7 +89,6 @@ class Socket {
                 if (req[0].nome &&
                     req[0].responsavel &&
                     req[0].cpf_cnpj &&
-                    req[0].iscnpj &&
                     req[0].cep &&
                     req[0].logradouro &&
                     req[0].numero &&

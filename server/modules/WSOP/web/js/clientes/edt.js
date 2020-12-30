@@ -13,7 +13,7 @@ ClientEvents.on("wsop/clientes/edt", (data) => {
         "<table>" +
         "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/clientes/close\")'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td><input disabled id='wsop_add_id' type='text' value='" + data.id + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.nome + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Responsável:</td><td><input id='wsop_add_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>CNPJ?:</td><td><input id='wsop_add_iscnpj' type='checkbox' onchange='ClientEvents.emit(\"iscnpjchange\")' " + ((data.iscnpj == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr id='tr_wsop_add_cnpj' style='display:contents'><td class='wsop_edt_label'>CNPJ:</td><td><input id='wsop_add_cnpj' type='text' onchange='ClientEvents.emit(\"cnpjchange\")' value='" + data.cpf_cnpj + "'></td></tr>" +
@@ -37,7 +37,7 @@ ClientEvents.on("wsop/clientes/edt", (data) => {
 ClientEvents.on("WSOP/clientes/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/clientes/edt", {
         id: document.getElementById("wsop_add_id").value,
-        nome: document.getElementById("wsop_add_name").value,
+        name: document.getElementById("wsop_add_name").value,
         responsavel: document.getElementById("wsop_add_responsavel").value,
         cpf_cnpj: document.getElementById("wsop_add_cnpj").value || document.getElementById("wsop_add_cpf").value,
         cep: document.getElementById("wsop_add_cep").value,
