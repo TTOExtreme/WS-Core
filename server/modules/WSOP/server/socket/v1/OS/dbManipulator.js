@@ -15,11 +15,33 @@ class osManipulator {
     /**
      * Lista todos os Clientes cadastrados sem filtro
      */
-    ListAll() {
+    ListAll(id = "") {
         return this.db.query("SELECT OS.*, U.name as createdBy, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
-            " WHERE OS.active=1;");
+            " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : "") + " ;").then((list) => {
+                let allProm = [];
+                let result = [];
+                list.forEach(item => {
+                    allProm.push(new Promise((resolve, reject) => {
+                        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._WSOP_OSAnexos  WHERE active=1 AND id_os=" + item.id + ";").then(anexos => {
+                            return this.db.query("SELECT R.*, P.name, P.barcode,P.img FROM " + this.db.DatabaseName + ".rlt_Produtos_OS AS R " +
+                                " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Produtos as P on P.id = R.id_produtos " +
+                                " WHERE R.active=1 AND R.id_os=" + item.id + ";").then(produtos => {
+                                    let it = item;
+                                    it.anexos = anexos;
+                                    it.produtos = produtos;
+                                    result.push(it);
+                                    resolve(it);
+                                })
+                        })
+                    }));
+                });
+
+                return Promise.all(allProm).finally(() => {
+                    return Promise.resolve(result);
+                })
+            });
     }
 
     /**
@@ -78,17 +100,18 @@ class osManipulator {
     }
 
     /**
-     * inserir anexo OS
-     * @param {Number} ID
-     * @param {Boolean} active
-     * @param {Number} UserID 
+     * Anexar a OS
+     * @param {*} ID 
+     * @param {*} filename 
+     * @param {*} thumb 
+     * @param {*} UserID 
      */
-    appendAnexo(ID, filename, UserID) {
+    appendAnexo(ID, filename, thumb, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_OSAnexos " +
-            " (id_os, filename, active, createdBy, createdIn)" +
+            " (id_os, filename, thumb, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + ID + "','" + filename + "',1," + UserID + "," + Date.now() + ");");
+            " ('" + ID + "','" + filename + "','" + thumb + "',1," + UserID + "," + Date.now() + ");");
     }
 
     /**
@@ -99,16 +122,37 @@ class osManipulator {
      */
     delAnexo(ID, UserID) {
 
-        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OSAnexos SET" +
             " active=0," +
             " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
-            ((active) ?
-                " ,deactivatedBy=null, deactivatedIn=null " :
-                " ,deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " ") +
+            " ,deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " " +
             " ,modifiedBy='" + UserID + "', modifiedIn=" + Date.now() + " " +
             " WHERE id=" + ID + ";");
     }
 
+
+    appendProduto(ID, id_produto, qnt, obs, UserID) {
+        return this.db.query("INSERT INTO " + this.db.DatabaseName + ".rlt_Produtos_OS " +
+            " (id_os, id_produtos, obs,qnt, active, createdBy, createdIn)" +
+            " VALUES " +
+            " ('" + ID + "','" + id_produto + "','" + obs + "'," + qnt + ",1," + UserID + "," + Date.now() + ");");
+    }
+
+    /**
+     * Desativar anexo OS
+     * @param {Number} ID
+     * @param {Boolean} active
+     * @param {Number} UserID 
+     */
+    delProduto(ID, UserID) {
+
+        return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_Produtos_OS SET" +
+            " active=0," +
+            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
+            " ,deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " " +
+            " ,modifiedBy='" + UserID + "', modifiedIn=" + Date.now() + " " +
+            " WHERE id=" + ID + ";");
+    }
 }
 
 module.exports = { osManipulator }

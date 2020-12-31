@@ -97,12 +97,12 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
         for (i = 0; i < arr.length; i++) {
-            if (arr[i].name.substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            if ((arr[i].name + "").substr(0, val.length).toUpperCase() == val.toUpperCase()) {
                 b = document.createElement("DIV");
                 b.setAttribute("id", arr[i].id)
-                b.innerHTML = "<strong>" + arr[i].name.substr(0, val.length) + "</strong>";/*make the matching letters bold:*/
-                b.innerHTML += arr[i].name.substr(val.length);
-                b.innerHTML += "<input type='hidden' value='" + arr[i].name + "'>";
+                b.innerHTML = "<strong>" + (arr[i].name + "").substr(0, val.length) + "</strong>";/*make the matching letters bold:*/
+                b.innerHTML += (arr[i].name + "").substr(val.length);
+                b.innerHTML += "<input type='hidden' value='" + (arr[i].name + "") + "'>";
                 b.addEventListener("click", function (e) {
                     inp.value = this.getElementsByTagName("input")[0].value;
                     document.getElementById("wsop_add_id_cliente").value = this.getAttribute("id");

@@ -1,9 +1,10 @@
 
 const _DB = {
+    id: "INT PRIMARY KEY AUTO_INCREMENT",
     id_os: "INT",
     id_produtos: "INT",
     obs: "MEDIUMTEXT",
-    img: "TEXT",
+    qnt: "INT",
     createdIn: "BIGINT",
     createdBy: "INT",
     deactivatedIn: "BIGINT",

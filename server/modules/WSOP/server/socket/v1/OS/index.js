@@ -43,6 +43,37 @@ class Socket {
                         data: res
                     })
                 }).catch((err) => {
+                    this._log.error("On Listing OS")
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            })
+        })
+
+
+        /**
+         * Reload Edt os
+         */
+        socket.on("wsop/os/lst/edt", (req) => {
+            this._myself.checkPermission("WSOP/menu/os").then(() => {
+                this._OsClass.ListAll(req[0].id).then((res) => {
+                    socket.emit("ClientEvents", {
+                        event: "wsop/os/edt",
+                        data: res[0]
+                    })
+                }).catch((err) => {
+                    this._log.error("On Listing OS")
+                    this._log.error(err);
                     if (!this._myself.isLogged()) {
                         socket.emit("logout", "");
                     }
@@ -85,7 +116,8 @@ class Socket {
                         })
                     })
                 } else {
-                    console.log(req)
+                    this._log.error("On Adding OS")
+                    this._log.error(err);
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -111,23 +143,19 @@ class Socket {
                     }
                     fs.writeFileSync(filepath + name, req[0].stream);
 
-                    this._OsClass.appendAnexo(req[0].id, name, this._myself.myself.id).then(() => {
-
-                        if (req[0].ext == ".png" || req[0].ext == ".jpeg" || req[0].ext == ".gif" || req[0].ext == ".bmp" || req[0].ext == ".png") {
-                            socket.emit("ClientEvents", {
-                                event: "wsop/os/fileuploaded",
-                                data: {
-                                    file: name
-                                }
-                            })
-                        } else {
-                            socket.emit("ClientEvents", {
-                                event: "wsop/os/fileuploaded",
-                                data: {
-                                    file: "../file.png"
-                                }
-                            })
-                        }
+                    let thumb = "os/" + name;
+                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".png") {
+                        thumb = "file.png";
+                    }
+                    this._OsClass.appendAnexo(req[0].id, name, thumb, this._myself.myself.id).then((res) => {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/os/fileuploaded",
+                            data: {
+                                id: "",
+                                file: name,
+                                thumb: thumb,
+                            }
+                        })
                     })
 
                 } catch (err) {
@@ -147,6 +175,120 @@ class Socket {
                 }
             })
 
+        })
+
+        /**
+         * add Produto
+         */
+        socket.on("wsop/os/produto/add", (req) => {
+            this._myself.checkPermission("WSOP/os/add").then(() => {
+                if (req[0].id &&
+                    req[0].qnt
+                ) {
+                    this._OsClass.appendProduto(req[0].id_os, req[0].id, req[0].qnt, req[0].obs, this._myself.myself.id).then((id) => {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/os/produto/added",
+                            data: {
+                            }
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                } else {
+                    this._log.error("On Adding OS")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: "Favor Preencher todos os campos",
+                            time: 1000
+                        }
+                    })
+                }
+            })
+        })
+
+        /**
+         * delete Produto
+         */
+        socket.on("wsop/os/produto/del", (req) => {
+            this._myself.checkPermission("WSOP/os/add").then(() => {
+                if (req[0].id
+                ) {
+                    this._OsClass.delProduto(req[0].id, this._myself.myself.id).then((id) => {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/os/produto/added",
+                            data: {
+                            }
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                } else {
+                    this._log.error("On Adding OS")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: "Favor Preencher todos os campos",
+                            time: 1000
+                        }
+                    })
+                }
+            })
+        })
+
+        //
+
+        /**
+         * Delete Anexo da OS
+         */
+        socket.on("wsop/os/anexo/del", (req) => {
+            this._myself.checkPermission("WSOP/menu/os").then(() => {
+                this._OsClass.delAnexo(req[0].id, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "wsop/os/fileuploaded",
+                        data: {
+                        }
+                    })
+                }).catch((err) => {
+                    this._log.error("On Listing OS")
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            })
         })
 
         /**
@@ -177,7 +319,6 @@ class Socket {
                         })
                     })
                 } else {
-                    console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {

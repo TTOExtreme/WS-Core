@@ -134,15 +134,20 @@
             - [] Pesquisa de CEP
             - [] Pesquisa de CNPJ
     - [] OS/OP
+        - [x] Campo Descrição com wysiwyg
         - [x] Adicionar
+            - [] Abrir editor para adicionar items (anexos/produtos)
         - [x] Editar
         - [x] Excluir (desativar)
         - [] Sistema de Tags
         - [] Cores distintas para cada Status
         - [] campo Expira/ Termino em
-        - [] Anexos
-
+        - [x] Anexos
+        - [x] Produtos com Pesquisa, quantidade, e Observação
+            - [] Criar redução do inventario quando associa;
         - [] Status
             - [] Listas com cada Status (terminais de Produçao)
                 - [] Botão para enviar pedido para o proximo Status
+    - [] Terminais com cada status
+        - [] Botão para passagem para o proximo processo
             

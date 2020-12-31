@@ -19,6 +19,7 @@ class ProdutosStruct {
     id_os;
     name;
     filename;
+    thumb;
     createdIn;
     createdBy;
     deactivatedIn;
@@ -37,6 +38,7 @@ class ProdutosStruct {
             if (os.id_os) { this.id_os = os.id_os }
             if (os.name) { this.name = os.name }
             if (os.filename) { this.filename = os.filename }
+            if (os.thumb) { this.thumb = os.thumb }
             if (os.createdIn) { this.createdIn = os.createdIn }
             if (os.createdBy) { this.createdBy = os.createdBy }
             if (os.deactivatedIn) { this.deactivatedIn = os.deactivatedIn }
@@ -53,6 +55,7 @@ const _DB = {
     id_os: "INT",
     name: "VARCHAR(200)",
     filename: "VARCHAR(600)",
+    thumb: "VARCHAR(600)",
     createdIn: "BIGINT",
     createdBy: "INT",
     deactivatedIn: "BIGINT",

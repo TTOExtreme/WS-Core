@@ -21,6 +21,11 @@ class ProdutosManipulator {
             " WHERE C.active=1;");
     }
 
+    ListAllOs() {
+        return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory, C.img FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
+            " WHERE C.active=1;");
+    }
+
     /**
      * Criar Cliente
      * @param {String} name 

@@ -4,6 +4,8 @@ ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
+    "./js/libs/suneditor.min.js",
+    "./css/screen/suneditor.min.css",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/del.js",
@@ -108,14 +110,15 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
+                console.log(data)
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
             }
         });
 
-        ClientEvents.on("system/added/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/added/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Adicionada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
     }
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
