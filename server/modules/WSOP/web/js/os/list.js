@@ -7,6 +7,7 @@ ClientEvents.emit("LoadExternal", [
     "./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
     "./module/WSOP/js/utils/osStatus.js",
+    "./module/WSOP/js/os/anexo.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/os/edt.js",
@@ -116,7 +117,7 @@ window.UserList = class UserList {
             }
         });
 
-        ClientEvents.on("system/added/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Adicionada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
         ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
         ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
     }

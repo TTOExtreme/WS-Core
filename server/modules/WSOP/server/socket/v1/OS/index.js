@@ -2,6 +2,7 @@ const osManipulator = require('./dbManipulator').osManipulator;
 const fs = require('fs');
 const path = require('path').join;
 const BCypher = require('../../../../../../core/utils/bcypher').Bcypher;
+const imageManipulator = require('../utils/ImageManipulator').ImageManipulator;
 
 class Socket {
 
@@ -21,6 +22,7 @@ class Socket {
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
         this._OsClass = new osManipulator(WSMainServer);
+        this._imageClass = new imageManipulator();
     }
 
     /**
@@ -72,7 +74,7 @@ class Socket {
                         data: res[0]
                     })
                 }).catch((err) => {
-                    this._log.error("On Listing OS")
+                    this._log.error("On getting OS: " + req[0].id)
                     this._log.error(err);
                     if (!this._myself.isLogged()) {
                         socket.emit("logout", "");
@@ -94,39 +96,26 @@ class Socket {
          */
         socket.on("wsop/os/add", (req) => {
             this._myself.checkPermission("WSOP/os/add").then(() => {
-                if (req[0].id_cliente &&
-                    req[0].status
-                ) {
-                    this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, req[0].active, this._myself.myself.id).then((id) => {
-                        socket.emit("ClientEvents", {
-                            event: "system/added/os",
-                            data: id
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
-                        }
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
-                            }
-                        })
+                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, req[0].active, this._myself.myself.id).then((results) => {
+                    socket.emit("ClientEvents", {
+                        event: "system/added/os",
+                        data: { id: results.insertId }
                     })
-                } else {
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
                     this._log.error("On Adding OS")
                     this._log.error(err);
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
-                            status: "INFO",
-                            mess: "Favor Preencher todos os campos",
+                            status: "ERROR",
+                            mess: err,
                             time: 1000
                         }
                     })
-                }
+                })
             })
         })
 
@@ -146,18 +135,40 @@ class Socket {
                     let thumb = "os/" + name;
                     if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".png") {
                         thumb = "file.png";
-                    }
-                    this._OsClass.appendAnexo(req[0].id, name, thumb, this._myself.myself.id).then((res) => {
-                        socket.emit("ClientEvents", {
-                            event: "wsop/os/fileuploaded",
-                            data: {
-                                id: "",
-                                file: name,
-                                thumb: thumb,
+                    } else {
+                        this._imageClass.thumb(filepath + name, (filepath + name).replace(".", "_thumb."), 300, 170).then(() => {
+                            this._OsClass.appendAnexo(req[0].id, name, thumb, this._myself.myself.id).then((res) => {
+                                socket.emit("ClientEvents", {
+                                    event: "wsop/os/fileuploaded",
+                                    data: {
+                                        id: "",
+                                        file: name,
+                                        thumb: thumb,
+                                    }
+                                })
+                            })
+
+                        }).catch((err) => {
+                            if (err == "Timeout") {
+                                socket.emit("ClientEvents", {
+                                    event: "wsop/os/fileuploaded",
+                                    data: {}
+                                })
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "ERROR",
+                                        mess: err,
+                                        time: 1000
+                                    }
+                                })
+                            } else {
+                                this._log.error("On creating thumbnail to Product")
+                                this._log.error("Check instalation of ImageMagick and GraphicsMagick in server\nyum install GraphicsMagick ImageMagick\n");
+                                this._log.error(err);
                             }
                         })
-                    })
-
+                    }
                 } catch (err) {
                     if (!this._myself.isLogged()) {
                         socket.emit("logout", "");

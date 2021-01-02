@@ -123,6 +123,7 @@
         - [x] Excluir (desativar)
     - [x] Produtos
         // para cada modelo e tamanho cadastrar como item diferente EX. Camisa Manga Longa Tamanho P
+        // uso de estilo PBS (Product Based System)
         - [x] Adicionar
         - [x] Editar
         - [x] Excluir (desativar)
@@ -133,10 +134,10 @@
         - [] Cadastro
             - [] Pesquisa de CEP
             - [] Pesquisa de CNPJ
-    - [] OS/OP
+    - [x] OS/OP
         - [x] Campo Descrição com wysiwyg
         - [x] Adicionar
-            - [] Abrir editor para adicionar items (anexos/produtos)
+            - [x] Abrir editor para adicionar items (anexos/produtos)
         - [x] Editar
         - [x] Excluir (desativar)
         - [] Sistema de Tags
@@ -151,3 +152,8 @@
     - [] Terminais com cada status
         - [] Botão para passagem para o proximo processo
             
+        31/12 - Anexos nas oss e Produtos de cada uma
+        02/01 - Thumbnails/anexos
+        03/01 - telas/terminais com passagem de serviço para o proximo status
+        04/01 - Visualizador de OS/Impressão / Cadastro de Emissor
+        05/01 - Telas para celular (CSS)

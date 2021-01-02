@@ -25,13 +25,41 @@ ClientEvents.on("WSOP/os/add", () => {
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' value='" + data.cliente + "'></td></tr>" +
         "<tr style='display:none;'><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + StatusIdToOptList(data.status) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_description' type='text' value='" + data.description + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_add_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"WSOP/os/save\")' accept='image/gif, image/jpeg, image/png'></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
+
+    const editor = SUNEDITOR.create((document.getElementById('wsop_add_description') || 'wsop_add_description'), {
+        width: "calc(100vw - 200px)",
+        buttonList: [
+            ['font', 'fontSize'],
+            ['bold', 'underline', 'italic'],
+            ['fontColor', 'hiliteColor'],
+            ['outdent', 'indent'],
+            ['align', 'horizontalRule', 'list', 'lineHeight'],
+            ['table', 'link'],
+            ['fullScreen', 'showBlocks', 'codeView']
+        ],
+        colorList: [
+            '#ff0000', '#ff5e00', '#ffe400', '#abf200', '#00d8ff', '#0055ff', '#6600ff', '#ff00dd', '#000000',
+            '#ffd8d8', '#fae0d4', '#faf4c0', '#e4f7ba', '#d4f4fa', '#d9e5ff', '#e8d9ff', '#ffd9fa', '#f1f1f1',
+            '#ffa7a7', '#ffc19e', '#faed7d', '#cef279', '#b2ebf4', '#b2ccff', '#d1b2ff', '#ffb2f5', '#bdbdbd',
+            '#f15f5f', '#f29661', '#e5d85c', '#bce55c', '#5cd1e5', '#6699ff', '#a366ff', '#f261df', '#8c8c8c',
+            '#980000', '#993800', '#998a00', '#6b9900', '#008299', '#003399', '#3d0099', '#990085', '#353535',
+            '#670000', '#662500', '#665c00', '#476600', '#005766', '#002266', '#290066', '#660058', '#222222'
+        ],
+        lineHeights: [
+            { text: '1', value: 1 },
+            { text: '1.15', value: 1.15 },
+            { text: '1.5', value: 1.5 },
+            { text: '2', value: 2 }
+        ],
+    });
+    editor.onChange = function (contents, core) { document.getElementById("wsop_add_description").innerHTML = contents; }
     ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
 });
 

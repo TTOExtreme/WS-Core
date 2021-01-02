@@ -1,31 +1,31 @@
 
 ClientEvents.on("wsop/os/edt", (data) => {
-    ClientEvents.emit("WSOP/os/close");
+    ClientEvents.emit("WSOP/os/edt/close");
     console.log(data);
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_add_div");
-    div.setAttribute("id", "wsop_add_div");
+    div.setAttribute("class", "wsop_edt_div");
+    div.setAttribute("id", "wsop_edt_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/close\")'>X</p></td></tr>" +
-        "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_add_id' type='text' disabled value='" + data.id + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_add_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + StatusIdToOptList(data.status) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_edt_closeButton' onclick='ClientEvents.emit(\"WSOP/os/edt/close\")'>X</p></td></tr>" +
+        "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status'>" + StatusIdToOptList(data.status) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>" +
         "</table><hr>" +
         "<table style='width:100%'><tbody id='wsop_edt_anexos' class='wsop_edt_anexos'>" +
-        "<tr><td colspan=4><p class='wsop_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p><input id='wsop_add_img' style='float:right' type='button' value='Adicionar' onclick='ClientEvents.emit(\"wsop/os/uploadIMG\",\"" + data.id + "\")'></td></tr>" +
+        "<tr><td colspan=4><p class='wsop_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p><input id='wsop_edt_img' style='float:right' type='button' value='Adicionar' onclick='ClientEvents.emit(\"wsop/os/uploadIMG\",\"" + data.id + "\")'></td></tr>" +
         "</table><hr>" +
         "<table style='width:100%; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
         "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
-        "<tr><td colspan=4><input id='wsop_add_produto' placeholder='Produto' type='text'><input id='wsop_add_id_produto' style='display:none' type='text'><input id='wsop_add_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'></td></tr>" +
-        "<tr><td colspan=4><textarea id='wsop_add_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
+        "<tr><td colspan=4><input id='wsop_edt_produto' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'></td></tr>" +
+        "<tr><td colspan=4><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
         "<tr><td colspan=4 style='height:20px'>  </td></tr>" +
         "</table>";
 
@@ -34,7 +34,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
     let anexosTable = document.getElementById("wsop_edt_anexos");
     let htm = "";
     data.anexos.forEach((anexo, index) => {
-        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td class='wsop_anexo_item'><input value='Excluir' type='button' onclick='ClientEvents.emit(\"SendSocket\",\"wsop/os/anexo/del\", {id:" + anexo.id + "})'><img class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb.replace(".", "_thumb.") + "'></td>";
     });
     anexosTable.innerHTML += htm;
 
@@ -46,7 +46,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td><td><img id='wsop_add_img_thumb' class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/" + produto.img + "'></td>";
+            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td><td><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img + "'></td>";
     });
     produtosTable.innerHTML += htm;
 
@@ -58,7 +58,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
     ClientEvents.on("wsop/os/produto/added", () => {
         ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data.id });
     })
-    const editor = SUNEDITOR.create((document.getElementById('wsop_add_description') || 'wsop_add_description'), {
+    const editor = SUNEDITOR.create((document.getElementById('wsop_edt_description') || 'wsop_edt_description'), {
         width: "calc(100vw - 200px)",
         buttonList: [
             ['font', 'fontSize'],
@@ -84,8 +84,8 @@ ClientEvents.on("wsop/os/edt", (data) => {
             { text: '2', value: 2 }
         ],
     });
-    editor.onChange = function (contents, core) { document.getElementById("wsop_add_description").innerHTML = contents; }
-    const editor1 = SUNEDITOR.create((document.getElementById('wsop_add_description_produto') || 'wsop_add_description_produto'), {
+    editor.onChange = function (contents, core) { document.getElementById("wsop_edt_description").innerHTML = contents; }
+    const editor1 = SUNEDITOR.create((document.getElementById('wsop_edt_description_produto') || 'wsop_edt_description_produto'), {
         width: "calc(100%)",
         buttonList: [
             ['font', 'fontSize'],
@@ -111,16 +111,22 @@ ClientEvents.on("wsop/os/edt", (data) => {
             { text: '2', value: 2 }
         ],
     });
-    editor1.onChange = function (contents, core) { document.getElementById("wsop_add_description_produto").innerHTML = contents; }
+    editor1.onChange = function (contents, core) { document.getElementById("wsop_edt_description_produto").innerHTML = contents; }
     ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
+});
+
+ClientEvents.on("WSOP/os/edt/close", () => {
+    if (document.getElementById("wsop_edt_div")) {
+        document.body.removeChild(document.getElementById("wsop_edt_div"));
+    }
 });
 
 ClientEvents.on("WSOP/os/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edt", {
-        id: document.getElementById("wsop_add_id").value,
-        description: document.getElementById("wsop_add_description").innerHTML,
-        status: document.getElementById("wsop_add_status").value,
-        active: document.getElementById("wsop_add_active").checked,
+        id: document.getElementById("wsop_edt_id").value,
+        description: document.getElementById("wsop_edt_description").innerHTML,
+        status: document.getElementById("wsop_edt_status").value,
+        active: document.getElementById("wsop_edt_active").checked,
     });
 })
 
@@ -134,7 +140,7 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
             let ext = input.files[0].name.substring(input.files[0].name.lastIndexOf("."));
 
             let tr = document.createElement("tr");
-            tr.innerHTML = "<td class='wsop_edt_label'><input id='wpma_anexo_del' value='Excluir' type='button' ></td><td><img id='wsop_add_img_thumb' class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/loading.gif'></td>";
+            tr.innerHTML = "<td><div class='wsop_anexo_item'><input value='Excluir' type='button' ><img class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/loading.gif'><div></td>";
             document.getElementById("wsop_edt_anexos").appendChild(tr);
 
             sender.onload = function (e) {
@@ -148,17 +154,17 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
 
 ClientEvents.on("wsop/os/produto/add", () => {
     let data = {
-        id: document.getElementById("wsop_add_id_produto").value | "",
-        id_os: document.getElementById("wsop_add_id").value | "",
-        qnt: document.getElementById("wsop_add_qnt_produto").value | "",
-        obs: document.getElementById("wsop_add_description_produto").innerHTML
+        id: document.getElementById("wsop_edt_id_produto").value | "",
+        id_os: document.getElementById("wsop_edt_id").value | "",
+        qnt: document.getElementById("wsop_edt_qnt_produto").value | "",
+        obs: document.getElementById("wsop_edt_description_produto").innerHTML
     }
     ClientEvents.emit("SendSocket", "wsop/os/produto/add", data)
 })
 
 
 ClientEvents.on("wsop/os/produtos/lst", (arr) => {
-    let inp = document.getElementById("wsop_add_produto");
+    let inp = document.getElementById("wsop_edt_produto");
     var currentFocus;
 
 
@@ -206,7 +212,7 @@ ClientEvents.on("wsop/os/produtos/lst", (arr) => {
                 b.innerHTML += "<input type='hidden' value='" + (name + " | Estoque(" + arr[i].inventory + ")") + "'>";
                 b.addEventListener("click", function (e) {
                     inp.value = this.getElementsByTagName("input")[0].value;
-                    document.getElementById("wsop_add_id_produto").value = this.getAttribute("id");
+                    document.getElementById("wsop_edt_id_produto").value = this.getAttribute("id");
                     closeAllLists();
                 });
                 a.appendChild(b);
