@@ -128,12 +128,12 @@
         - [x] Editar
         - [x] Excluir (desativar)
         - [x] Imagem associada
-            - [] Thumbnails com diferentes resoluções
-            - [] Fix Endereço salvo no BD para somente nome do arquivo
-    - [] Emitente
-        - [] Cadastro
-            - [] Pesquisa de CEP
-            - [] Pesquisa de CNPJ
+            - [x] Thumbnails com diferentes resoluções
+            - [x] Fix Endereço salvo no BD para somente nome do arquivo
+    - [x] Emitente
+        - [x] Cadastro
+            - [x] Pesquisa de CEP
+            - [x] Pesquisa de CNPJ
     - [x] OS/OP
         - [x] Campo Descrição com wysiwyg
         - [x] Adicionar
@@ -152,8 +152,7 @@
     - [] Terminais com cada status
         - [] Botão para passagem para o proximo processo
             
-        31/12 - Anexos nas oss e Produtos de cada uma
-        02/01 - Thumbnails/anexos
-        03/01 - telas/terminais com passagem de serviço para o proximo status
-        04/01 - Visualizador de OS/Impressão / Cadastro de Emissor
-        05/01 - Telas para celular (CSS)
+    - [] Fix
+        - [] Editar produto não carrega a imagem de thumbnail
+        - [] Tamanho da tela de Edt Os incoerente com a tela do computador
+        

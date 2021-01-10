@@ -73,3 +73,7 @@ footer p {
 .move_menu:active {
     cursor: grabbing;
 }
+
+.menu_header {
+    background-color: #30303030;
+}

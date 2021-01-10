@@ -127,6 +127,7 @@ class Socket {
                 try {
                     let name = new BCypher().generate_salt(48) + req[0].ext;
                     let filepath = path(__dirname + "/../../../../web/img/os/")
+                    if (!fs.existsSync(filepath)) { fs.mkdirSync(filepath); }
                     while (fs.existsSync(filepath + name)) { // necessario para criar arquivo com nome unico
                         name = new BCypher().generate_salt(48) + req[0].ext;
                     }
@@ -134,14 +135,26 @@ class Socket {
 
                     let thumb = "os/" + name;
                     if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".png") {
-                        thumb = "file.png";
+                        thumb = "file_thumb.png";
+                        this._OsClass.appendAnexo(req[0].id, req[0].name, "os/" + name, thumb, this._myself.myself.id).then((res) => {
+                            socket.emit("ClientEvents", {
+                                event: "wsop/os/fileuploaded",
+                                data: {
+                                    id: req[0].id,
+                                    file: name,
+                                    thumb: thumb,
+                                }
+                            })
+                        })
                     } else {
-                        this._imageClass.thumb(filepath + name, (filepath + name).replace(".", "_thumb."), 300, 170).then(() => {
-                            this._OsClass.appendAnexo(req[0].id, name, thumb, this._myself.myself.id).then((res) => {
+                        thumb = (filepath + name).replace(".", "_thumb.");
+                        this._imageClass.thumb(filepath + name, thumb, 300, 170).then(() => {
+                            thumb = ("os/" + name).replace(".", "_thumb.");
+                            this._OsClass.appendAnexo(req[0].id, req[0].name, "os/" + name, thumb, this._myself.myself.id).then((res) => {
                                 socket.emit("ClientEvents", {
                                     event: "wsop/os/fileuploaded",
                                     data: {
-                                        id: "",
+                                        id: req[0].id,
                                         file: name,
                                         thumb: thumb,
                                     }

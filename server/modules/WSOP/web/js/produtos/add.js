@@ -1,5 +1,5 @@
 ClientEvents.on("WSOP/produtos/add", () => {
-    ClientEvents.emit("WSOP/produtos/close");
+    ClientEvents.emit("WSOP/produtos/add/close");
     let data = {
         name: "",
         description: "",
@@ -20,7 +20,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/produtos/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/produtos/add/close\")'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_description' type='text' value='" + data.description + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_add_barcode' type='text'value='" + data.barcode + "'></td></tr>" +
@@ -38,7 +38,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
 });
 //ClientEvents.emit("WSOP/produtos/add")
 
-ClientEvents.on("WSOP/produtos/close", () => {
+ClientEvents.on("WSOP/produtos/add/close", () => {
     if (document.getElementById("wsop_add_div")) {
         document.body.removeChild(document.getElementById("wsop_add_div"));
     }
@@ -53,7 +53,7 @@ ClientEvents.on("WSOP/produtos/save", () => {
         price: document.getElementById("wsop_add_price").value,
         cost: document.getElementById("wsop_add_cost").value,
         inventory: document.getElementById("wsop_add_inventory").value,
-        img: document.getElementById("wsop_add_img_thumb").src,
+        img: document.getElementById("wsop_add_img_thumb").getAttribute("loc"),
         active: document.getElementById("wsop_add_active").checked,
     });
     /**
@@ -68,11 +68,12 @@ ClientEvents.on("uploadIMG", () => {
         if (input.files && input.files[0]) {
             var sender = new FileReader();
             let ext = input.files[0].name.substring(input.files[0].name.lastIndexOf("."));
+            let name = input.files[0].name.substring(0, input.files[0].name.lastIndexOf("."));
 
             let img = document.getElementById("wsop_add_img_thumb")
             img.setAttribute('src', "./module/WSOP/img/loading.gif")
             sender.onload = function (e) {
-                ClientEvents.emit("SendSocket", "wsop/produtos/file", { ext: ext, stream: e.target.result })
+                ClientEvents.emit("SendSocket", "wsop/produtos/file", { name: name, ext: ext, stream: e.target.result })
             };
 
             sender.readAsArrayBuffer(input.files[0]);
@@ -81,5 +82,7 @@ ClientEvents.on("uploadIMG", () => {
 })
 ClientEvents.on("wsop/produtos/fileuploaded", (data) => {
     let img = document.getElementById("wsop_add_img_thumb")
-    img.setAttribute('src', data.file)
+    img.setAttribute('src', "./module/WSOP/img/" + data.file)
+    img.setAttribute('loc', data.file)
+    img.setAttribute('onclick', "ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: "", thumb: data.file }) + ")")
 })

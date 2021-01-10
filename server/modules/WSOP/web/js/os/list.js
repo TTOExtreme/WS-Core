@@ -7,7 +7,7 @@ ClientEvents.emit("LoadExternal", [
     "./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
     "./module/WSOP/js/utils/osStatus.js",
-    "./module/WSOP/js/os/anexo.js",
+    "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/os/edt.js",

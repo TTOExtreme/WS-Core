@@ -7,6 +7,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/produtos/add.js",
     "./module/WSOP/js/produtos/del.js",
     "./module/WSOP/js/produtos/edt.js",
+    "./module/WSOP/js/produtos/view.js",
     "./module/WSOP/css/index.css"
 ], () => { }, false)
 

@@ -19,7 +19,7 @@ class osManipulator {
         return this.db.query("SELECT OS.*, U.name as createdBy, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
-            " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : "") + " ;").then((list) => {
+            " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : ";") + " ;").then((list) => {
                 let allProm = [];
                 let result = [];
                 list.forEach(item => {
@@ -106,12 +106,12 @@ class osManipulator {
      * @param {*} thumb 
      * @param {*} UserID 
      */
-    appendAnexo(ID, filename, thumb, UserID) {
+    appendAnexo(ID, name, filename, thumb, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_OSAnexos " +
-            " (id_os, filename, thumb, active, createdBy, createdIn)" +
+            " (id_os, name, filename, thumb, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + ID + "','" + filename + "','" + thumb + "',1," + UserID + "," + Date.now() + ");");
+            " ('" + ID + "','" + name + "','" + filename + "','" + thumb + "',1," + UserID + "," + Date.now() + ");");
     }
 
     /**
