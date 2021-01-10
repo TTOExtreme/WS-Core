@@ -58,6 +58,7 @@
             Running.js <-- Executar ao termino das inicializações
             Stop.js <-- Executar ao desligar o servidor
     - [x] Criar cache de dados dos modulos
+    - [x] Adicionado Email e Telefone para o Usuário
 
 
 //Modulo IPMA
@@ -153,6 +154,6 @@
         - [] Botão para passagem para o proximo processo
             
     - [] Fix
-        - [] Editar produto não carrega a imagem de thumbnail
-        - [] Tamanho da tela de Edt Os incoerente com a tela do computador
+        - [x] Editar produto não carrega a imagem de thumbnail
+        - [x] Tamanho da tela de Edt Os incoerente com a tela do computador
         

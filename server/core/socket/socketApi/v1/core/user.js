@@ -205,7 +205,7 @@ class Socket {
          */
         socket.on("adm/usr/add/save", (data) => {
             this._myself.checkPermission("adm/usr/add").then(() => {
-                this._userServer.createUser(data[0].id_user, data[0].name, data[0].username, data[0].pass, data[0].active, this._myself.myself.id).then(() => {
+                this._userServer.createUser(data[0].id_user, data[0].name, data[0].username, data[0].pass, data[0].email, data[0].telefone, data[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -236,7 +236,7 @@ class Socket {
          */
         socket.on("adm/usr/edt/save", (data) => {
             this._myself.checkPermission("adm/usr/edt").then(() => {
-                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, this._myself.myself.id).then(() => {
+                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, data[0].email, data[0].telefone, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {

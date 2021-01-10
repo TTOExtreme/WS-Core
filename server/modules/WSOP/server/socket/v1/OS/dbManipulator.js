@@ -16,7 +16,7 @@ class osManipulator {
      * Lista todos os Clientes cadastrados sem filtro
      */
     ListAll(id = "") {
-        return this.db.query("SELECT OS.*, U.name as createdBy, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+        return this.db.query("SELECT OS.*, U.name as createdBy, U.email as U_email, U.telefone as U_telefone, C.name as cliente, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
             " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : ";") + " ;").then((list) => {
@@ -25,7 +25,7 @@ class osManipulator {
                 list.forEach(item => {
                     allProm.push(new Promise((resolve, reject) => {
                         return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._WSOP_OSAnexos  WHERE active=1 AND id_os=" + item.id + ";").then(anexos => {
-                            return this.db.query("SELECT R.*, P.name, P.barcode,P.img FROM " + this.db.DatabaseName + ".rlt_Produtos_OS AS R " +
+                            return this.db.query("SELECT R.*, P.name, P.barcode,P.img,P.price FROM " + this.db.DatabaseName + ".rlt_Produtos_OS AS R " +
                                 " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Produtos as P on P.id = R.id_produtos " +
                                 " WHERE R.active=1 AND R.id_os=" + item.id + ";").then(produtos => {
                                     let it = item;

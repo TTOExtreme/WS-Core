@@ -1,7 +1,6 @@
 
 ClientEvents.on("wsop/os/edt", (data) => {
     ClientEvents.emit("WSOP/os/edt/close");
-    console.log(data);
     /**
      * create Show Page for user info
      */
@@ -165,6 +164,7 @@ ClientEvents.on("wsop/os/produto/add", () => {
 
 ClientEvents.on("wsop/os/produtos/lst", (arr) => {
     let inp = document.getElementById("wsop_edt_produto");
+    if (inp == undefined) return;
     var currentFocus;
 
 

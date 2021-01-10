@@ -388,7 +388,22 @@ class Socket {
          */
         socket.on("wsop/lst/os/ctx", (req) => {
             let itemList = [];
-
+            itemList.push({
+                name: "Visualizar",
+                active: true,
+                event: {
+                    call: "wsop/os/view",
+                    data: req[0].row
+                }
+            });
+            itemList.push({
+                name: "Imprimir",
+                active: true,
+                event: {
+                    call: "wsop/os/print",
+                    data: req[0].row
+                }
+            });
             //*/
             if (this._myself.checkPermissionSync("WSOP/os/edt")) {
                 itemList.push({

@@ -36,6 +36,7 @@
 
 .wsop_add_div {
     color: white;
+    font-family: sans-serif;
     position: absolute;
     background: var(--menu-bg);
     top: 50vh;
@@ -55,6 +56,8 @@
 }
 
 .wsop_edt_div {
+    color: white;
+    font-family: sans-serif;
     position: absolute;
     background: var(--menu-bg);
     top: 50vh;
@@ -68,6 +71,9 @@
     overflow-x: hidden;
     border: 1px solid #606060;
     height: calc(100vh - 90px);
+}
+.wsop_edt_div p{
+    margin: 0;
 }
 
 .wsop_add_closeButton {

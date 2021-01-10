@@ -17,8 +17,8 @@ if (window.UserList) { // usa a mesma interface global para todas as listas
 }
 
 ClientEvents.on("wsop/emitente/add", (data) => {
+    window.Emitente = data;
     ClientEvents.emit("WSOP/emitente/close");
-    console.log(data)
     /**
      * create Show Page for user info
      */
@@ -42,7 +42,7 @@ ClientEvents.on("wsop/emitente/add", (data) => {
         "<tr><td class='wsop_edt_label'>Estado:</td><td><input id='wsop_add_uf' type='text' value='" + data.uf + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Telefone:</td><td><input id='wsop_add_telefone' type='text' value='" + data.telefone + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>E-Mail:</td><td><input id='wsop_add_email' type='text' value='" + data.email + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Logo:</td><td><img id='wsop_add_img_thumb' class='wsop_add_img_thumb' alt='' src='module/WSOP/img/" + data.img.replace(".", "_thumb.") + "' loc='" + data.img + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Logo:</td><td><img id='wsop_add_img_thumb' class='wsop_add_img_thumb' alt='' src='module/WSOP/img/" + data.img + "' loc='" + data.img + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'></td><td><input id='wsop_add_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")' value='" + data.img + "'></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/emitente/save\")'></td></tr>" +

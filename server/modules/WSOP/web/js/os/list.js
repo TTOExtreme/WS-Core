@@ -3,15 +3,23 @@ ClientEvents.clearAll();
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
+//load emitente Data
+ClientEvents.on("wsop/emitente/add", (data) => { window.Emitente = data; });
+ClientEvents.emit("SendSocket", "wsop/emitente/lst");
+
+
 ClientEvents.emit("LoadExternal", [
     "./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/os/add.js",
+    "./module/WSOP/js/os/view.js",
+    "./module/WSOP/js/os/print.js",
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/os/edt.js",
-    "./module/WSOP/css/index.css"
+    "./module/WSOP/css/index.css",
+    "./module/WSOP/css/print.css"
 ], () => {
     new window.UserList();
 }, false)
@@ -111,7 +119,6 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
-                console.log(data)
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
             }
