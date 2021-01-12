@@ -9,6 +9,7 @@ class UserStruct {
     lastConnection;
     lastTry;
     lastIp;
+    permissions;
 
     /**
      * converte um JSON para o objeto USER
@@ -40,7 +41,20 @@ class UserStruct {
             if (user.lastIp) {
                 this.lastIp = user.lastIp
             }
+            if (user.permissions) {
+                this.permissions = user.permissions
+            }
         }
+    }
+
+    checkPermission(permissionCode) {
+        if (this.permissions) {
+            if (this.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined ||
+                this.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
@@ -70,7 +84,7 @@ class Socket {
             reconnection: false,
             transports: ['websocket'],
             cookie: "wscore",
-            forceNew:false
+            forceNew: false
         });
         this.socketInit(this);
     }
@@ -119,7 +133,7 @@ class Socket {
                     })
                 }
             });
-            ClientEvents.on("Logout",()=>{
+            ClientEvents.on("Logout", () => {
                 SocketClass._clearCookies();
                 window.location.assign("./login");
             })
@@ -240,7 +254,7 @@ class Socket {
         routes[route] = callback;
     }
     _clearCookies() {
-        
+
         document.cookie = "wscore=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         //*/
     }

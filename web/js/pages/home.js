@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js",
         "./js/screen/topMenu.js",
-        "./js/screen/contextCreator.js"
+        "./js/screen/contextCreator.js",
+        "./js/core/user/changepass.js"
     ]).then(() => {
         ClientEvents.setCoreEvent("LoadExternal");
         ClientEvents.on("LoadExternal", (list, callback, refreshOnError = true, index = 5) => {

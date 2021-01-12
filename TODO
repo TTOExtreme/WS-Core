@@ -17,7 +17,7 @@
         - [x] Desativar
         - [x] Remover
         - [x] Atribuir Grupo
-        - [] Alterar senha
+        - [x] Alterar senha
     - [x] Aba Grupos
         // mudar modo de mostrar os grupos (somente o associado como pai)
         // corrigir hierarchy
@@ -32,11 +32,13 @@
         - [x] Logica de hierarquia
         - [] Lista de usuários no grupo
     - [] Interface Cliente
-        - [] Trocar a propria senha
-        - [] Ultimo Ip Conectado
-        - [] Ultimo login
+        - [x] Trocar a propria senha
+        - [x] Ultimo Ip Conectado
+        - [x] Ultimo login
         - [] Preferencias
         - [] Acesso Rapido / Favoritos
+    - [x] Alterar Creditos
+        - [x] Direito de uso em base GPL 3.0
 
 
 

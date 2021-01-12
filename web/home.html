@@ -74,6 +74,20 @@
                     <td class="LeftMenu-UserMenu-title">Ultimo Login:</td>
                     <td class="LeftMenu-UserMenu-info" id="LMU-LastLogin"></td>
                 </tr>
+                <tr id='LMI-ChangePassButton' style='display: none;'>
+                    <td colspan="2" class="LeftMenu-UserMenu-title">
+                        <center>
+                            <input type="button" onclick="ClientEvents.emit('usr/edt/pass')" value="AlterarSenha">
+                        </center>
+                    </td>
+                </tr>
+                <tr id='LMI-PreferencesButton' style='display: none;'>
+                    <td colspan="2" class="LeftMenu-UserMenu-title">
+                        <center>
+                            <input type="button" onclick="ClientEvents.emit('usr/edt/pass')" value="Preferencias">
+                        </center>
+                    </td>
+                </tr>
             </Table>
         </div>
     </aside>
@@ -83,7 +97,7 @@
     </div>
 
     <footer id="Credits_Holder">
-        <p>Criado e desenvolvido por Departamento de T.I./S.A.I. PMV - 2020</p>
+        <p>Criado e desenvolvido por Lucas R.Camarotto 2020-2021</p>
     </footer>
 
     <div>

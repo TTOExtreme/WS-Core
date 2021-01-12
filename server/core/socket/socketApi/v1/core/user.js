@@ -263,6 +263,35 @@ class Socket {
         })
 
         /**
+         * User ChangePass
+         */
+        socket.on("usr/edt/pass", (data) => {
+            this._myself.checkPermission("def/usr/chgpass").then(() => {
+                this._myself.changePass(data[0].pass).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Alterado com sucesso",
+                            status: "OK"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
          * User Disable
          */
         socket.on("adm/usr/disable/save", (data) => {
