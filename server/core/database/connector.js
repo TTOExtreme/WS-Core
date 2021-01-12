@@ -40,6 +40,8 @@ class DBConnector {
                     rows.forEach(element => {
                         data.push(JSON.parse(JSON.stringify(element)));
                     });
+                if (rows.insertId)
+                    data = rows;
                 resolve(data);
             })
         })

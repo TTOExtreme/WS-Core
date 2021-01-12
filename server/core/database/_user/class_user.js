@@ -152,13 +152,13 @@ class User {
         let ud = JSON.parse(this.myself.toString());
         delete ud.password;
         delete ud.salt;
-        delete ud.createdBy;
-        delete ud.deactivatedBy;
-        delete ud.deactivatedIn;
-        delete ud.active;
-        delete ud.connected;
-        delete ud.id;
-        delete ud.permissions;
+        //delete ud.createdBy;
+        //delete ud.deactivatedBy;
+        //delete ud.deactivatedIn;
+        //delete ud.active;
+        //delete ud.connected;
+        //delete ud.id;
+        //delete ud.permissions;
         return (ud);
     }
 
@@ -376,7 +376,7 @@ class User {
                 let gs = new Group_Server.Group(this._WSMainServer)
                 return gs.findmeidFromUser(this.myself.id).then((grps) => {
                     //console.log(gs.listGroups());
-                    console.log(grps);
+
                     this.myself.groups = grps;
                     //console.log(this.myself.groups)
                     resolve(this.myself);
@@ -401,7 +401,7 @@ class User {
      * @param {JSON} menus 
      */
     AppendMenus(menus) {
-        this.Menus = this.Menus.concat(this.Menus, menus);
+        this.Menus = this.Menus.concat(menus);
     }
 
     /**
@@ -425,11 +425,11 @@ class User {
         try {
             let _AdmMenus = this._AdmMenus; //create an separeted Instance for each user
             _AdmMenus.forEach((Menu, index, arr) => {
-                if (this.checkPermissionSync(Menu.Id)) {
+                if (this.checkPermissionSync(Menu.Permission)) {
                     Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
-                        if (this.checkPermissionSync(SubMenu.Id)) {
+                        if (this.checkPermissionSync(SubMenu.Permission)) {
                             SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
-                                if (this.checkPermissionSync(TopMenu.Id)) { } else {
+                                if (this.checkPermissionSync(TopMenu.Permission)) { } else {
                                     Toparr.splice(Topindex, 1);
                                 }
                             });
@@ -456,12 +456,14 @@ class User {
         this._AdmMenus.push({
             Name: "Administração",
             Id: "menu/adm",
+            Permission: "menu/adm",
             Icon: "",
             Event: () => { },
             SubItems: [
                 {
                     Name: "Usuários",
                     Id: "menu/adm/usr",
+                    Permission: "menu/adm/usr",
                     Icon: "",
                     EventCall: "Load",
                     EventData: "./js/core/user/list.js",
@@ -469,6 +471,7 @@ class User {
                         {
                             Name: "Adicionar",
                             Id: "menu/adm/usr/add",
+                            Permission: "menu/adm/usr/add",
                             EventCall: "Load",
                             EventData: "./js/core/user/add.js",
                         }
@@ -477,6 +480,7 @@ class User {
                 {
                     Name: "Grupos",
                     Id: "menu/adm/grp",
+                    Permission: "menu/adm/grp",
                     Icon: "",
                     EventCall: "Load",
                     EventData: "./js/core/group/list.js",
@@ -484,6 +488,7 @@ class User {
                         {
                             Name: "Adicionar",
                             Id: "menu/adm/grp/add",
+                            Permission: "menu/adm/grp/add",
                             EventCall: "Load",
                             EventData: "./js/core/group/add.js",
                         }

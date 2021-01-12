@@ -4,6 +4,8 @@ const _DB = [
         name: "Administrador",
         username: "admin",
         password: "admin",
+        email: "wscore@email.com",
+        telefone: "(00) 00000-0000",
         active: 1
     }
 ]

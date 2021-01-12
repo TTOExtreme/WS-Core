@@ -44,7 +44,7 @@ class Bcypher {
      */
     generate_crypt() {
         return rs.generate({
-            charset: 'qwertyuiopasdfghjklçzxcvbnmQWERTYUIOPASDFGHJKLÇZXCVBNM7894561230',
+            charset: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM7894561230',
             length: 32
         }).toString();
     };
@@ -53,10 +53,10 @@ class Bcypher {
      * Generates a hash salt with 4096 Chars 
      * @returns {String} Hash with 4096 Chars
      */
-    generate_salt() {
+    generate_salt(length = 4096) {
         return rs.generate({
-            charset: 'qwertyuiopasdfghjklçzxcvbnmQWERTYUIOPASDFGHJKLÇZXCVBNM7894561230',
-            length: 32
+            charset: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM7894561230',
+            length: length
         }).toString();
     };
 }

@@ -121,7 +121,8 @@ class DatabaseCreator {
                 if (fs.existsSync(__dirname + '/../../../modules/' + mod + '/server/structures/data')) {
                     let datas = fs.readdirSync(__dirname + '/../../../modules/' + mod + '/server/structures/data')
                     datas.forEach((table) => {
-                        let tablename = "_" + table.replace(".js", "").replace("Create", "");
+                        let tablename = table.replace(".js", "").replace("Create", "");
+
                         //if (table.indexOf("_") > -1) { tablename = "rlt_" + table.replace(".js", "").replace("Create", "") }
                         let sql = "INSERT INTO " + this.databasename + "." + tablename + " ";
 
