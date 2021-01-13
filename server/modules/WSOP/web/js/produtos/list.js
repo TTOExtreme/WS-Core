@@ -70,7 +70,7 @@ window.UserList = class UserList {
 
     constructor() {
 
-        if (Myself.checkPermmision("WSOP/cliente/add")) {
+        if (Myself.checkPermission("WSOP/cliente/add")) {
             this.newCollums[0].headerMenu.push(
                 {
                     label: "Cadastrar novo Produto",

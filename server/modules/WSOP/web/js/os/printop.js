@@ -1,16 +1,16 @@
 
-ClientEvents.on("wsop/os/print", (data) => {
-    ClientEvents.emit("WSOP/os/print/close");
+ClientEvents.on("wsop/os/printop", (data) => {
+    ClientEvents.emit("WSOP/os/printop/close");
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
     div.setAttribute("class", "wsop_print_div");
-    div.setAttribute("id", "wsop_print_div");
+    div.setAttribute("id", "wsop_printop_div");
 
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
-        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/print/close\")'>X</p></td></tr></table>" +
+        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/printop/close\")'>X</p></td></tr></table>" +
         "<div id='wsop_print' class='wsop_print'>" +
         "<table style='width:100%;'>" +
         //OS ID
@@ -32,16 +32,20 @@ ClientEvents.on("wsop/os/print", (data) => {
         //cliente
         "<tr><td><b>Cliente:</td><td><b>Responsável:</tr>" +
         "<tr><td style='font-size:10pt'>" + data.cliente + "</td><td style='font-size:10pt'>" + data.createdBy + "</td></tr><tr>" +
-        "<tr><td style='font-size:10pt'>" + data.C_cpf_cnpj + "</td><td style='font-size:10pt'>E-Mail: " + data.U_email + "</td></tr>" +
-        "<tr><td style='font-size:10pt'>" + data.C_logradouro + "," + data.C_numero + " - " + data.C_bairro + " " + data.C_municipio + "-" + data.C_uf + "</td><td style='font-size:10pt'>Tel.: " + data.U_telefone + "</td></tr>" +
-        "<tr><td style='font-size:10pt'>" + data.C_cep + "</td></tr>" +
-        "<tr><td style='font-size:10pt'>Telefone: " + data.C_telefone + " - E-Mail: " + data.C_email + "</td></tr>" +
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
-        "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='wsop_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
+        "<tr><td style='width:70%'>Descrição:</td><td class='wsop_printop_perdas'>Status</td><td class='wsop_printop_perdas'>Responsável</td><td class='wsop_printop_perdas'>Perdas</td></tr>" +
+        "<tr><td class='wsop_produto_item2' style='border:none;width:70%' rowspan=16>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") +
+        "</td><td class='wsop_printop_perdas'>Mockup:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>PDF Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>Calandra:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>Costura:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>Conferencia:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>Embalagem:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td class='wsop_printop_perdas'>Produçao:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_print_anexos' class='wsop_print_anexos'>" +
         "<tr><td colspan=4><p class='wsop_print_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
@@ -49,9 +53,6 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<table style='width: 100%;; border-collapse:collapse'><tbody id='wsop_print_produtos' class='wsop_print_produtos'>" +
         "<tr><td class='wsop_print_label' style='float:left'>Produtos:</td><td></td></tr>" +
         "<tr><td colspan=4 style='height:20px'></td></tr>" +
-        "</table>" +
-        "<table style='width:100%;'>" +
-        "<tr style='font-size:12pt'><b><td><center><pre>Data\n\n_______________________________</td><td><center><pre>Assinatura Cliente\n\n_______________________________</td><td><center><pre>Assinatura Responsável\n\n_______________________________</td></tr><tr>" +
         "</table>" +
         "</div>";
 
@@ -65,7 +66,7 @@ ClientEvents.on("wsop/os/print", (data) => {
     anexosTable.innerHTML += htm;
 
     let produtosTable = document.getElementById("wsop_print_produtos");
-    htm = "<tr class='wsop_produto_item1'><td>Código:</td><td>Item:</td><td>Quantidade:</td><td>Preço Unit.</td><td>SubTotal</td></tr>";
+    htm = "<tr class='wsop_produto_item1'><td>Código:</td><td>Item:</td><td>Quantidade:</td></tr>";
     let total = 0;
     let totalqnt = 0;
     data.produtos.forEach((produto) => {
@@ -75,17 +76,15 @@ ClientEvents.on("wsop/os/print", (data) => {
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<td>R$ " + produto.price + "</td>" +
-            "<td>R$ " + (produto.qnt * produto.price).toFixed(2) + "</td>" +
-            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:50%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
+            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
     });
-    htm += "<tr class='wsop_produto_item1'><td></td><td><b>Qntidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
+    htm += ("<tr class='wsop_produto_item1'><td></td><td><b>Qntidade Total:</td><td><b>" + totalqnt + "</td>")
     produtosTable.innerHTML += htm;
 });
 
-ClientEvents.on("WSOP/os/print/close", () => {
-    if (document.getElementById("wsop_print_div")) {
-        document.body.removeChild(document.getElementById("wsop_print_div"));
+ClientEvents.on("WSOP/os/printop/close", () => {
+    if (document.getElementById("wsop_printop_div")) {
+        document.body.removeChild(document.getElementById("wsop_printop_div"));
     }
 });
 

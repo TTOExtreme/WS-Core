@@ -22,7 +22,13 @@ document.addEventListener("DOMContentLoaded", function (event) {
         ClientEvents.setCoreEvent("LoadExternal");
         ClientEvents.on("LoadExternal", (list, callback, refreshOnError = true, index = 5) => {
             loadExternalFiles(list).then(() => {
-                callback();
+                if (callback != undefined) {
+                    callback();
+                } else {
+                    console.log("Callback Null");
+                    console.log(list)
+                    console.log(index);
+                }
             }).catch((err) => {
                 console.log("An error ocurred when loading external css\nAre you disconnected from internet?")
                 console.log(err);
@@ -32,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     }
                 } else {
                     setTimeout(() => {
-                        ClientEvents.emit("LoadExternal", callback, index - 1);
+                        ClientEvents.emit("LoadExternal", list, callback, index - 1);
                     })
                 }
             })

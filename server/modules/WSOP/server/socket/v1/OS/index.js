@@ -397,10 +397,18 @@ class Socket {
                 }
             });
             itemList.push({
-                name: "Imprimir",
+                name: "Imprimir OS",
                 active: true,
                 event: {
                     call: "wsop/os/print",
+                    data: req[0].row
+                }
+            });
+            itemList.push({
+                name: "Imprimir OP",
+                active: true,
+                event: {
+                    call: "wsop/os/printop",
                     data: req[0].row
                 }
             });

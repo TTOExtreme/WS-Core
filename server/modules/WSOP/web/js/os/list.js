@@ -16,13 +16,14 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/view.js",
     "./module/WSOP/js/os/print.js",
+    "./module/WSOP/js/os/printop.js",
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/os/edt.js",
     "./module/WSOP/css/index.css",
     "./module/WSOP/css/print.css"
 ], () => {
     new window.UserList();
-}, false)
+}, false);
 
 if (window.UserList) { // usa a mesma interface global para todas as listas
     window.UserList = null;
@@ -83,7 +84,7 @@ window.UserList = class UserList {
 
     constructor() {
 
-        if (Myself.checkPermmision("WSOP/os/add")) {
+        if (Myself.checkPermission("WSOP/os/add")) {
             this.newCollums[0].headerMenu.push(
                 {
                     label: "Abrir OS",

@@ -152,10 +152,12 @@
         - [] Status
             - [] Listas com cada Status (terminais de Produçao)
                 - [] Botão para enviar pedido para o proximo Status
+        - [x] Impressão de OS (via do Cliente) e de OP (via da Produção)
     - [] Terminais com cada status
         - [] Botão para passagem para o proximo processo
             
     - [] Fix
         - [x] Editar produto não carrega a imagem de thumbnail
         - [x] Tamanho da tela de Edt Os incoerente com a tela do computador
+        - [] Travamento do Socket quando manda imprimir
         

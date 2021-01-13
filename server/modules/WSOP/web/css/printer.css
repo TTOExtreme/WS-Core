@@ -23,7 +23,7 @@
 
 .wsop_print_label {
     float: right;
-    color:black;
+    color: black;
     height: 20px;
 }
 
@@ -49,7 +49,8 @@
     border: 1px solid #606060;
     height: calc(100vh - 90px);
 }
-.wsop_print_div p{
+
+.wsop_print_div p {
     margin: 0;
 }
 
@@ -104,7 +105,13 @@
     max-width: 250px;
     max-height: 140px;
 }
-.wsop_emissor_logo{
+
+.wsop_emissor_logo {
     max-width: 150px;
     max-height: 90px;
+}
+
+.wsop_printop_perdas {
+    border: 1px solid #000;
+    text-align: center;
 }
