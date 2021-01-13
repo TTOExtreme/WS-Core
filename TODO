@@ -1,8 +1,3 @@
-//Working done on commit
-    Fixed error on reloading same page (user/grp, user/perm, grp/grp,grp/perm)
-    Added grp manager for user
-    Added Col for modified permission associated to group
-
 // Menu Lateral
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
     - [x] Adicionar barra para abrir menu lateral
@@ -17,7 +12,8 @@
         - [x] Desativar
         - [x] Remover
         - [x] Atribuir Grupo
-        - [] Alterar senha
+        - [x] Alterar senha
+        - [] Alteração do botão criação de usuário para um item da tabela
     - [x] Aba Grupos
         // mudar modo de mostrar os grupos (somente o associado como pai)
         // corrigir hierarchy
@@ -31,12 +27,18 @@
         - [x] Atribuir Grupo
         - [x] Logica de hierarquia
         - [] Lista de usuários no grupo
+        - [] Alteração do botão criação de grupo para um item da tabela
     - [] Interface Cliente
-        - [] Trocar a propria senha
-        - [] Ultimo Ip Conectado
-        - [] Ultimo login
+        - [x] Trocar a propria senha
+        - [x] Ultimo Ip Conectado
+        - [x] Ultimo login
         - [] Preferencias
         - [] Acesso Rapido / Favoritos
+        - [] Tela principal com favoritos na barra superior
+        - [] Abertura de favorito automatico
+        - [] reordenação de favoritos
+    - [x] Alterar Creditos
+        - [x] Direito de uso em base GPL 3.0
 
 
 

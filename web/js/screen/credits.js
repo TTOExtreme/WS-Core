@@ -13,12 +13,12 @@ ClientEvents.on("Page_Loaded", new Promise((res, rej) => {
         "<center><div id='credits_holder' class='credits_holder noselect'>" +
         "<div id='credits' class='credits'>" +
         "<h2>" +
-        "<p style='color: #ffffff;'>Responsaveis pelo Projeto:</p>" +
+        "<p style='color: #ffffff;'>Direito de Uso:</p>" +
         "</h2>" +
-        "<p>Wilton L. Borges (Secretario)</p>" +
-        "<p>Paulo C. Marostica (Diretor do Departamento)</p>" +
-        "<p>Fernando R. Poli (Chefe de Secção)</p>" +
-        "<p>Lucas R. Camarotto (Desenvolvedor)</p>" +
+        "<p>Licença de uso em Base GPL 3.0</p>" +
+        "<a href='http://www.gnu.org/licenses/gpl-3.0.html' target='_blank'>http://www.gnu.org/licenses/gpl-3.0.html</a>" +
+        "<p>Desenvolvido por:</p>" +
+        "<p>Lucas R. Camarotto</p>" +
         "</div>" +
         "</div>" +
         "</div>";

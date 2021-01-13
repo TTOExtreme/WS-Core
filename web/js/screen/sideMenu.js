@@ -79,6 +79,12 @@ ClientEvents.on("LMU-SetInfo", (info) => {
     if (info.name) document.getElementById("LMU-Username").innerText = info.username;
     if (info.lastIp) document.getElementById("LMU-Ip").innerText = info.lastIp;
     if (info.lastConnection) document.getElementById("LMU-LastLogin").innerText = formatTime(info.lastConnection);
+    if (Myself.checkPermission("def/usr/chgpass")) {
+        document.getElementById("LMI-ChangePassButton").style.display = "block";
+    }
+    if (Myself.checkPermission("def/usr/preferences")) {
+        document.getElementById("LMI-PreferencesButton").style.display = "block";
+    }
 })
 
 ClientEvents.setCoreEvent("Logged")

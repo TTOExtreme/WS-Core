@@ -47,7 +47,7 @@ class UserStruct {
         }
     }
 
-    checkPermmision = function (permissionCode) {
+    checkPermission(permissionCode) {
         if (this.permissions) {
             if (this.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined ||
                 this.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {

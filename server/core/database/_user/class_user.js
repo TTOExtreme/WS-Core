@@ -164,13 +164,19 @@ class User {
 
     /**
      * Function for changing the user pass
-     * @param {string} oldPass 
      * @param {string} newPass 
      */
-    changePass(oldPass, newPass) {
-        // TODO
-
-        this.log.info("User change Password User: <" + username + ">.");
+    changePass(newPass) {
+        const salt = this.bcypher.generate_salt();
+        return new Promise((resolve, reject) => {
+            this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+                " SET password='" + this.bcypher.sha512(salt + this.bcypher.sha512(newPass)) + "', salt='" + salt + "'" +
+                " WHERE id=" + this.myself.id + ";").then(() => {
+                    resolve();
+                }).catch(err => {
+                    this.log.error("Cannot Set Password:\n" + (err).toString());
+                })
+        })
     }
 
     /**
