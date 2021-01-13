@@ -23,11 +23,11 @@ ClientEvents.on("WSOP/clientes/add", () => {
      */
     let div = document.createElement("div");
     div.setAttribute("class", "wsop_add_div");
-    div.setAttribute("id", "wsop_add_div");
+    div.setAttribute("id", "wsop_add_clientes_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/clientes/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_clientes_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/clientes/close\")'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Responsável:</td><td><input id='wsop_add_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>CNPJ?:</td><td><input id='wsop_add_iscnpj' type='checkbox' onchange='ClientEvents.emit(\"iscnpjchange\")' " + ((data.iscnpj == 1) ? "Checked" : "") + "></td></tr>" +
@@ -51,13 +51,13 @@ ClientEvents.on("WSOP/clientes/add", () => {
 //ClientEvents.emit("WSOP/clientes/add")
 
 ClientEvents.on("WSOP/clientes/close", () => {
-    if (document.getElementById("wsop_add_div")) {
-        document.body.removeChild(document.getElementById("wsop_add_div"));
+    if (document.getElementById("wsop_add_clientes_div")) {
+        document.body.removeChild(document.getElementById("wsop_add_clientes_div"));
     }
 });
 
 ClientEvents.on("cnpjchange", () => {
-    if (document.getElementById("wsop_add_div")) {
+    if (document.getElementById("wsop_add_clientes_div")) {
         let cnpj = document.getElementById("wsop_add_cnpj").value;
         consultaCNPJ(cnpj).then(data => {
             if (document.getElementById("wsop_add_name").value == "")
@@ -88,7 +88,7 @@ ClientEvents.on("cnpjchange", () => {
 
 
 ClientEvents.on("cepchange", () => {
-    if (document.getElementById("wsop_add_div")) {
+    if (document.getElementById("wsop_add_clientes_div")) {
         let cep = document.getElementById("wsop_add_cep").value;
         consultaCEP(cep).then(data => {
 

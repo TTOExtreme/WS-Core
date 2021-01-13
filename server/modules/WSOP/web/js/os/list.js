@@ -14,6 +14,10 @@ ClientEvents.emit("LoadExternal", [
     "./css/fontAwesome.min.css",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/anexo.js",
+    "./module/WSOP/js/utils/consulta.js",
+    "./module/WSOP/js/utils/ProdutosStruct.js",
+    "./module/WSOP/js/produtos/add.js",
+    "./module/WSOP/js/clientes/add.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/view.js",
     "./module/WSOP/js/os/print.js",
@@ -177,6 +181,16 @@ window.UserList = class UserList {
             }
         });
 
+        ClientEvents.on("system/added/produtos", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
+            ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
+            ClientEvents.emit("WSOP/produtos/close");
+        });
+        ClientEvents.on("system/added/clientes", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
+            ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
+            ClientEvents.emit("WSOP/clientes/close");
+        });
         ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
         ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
         ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });

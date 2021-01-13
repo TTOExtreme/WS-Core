@@ -34,13 +34,16 @@ function StatusIdToOptList(selected = 0) {
     })
     return ret;
 }
+
 function StatusIdToColor(ID = 0) {
     if (ID < statusIDs.length) {
         return statusIDs[ID].color
     }
 }
+
 function StatusIdToBgColor(ID = 0) {
     if (ID < statusIDs.length) {
         return statusIDs[ID].bgColor
     }
 }
+

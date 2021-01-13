@@ -24,7 +24,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "</table><hr>" +
         "<table style='width: calc(100vw - 250px);; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
         "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
-        "<tr><td colspan=4><input id='wsop_edt_produto' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'></td></tr>" +
+        "<tr><td colspan=4><input id='wsop_edt_produto' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'><input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></td></tr>" +
         "<tr><td colspan=4><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
         "<tr><td colspan=4 style='height:20px'>  </td></tr>" +
         "</table>";

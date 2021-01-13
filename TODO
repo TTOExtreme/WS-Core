@@ -133,6 +133,10 @@
         - [x] Imagem associada
             - [x] Thumbnails com diferentes resoluções
             - [x] Fix Endereço salvo no BD para somente nome do arquivo
+        - [] Itens adicionais no produto
+            - [] Vies
+            - [] Gola
+            - [] Tamanho (no cadastro de produto para cada OS/OP)
     - [x] Emitente
         - [x] Cadastro
             - [x] Pesquisa de CEP
