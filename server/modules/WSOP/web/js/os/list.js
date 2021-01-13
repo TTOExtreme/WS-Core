@@ -11,6 +11,7 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 ClientEvents.emit("LoadExternal", [
     "./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
+    "./css/fontAwesome.min.css",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/os/add.js",
@@ -19,22 +20,70 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/os/printop.js",
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/os/edt.js",
+    "./module/WSOP/js/os/edtstatus.js",
     "./module/WSOP/css/index.css",
     "./module/WSOP/css/print.css"
 ], () => {
     new window.UserList();
 }, false);
 
-if (window.UserList) { // usa a mesma interface global para todas as listas
+if (window.UserList || window.UpdateMainTable) { // usa a mesma interface global para todas as listas
     window.UserList = null;
+    clearInterval(window.UpdateMainTable);
+    window.UpdateMainTable = null;
 }
+
+window.UpdateMainTable = setInterval(() => {
+    ClientEvents.emit("SendSocket", "wsop/os/lst");
+}, 10 * 1000);
 
 window.UserList = class UserList {
 
     /**Defines of Table */
     actionFunction = "null";
-    actionName = "";
-    actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
+    actionName = "Ações";
+    //actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
+    actionIcon = function (cell, formatterParams, onRendered) { //plain text value
+        //console.log(cell);
+        let rowdata = cell._cell.row.data;
+        //console.log(rowdata);
+        let htm = document.createElement("div");
+
+        if (Myself.checkPermission("WSOP/menu/os")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-print");
+            bot.setAttribute("title", "Imprimir OS");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/print", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/menu/os")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-print");
+            bot.setAttribute("title", "Imprimir OP");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/printop", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/os/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-edit");
+            bot.setAttribute("title", "Editar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/edt", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/os/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-mail-forward");
+            bot.setAttribute("title", "Mudar Status");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        return htm;
+    };
     actionfield = "0";
     actionCallback = null;
     confirmExecution = false;
@@ -54,29 +103,17 @@ window.UserList = class UserList {
         title: "Ações",
         headerMenu: [],
         columns: [
-            {
-                title: this.actionName, field: this.actionfield, formatter: this.actionIcon, cellClick: function (e, cell) {
-                    let data = cell.getData();
-                    if (this.confirmExecution) {
-                        if (confirm("Voce esta prestes a " + ((this.actionOptions.length > 0) ? this.actionOptions[data[this.actionfield]] : this.actionName) + " a OS: " + data.id + "\nVoce tem certeza disso?")) {
-                            if (this.actionCallback != null) {
-                                this.actionCallback(data);
-                            } else {
-                                send(this.actionFunction, data);
-                            }
-                        }
-                    } else {
-                        if (this.actionCallback != null) {
-                            this.actionCallback(data);
-                        } else {
-                            send(this.actionFunction, data);
-                        }
-                    }
-                }, visible: !(this.actionName == "")
-            },
+            { title: this.actionName, formatter: this.actionIcon },
             { title: 'ID', field: 'id', headerFilter: "input" },
             { title: 'Cliente', field: 'cliente', headerFilter: "input" },
-            { title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(), formatter: ((data) => StatusIdToName(data.getRow().getData().status)) },
+            {
+                title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
+                formatter: function (cell) {
+                    cell._cell.element.style.background = StatusIdToBgColor(cell.getRow().getData().status);
+                    cell._cell.element.style.color = StatusIdToColor(cell.getRow().getData().status);
+                    return StatusIdToName(cell.getRow().getData().status);
+                }
+            },
             { title: 'Expira Em', field: 'endingIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
         ]
@@ -93,6 +130,13 @@ window.UserList = class UserList {
                     }
                 })
         }
+        this.newCollums[0].headerMenu.push(
+            {
+                label: "Atualizar",
+                action: function (e, column) {
+                    ClientEvents.emit("SendSocket", "wsop/os/lst");
+                }
+            })
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
             data: this.UserListData,

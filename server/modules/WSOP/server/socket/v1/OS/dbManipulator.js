@@ -74,9 +74,23 @@ class osManipulator {
     editOS(ID, description, status, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
-            ((description != "") ? " description='" + description + "'," : " ") +
-            ((status != "") ? " status='" + status + "'," : " ") +
+            " description='" + description + "'," +
+            " status='" + status + "'," +
             " active=" + (active ? 1 : 0) + "," +
+            " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
+            " WHERE id='" + ID + "';");
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} status 
+     * @param {*} UserID 
+     */
+    editStatusOS(ID, status, UserID) {
+
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
+            " status='" + status + "'," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
             " WHERE id='" + ID + "';");
     }

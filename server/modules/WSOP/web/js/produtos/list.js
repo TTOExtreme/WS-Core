@@ -11,9 +11,12 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/css/index.css"
 ], () => { }, false)
 
-if (window.UserList) { // usa a mesma interface global para todas as listas
+if (window.UserList || window.UpdateMainTable) { // usa a mesma interface global para todas as listas
     window.UserList = null;
+    clearInterval(window.UpdateMainTable);
+    window.UpdateMainTable = null;
 }
+
 
 window.UserList = class UserList {
 

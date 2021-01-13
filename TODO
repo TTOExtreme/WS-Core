@@ -149,12 +149,13 @@
         - [x] Anexos
         - [x] Produtos com Pesquisa, quantidade, e Observação
             - [] Criar redução do inventario quando associa;
-        - [] Status
-            - [] Listas com cada Status (terminais de Produçao)
-                - [] Botão para enviar pedido para o proximo Status
+        - [x] Status
+            - [x] Botao atualizar
+            - [x] Listas com cada Status (terminais de Produçao) uso da lista principal filtrada
+                - [x] Botão para enviar pedido para o proximo Status
         - [x] Impressão de OS (via do Cliente) e de OP (via da Produção)
-    - [] Terminais com cada status
-        - [] Botão para passagem para o proximo processo
+    - [x] Terminais com cada status
+        - [x] Botão para passagem para o proximo processo
             
     - [] Fix
         - [x] Editar produto não carrega a imagem de thumbnail
