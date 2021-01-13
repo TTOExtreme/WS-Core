@@ -66,7 +66,12 @@ window.UserList = class UserList {
             },
             { title: 'Codigo', field: 'barcode', headerFilter: "input" },
             { title: 'Nome', field: 'name', headerFilter: "input" },
-            { title: 'Descrição', field: 'description', headerFilter: "input" },
+            { title: 'Modelo', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).modelo), headerFilter: "input" },
+            { title: 'Gola', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).gola), headerFilter: "input" },
+            { title: 'Vies', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).vies), headerFilter: "input" },
+            { title: 'Genero', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).genero), headerFilter: "input" },
+            { title: 'Descrição', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).description), headerFilter: "input" },
+
             { title: 'Inventario', field: 'inventory', headerFilter: "input" },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" }
         ]

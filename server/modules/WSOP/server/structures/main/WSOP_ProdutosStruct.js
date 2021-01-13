@@ -84,7 +84,7 @@ class ProdutosStruct {
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
     name: "VARCHAR(200)",
-    description: "VARCHAR(600)",
+    description: "TEXT",
     barcode: "VARCHAR(200)",
     price: "VARCHAR(200)",
     cost: "VARCHAR(200)",

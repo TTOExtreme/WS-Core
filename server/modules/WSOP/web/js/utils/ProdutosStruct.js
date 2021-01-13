@@ -12,7 +12,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
      */
 
     _Tamanhos = [
-        "PP",
         "P",
         "M",
         "G",
@@ -35,61 +34,220 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
     ]
 
     _Gola = [
-        "Branca",
-        "Preta",
-        "Especial"
+        "Redonda",
+        "Redonda Transpassada",
+        "Decote V Transpassado",
+        "Decote V Transpassado",
+        "Decote V Com Vivo",
+        "Decote V Duas Cores",
+        "Decote V",
+        "Gola Polo",
+        "Soccer",
+        "Soccer Com Vivo",
+        "Confort",
+        "Soccer Peitilho Meio Aberto"
     ]
 
     _Modelos = [
         {
-            name: "Regata",
-            sigla: "Rg",
+            name: "Regata Esportiva Padrão",
+            tecidos: ["Dry"]
         },
         {
-            name: "Camisa Manga Curta",
-            sigla: "Mc",
+            name: "Regata Esportiva Gabiru",
+            tecidos: ["Dry"]
         },
         {
-            name: "Camisa Manga Longa",
-            sigla: "Ml",
+            name: "Regata Esportiva Nadador",
+            tecidos: ["Elastano"]
         },
         {
-            name: "Camisa Manga Longa Raglan",
-            sigla: "MlR",
+            name: "Regata Esportiva Machão",
+            tecidos: ["Elastano"]
         },
         {
-            name: "Agasalho",
-            sigla: "Ag",
-        }
+            name: "Shorts Esportivo",
+            tecidos: ["Dry", "Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Shorts Especial Recortado",
+            tecidos: ["Dry", "Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Shorts Especial Training",
+            tecidos: ["Dry"],
+            gola: ["-"]
+        },
+        {
+            name: "Shorts Especial Recortado Com Cós",
+            tecidos: ["Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Shorts Saia Beach (Saia)",
+            tecidos: ["Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Shorts Saia Entrelaçado",
+            tecidos: ["Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Shorts Ciclista",
+            tecidos: ["Elastano"],
+            genero: ["Feminino"],
+            gola: ["-"]
+        },
+        {
+            name: "Bermuda",
+            tecidos: ["Dry"],
+            gola: ["-"]
+        },
+        {
+            name: "Manga Curta Futebol",
+            tecidos: ["Dry", "Sport Dry"]
+        },
+        {
+            name: "Manga Curta Futevôlei",
+            tecidos: ["Elastano"]
+        },
+        {
+            name: "Manga Curta Slim",
+            tecidos: ["Elastano"]
+        },
+        {
+            name: "Polo de Treino Esportiva",
+            tecidos: ["Sport Dry"]
+        },
+        {
+            name: "Colete Unisex",
+            tecidos: ["Sport Dry"],
+            genero: ["Uni"],
+            gola: ["-"]
+        },
+        {
+            name: "Top",
+            tecidos: ["Heavy Elastano"],
+            genero: ["Feminino"],
+            gola: ["-"]
+        },
+        {
+            name: "Manga Longa Futevôlei",
+            tecidos: ["Elastano"]
+        },
+        {
+            name: "Manga Longa Slim",
+            tecidos: ["Elastano"]
+        },
+        {
+            name: "Manga Longa Raglan",
+            tecidos: ["Elastano"]
+        },
+        {
+            name: "Agasalho Zipper C/ Capuz",
+            tecidos: ["Premium"],
+            gola: ["-"]
+        },
+        {
+            name: "Agasalho Canguru C/ Capuz",
+            tecidos: ["Premium"],
+            gola: ["-"]
+        },
+        {
+            name: "Agasalho Treino",
+            tecidos: ["Helanca"],
+            gola: ["-"]
+        },
+        {
+            name: "Sunga Boxer",
+            tecidos: ["Heavy Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Calça Termica Boxer",
+            tecidos: ["Heavy Elastano"],
+            gola: ["-"]
+        },
+        {
+            name: "Calça Treino",
+            tecidos: ["Heavy Elastano", "Helanca"],
+            gola: ["-"]
+        },
+        {
+            name: "Bag",
+            tecidos: ["Alta Performance"],
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Uni"],
+            tamanhos: ["Uni"]
+        },
+        {
+            name: "Bone Aba Curvada",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Uni"],
+            tamanhos: ["Uni"]
+        },
+        {
+            name: "Bone Aba Reta",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Uni"],
+            tamanhos: ["Uni"]
+        },
+        {
+            name: "Chinelo",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Uni"],
+            tamanhos: ["Uni"]
+        },
+        {
+            name: "Viseira",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Uni"],
+            tamanhos: ["Uni"]
+        },
     ]
 
 
-    getModelos(selected = 0) {
-        let ret = ""
+    getModelos(Modelo = "") {
+        let ret = "<option disabled selected>Selecione:</option>"
         this._Modelos.forEach((item, index) => {
-            ret += "<option value='" + index + "' " + ((index == selected) ? "selected" : "") + ">" + item.name + "</option>";
+            ret += "<option value='" + item.name + "' " + ((item.name == Modelo) ? "selected" : "") + ">" + item.name + "</option>";
         })
         return ret;
     }
 
-    getTamanhos(Modelo = 0, selected = 0) {
+    getTamanhos(Modelo = "", selected = 0) {
         let ret = "<option disabled selected>Selecione:</option>";
-        (this._Modelos[Modelo].tamanhos || this._Tamanhos).forEach((item, index) => {
-            ret += "<option value='" + index + "' " + ((index == selected - 1) ? "selected" : "") + ">" + item + "</option>";
+        ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].tamanhos : undefined) || this._Tamanhos).forEach((item, index) => {
+            ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;
     }
-    getVies(Modelo = 0, selected = 0) {
+    getVies(Modelo = "", selected = 0) {
         let ret = "<option disabled selected>Selecione:</option>";
-        (this._Modelos[Modelo].vies || this._Vies).forEach((item, index) => {
-            ret += "<option value='" + index + "' " + ((index == selected - 1) ? "selected" : "") + ">" + item + "</option>";
+        ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].vies : undefined) || this._Vies).forEach((item, index) => {
+            ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;
     }
-    getGola(Modelo = 0, selected = 0) {
+    getGola(Modelo = "", selected = 0) {
         let ret = "<option disabled selected>Selecione:</option>";
-        (this._Modelos[Modelo].gola || this._Gola).forEach((item, index) => {
-            ret += "<option value='" + index + "' " + ((index == selected - 1) ? "selected" : "") + ">" + item + "</option>";
+        ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].gola : undefined) || this._Gola).forEach((item, index) => {
+            ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
+        })
+        return ret;
+    }
+    getGenero(Modelo = "", selected = 0) {
+        let ret = "<option disabled selected>Selecione:</option>";
+        ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].genero : undefined) || ["Masculino", "Feminino"]).forEach((item, index) => {
+            ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;
     }
