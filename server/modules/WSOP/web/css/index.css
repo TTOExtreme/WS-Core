@@ -52,7 +52,7 @@
 }
 
 .wsop_add_div input[type="text"] {
-    width: 300px;
+    width: 250px;
 }
 
 .wsop_edt_div {
@@ -72,7 +72,8 @@
     border: 1px solid #606060;
     height: calc(100vh - 90px);
 }
-.wsop_edt_div p{
+
+.wsop_edt_div p {
     margin: 0;
 }
 
@@ -96,7 +97,7 @@ input[type="text"]:disabled {
 }
 
 .wsop_add_img_thumb {
-    max-width: 300px;
+    max-width: 250px;
     max-height: 170px;
     /* padding-left: 20px; */
 }
@@ -110,7 +111,7 @@ input[type="text"]:disabled {
 .wsop_anexo_item {
     color: white;
     border: 1px solid #606060;
-    width: 300px;
+    width: 250px;
     height: 190px;
 }
 
@@ -156,7 +157,7 @@ input[type="text"]:disabled {
 }
 
 .wsop_edt_img_thumb {
-    max-width: 300px;
+    max-width: 250px;
     max-height: 170px;
 }
 

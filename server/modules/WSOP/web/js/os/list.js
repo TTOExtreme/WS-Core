@@ -81,6 +81,14 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
+        if (Myself.checkPermission("WSOP/os/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-eye");
+            bot.setAttribute("title", "Visualizar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/view", (rowdata)) };
+            htm.appendChild(bot);
+        }
 
         return htm;
     };
