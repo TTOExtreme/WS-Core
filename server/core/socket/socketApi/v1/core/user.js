@@ -321,8 +321,11 @@ class Socket {
          * User Get Preferences
          */
         socket.on("usr/get/preferences", (data) => {
+            console.log("data");
             this._myself.checkPermission("def/usr/login").then(() => {
                 this._myself.loadPreferences().then((prefs) => {
+                    console.log("prefs")
+                    console.log(prefs)
                     socket.emit("ClientEvents", {
                         event: "usr/get/preferences",
                         data: prefs

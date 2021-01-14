@@ -9,8 +9,7 @@ ClientEvents.emit("LoadExternal", [
     "./js/core/user/disable.js",
     "./js/core/user/edt.js",
     "./js/core/user/grp.js",
-    "./css/core/user/index.css",
-    "./css/fontAwesome.min.css"
+    "./css/core/user/index.css"
 ], () => { }, false)
 
 if (window.UserList) {

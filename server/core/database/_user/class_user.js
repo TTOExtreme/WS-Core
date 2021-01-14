@@ -205,7 +205,8 @@ class User {
             this.db.query("SELECT preferences FROM " + this.db.DatabaseName + "._User" +
                 " WHERE id=" + this.myself.id + ";").then((result) => {
                     if (result[0]) {
-                        this.myself.preferences = result[0].preferences;
+                        console.log(result[0])
+                        this.myself.preferences = JSON.parse(result[0].preferences);
                         resolve(this.myself.preferences);
                     } else {
                         reject("Cannot Load Preferences: User not Found");

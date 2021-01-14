@@ -12,10 +12,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/utils/socket.js",
         "./js/libs/bcypher.js",
         "./js/libs/tabulator.min.js",
+        "./js/screen/favoritos.js",
         "./js/screen/menuDragger.js",
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js",
-        "./js/screen/topMenu.js",
+        //"./js/screen/topMenu.js",
         "./js/screen/contextCreator.js",
         "./js/core/user/changepass.js"
     ]).then(() => {
@@ -55,6 +56,7 @@ loadExternalFiles([
     "./css/screen/LeftMenu.css",
     "./css/screen/loading.css",
     "./css/screen/contextCreator.css",
+    "./css/fontAwesome.min.css",
     "./css/themes/theme-dark.css"
 ]).then(() => {
 }).catch((err) => {
