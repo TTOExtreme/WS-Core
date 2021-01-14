@@ -205,7 +205,6 @@ class User {
             this.db.query("SELECT preferences FROM " + this.db.DatabaseName + "._User" +
                 " WHERE id=" + this.myself.id + ";").then((result) => {
                     if (result[0]) {
-                        console.log(result[0])
                         this.myself.preferences = JSON.parse(result[0].preferences);
                         resolve(this.myself.preferences);
                     } else {
