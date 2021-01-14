@@ -9,7 +9,8 @@ ClientEvents.emit("LoadExternal", [
     "./js/core/user/disable.js",
     "./js/core/user/edt.js",
     "./js/core/user/grp.js",
-    "./css/core/user/index.css"
+    "./css/core/user/index.css",
+    "./css/fontAwesome.min.css"
 ], () => { }, false)
 
 if (window.UserList) {
@@ -20,8 +21,46 @@ window.UserList = class UserList {
 
     /**Defines of Table */
     actionFunction = "null";
-    actionName = "";
-    actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
+    actionName = "Ações";
+    actionIcon = function (cell, formatterParams, onRendered) { //plain text value
+        let rowdata = cell._cell.row.data;
+        let htm = document.createElement("div");
+
+        if (Myself.checkPermission("adm/usr/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-edit");
+            bot.setAttribute("title", "Editar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("usr/edt", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/usr/disable")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", ((rowdata.active == 1) ? "fa fa-close" : "fa fa-check"));
+            bot.setAttribute("title", ((rowdata.active == 1) ? "Desativar" : "Ativar"));
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("usr/disable", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/usr/perm")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-user-plus");
+            bot.setAttribute("title", "Permissões");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("usr/perm", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/usr/grp")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-users");
+            bot.setAttribute("title", "Grupos");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("usr/grp", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        return htm;
+    }; //"buttonTick" "buttonCross" "tickCross"
     actionfield = "0";
     actionCallback = null;
     confirmExecution = false;
@@ -29,7 +68,6 @@ window.UserList = class UserList {
     actionRowFormatter = (data) => { };
     UserListData = [];
     rowContext = (ev, row) => {
-        //console.log(ev);
         ClientEvents.emit("SendSocket", "adm/usr/lst/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
@@ -80,6 +118,15 @@ window.UserList = class UserList {
 
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
+            persistence: {
+                sort: true, //persist column sorting
+                filter: true, //persist filter sorting
+                group: true, //persist row grouping
+                page: true, //persist page
+                columns: true, //persist columns
+            },
+            persistenceID: "user-lst",
+            persistenceMode: true,
             data: this.UserListData,
             headerFilterPlaceholder: "Filtrar",
             index: "id",

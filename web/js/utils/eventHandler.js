@@ -65,6 +65,22 @@ class ClientEvent {
     }
 
     /**
+     * Clear all listerners duplicated
+     * @param {String} name 
+     */
+    clearAllDupes() {
+        Object.keys(this._events).forEach(name => {
+            if (this._events[name]) {
+                this._events[name].forEach((event, index) => {
+                    if (index > 0)
+                        delete this._events[name][index];
+                });
+
+            }
+        })
+    }
+
+    /**
      * Set as Core Event Listener that locks clearing 
      * @param {String} name 
      */

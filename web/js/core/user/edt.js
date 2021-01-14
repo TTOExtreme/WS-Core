@@ -1,6 +1,5 @@
 
 ClientEvents.on("usr/edt", (data) => {
-    console.log(data);
     ClientEvents.emit("usr/edt/close");
     /**
      * id

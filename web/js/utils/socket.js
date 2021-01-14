@@ -94,6 +94,7 @@ class Socket {
         SocketClass.socket.on('connect', function () {
             SocketClass.socket.on("auth-ok", function (data) {
 
+                ClientEvents.clear("SendSocket");
                 ClientEvents.setCoreEvent("SendSocket");
                 ClientEvents.on("SendSocket", (ename, data) => {
                     SocketClass._send(ename, data);
@@ -133,6 +134,8 @@ class Socket {
                     })
                 }
             });
+            ClientEvents.clear("Logout");
+            ClientEvents.setCoreEvent("Logout");
             ClientEvents.on("Logout", () => {
                 SocketClass._clearCookies();
                 window.location.assign("./login");
@@ -142,6 +145,7 @@ class Socket {
                 window.location.assign("./login");
             })
             SocketClass.socket.on('disconnect', function () {
+                SocketClass.socket.disconnect();
                 SocketClass.socketStatus.connected = false;
                 SocketClass.socketStatus.logged = false;
                 ClientEvents.emit("system_mess", {
@@ -235,6 +239,8 @@ class Socket {
             mess: "Reconectando",
             time: 1000
         })
+        //this.socket.connect();
+        ClientEvents.clearAllDupes();
         this._init();
     }
 
@@ -260,7 +266,10 @@ class Socket {
     }
 }
 
+ClientEvents.clear("Page_Loaded");
+ClientEvents.setCoreEvent("Page_Loaded");
 ClientEvents.on("Page_Loaded", () => {
+    console.log("new Socket appended ")
     socket = new Socket();
 })
 

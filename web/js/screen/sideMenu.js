@@ -121,7 +121,7 @@ function ToggleLeftMenuItem(obj) {
             }
         }
         if (item.TopItems.length > 0) {
-            ClientEvents.emit("TopMenu-SetItems", item.TopItems);
+            //ClientEvents.emit("TopMenu-SetItems", item.TopItems);
         }
     }
 }
