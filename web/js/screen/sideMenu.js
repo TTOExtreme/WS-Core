@@ -118,10 +118,11 @@ function ToggleLeftMenuItem(obj) {
         } else {
             if (item.EventCall && item.EventData) {
                 ClientEvents.emit(item.EventCall, item.EventData);
+                ClientEvents.emit("fav/add", item);
             }
         }
         if (item.TopItems.length > 0) {
-            ClientEvents.emit("TopMenu-SetItems", item.TopItems);
+            //ClientEvents.emit("TopMenu-SetItems", item.TopItems);
         }
     }
 }
@@ -144,9 +145,29 @@ class LeftMenuItem {
     SubItems;
     /**@const {ClientMenus} TopItems */
     TopItems;
+    /**@const {ClientMenus} Open indicador se é uma aba aberta */
+    Open = false;
 
     constructor(obj) {
         Object.assign(this, obj);
+        if (this.EventCall) {
+            if (!window.Abas) {
+                window.Abas = {};
+            }
+            if (Myself.preferences) {
+                if (Myself.preferences.favoritos) {
+                    if (Myself.preferences.favoritos.find(val => val == this.Id)) {
+                        ClientEvents.emit("fav/add", obj);
+                        if (Myself.preferences.favoritos.indexOf(this.Id) == 0) {
+                            this.Open = true;
+                            ClientEvents.emit(this.EventCall, this.EventData);
+                        }
+                        /**TODO CRIAR CHAMADA de abertura apenas da primeira aba */
+                    }
+                }
+            }
+            window.Abas[this.Id] = obj;//indexa todas as abas
+        }
     }
     getItem() {
         let si = document.createElement("tr");

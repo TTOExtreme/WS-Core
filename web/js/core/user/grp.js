@@ -146,7 +146,6 @@ ClientEvents.on("adm/usr/grp/data", (data) => {
     /**
      * Add data to table
      */
-    console.log(data)
     if (window.table_usr_grp) {
         data = freeHierarchy(
             data,

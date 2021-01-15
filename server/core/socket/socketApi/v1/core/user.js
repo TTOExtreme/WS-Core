@@ -292,6 +292,58 @@ class Socket {
         })
 
         /**
+         * User Set Preferences
+         */
+        socket.on("usr/edt/preferences", (data) => {
+            this._myself.checkPermission("def/usr/login").then(() => {
+                this._myself.savePreferences(data[0].preferences).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "savedPreferences",
+                        data: {}
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Erro ao salvar Preferencias do Usuário",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User Get Preferences
+         */
+        socket.on("usr/get/preferences", (data) => {
+            this._myself.checkPermission("def/usr/login").then(() => {
+                this._myself.loadPreferences().then((prefs) => {
+                    socket.emit("ClientEvents", {
+                        event: "usr/get/preferences",
+                        data: prefs
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Erro ao salvar Preferencias do Usuário",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
          * User Disable
          */
         socket.on("adm/usr/disable/save", (data) => {
