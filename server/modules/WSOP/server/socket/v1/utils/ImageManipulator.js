@@ -23,7 +23,6 @@ class ImageManipulator {
                     if (!value) { reject("Image Undefined"); return; }
                     let ratio = ((max_width / value.width < max_height / value.height) ? max_width / value.width : max_height / value.height);
                     let resolved = false;
-                    console.log((value.width * ratio).toFixed(0) + " " + (value.height * ratio).toFixed(0) + " R:" + ratio + " w:" + value.width)
                     img.resize((value.width * ratio).toFixed(0), (value.height * ratio).toFixed(0)).write(fileOutput, () => { resolved = true; resolve(); });
                     setTimeout(() => { if (!resolved) { reject("Timeout") } }, 20000);
                 })

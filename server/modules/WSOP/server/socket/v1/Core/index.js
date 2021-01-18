@@ -37,7 +37,7 @@ class Core {
             },
             {
                 Name: "Emitente",
-                Id: "menu/WSOP/OS",
+                Id: "menu/WSOP/Emitente",
                 Permission: "menu/WSOP/OS",
                 Icon: "",
                 EventCall: "Load",

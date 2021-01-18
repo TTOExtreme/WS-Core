@@ -125,7 +125,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         {
             name: "Colete Unisex",
             tecidos: ["Sport Dry"],
-            genero: ["Uni"],
+            genero: ["Unisex"],
             gola: ["-"]
         },
         {
@@ -177,40 +177,99 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             gola: ["-"]
         },
         {
+            name: "Conjunto Sunga e Manga Longa",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Masculino"]
+        },
+        {
+            name: "Conjunto Manga Longa e Shorts",
+            tecidos: ["-"],
+            gola: ["-"]
+        },
+        {
+            name: "Conjunto Manga Longa e Boné",
+            tecidos: ["-"],
+            gola: ["-"]
+        },
+        {
+            name: "Conjunto Regata e Shorts",
+            tecidos: ["-"],
+            gola: ["-"]
+        },
+        {
+            name: "Kit: Regata, Manga Longa e Shorts",
+            tecidos: ["-"],
+            gola: ["-"],
+        },
+        {
+            name: "Kit: Regata, Manga Longa e Bermuda",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Masculino"]
+        },
+        {
             name: "Bag",
-            tecidos: ["Alta Performance"],
             tecidos: ["-"],
             gola: ["-"],
-            genero: ["Uni"],
-            tamanhos: ["Uni"]
+            genero: ["-"],
+            tamanhos: ["Unico"]
         },
         {
-            name: "Bone Aba Curvada",
+            name: "Boné Aba Curvada",
             tecidos: ["-"],
             gola: ["-"],
-            genero: ["Uni"],
-            tamanhos: ["Uni"]
+            genero: ["Unisex"],
+            tamanhos: ["Unico"]
         },
         {
-            name: "Bone Aba Reta",
+            name: "Boné Aba Reta",
             tecidos: ["-"],
             gola: ["-"],
-            genero: ["Uni"],
-            tamanhos: ["Uni"]
+            genero: ["Unisex"],
+            tamanhos: ["Unico"]
         },
         {
             name: "Chinelo",
             tecidos: ["-"],
             gola: ["-"],
-            genero: ["Uni"],
-            tamanhos: ["Uni"]
+            genero: ["Unisex"],
+            tamanhos: ["-"]
+        },
+        {
+            name: "Tênis",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Unisex"],
+            tamanhos: ["-"]
         },
         {
             name: "Viseira",
             tecidos: ["-"],
             gola: ["-"],
-            genero: ["Uni"],
-            tamanhos: ["Uni"]
+            genero: ["Unisex"],
+            tamanhos: ["Unico"]
+        },
+        {
+            name: "Bola",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["-"],
+            tamanhos: ["Unico"]
+        },
+        {
+            name: "Chaveiro",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["-"],
+            tamanhos: ["Unico"]
+        },
+        {
+            name: "Óculos",
+            tecidos: ["-"],
+            gola: ["-"],
+            genero: ["Unisex"],
+            tamanhos: ["Unico"]
         },
     ]
 

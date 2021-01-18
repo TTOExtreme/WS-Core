@@ -11,7 +11,6 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 ClientEvents.emit("LoadExternal", [
     "./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
-    "./css/fontAwesome.min.css",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/utils/consulta.js",
