@@ -61,8 +61,8 @@
             Stop.js <-- Executar ao desligar o servidor
     - [x] Criar cache de dados dos modulos
     - [x] Sistema de Favoritos na pagina principal
-        - [] Alterar todos os itens de menu superior para menu interno da tabela
-    - [] Todas as funçoes com context mover para coluna de ações da tabela
+        - [x] Alterar todos os itens de menu superior para menu interno da tabela
+    - [x] Todas as funçoes com context mover para coluna de ações da tabela
 
 
 //Modulo IPMA

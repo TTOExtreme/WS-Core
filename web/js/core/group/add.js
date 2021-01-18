@@ -39,10 +39,9 @@ ClientEvents.on("grp/add/add", () => {
 
     document.body.appendChild(div);
 });
-ClientEvents.emit("grp/add/add")
+//ClientEvents.emit("grp/add/add")
 
 ClientEvents.on("grp/add/close", () => {
-    console.log('Called')
     if (document.getElementById("grp_add_div")) {
         document.body.removeChild(document.getElementById("grp_add_div"));
     }

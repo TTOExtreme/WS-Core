@@ -280,7 +280,7 @@ class Socket {
          */
         socket.on("adm/grp/disable/save", (data) => {
             this._myself.checkPermission("adm/grp/disable").then(() => {
-                this._groupServer.edtGroup(data[0].id_group, undefined, data[0].active, this._myself.myself.id).then(() => {
+                this._groupServer.edtGroup(data[0].id_group, data[0].name, data[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {

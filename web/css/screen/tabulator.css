@@ -376,6 +376,7 @@
 }
 
 .tabulator .tabulator-footer .tabulator-page {
+    color: #fff;
     display: inline-block;
     margin: 0 2px;
     padding: 2px 5px;

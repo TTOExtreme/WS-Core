@@ -41,7 +41,7 @@ ClientEvents.on("usr/add/add", () => {
 
     document.body.appendChild(div);
 });
-ClientEvents.emit("usr/add/add")
+//ClientEvents.emit("usr/add/add")
 
 ClientEvents.on("usr/add/close", () => {
     console.log('Called')

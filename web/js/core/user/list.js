@@ -4,6 +4,7 @@ ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
+    "./js/core/user/add.js",
     "./js/core/user/edt.js",
     "./js/core/user/perm.js",
     "./js/core/user/disable.js",
@@ -57,7 +58,6 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("usr/grp", (rowdata)) };
             htm.appendChild(bot);
         }
-
         return htm;
     }; //"buttonTick" "buttonCross" "tickCross"
     actionfield = "0";
@@ -74,58 +74,54 @@ window.UserList = class UserList {
 
     main_table;
 
-    newCollums = [
-        {
-            title: this.actionName, field: this.actionfield, formatter: this.actionIcon, cellClick: function (e, cell) {
-                let data = cell.getData();
-                if (this.confirmExecution) {
-                    if (confirm("Voce esta prestes a " + ((this.actionOptions.length > 0) ? this.actionOptions[data[this.actionfield]] : this.actionName) + " o Usuário: " + data.user + "\nVoce tem certeza disso?")) {
-                        if (this.actionCallback != null) {
-                            this.actionCallback(data);
-                        } else {
-                            send(this.actionFunction, data);
-                        }
-                    }
-                } else {
-                    if (this.actionCallback != null) {
-                        this.actionCallback(data);
-                    } else {
-                        send(this.actionFunction, data);
-                    }
+    newCollums = [{
+        title: "Ações",
+        headerMenu: [],
+        columns: [
+            {
+                title: this.actionName, field: this.actionfield, formatter: this.actionIcon, visible: !(this.actionName == "")
+            },
+            { title: 'Nome', field: 'name', headerFilter: "input" },
+            { title: 'Login', field: 'username', headerFilter: "input" },
+            { title: 'Conectado', field: 'connected', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] },
+            { title: 'Ultimo Login', field: 'lastConnection', formatter: ((data) => formatTime(data.getRow().getData().lastConnection)), headerFilter: "input" },
+            //{ title: 'Ultima Tentativa', field: 'lastTry', formatter: ((data) => formatTime(data.getRow().getData().lastTry)), headerFilter: "input" },
+            { title: 'Ultimo IP', field: 'lastIp', headerFilter: "input" },
+            {
+                title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
+                    "1": "Ativo",
+                    "0": "Desativado"
                 }
-            }, visible: !(this.actionName == "")
-        },
-        { title: 'Nome', field: 'name', headerFilter: "input" },
-        { title: 'Login', field: 'username', headerFilter: "input" },
-        { title: 'Conectado', field: 'connected', formatter: "tickCross", headerFilter: "select", headerFilterParams: [{ label: "-", value: "" }, { label: "Conectado", value: "1" }, { label: "Desconectado", value: "0" }] },
-        { title: 'Ultimo Login', field: 'lastConnection', formatter: ((data) => formatTime(data.getRow().getData().lastConnection)), headerFilter: "input" },
-        //{ title: 'Ultima Tentativa', field: 'lastTry', formatter: ((data) => formatTime(data.getRow().getData().lastTry)), headerFilter: "input" },
-        { title: 'Ultimo IP', field: 'lastIp', headerFilter: "input" },
-        {
-            title: 'Ativo', field: 'active', headerFilter: "input", formatter: "lookup", formatterParams: {
-                "1": "Ativo",
-                "0": "Desativado"
-            }
-        },
-        { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
-        { title: 'Criado Por', field: 'createdBy', headerFilter: "input" },
-        //{ title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
-        //{ title: 'Desativado Por', field: 'deactivatedBy', headerFilter: "input" }
-    ];
+            },
+            { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
+            { title: 'Criado Por', field: 'createdBy', headerFilter: "input" },
+            //{ title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
+            //{ title: 'Desativado Por', field: 'deactivatedBy', headerFilter: "input" }
+        ]
+    }];
+
 
     constructor() {
 
+        if (Myself.checkPermission("adm/usr/add")) {
+            this.newCollums[0].headerMenu.push(
+                {
+                    label: "Adicionar",
+                    action: function (e, column) {
+                        ClientEvents.emit("usr/add/add");
+                    }
+                })
+        }
+        this.newCollums[0].headerMenu.push(
+            {
+                label: "Atualizar",
+                action: function (e, column) {
+                    ClientEvents.emit("SendSocket", "adm/user/lst");
+                }
+            })
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
-            persistence: {
-                sort: true, //persist column sorting
-                filter: true, //persist filter sorting
-                group: true, //persist row grouping
-                page: true, //persist page
-                columns: true, //persist columns
-            },
-            persistenceID: "user-lst",
-            persistenceMode: true,
+            persistence: true,
             data: this.UserListData,
             headerFilterPlaceholder: "Filtrar",
             index: "id",

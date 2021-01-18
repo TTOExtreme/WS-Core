@@ -4,6 +4,7 @@ ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
+    "./js/core/group/add.js",
     "./js/core/group/edt.js",
     "./js/core/group/perm.js",
     "./js/core/group/disable.js",
@@ -20,8 +21,46 @@ window.UserList = class UserList {
 
     /**Defines of Table */
     actionFunction = "null";
-    actionName = "";
-    actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
+    actionName = "Ações";
+    actionIcon = function (cell, formatterParams, onRendered) { //plain text value
+        let rowdata = cell._cell.row.data;
+        let htm = document.createElement("div");
+
+        if (Myself.checkPermission("adm/grp/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-edit");
+            bot.setAttribute("title", "Editar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("grp/edt", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/grp/disable")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", ((rowdata.active == 1) ? "fa fa-close" : "fa fa-check"));
+            bot.setAttribute("title", ((rowdata.active == 1) ? "Desativar" : "Ativar"));
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("grp/disable", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/grp/perm")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-user-plus");
+            bot.setAttribute("title", "Permissões");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("grp/perm", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/grp/grp")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-users");
+            bot.setAttribute("title", "Grupos");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("grp/grp", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        return htm;
+    }; //"buttonTick" "buttonCross" "tickCross"
     actionfield = "0";
     actionCallback = null;
     confirmExecution = false;
@@ -29,7 +68,6 @@ window.UserList = class UserList {
     actionRowFormatter = (data) => { };
     UserListData = [];
     rowContext = (ev, row) => {
-        //console.log(ev);
         ClientEvents.emit("SendSocket", "adm/grp/lst/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
@@ -37,8 +75,10 @@ window.UserList = class UserList {
 
     main_table;
 
-    newCollums = [
-        {
+    newCollums = [{
+        title: "Ações",
+        headerMenu: [],
+        columns: [{
             title: this.actionName, field: this.actionfield, formatter: this.actionIcon, cellClick: function (e, cell) {
                 let data = cell.getData();
                 if (this.confirmExecution) {
@@ -67,14 +107,33 @@ window.UserList = class UserList {
         },
         { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
         { title: 'Criado Por', field: 'createdBy', headerFilter: "input" },
-        //{ title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
-        //{ title: 'Desativado Por', field: 'deactivatedBy', headerFilter: "input" }
-    ];
+            //{ title: 'Desativado Em', field: 'deactivatedIn', formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)), headerFilter: "input" },
+            //{ title: 'Desativado Por', field: 'deactivatedBy', headerFilter: "input" }
+        ]
+    }];
 
     constructor() {
 
+        if (Myself.checkPermission("adm/grp/add")) {
+            this.newCollums[0].headerMenu.push(
+                {
+                    label: "Adicionar",
+                    action: function (e, column) {
+                        ClientEvents.emit("grp/add/add");
+                    }
+                })
+        }
+        this.newCollums[0].headerMenu.push(
+            {
+                label: "Atualizar",
+                action: function (e, column) {
+                    ClientEvents.emit("SendSocket", "adm/grp/lst");
+                }
+            })
+
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
+            persistence: true,
             data: this.UserListData,
             headerFilterPlaceholder: "Filtrar",
             index: "id",
