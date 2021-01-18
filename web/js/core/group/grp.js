@@ -162,7 +162,6 @@ ClientEvents.on("adm/grp/grp/data", (data) => {
             "_children",
             { active: 0, name: "limite da tabela", createdIn: null, createdBy: null, modifiedIn: null, modifiedBy: null, deactivatedIn: null, deactivatedBy: null },
             7)
-        console.log(data);
         window.table_grp_grp.setData(data);
     }
 })
