@@ -38,7 +38,6 @@ class Socket {
          * List all os
          */
         socket.on("wsop/emitente/lst", (req) => {
-            console.log("call")
             this._myself.checkPermission("WSOP/menu/emitente").then(() => {
                 this._EmitenteClass.ListAll().then((res) => {
                     socket.emit("ClientEvents", {
