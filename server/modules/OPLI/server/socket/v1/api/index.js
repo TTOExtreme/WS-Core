@@ -39,6 +39,7 @@ class Socket {
                         event: "OPLI/api/edt",
                         data: res[0] || {
                             api: "",
+                            aplication: "",
                             pullproducts: true,
                             pullsells: true,
                             pullclients: true,
@@ -64,7 +65,7 @@ class Socket {
         })
 
         /**
-         * add OS
+         * edit Application keys
          */
         socket.on("opli/api/edt", (req) => {
             this._myself.checkPermission("OPLI/menu/Api").then(() => {

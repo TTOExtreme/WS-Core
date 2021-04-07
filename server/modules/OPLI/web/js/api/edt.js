@@ -46,7 +46,7 @@ ClientEvents.on("OPLI/api/edt", (data) => {
 ClientEvents.on("opli/clientes/edt", () => {
     ClientEvents.emit("SendSocket", "opli/api/edt", {
         api: document.getElementById("opli_add_api").value,
-        api: document.getElementById("opli_add_aplication").value,
+        aplication: document.getElementById("opli_add_aplication").value,
         pullproducts: document.getElementById("opli_add_pullproducts").checked,
         pullsells: document.getElementById("opli_add_pullsells").checked,
         pullclients: document.getElementById("opli_add_pullclients").checked,
@@ -66,6 +66,8 @@ ClientEvents.on("opli/api/close", () => {
 
 ClientEvents.on("opli/appendlog", (data) => {
     document.getElementById("opli_log").value += data + "\r\n";
+
+    document.getElementById("opli_log").scrollTop = document.getElementById("opli_log").scrollHeight;
 })
 
 ClientEvents.on("system/updated/products", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produtos Recarregados", time: 1000 }); });
