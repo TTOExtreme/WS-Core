@@ -92,6 +92,34 @@ class Socket {
             })
         })
 
+        /**
+         * List Site itens
+         */
+        socket.on("WSOP/site/lst", (req) => {
+            this._myself.checkPermission("WSOP/menu/os").then(() => {
+                this._ApiClass.ListAllSite().then((results) => {
+                    socket.emit("ClientEvents", {
+                        event: "wsop/site/lst",
+                        data: results
+                    })
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    this._log.error("On Editing Api for Loja Integrada")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            })
+        })
+
 
         /**
          * Update Database Products

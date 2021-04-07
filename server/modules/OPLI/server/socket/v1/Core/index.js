@@ -16,6 +16,15 @@ class Core {
                 EventCall: "Load",
                 EventData: "./module/OPLI/js/api/edt.js",
                 TopItems: [],
+            },
+            {
+                Name: "Site",
+                Id: "menu/OPLI/site",
+                Permission: "menu/WSOP/lst",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./module/OPLI/js/site/list.js",
+                TopItems: [],
             }
         ],
         TopItems: [],

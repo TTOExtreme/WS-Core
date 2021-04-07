@@ -65,7 +65,7 @@ const _DB = {
     dados_cliente: "MEDIUMTEXT",
     dados_li: "MEDIUMTEXT",
     id_li: "INT", //Id da loja integrada
-    status: "VARCHAR(60)",
+    status: "INT",
     name: "VARCHAR(200)",
     endingIn: "BIGINT",
     createdIn: "BIGINT",

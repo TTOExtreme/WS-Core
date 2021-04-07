@@ -28,6 +28,14 @@ class apiManipulator {
     }
 
     /**
+     * Lista todos as Vendas de Site
+     */
+    ListAllSite() {
+        return this.db.query("SELECT C.*, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id_li desc;");
+    }
+
+    /**
      * Editar cadastro do cliente
      * @param {String} API 
      * @param {Boolean} pullproducts 
@@ -58,7 +66,7 @@ class apiManipulator {
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Site" +
             " (id_li,description,nome_cliente,dados_cliente,dados_li,status,name,endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_li + "','" + description + "','" + nome_cliente + "','" + dados_cliente + "','" + dados_li + "','" + status + "','" + name + "','" + endingIn + "'," + (active ? 1 : 0) + ",1," + Date.now() + ");");
+            " ('" + id_li + "','" + description + "','" + nome_cliente + "','" + dados_cliente + "','" + dados_li + "'," + status + ",'" + name + "','" + endingIn + "'," + (active ? 1 : 0) + ",1," + Date.now() + ");");
     }
 
     /**
@@ -317,7 +325,7 @@ class apiUtils {
                             json.cliente.nome.replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, ""),
                             JSON.stringify(json.cliente).replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, "").replace("'", ""),
                             JSON.stringify(json).replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, "").replace("'", ""),
-                            json.situacao.codigo,
+                            json.situacao.id,
                             ("#" + json.numero.toString() + " - " + json.cliente.nome).replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, ""),
                             new Date(json.data_expiracao).getTime(),
                             description.replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, ""),
