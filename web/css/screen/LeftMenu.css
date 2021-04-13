@@ -13,7 +13,7 @@
 
 @media only screen and (max-width: 600px) {
     .LeftMenuClose {
-        left: -30px;
+        left: 0px;
     }
 }
 

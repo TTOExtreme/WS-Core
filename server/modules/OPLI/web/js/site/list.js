@@ -9,16 +9,18 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 
 
 ClientEvents.emit("LoadExternal", [
-    "./js/libs/suneditor.min.js",
+    //"./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
     "./module/OPLI/js/utils/osStatus.js",
+    "./module/OPLI/js/utils/html5-qrcode.min.js",
+    "./module/OPLI/js/utils/qrcodeAnalizer.js",
     //"./module/OPLI/js/utils/anexo.js",
     //"./module/OPLI/js/utils/consulta.js",
     //"./module/OPLI/js/utils/ProdutosStruct.js",
     //"./module/OPLI/js/produtos/add.js",
     //"./module/OPLI/js/clientes/add.js",
     //"./module/OPLI/js/os/add.js",
-    //"./module/OPLI/js/os/view.js",
+    "./module/OPLI/js/site/view.js",
     //"./module/OPLI/js/os/print.js",
     //"./module/OPLI/js/os/printop.js",
     //"./module/OPLI/js/os/del.js",
@@ -89,7 +91,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/site/view", (rowdata)) };
+            bot.onclick = () => { console.log(rowdata); ClientEvents.emit("wsop/site/view", (rowdata)) };
             htm.appendChild(bot);
         }
 
@@ -170,6 +172,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/site/lst", (data) => {
             if (data) {
                 this.UserListData = data;
+                //console.log(data);
                 this.main_table.replaceData(this.UserListData);
             }
         });

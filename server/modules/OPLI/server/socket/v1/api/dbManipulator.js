@@ -32,7 +32,7 @@ class apiManipulator {
      */
     ListAllSite() {
         return this.db.query("SELECT C.*, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id_li desc;");
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id_li desc LIMIT 100;");
     }
 
     /**
@@ -62,11 +62,11 @@ class apiManipulator {
      * @param {Number} UserID 
      */
 
-    saveSell(id_li, nome_cliente, dados_cliente, dados_li, status, name, endingIn, description, active) {
+    saveSell(id_li, nome_cliente, dados_cliente, dados_li, products, status, name, endingIn, description, active) {
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Site" +
-            " (id_li,description,nome_cliente,dados_cliente,dados_li,status,name,endingIn, active, createdBy, createdIn)" +
+            " (id_li,description,nome_cliente,dados_cliente,dados_li,products,status,name,endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_li + "','" + description + "','" + nome_cliente + "','" + dados_cliente + "','" + dados_li + "'," + status + ",'" + name + "','" + endingIn + "'," + (active ? 1 : 0) + ",1," + Date.now() + ");");
+            " ('" + id_li + "','" + description + "','" + nome_cliente + "','" + dados_cliente + "','" + dados_li + "','" + products + "'," + status + ",'" + name + "','" + endingIn + "'," + (active ? 1 : 0) + ",1," + Date.now() + ");");
     }
 
     /**
@@ -161,7 +161,7 @@ class apiManipulator {
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "API: " + APIS[0].api })
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "Aplication: " + APIS[0].aplication })
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "Iniciando Cadastro de Vendas" })
-                    return new apiUtils()._LoadListSells(socket, APIS[0].api, APIS[0].aplication, 0).then(() => {
+                    return new apiUtils()._LoadListSells(socket, APIS[0].api, APIS[0].aplication, 4000).then(() => {
                         resolve();
                     })
                 } else {
@@ -309,10 +309,11 @@ class apiUtils {
                     json = JSON.parse(json);
                     let description = "";
                     description += "Obs do cliente: " + json.cliente_obs;
-                    description += "Produtos: ";
+                    let products = [];
                     if (json.itens != undefined) {
                         json.itens.forEach(item => {
-                            description += item.nome + " QNT: " + item.quantidade + " Tam: " + item.sku.substring((item.sku.lastIndexOf("-") > -1) ? item.sku.lastIndexOf("-") : 0) + "SKU: " + item.sku + "#;";
+                            products.push(item);
+                            //description += "<p>" + item.nome + " QNT: " + item.quantidade + " Tam: " + item.sku.substring((item.sku.lastIndexOf("-") > -1) ? item.sku.lastIndexOf("-") : 0) + " SKU: " + item.sku + "";
                         });
                     } else {
                         console.log("Pedido sem item: ");
@@ -322,13 +323,14 @@ class apiUtils {
                     if (json.cliente != undefined) {
                         apiOPLIManipulator.saveSell(
                             json.numero,
-                            json.cliente.nome.replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, ""),
-                            JSON.stringify(json.cliente).replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, "").replace("'", ""),
-                            JSON.stringify(json).replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, "").replace("'", ""),
+                            json.cliente.nome.replace(/[^a-zA-Z0-9úÚóÓéÉàÀêÊõÕãÃáÁ"\[\]\r\n}{#@$%& - +()?_=,.<>:;~^ ]/g, ""),
+                            JSON.stringify(json.cliente).replace(/[^a-zA-Z0-9úÚóÓéÉàÀêÊõÕãÃáÁ"\[\]\r\n}{#@$%& - +()?_=,.<>:;~^ ]/g, "").replace("'", ""),
+                            JSON.stringify(json).replace(/[^a-zA-Z0-9úÚóÓéÉàÀêÊõÕãÃáÁ"\[\]\r\n}{#@$%& - +()?_=,.<>:;~^ ]/g, "").replace("'", ""),
+                            JSON.stringify(products),
                             json.situacao.id,
-                            ("#" + json.numero.toString() + " - " + json.cliente.nome).replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, ""),
-                            new Date(json.data_expiracao).getTime(),
-                            description.replace(/[^a-zA-Z0-9"\[\]}{#@$%&-+()?_=,.<>:;~^ ]/g, ""),
+                            ("#" + json.numero.toString() + " - " + json.cliente.nome).replace(/[^a-zA-Z0-9úÚóÓéÉàÀêÊõÕãÃáÁ"\[\]\r\n}{#@$%& - +()?_=,.<>:;~^ ]/g, ""),
+                            new Date((json.data_expiracao + "")).getTime(),
+                            description.replace(/[^a-zA-Z0-9úÚóÓéÉàÀêÊõÕãÃáÁ"\[\]\r\n}{#@$%& - +()?_=,.<>:;~^ ]/g, ""),
                             !json.situacao.cancelado)
                     }
                 });
