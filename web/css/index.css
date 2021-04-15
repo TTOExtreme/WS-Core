@@ -77,3 +77,30 @@ footer p {
 .menu_header {
     background-color: #30303030;
 }
+
+@media (max-width: 600px)
+{
+    footer p {
+        float: right;
+        margin: 8px;
+        padding-right: 16px;
+        font-size: 10px;
+        color: #a0a0a0;
+    }
+    .MainScreenHolder {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        background-color: #30303030;
+        width: calc(100vw - 30px);
+        height: calc(100vh - 120px);
+    }
+    body {
+        width: 100vw;
+        height: calc(100vh - 56px);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-family: sans-serif;
+    }
+}

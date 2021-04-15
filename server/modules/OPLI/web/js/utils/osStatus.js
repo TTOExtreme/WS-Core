@@ -12,6 +12,7 @@
  * 13: Pedido Pronto da Retirada
  * 14: Pedido Entregue
  */
+
 const OPLIstatusIDs = [
     { name: "Checar STATUS", color: "#000000", bgColor: "#ff0000" },//0
     { name: "Checar STATUS", color: "#000000", bgColor: "#ff0000" },//1

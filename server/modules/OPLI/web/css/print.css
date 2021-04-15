@@ -21,6 +21,7 @@
     background: var(--menu-item-bg);
     width: 20px;
     text-align: center;
+    float: right;
 }
 
 .wsop_print_label {
@@ -64,6 +65,7 @@
     background: var(--menu-item-bg);
     width: 20px;
     text-align: center;
+    float: right;
 }
 
 .wsop_anexo_item {

@@ -38,9 +38,6 @@ if (window.UserList || window.UpdateMainTable) { // usa a mesma interface global
     window.UpdateMainTable = null;
 }
 
-window.UpdateMainTable = setInterval(() => {
-    ClientEvents.emit("SendSocket", "WSOP/site/lst");
-}, 10 * 1000);
 
 window.UserList = class UserList {
 
@@ -144,6 +141,13 @@ window.UserList = class UserList {
                     ClientEvents.emit("SendSocket", "WSOP/site/lst");
                 }
             })
+        this.newCollums[0].headerMenu.push(
+            {
+                label: "Download CSV",
+                action: function (e, column) {
+                    ClientEvents.emit("WSOP/site/dnl", {});
+                }
+            })
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
             data: this.UserListData,
@@ -152,13 +156,13 @@ window.UserList = class UserList {
             dataTree: true,
             dataTreeStartExpanded: false,
             columns: this.newCollums,
-            height: '100%',
+            height: ((screen.width > 600) ? "100%" : "calc(100% - 30px)"),
             paginationButtonCount: 3,
             pagination: "local",
             paginationSize: 15,
             paginationSizeSelector: [10, 15, 20, 25, 30, 50, 100, 200, 500, 1000],
             movableColumns: true,
-            layout: "fitColumns",
+            layout: ((screen.width > 600) ? "fitColumns" : "fitData"),
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext
         });
@@ -174,13 +178,16 @@ window.UserList = class UserList {
                 this.UserListData = data;
                 //console.log(data);
                 this.main_table.replaceData(this.UserListData);
+                setTimeout(() => { //moved to here for broadcasting problems
+                    ClientEvents.emit("SendSocket", "WSOP/site/lst");
+                }, 10 * 1000);
             }
         });
 
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");
-            ClientEvents.emit("WSOP/produtos/close");
+            ClientEvents.emit("WSOP/produtos/close"); formatTime
         });
         ClientEvents.on("system/added/clientes", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
@@ -190,13 +197,78 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
         ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
         ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+
+
+        ClientEvents.on("WSOP/site/dnl", () => {
+            if (this.UserListData != undefined) {
+                let csv = "OS;status;data;mensagem;codigo;produtos;tamanho;qnt";
+
+
+                let getTamanho = (barcode) => {
+
+                    if (barcode.indexOf("-pp") > -1) { return "PP"; }
+                    if (barcode.indexOf("-gg") > -1) { return "GG"; }
+                    if (barcode.indexOf("-exg") > -1) { return "EXG"; }
+                    if (barcode.indexOf("-exgg") > -1) { return "EXGG"; }
+                    if (barcode.indexOf("-g3") > -1) { return "G3"; }
+                    if (barcode.indexOf("-g4") > -1) { return "G4"; }
+                    if (barcode.indexOf("-p") > -1) { return "P"; }
+                    if (barcode.indexOf("-m") > -1) { return "M"; }
+                    if (barcode.indexOf("-g") > -1) { return "G"; }
+                    if (barcode.indexOf("-rn") > -1) { return "RN"; }
+                    if (barcode.indexOf("-2") > -1) { return "2"; }
+                    if (barcode.indexOf("-4") > -1) { return "4"; }
+                    if (barcode.indexOf("-6") > -1) { return "6"; }
+                    if (barcode.indexOf("-8") > -1) { return "8"; }
+                    if (barcode.indexOf("-10") > -1) { return "10"; }
+                    if (barcode.indexOf("-12") > -1) { return "12"; }
+                    if (barcode.indexOf("-14") > -1) { return "14"; }
+                    if (barcode.indexOf("-16") > -1) { return "16"; }
+                }
+
+                this.UserListData.forEach(os => {
+                    try {
+                        csv += "\n" + os.id_li + ";" + OPLIStatusIdToName(os.status) + ";" + formatTime(os.endingIn) + ";" + os.description.replace(new RegExp("\n", "g"), " ") + ";;";
+                        let prods = JSON.parse(os.products);
+                        prods.forEach(prod => {
+                            let tam = getTamanho(prod.sku);
+                            csv += "\n;;;;\"" + prod.sku + "\";\"" + prod.nome + "\"";
+                            csv += ";\"" + tam + "\"";
+                            csv += ";\"" + parseInt(prod.quantidade) + "\"";
+
+
+                            /*"[{"altura":9,"disponibilidade":6,"id":97982435,"largura":27,"linha":1,"ncm":"",
+                            "nome":"Conjunto Regata e Shorts |PRETO |  MIKASA OPEN - ETAPA SÃO PAULO",
+                            "pedido":"/api/v1/pedido/4419","peso":"0.400","preco_cheio":"115.6000","preco_custo":null,
+                            "preco_promocional":"99.0000","preco_subtotal":"99.0000","preco_venda":"99.0000",
+                            "produto":"/api/v1/produto/68522024","produto_pai":"/api/v1/produto/68522020",
+                            "profundidade":17,"quantidade":"1.000","sku":"ZX3SK62BR-g-SJ0LMJNDC","tipo":"atributo_opcao"}]"//*/
+                        })
+                    } catch (err) {
+
+                    }
+                })
+
+                let downloadLink = document.createElement("a");
+                let blob = new Blob(["\ufeff", csv]);
+                let url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                downloadLink.download = "data.csv";
+
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+
+        });
+
     }
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
         OPLIstatusIDs.forEach((item, index) => {
             ret.push({ label: item.name, value: index })
         })
-        console.log(ret);
         return ret;
     }
 }
+

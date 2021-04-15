@@ -1,6 +1,10 @@
 const { resolve } = require("path");
 const https = require("https");
 const WSOP_Product = require('../../../../../WSOP/server/socket/v1/Produtos/dbManipulator').ProdutosManipulator;
+const fs = require('fs');
+const request = require('request');
+const path = require('path').join;
+
 let WSOP_ProductClass;
 let apiOPLIManipulator;
 
@@ -31,8 +35,9 @@ class apiManipulator {
      * Lista todos as Vendas de Site
      */
     ListAllSite() {
-        return this.db.query("SELECT C.*, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id_li desc LIMIT 100;");
+        console.log("list site")
+        return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.dados_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id_li desc limit 50;");
     }
 
     /**
@@ -161,7 +166,7 @@ class apiManipulator {
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "API: " + APIS[0].api })
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "Aplication: " + APIS[0].aplication })
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "Iniciando Cadastro de Vendas" })
-                    return new apiUtils()._LoadListSells(socket, APIS[0].api, APIS[0].aplication, 4000).then(() => {
+                    return new apiUtils()._LoadListSells(socket, APIS[0].api, APIS[0].aplication, 4258).then(() => {
                         resolve();
                     })
                 } else {
@@ -183,6 +188,20 @@ class apiManipulator {
 
 
 class apiUtils {
+
+
+    _downloadItem(uri, filename, callback) {
+        return new Promise((resolve, rej) => {
+            request.head(uri, function (err, res, body) {
+                console.log('content-type:', res.headers['content-type']);
+                console.log('content-length:', res.headers['content-length']);
+
+                request(uri).pipe(fs.createWriteStream(filename)).on('close', resolve);
+            });
+
+        })
+    };
+
     //curl -H "Content-Type: application/json" -H "Authorization: chave_api xxxxxxxxx aplicacao xxxxxxxxx" -X GET https://api.awsli.com.br/v1/categoria/
     /**
      * 
@@ -223,28 +242,29 @@ class apiUtils {
                             img = json.imagem_principal.grande;
                         }
                     }
+                    let barcode = json.sku || "";
+
+                    barcode = barcode.replace("-rn", "")
+                    barcode = barcode.replace("-2", "")
+                    barcode = barcode.replace("-4", "")
+                    barcode = barcode.replace("-6", "")
+                    barcode = barcode.replace("-8", "")
+                    barcode = barcode.replace("-10", "")
+                    barcode = barcode.replace("-12", "")
+                    barcode = barcode.replace("-14", "")
+                    barcode = barcode.replace("-16", "")
+                    barcode = barcode.replace("-pp", "")
+                    barcode = barcode.replace("-p", "")
+                    barcode = barcode.replace("-m", "")
+                    barcode = barcode.replace("-g", "")
+                    barcode = barcode.replace("-gg", "")
+                    barcode = barcode.replace("-exg", "")
+                    barcode = barcode.replace("-exgg", "")
+                    barcode = barcode.replace("-g3", "")
+                    barcode = barcode.replace("-g4", "")
+
                     if (!json.nome) {
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "Carregado: " + ID })
-                        let barcode = json.sku;
-
-                        barcode = barcode.replace("-rn", "")
-                        barcode = barcode.replace("-2", "")
-                        barcode = barcode.replace("-4", "")
-                        barcode = barcode.replace("-6", "")
-                        barcode = barcode.replace("-8", "")
-                        barcode = barcode.replace("-10", "")
-                        barcode = barcode.replace("-12", "")
-                        barcode = barcode.replace("-14", "")
-                        barcode = barcode.replace("-16", "")
-                        barcode = barcode.replace("-pp", "")
-                        barcode = barcode.replace("-p", "")
-                        barcode = barcode.replace("-m", "")
-                        barcode = barcode.replace("-g", "")
-                        barcode = barcode.replace("-gg", "")
-                        barcode = barcode.replace("-exg", "")
-                        barcode = barcode.replace("-exgg", "")
-                        barcode = barcode.replace("-g3", "")
-                        barcode = barcode.replace("-g4", "")
 
                         WSOP_ProductClass.ListByBarcode(barcode).then((products) => {
                             if (!products[0]) {
@@ -261,9 +281,26 @@ class apiUtils {
                             }
                         })
                     } else {
-                        WSOP_ProductClass.createProduto(json.nome, description || "", json.sku, 0, 0, img, 0, json.ativo, 1).then(() => {
-                            resolve();
-                        })
+                        if (json.imagem_principal) {
+                            new apiUtils()._downloadItem(json.imagem_principal.grande, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + ".jpg")).then(() => {
+
+                                new apiUtils()._downloadItem(json.imagem_principal.pequena, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + "_thumb.jpg")).then(() => {
+
+                                    WSOP_ProductClass.createProduto(json.nome, description || "", json.sku, 0, 0, "produtos/" + barcode + ".jpg", 0, json.ativo, 1).then(() => {
+                                        resolve();
+                                    }).catch(err => {
+                                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                        this.log.error("On creating product from Loja Integrada")
+                                        this.log.error(json)
+                                        this.log.error(err)
+                                    })
+                                })
+                            })
+                        } else {
+                            WSOP_ProductClass.createProduto(json.nome, description || "", json.sku, 0, 0, img, 0, json.ativo, 1).then(() => {
+                                resolve();
+                            })
+                        }
                     }
                 });
             });
@@ -459,7 +496,8 @@ class apiUtils {
                                     }
                             }
                             return Promise.all(arr).then(() => {
-                                setTimeout(() => { new apiUtils()._LoadListSells(socket, api, aplication, offset + 20).then(() => { resolve(); }); }, (60 * 1000) / (200 / 20))
+                                setTimeout(() => { new apiUtils()._LoadListSells(socket, api, aplication, offset + 20).then(() => { resolve(); }); }, (6 * 1000))
+                                // sao 300 por minuto mas estamos fazendo 200 para não exceder ou seja 20 a cada 6 segundos sendo 10 requests de 20 itens por minuto
                             })
                         } else {
                             socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos os Vendas Cadastrados" })

@@ -22,7 +22,8 @@
     width: 20px;
     text-align: center;
 }
-.opli_edt_closebtn{
+
+.opli_edt_closebtn {
     float: right;
     color: var(--div-text);
     height: 20px;
@@ -76,7 +77,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     border: 1px solid #606060;
-    height: calc(100vh - 90px);
 }
 
 .opli_edt_div p {
@@ -162,6 +162,17 @@ input[type="text"]:disabled {
     border: 1px solid #303030;
 }
 
+.opli_produto_item3 {
+    border: 2px solid #606060;
+    border-top: 1px solid #303030;
+    border-bottom: 1px solid #303030;
+}
+
+.opli_produto_item3 td {
+    width: 100px;
+    border: 1px solid #303030;
+}
+
 .opli_edt_img_thumb {
     max-width: 250px;
     max-height: 170px;
@@ -207,4 +218,22 @@ input[type="text"]:disabled {
 
 .sun-editor {
     width: calc(100vw - 200px);
+}
+
+@media (max-width: 600px) {
+    .opli_edt_div {
+        color: white;
+        font-family: sans-serif;
+        position: absolute;
+        background: var(--menu-bg);
+        left: 50vw;
+        transform: translate(calc(-50% + 15px), calc(-50% - 15px));
+        padding: 10px;
+        padding-right: 20px;
+        border-radius: 10px;
+        max-height: calc(100vh - 121px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        border: 1px solid #606060;
+    }
 }

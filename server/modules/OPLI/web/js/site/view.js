@@ -19,7 +19,7 @@ ClientEvents.on("wsop/site/view", (data) => {
         "<table style='width:100%;'>" +
         //os
         "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='wsop_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
+        "<tr><td class='opli_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_edt_anexos' class='opli_edt_anexos'>" +
         "<tr><td colspan=4><p class='opli_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
@@ -32,6 +32,28 @@ ClientEvents.on("wsop/site/view", (data) => {
 
     document.body.appendChild(div);
 
+    let getTamanho = (barcode) => {
+
+        if (barcode.indexOf("-pp") > -1) { return "PP"; }
+        if (barcode.indexOf("-gg") > -1) { return "GG"; }
+        if (barcode.indexOf("-exg") > -1) { return "EXG"; }
+        if (barcode.indexOf("-exgg") > -1) { return "EXGG"; }
+        if (barcode.indexOf("-g3") > -1) { return "G3"; }
+        if (barcode.indexOf("-g4") > -1) { return "G4"; }
+        if (barcode.indexOf("-p") > -1) { return "P"; }
+        if (barcode.indexOf("-m") > -1) { return "M"; }
+        if (barcode.indexOf("-g") > -1) { return "G"; }
+        if (barcode.indexOf("-rn") > -1) { return "RN"; }
+        if (barcode.indexOf("-2") > -1) { return "2"; }
+        if (barcode.indexOf("-4") > -1) { return "4"; }
+        if (barcode.indexOf("-6") > -1) { return "6"; }
+        if (barcode.indexOf("-8") > -1) { return "8"; }
+        if (barcode.indexOf("-10") > -1) { return "10"; }
+        if (barcode.indexOf("-12") > -1) { return "12"; }
+        if (barcode.indexOf("-14") > -1) { return "14"; }
+        if (barcode.indexOf("-16") > -1) { return "16"; }
+    }
+
     let anexosTable = document.getElementById("wsop_edt_anexos");
     let htm = "";
     if (data.anexo != undefined) {
@@ -42,28 +64,51 @@ ClientEvents.on("wsop/site/view", (data) => {
 
     }
     let produtosTable = document.getElementById("wsop_edt_produtos");
-    htm = "<tr class='wsop_produto_item1'><td style='width:30px'>Ações:</td><td>Código:</td><td>Item:</td><td>Tamanho:</td><td>Quantidade:</td></tr>";
+    htm = "<tr class='opli_produto_item1'><td>Código:</td><td>Tamanho:</td><td>Quantidade:</td></tr>";
 
     if (data.products != undefined) {
-        data.products = JSON.parse(data.products)
+        try {
+            data.products = JSON.parse((data.products))
+        } catch (eer) { }
+
         data.products.forEach((produto) => {
-            htm += "<tr class='wsop_produto_item1'>" +
+            barcode = produto.sku || "";
+            barcode = barcode.replace("-rn", "")
+            barcode = barcode.replace("-2", "")
+            barcode = barcode.replace("-4", "")
+            barcode = barcode.replace("-6", "")
+            barcode = barcode.replace("-8", "")
+            barcode = barcode.replace("-10", "")
+            barcode = barcode.replace("-12", "")
+            barcode = barcode.replace("-14", "")
+            barcode = barcode.replace("-16", "")
+            barcode = barcode.replace("-pp", "")
+            barcode = barcode.replace("-p", "")
+            barcode = barcode.replace("-m", "")
+            barcode = barcode.replace("-g", "")
+            barcode = barcode.replace("-gg", "")
+            barcode = barcode.replace("-exg", "")
+            barcode = barcode.replace("-exgg", "")
+            barcode = barcode.replace("-g3", "")
+            barcode = barcode.replace("-g4", "")
+
+            htm += "<tr class='opli_produto_item1'>" +
                 "<td>" + produto.sku + "</td>" +
-                "<td colspan=2>" + produto.nome + "</td>" +
-                "<td>" + produto.sku.substring((produto.sku.lastIndexOf("-") > -1) ? produto.sku.lastIndexOf("-") + 1 : 0) + "</td>" +
-                "<td>" + produto.quantidade + "</td>" +
-                "<tr class='wsop_produto_item2'><td><center><img class='opli_edt_img_thumb' alt='Imagem indisponivel' src='./module/OPLI/img/site/" + produto.sku + ".img'></td>" +
+                "<td><center>" + getTamanho(produto.sku) + "</td>" +
+                "<td><center>" + produto.quantidade + "</td>" +
+                "</tr><tr class='opli_produto_item3'><td colspan=3>" + produto.nome + "</td></tr>" +
+                "<tr class='opli_produto_item2'><td><center><img class='opli_edt_img_thumb' alt='Imagem indisponivel' src='./module/WSOP/img/produtos/" + barcode + "_thumb.jpg'></td>" +
                 "<td><input value='Validar' type='button' onclick='ClientEvents.emit(\"WSOP/site/qrcode\"," + JSON.stringify({ id: produto.sku, data: produto.sku }) + ")'></input></td><td>Valido:";
 
             for (let i = 0; i < parseInt(produto.quantidade); i++) {
                 htm += "<input id='" + produto.sku + "' type='checkbox' onchange='ClientEvents.emit(\"WSOP/site/checkstatus\"," + JSON.stringify(data.products) + ")'></input>"
             }
 
-            htm += " </td><td></td><td></td></tr>";
+            htm += " </tr>";
         });
         produtosTable.innerHTML += htm;
     }
-    produtosTable.innerHTML += "<tr class='wsop_produto_item1'><td style='width:30px'><input id='wsop_changestatus' onclick='ClientEvents.emit(\"WSOP/site/changestatus\"," + JSON.stringify(data) + ")' type='button' value='Expedição' disabled></td></tr>";
+    produtosTable.innerHTML += "<tr class='opli_produto_item1'><td style='width:30px'><input id='wsop_changestatus' onclick='ClientEvents.emit(\"WSOP/site/changestatus\"," + JSON.stringify(data) + ")' type='button' value='Expedição' disabled></td></tr>";
 
     ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");
 });

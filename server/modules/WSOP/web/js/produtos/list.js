@@ -87,6 +87,13 @@ window.UserList = class UserList {
                         ClientEvents.emit("WSOP/produtos/add");
                     }
                 })
+            this.newCollums[0].headerMenu.push(
+                {
+                    label: "Download CSV",
+                    action: function (e, column) {
+                        ClientEvents.emit("WSOP/produtos/dnl", {});
+                    }
+                })
         }
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
@@ -123,7 +130,52 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
         ClientEvents.on("system/removed/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
         ClientEvents.on("system/edited/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+
+        ClientEvents.on("WSOP/produtos/dnl", () => {
+            if (this.UserListData != undefined) {
+                let csv = "codigo;nome;genero;modelo;gola;vies;descricao;ativo";
+
+                this.UserListData.forEach(os => {
+                    try {
+                        csv += "\n" + os.barcode + ";" + os.name + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).genero + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).modelo + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).gola + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).vies + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).description + ";" + (os.active == 1 ? "Sim" : "Não");
+
+
+
+                        /*
+                        { title: 'Nome', field: 'name', headerFilter: "input" },
+                        { title: 'Modelo', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).modelo), headerFilter: "input" },
+                        { title: 'Gola', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).gola), headerFilter: "input" },
+                        { title: 'Vies', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).vies), headerFilter: "input" },
+                        { title: 'Genero', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).genero), headerFilter: "input" },
+                        { title: 'Descrição', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).description), headerFilter: "input" },
+
+                        
+                        "[{"altura":9,"disponibilidade":6,"id":97982435,"largura":27,"linha":1,"ncm":"",
+                        "nome":"Conjunto Regata e Shorts |PRETO |  MIKASA OPEN - ETAPA SÃO PAULO",
+                        "pedido":"/api/v1/pedido/4419","peso":"0.400","preco_cheio":"115.6000","preco_custo":null,
+                        "preco_promocional":"99.0000","preco_subtotal":"99.0000","preco_venda":"99.0000",
+                        "produto":"/api/v1/produto/68522024","produto_pai":"/api/v1/produto/68522020",
+                        "profundidade":17,"quantidade":"1.000","sku":"ZX3SK62BR-g-SJ0LMJNDC","tipo":"atributo_opcao"}]"//*/
+                    } catch (err) {
+
+                    }
+                })
+
+                let downloadLink = document.createElement("a");
+                let blob = new Blob(["\ufeff", csv]);
+                let url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                downloadLink.download = "data.csv";
+
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+
+        });
     }
+
+
 }
 
 new window.UserList();
