@@ -13,7 +13,7 @@ ClientEvents.on("wsop/site/view", (data) => {
         "<div id='wsop_edt' class='opli_edt'>" +
         "<table style='width:100%;'>" +
         //OS ID
-        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + OPLIStatusIdToName(data.status) + " | OS: " + data.id_li + "</b></td></tr>" +
+        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + window.utils.OPLIStatusIdToName(data.status) + " | OS: " + data.id_li + "</b></td></tr>" +
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
@@ -131,5 +131,5 @@ ClientEvents.on('WSOP/site/checkstatus', (data) => {
 })
 
 ClientEvents.on('WSOP/site/changestatus', (data) => {
-    console.log(data)
+    //console.log(data)
 })

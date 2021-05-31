@@ -66,14 +66,20 @@ class User {
                 }).then((result) => {
                     if (result[0]) {
                         this.myself = new UserStruct(result[0]);
-                        return this.resetUUID()
-                            .then(() => {
-                                return this._loadPermissions();
-                                return Promise.resolve(this.myself)
-                            }).catch((err) => {
-                                this.log.error(err);
-                                return Promise.reject("Not Able to reset UUID for user: <" + username + "> in database.");
-                            })
+
+                        if (this.myself.uuid != undefined || this.myself.uuid != null) {
+                            return this._loadPermissions();// reset quando nulo ou corrompido
+                        } else {
+                            return this.resetUUID()
+                                .then(() => {
+                                    return this._loadPermissions();
+                                    //return Promise.resolve(this.myself)
+                                }).catch((err) => {
+                                    this.log.error(err);
+                                    return Promise.reject("Not Able to reset UUID for user: <" + username + "> in database.");
+                                })
+                        }
+
                     } else {
                         return Promise.reject();
                     }
@@ -256,7 +262,7 @@ class User {
                 if (!this.checkPermissionSync("dev/usr/login")) {
                     this.LogOut(); //create a logout in case the user is blocked
                 }
-                return Promise.reject("Usuário sem permissão para a ação");
+                return Promise.reject("Usuário sem permissão para a ação: " + permissionCode);
             }
         }
     }
@@ -407,7 +413,8 @@ class User {
      * @param {JSON} menus 
      */
     AppendMenus(menus) {
-        this.Menus = this.Menus.concat(menus);
+        this._AdmMenus = this._AdmMenus.concat(menus);
+        this._generateMenus();
     }
 
     /**

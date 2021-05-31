@@ -65,7 +65,7 @@ class ProdutosManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editProduto(ID, name, description, barcode, price, cost, img, inventory, active, UserID) {
+    editProduto(ID, name = "", description = "", barcode = "", price, cost, img, inventory = 0, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Produtos SET" +
             ((name != "") ? " name='" + name + "'," : " ") +

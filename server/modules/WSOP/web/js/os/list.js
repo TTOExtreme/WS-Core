@@ -12,6 +12,8 @@ ClientEvents.emit("LoadExternal", [
     "./js/libs/suneditor.min.js",
     "./css/screen/suneditor.min.css",
     "./module/WSOP/js/utils/osStatus.js",
+    "./module/WSOP/js/utils/timeCalc.js",
+    "./module/WSOP/js/utils/formaEnvio.js",
     "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/utils/consulta.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
@@ -52,7 +54,7 @@ window.UserList = class UserList {
         //console.log(rowdata);
         let htm = document.createElement("div");
 
-        if (Myself.checkPermission("WSOP/menu/os")) {
+        if (Myself.checkPermission("WSOP/os/osview")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-print");
             bot.setAttribute("title", "Imprimir OS");
@@ -60,7 +62,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/print", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/menu/os")) {
+        if (Myself.checkPermission("WSOP/os/opview")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-print");
             bot.setAttribute("title", "Imprimir OP");
@@ -84,7 +86,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/edt")) {
+        if (Myself.checkPermission("WSOP/os/osview")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
@@ -120,9 +122,9 @@ window.UserList = class UserList {
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
                 formatter: function (cell) {
-                    cell._cell.element.style.background = StatusIdToBgColor(cell.getRow().getData().status);
-                    cell._cell.element.style.color = StatusIdToColor(cell.getRow().getData().status);
-                    return StatusIdToName(cell.getRow().getData().status);
+                    cell._cell.element.style.background = new window.Modules.WSOP.StatusID().StatusIdToBgColor(cell.getRow().getData().status);
+                    cell._cell.element.style.color = new window.Modules.WSOP.StatusID().StatusIdToColor(cell.getRow().getData().status);
+                    return new window.Modules.WSOP.StatusID().StatusIdToName(cell.getRow().getData().status);
                 }
             },
             { title: 'Expira Em', field: 'endingIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },

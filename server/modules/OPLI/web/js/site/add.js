@@ -86,7 +86,7 @@ ClientEvents.on("WSOP/os/save", () => {
 
 
 ClientEvents.on("wsop/os/clientes/lst", (arr) => {
-    console.log(arr)
+    //console.log(arr)
     let inp = document.getElementById("wsop_add_cliente");
     var currentFocus;
 

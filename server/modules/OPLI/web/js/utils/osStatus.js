@@ -12,8 +12,11 @@
  * 13: Pedido Pronto da Retirada
  * 14: Pedido Entregue
  */
+if (window.utils == undefined) {
+    window.utils = {};
+}
 
-const OPLIstatusIDs = [
+window.utils.OPLIstatusIDs = [
     { name: "Checar STATUS", color: "#000000", bgColor: "#ff0000" },//0
     { name: "Checar STATUS", color: "#000000", bgColor: "#ff0000" },//1
     { name: "Aguardando Pagamento", color: "#ffffff", bgColor: "#227d76" },//2
@@ -37,31 +40,32 @@ const OPLIstatusIDs = [
     { name: "Pagamento em Chargeback", color: "#ffffff", bgColor: "#2c30f1" },//?
 ]
 
-function OPLIStatusIdToName(ID) {
-    if (ID < OPLIstatusIDs.length) {
-        return OPLIstatusIDs[ID].name
+window.utils.OPLIStatusIdToName = (ID) => {
+    if (ID < window.utils.OPLIstatusIDs.length) {
+        return window.utils.OPLIstatusIDs[ID].name
     }
     return "-"
 }
 
-function OPLIStatusIdToOptList(selected = 0) {
+window.utils.OPLIStatusIdToOptList = (selected = 0) => {
     let ret = ""
-    OPLIstatusIDs.forEach((item, index) => {
-        if (item.name != "Checar STATUS")
+    window.utils.OPLIstatusIDs.forEach((item, index) => {
+        if (item.name != "Checar STATUS") {
             ret += "<option value='" + index + "' " + ((index == selected) ? "selected" : "") + ">" + item.name + "</option>";
+        }
     })
     return ret;
 }
 
-function OPLIStatusIdToColor(ID = 0) {
-    if (ID < OPLIstatusIDs.length) {
-        return OPLIstatusIDs[ID].color
+window.utils.OPLIStatusIdToColor = (ID = 0) => {
+    if (ID < window.utils.OPLIstatusIDs.length) {
+        return window.utils.OPLIstatusIDs[ID].color
     }
 }
 
-function OPLIStatusIdToBgColor(ID = 0) {
-    if (ID < OPLIstatusIDs.length) {
-        return OPLIstatusIDs[ID].bgColor
+window.utils.OPLIStatusIdToBgColor = (ID = 0) => {
+    if (ID < window.utils.OPLIstatusIDs.length) {
+        return window.utils.OPLIstatusIDs[ID].bgColor
     }
 }
 

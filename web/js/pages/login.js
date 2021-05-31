@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/libs/crypto-js.js",
         "./js/libs/bcypher.js",
     ]).then(() => {
-        console.log("Finished Loading");
+        //console.log("Finished Loading");
         ClientEvents.emit("Page_Loaded");
         document.getElementById("password").addEventListener("keyup", loginEnter);
         document.getElementById("submit").onclick = function (ev) {
@@ -34,16 +34,16 @@ document.addEventListener("DOMContentLoaded", function (event) {
                             if (!document.getElementById("login-msgbox").classList.contains("show"))
                                 document.getElementById("login-msgbox").classList.toggle('show');
                             document.getElementById("login-msgbox").innerText = data;
-                        } catch (err) {}
+                        } catch (err) { }
                         setTimeout(() => {
                             try {
                                 if (document.getElementById("login-msgbox").classList.contains("show"))
                                     document.getElementById("login-msgbox").classList.toggle('show');
-                            } catch (err) {}
+                            } catch (err) { }
                         }, 800)
                     })
                 }
-            }).catch(err => {})
+            }).catch(err => { })
 
         }
 

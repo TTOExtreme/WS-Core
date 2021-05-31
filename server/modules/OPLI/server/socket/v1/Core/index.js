@@ -20,7 +20,7 @@ class Core {
             {
                 Name: "Site",
                 Id: "menu/OPLI/site",
-                Permission: "menu/WSOP/lst",
+                Permission: "OPLI/menu/site",
                 Icon: "",
                 EventCall: "Load",
                 EventData: "./module/OPLI/js/site/list.js",

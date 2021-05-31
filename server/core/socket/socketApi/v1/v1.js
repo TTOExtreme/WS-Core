@@ -41,14 +41,12 @@ class v1 {
                                 _socket = socket;
                                 this._loadModules(_socket, Myself);
 
-                                socket.emit("auth-ok", Myself.getUserClientData());
-
                                 var address = socket.handshake.address;
                                 Myself.LogIn({
                                     ip: clearIpv6(address)
                                 });
 
-
+                                socket.emit("auth-ok", Myself.getUserClientData());
                                 return Promise.resolve();
                             })
                         }).catch(() => {

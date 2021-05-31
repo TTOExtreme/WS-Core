@@ -1,6 +1,6 @@
 
 ClientEvents.on("grp/edt", (data) => {
-    console.log(data);
+    //console.log(data);
     ClientEvents.emit("grp/edt/close");
     /**
      * id

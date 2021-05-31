@@ -7,7 +7,7 @@ class ImageManipulator {
     }
 
     isValidMedia(src) {
-        return /\.(jpe?g|png)$/.test(src);
+        return /\.(jpeg|png|jpg|bmp)$/.test(src);
     }
 
     isValidBaseDir(src) {

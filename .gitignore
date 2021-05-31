@@ -3,6 +3,9 @@ node_modules/
 server/modules/WSOP/web/img/os
 server/modules/WSOP/web/img/produtos
 server/modules/WSOP/web/img/emitente
+log1.log
 log.log
+log/*
 info.json
 sslcert/*
+Testes

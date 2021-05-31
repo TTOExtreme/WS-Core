@@ -5,6 +5,7 @@ body {
   margin: 0;
   padding: 0;
   transition: 1s opacity;
+  overflow: hidden;
 }
 
 .MainScreenHolder {

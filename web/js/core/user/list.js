@@ -5,6 +5,7 @@ ClientEvents.emit("LMI-CloseAll");
 
 ClientEvents.emit("LoadExternal", [
     "./js/core/user/add.js",
+    "./js/core/user/setpass.js",
     "./js/core/user/edt.js",
     "./js/core/user/perm.js",
     "./js/core/user/disable.js",
@@ -32,6 +33,14 @@ window.UserList = class UserList {
             bot.setAttribute("title", "Editar");
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("usr/edt", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("adm/usr/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-key");
+            bot.setAttribute("title", "Mudar senha");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("usr/set/pass", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("adm/usr/disable")) {

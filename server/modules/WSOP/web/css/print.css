@@ -75,6 +75,7 @@
 
 .wsop_anexo_item img {
     vertical-align: bottom;
+    max-height: 140px;
 }
 
 .wsop_print_anexos td {

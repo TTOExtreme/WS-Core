@@ -1,6 +1,6 @@
 ClientEvents.on("WSOP/os/anexo/edt", (data) => {
     ClientEvents.emit("WSOP/os/anexo/close");
-    console.log(data)
+    //console.log(data)
     /**
      * create Show Page for user info
      */
@@ -8,7 +8,7 @@ ClientEvents.on("WSOP/os/anexo/edt", (data) => {
     div.setAttribute("class", "wsop_add_div");
     div.setAttribute("id", "wsop_anexo_div");
     let ext = data.filename.substring(data.filename.lastIndexOf("."));
-    if (ext != ".png" && ext != ".jpeg" && ext != ".gif" && ext != ".bmp" && ext != ".png") {
+    if (ext != ".png" && ext != ".jpeg" && ext != ".gif" && ext != ".bmp" && ext != ".jpg") {
         data.replace_img = "file_thumb.png";
     }
     div.innerHTML = "" +
@@ -17,7 +17,7 @@ ClientEvents.on("WSOP/os/anexo/edt", (data) => {
         "<tr><td><center>" + (data.name || "") + "</center></td></tr>" +
         "<tr><td><img class='wsop_anexo_img' alt='' src='./module/WSOP/img/" + (data.replace_img || data.filename) + "'></td></tr>" +
         "<tr><td><a id='download_img' href=\"./module/WSOP/img/" + data.filename + "\" download=\"" + (data.name || "anexo") + data.filename.substring(data.filename.lastIndexOf(".")) + "\"></a></td></tr>" +
-        "<tr><td><input id='wpma_sites_submit' value='Excluir' type='button'  onclick='ClientEvents.emit(\"SendSocket\",\"wsop/os/anexo/del\", {id:" + data.id + "})'><input id='wpma_sites_submit' value='Download' type='button' onclick='document.getElementById(\"download_img\").click()'></td></tr>" +
+        "<tr><td><input id='wpma_sites_submit' value='Excluir' type='button'  onclick='ClientEvents.emit(\"SendSocket\",\"wsop/os/anexo/del\", {id:" + data.id + ",id_os:" + data.id_os + "})'><input id='wpma_sites_submit' value='Download' type='button' onclick='document.getElementById(\"download_img\").click()'></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
@@ -25,7 +25,7 @@ ClientEvents.on("WSOP/os/anexo/edt", (data) => {
 
 ClientEvents.on("WSOP/os/anexo/view", (data) => {
     ClientEvents.emit("WSOP/os/anexo/close");
-    console.log(data)
+    //console.log(data)
     if (data.thumb == undefined && data.img != undefined) {
         data.thumb = data.img.replace(".", "_thumb.");
     }

@@ -1,20 +1,20 @@
 
 ClientEvents.on("wsop/os/print", (data) => {
-    ClientEvents.emit("WSOP/os/print/close");
+    ClientEvents.emit("close_menu", 'wsop_print_div')
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_print_div");
+    div.setAttribute("class", "wsop_print_div menu_dragger");
     div.setAttribute("id", "wsop_print_div");
 
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
-        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/print/close\")'>X</p></td></tr></table>" +
+        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_print_div')>X</p></td></tr></table>" +
         "<div id='wsop_print' class='wsop_print'>" +
         "<table style='width:100%;'>" +
         //OS ID
-        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
+        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
@@ -33,7 +33,7 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<tr><td><b>Cliente:</td><td><b>Responsável:</tr>" +
         "<tr><td style='font-size:10pt'>" + data.cliente + "</td><td style='font-size:10pt'>" + data.createdBy + "</td></tr><tr>" +
         "<tr><td style='font-size:10pt'>" + data.C_cpf_cnpj + "</td><td style='font-size:10pt'>E-Mail: " + data.U_email + "</td></tr>" +
-        "<tr><td style='font-size:10pt'>" + data.C_logradouro + "," + data.C_numero + " - " + data.C_bairro + " " + data.C_municipio + "-" + data.C_uf + "</td><td style='font-size:10pt'>Tel.: " + data.U_telefone + "</td></tr>" +
+        "<tr><td style='font-size:10pt'>" + data.C_logradouro + "," + data.C_numero + " - " + data.C_bairro + " " + data.C_municipio + "-" + data.C_uf + "  " + data.C_country + "</td><td style='font-size:10pt'>Tel.: " + data.U_telefone + "</td></tr>" +
         "<tr><td style='font-size:10pt'>" + data.C_cep + "</td></tr>" +
         "<tr><td style='font-size:10pt'>Telefone: " + data.C_telefone + " - E-Mail: " + data.C_email + "</td></tr>" +
         "</table>" +
@@ -51,6 +51,7 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<tr><td colspan=4 style='height:20px'></td></tr>" +
         "</table>" +
         "<table style='width:100%;'>" +
+        "<tr style='font-size:12pt'><td colspan=3>" + window.Modules.WSOP.termos.termoCompraPrivateLabel + "</td></tr><tr>" +
         "<tr style='font-size:12pt'><b><td><center><pre>Data\n\n_______________________________</td><td><center><pre>Assinatura Cliente\n\n_______________________________</td><td><center><pre>Assinatura Responsável\n\n_______________________________</td></tr><tr>" +
         "</table>" +
         "</div>";
@@ -69,24 +70,24 @@ ClientEvents.on("wsop/os/print", (data) => {
     let total = 0;
     let totalqnt = 0;
     data.produtos.forEach((produto) => {
-        total += (produto.qnt * (produto.price).replace(" ", ""));
+        total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
         totalqnt += produto.qnt;
         htm += "<tr class='wsop_produto_item1'>" +
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<td>R$ " + (produto.price).replace(" ", "") + "</td>" +
-            "<td>R$ " + (produto.qnt * (produto.price).replace(" ", "")).toFixed(2) + "</td>" +
+            "<td>R$ " + parseFloat(produto.price.replace(",", ".").replace(" ", "")) + "</td>" +
+            "<td>R$ " + (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", ""))).toFixed(2) + "</td>" +
             "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:50%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
     });
-    htm += "<tr class='wsop_produto_item1'><td></td><td><b>Qntidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    produtosTable.innerHTML += htm;
-});
+    //htm += "<tr class='wsop_produto_item1'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
 
-ClientEvents.on("WSOP/os/print/close", () => {
-    if (document.getElementById("wsop_print_div")) {
-        document.body.removeChild(document.getElementById("wsop_print_div"));
-    }
+    htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
+    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
+    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Frete:</td><td>R$ " + parseFloat(data.precoEnvio).toFixed(2) + "</td>";
+    htm += "<tr><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
+
+    produtosTable.innerHTML += htm;
 });
 
 function PrintElem(elem) {
@@ -105,7 +106,7 @@ function PrintElem(elem) {
     mywindow.focus(); // necessary for IE >= 10*/
 
     mywindow.print();
-    console.log("printing")
+    //console.log("printing")
 
     return true;
 }

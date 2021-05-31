@@ -4,6 +4,7 @@
 ClientEvents.setCoreEvent("usr/get/preferences"); //quando recebe dados do servidor
 ClientEvents.on("usr/get/preferences", (preferences) => {
     Myself.preferences = preferences;
+    ClientEvents.emit("SendSocket", "usr/lst/menu", {});
 });
 
 ClientEvents.setCoreEvent("usr/load/preferences"); //quando e feito request para o servidor

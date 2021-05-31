@@ -57,6 +57,16 @@ class Socket {
                         }
                     })
                 })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to show Products: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -82,6 +92,16 @@ class Socket {
                             time: 1000
                         }
                     })
+                })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to List OS Products: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
                 })
             })
         })
@@ -118,7 +138,7 @@ class Socket {
                         })
                     })
                 } else {
-                    console.log(req)
+                    //console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -128,6 +148,16 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Add Products: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -147,7 +177,7 @@ class Socket {
 
                     fs.writeFileSync(filepath + name, req[0].stream);
 
-                    if (req[0].ext == ".png" || req[0].ext == ".jpeg" || req[0].ext == ".gif" || req[0].ext == ".bmp" || req[0].ext == ".png") {
+                    if (req[0].ext == ".png" || req[0].ext == ".jpeg" || req[0].ext == ".gif" || req[0].ext == ".bmp" || req[0].ext == ".jpg") {
 
                         this._imageClass.thumb(filepath + name, (filepath + name).replace(".", "_thumb."), 300, 170).then(() => {
 
@@ -182,6 +212,16 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Add Products File: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
 
         })
@@ -192,13 +232,7 @@ class Socket {
         socket.on("wsop/produtos/edt", (req) => {
             this._myself.checkPermission("WSOP/produtos/add").then(() => {
                 if (req[0].id &&
-                    req[0].name &&
-                    req[0].description &&
-                    req[0].barcode &&
-                    req[0].price &&
-                    req[0].cost &&
-                    req[0].img &&
-                    req[0].inventory
+                    req[0].img
                 ) {
                     this._ProdutosClass.editProduto(req[0].id, req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].cost, req[0].img, req[0].inventory, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
@@ -219,7 +253,7 @@ class Socket {
                         })
                     })
                 } else {
-                    console.log(req)
+                    //console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -229,6 +263,16 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to edt Products: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -254,6 +298,16 @@ class Socket {
                             time: 1000
                         }
                     })
+                })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Delete Products: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
                 })
             })
         })

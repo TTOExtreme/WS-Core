@@ -24,6 +24,7 @@ ClientEvents.on("wsop/clientes/edt", (data) => {
         "<tr><td class='wsop_edt_label'>Bairro:</td><td><input id='wsop_add_bairro' type='text' value='" + data.bairro + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Município:</td><td><input id='wsop_add_municipio' type='text' value='" + data.municipio + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Estado:</td><td><input id='wsop_add_uf' type='text' value='" + data.uf + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Pais:</td><td><input id='wsop_add_country' type='text' value='" + data.country + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Telefone:</td><td><input id='wsop_add_telefone' type='text' value='" + data.telefone + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>E-Mail:</td><td><input id='wsop_add_email' type='text' value='" + data.email + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
@@ -46,6 +47,7 @@ ClientEvents.on("WSOP/clientes/edt", () => {
         bairro: document.getElementById("wsop_add_bairro").value,
         municipio: document.getElementById("wsop_add_municipio").value,
         uf: document.getElementById("wsop_add_uf").value,
+        country: document.getElementById("wsop_add_country").value,
         telefone: document.getElementById("wsop_add_telefone").value,
         email: document.getElementById("wsop_add_email").value,
         iscnpj: document.getElementById("wsop_add_iscnpj").checked,

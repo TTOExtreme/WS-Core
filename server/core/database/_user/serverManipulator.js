@@ -60,9 +60,22 @@ class UserServer {
      * @returns {Promise}
      */
     edtUser(id, name, pass, active, myselfID = 1) {
-
         return this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
             " SET name='" + name + ((active != undefined) ? "', active=" + ((active) ? 1 : 0) : "") + ", modifiedBy=" + myselfID + ", modifiedIn=" + Date.now() + "" +
+            " WHERE id=" + id + "");
+    }
+
+    /**
+     * Edit user password
+     * @param {Int} id 
+     * @param {String} pass 
+     * @param {Int} myselfID 
+     * @returns {Promise}
+     */
+    edtUserPass(id, pass, myselfID = 1) {
+        const salt = this.bcypher.generate_salt();
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+            " SET modifiedBy = " + myselfID + ", modifiedIn = " + Date.now() + ", password = '" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "', salt = '" + salt + "'" +
             " WHERE id=" + id + "");
     }
 

@@ -90,7 +90,7 @@ ClientEvents.on("LMU-SetInfo", (info) => {
 ClientEvents.setCoreEvent("Logged")
 ClientEvents.on("Logged", (myself) => {
     ClientEvents.emit("LMU-SetInfo", myself);
-    ClientEvents.emit("SendSocket", "usr/lst/menu", {});
+    //ClientEvents.emit("SendSocket", "usr/lst/menu", {});
 })
 
 ClientEvents.setCoreEvent("LMI-CloseAll")

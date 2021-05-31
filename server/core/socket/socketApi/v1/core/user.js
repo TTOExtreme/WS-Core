@@ -290,6 +290,36 @@ class Socket {
                 })
             })
         })
+        /**
+         * User set Pass
+         */
+        socket.on("usr/set/pass", (data) => {
+            this._myself.checkPermission("adm/usr/edt").then(() => {
+                this._userServer.edtUserPass(data[0].id_user, data[0].pass, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Editado com sucesso",
+                            status: "OK",
+                            call: "SendSocket",
+                            data: "adm/user/lst"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
 
         /**
          * User Set Preferences

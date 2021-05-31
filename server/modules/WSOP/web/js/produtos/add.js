@@ -81,7 +81,7 @@ ClientEvents.on("WSOP/produtos/save", () => {
 })
 
 ClientEvents.on("uploadIMG", () => {
-    console.log("upload")
+    //console.log("upload")
     if (document.getElementById("wsop_add_produto_img")) {
         let input = document.getElementById("wsop_add_produto_img");
         if (input.files && input.files[0]) {

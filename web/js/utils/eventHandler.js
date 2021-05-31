@@ -23,9 +23,11 @@ class ClientEvent {
      */
     emit(name, ...args) {
         /*
-        console.log(name);
-        console.log(args);
-        //*/
+                console.log("\\/Event emiter:");
+                console.log(name);
+                console.log(args);
+                console.log("/\\");
+                //*/
         if (this._events[name]) {
             this._events[name].forEach(event => {
                 if (typeof (event.then) === 'function') {

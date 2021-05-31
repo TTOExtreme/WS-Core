@@ -13,10 +13,20 @@ class osManipulator {
     }
 
     /**
-     * Lista todos os Clientes cadastrados sem filtro
+     * Lista todos As OS cadastrados sem filtro
      */
     ListAll(id = "") {
-        return this.db.query("SELECT OS.*, U.name as createdBy, U.email as U_email, U.telefone as U_telefone, C.name as cliente, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+        return this.db.query("SELECT OS.*, OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, U.email as U_email, U.telefone as U_telefone, C.name as cliente, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.country as C_country, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
+            " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
+            " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : ";") + " ;");
+    }
+
+    /**
+     * Lista todos As OS cadastrados sem filtro
+     */
+    ListID(id = "") {
+        return this.db.query("SELECT OS.*, U.name as createdBy, OS.createdBy as creatorId, U.email as U_email, U.telefone as U_telefone, C.name as cliente, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.country as C_country, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
             " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : ";") + " ;").then((list) => {
@@ -25,7 +35,7 @@ class osManipulator {
                 list.forEach(item => {
                     allProm.push(new Promise((resolve, reject) => {
                         return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._WSOP_OSAnexos  WHERE active=1 AND id_os=" + item.id + ";").then(anexos => {
-                            return this.db.query("SELECT R.*, P.name, P.barcode,P.img,P.price FROM " + this.db.DatabaseName + ".rlt_Produtos_OS AS R " +
+                            return this.db.query("SELECT R.*, P.name, P.barcode,P.img,P.price,P.cost, P.description FROM " + this.db.DatabaseName + ".rlt_Produtos_OS AS R " +
                                 " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Produtos as P on P.id = R.id_produtos " +
                                 " WHERE R.active=1 AND R.id_os=" + item.id + ";").then(produtos => {
                                     let it = item;
@@ -54,12 +64,12 @@ class osManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createOS(id_Cliente, description, status, active, UserID) {
-
+    createOS(id_Cliente, description, status, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
+        //console.log(endingIn)
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
-            " (id_Cliente, description, status, active, createdBy, createdIn)" +
+            " (id_Cliente, description, status, formaEnvio,caixa,country,uf, prazo, endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_Cliente + "','" + description + "','" + status + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + id_Cliente + "','" + description + "','" + status + "','" + formaEnvio + "','" + caixa + "','" + country + "','" + uf + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
@@ -71,11 +81,21 @@ class osManipulator {
      * @param {*} active 
      * @param {*} UserID 
      */
-    editOS(ID, description, status, active, UserID) {
-
+    editOS(ID, description, status, formaEnvio, caixa, country, uf, statusChange, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
+        console.log("precoenvio: " + precoEnvio)
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
             " status='" + status + "'," +
+            " formaEnvio='" + formaEnvio + "'," +
+            " caixa='" + caixa + "'," +
+            " country='" + country + "'," +
+            " uf='" + uf + "'," +
+            " statusChange='" + statusChange + "'," +
+            " prazo='" + prazo + "'," +
+            " price='" + price + "'," +
+            " precoEnvio='" + precoEnvio + "'," +
+            " desconto='" + desconto + "'," +
+            " endingIn=" + endingIn + "," +
             " active=" + (active ? 1 : 0) + "," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
             " WHERE id='" + ID + "';");
@@ -87,10 +107,11 @@ class osManipulator {
      * @param {*} status 
      * @param {*} UserID 
      */
-    editStatusOS(ID, status, UserID) {
+    editStatusOS(ID, status, statusChange, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " status='" + status + "'," +
+            " statusChange='" + statusChange + "'," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
             " WHERE id='" + ID + "';");
     }
@@ -138,9 +159,8 @@ class osManipulator {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OSAnexos SET" +
             " active=0," +
-            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
-            " ,deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " " +
-            " ,modifiedBy='" + UserID + "', modifiedIn=" + Date.now() + " " +
+            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "', " +
+            " deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " " +
             " WHERE id=" + ID + ";");
     }
 
@@ -150,6 +170,19 @@ class osManipulator {
             " (id_os, id_produtos, obs,qnt, active, createdBy, createdIn)" +
             " VALUES " +
             " ('" + ID + "','" + id_produto + "','" + obs + "'," + qnt + ",1," + UserID + "," + Date.now() + ");");
+    }
+
+
+
+    edtProduto(ID, qnt, obs, UserID) {
+        console.log("UPDATE  " + this.db.DatabaseName + ".rlt_Produtos_OS SET " +
+            " qnt=" + qnt + ", obs='" + obs + "'," +
+            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
+            " WHERE id=" + ID + ";")
+        return this.db.query("UPDATE  " + this.db.DatabaseName + ".rlt_Produtos_OS SET " +
+            " qnt=" + qnt + ", obs='" + obs + "'," +
+            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
+            " WHERE id=" + ID + ";");
     }
 
     /**
@@ -162,9 +195,8 @@ class osManipulator {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_Produtos_OS SET" +
             " active=0," +
-            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
-            " ,deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " " +
-            " ,modifiedBy='" + UserID + "', modifiedIn=" + Date.now() + " " +
+            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "', " +
+            " deactivatedBy='" + UserID + "', deactivatedIn=" + Date.now() + " " +
             " WHERE id=" + ID + ";");
     }
 }

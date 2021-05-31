@@ -19,13 +19,13 @@ ClientEvents.emit("LoadExternal", [
     //"./module/OPLI/js/utils/ProdutosStruct.js",
     //"./module/OPLI/js/produtos/add.js",
     //"./module/OPLI/js/clientes/add.js",
-    //"./module/OPLI/js/os/add.js",
+    //"./module/OPLI/js/site/add.js",
     "./module/OPLI/js/site/view.js",
-    //"./module/OPLI/js/os/print.js",
-    //"./module/OPLI/js/os/printop.js",
-    //"./module/OPLI/js/os/del.js",
-    //"./module/OPLI/js/os/edt.js",
-    //"./module/OPLI/js/os/edtstatus.js",
+    //"./module/OPLI/js/site/print.js",
+    //"./module/OPLI/js/site/printop.js",
+    //"./module/OPLI/js/site/del.js",
+    //"./module/OPLI/js/site/edt.js",
+    "./module/OPLI/js/site/edtstatus.js",
     "./module/OPLI/css/index.css",
     "./module/OPLI/css/print.css"
 ], () => {
@@ -50,7 +50,7 @@ window.UserList = class UserList {
         let rowdata = cell._cell.row.data;
         //console.log(rowdata);
         let htm = document.createElement("div");
-
+        /*
         if (Myself.checkPermission("WSOP/menu/site")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-print");
@@ -82,16 +82,15 @@ window.UserList = class UserList {
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/site/edtstatus", (rowdata)) };
             htm.appendChild(bot);
-        }
+        }//*/
         if (Myself.checkPermission("WSOP/site/edt")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { console.log(rowdata); ClientEvents.emit("wsop/site/view", (rowdata)) };
+            bot.onclick = () => { console.log(rowdata); ClientEvents.emit("WSOP/site/lstid", { id: rowdata.id }); };
             htm.appendChild(bot);
         }
-
         return htm;
     };
     actionfield = "0";
@@ -100,6 +99,8 @@ window.UserList = class UserList {
     actionOptions = [];
     actionRowFormatter = (data) => { };
     UserListData = [];
+    RetrievingData = []; // quais itens faltam carregar
+    DownloadedData = []; //Itens carregados para download
     rowContext = (ev, row) => {
         //console.log(ev);
         ClientEvents.emit("SendSocket", "wsop/lst/site/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
@@ -115,16 +116,23 @@ window.UserList = class UserList {
         columns: [
             { title: this.actionName, formatter: this.actionIcon },
             { title: 'ID', field: 'id', headerFilter: "input", visible: false },
-            { title: 'ID L.I.', field: 'id_li', headerFilter: "input" },
+            {
+                title: 'ID L.I.', field: 'id_li', headerFilter: "input",
+                formatter: function (cell) {
+                    cell._cell.element.style.background = window.utils.OPLIStatusIdToBgColor(cell.getRow().getData().status);
+                    cell._cell.element.style.color = window.utils.OPLIStatusIdToColor(cell.getRow().getData().status);
+                    return cell.getRow().getData().id_li;
+                }
+            },
             { title: 'Nome', field: 'name', headerFilter: "input" },
             { title: 'Cliente', field: 'nome_cliente', headerFilter: "input" },
             //{ title: 'Status', field: 'status', headerFilter: "input" },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
                 formatter: function (cell) {
-                    cell._cell.element.style.background = OPLIStatusIdToBgColor(cell.getRow().getData().status);
-                    cell._cell.element.style.color = OPLIStatusIdToColor(cell.getRow().getData().status);
-                    return OPLIStatusIdToName(cell.getRow().getData().status);
+                    cell._cell.element.style.background = window.utils.OPLIStatusIdToBgColor(cell.getRow().getData().status);
+                    cell._cell.element.style.color = window.utils.OPLIStatusIdToColor(cell.getRow().getData().status);
+                    return window.utils.OPLIStatusIdToName(cell.getRow().getData().status);
                 }
             },
             { title: 'Expira Em', field: 'endingIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
@@ -176,7 +184,6 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/site/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                //console.log(data);
                 this.main_table.replaceData(this.UserListData);
                 setTimeout(() => { //moved to here for broadcasting problems
                     ClientEvents.emit("SendSocket", "WSOP/site/lst");
@@ -195,11 +202,37 @@ window.UserList = class UserList {
             ClientEvents.emit("WSOP/clientes/close");
         });
         ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
+        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
+        ClientEvents.on("system/edited/site", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Status Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); ClientEvents.emit("WSOP/site/changestatus/close"); ClientEvents.emit("WSOP/site/view/close"); });
 
+        ClientEvents.on("wsop/site/download", (data) => {
+            //console.log(data);
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
+            data.forEach(dataitem => {
+                this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
+            })
+            this.DownloadedData = this.DownloadedData.concat(data);
+            console.log(this.RetrievingData);
+            if (this.RetrievingData.length < 1) {
+                ClientEvents.emit("WSOP/site/dnlsave", {});
+            }
+        })
 
         ClientEvents.on("WSOP/site/dnl", () => {
+            if (this.UserListData != undefined) {
+
+                this.UserListData.forEach(os => {
+                    this.RetrievingData.push(os.id);
+                    if (os.id % 100 == 0) {
+                        ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: os.id });
+                    }
+                })
+                ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: 0 });
+            }
+        });
+
+        ClientEvents.on("WSOP/site/dnlsave", () => {
             if (this.UserListData != undefined) {
                 let csv = "OS;status;data;mensagem;codigo;produtos;tamanho;qnt";
 
@@ -226,9 +259,9 @@ window.UserList = class UserList {
                     if (barcode.indexOf("-16") > -1) { return "16"; }
                 }
 
-                this.UserListData.forEach(os => {
+                this.DownloadedData.forEach(os => {
                     try {
-                        csv += "\n" + os.id_li + ";" + OPLIStatusIdToName(os.status) + ";" + formatTime(os.endingIn) + ";" + os.description.replace(new RegExp("\n", "g"), " ") + ";;";
+                        csv += "\n#" + os.id_li + ";" + window.utils.OPLIStatusIdToName(os.status) + ";" + formatTime(os.endingIn) + ";" + os.description.replace(new RegExp("\n", "g"), " ") + ";;";
                         let prods = JSON.parse(os.products);
                         prods.forEach(prod => {
                             let tam = getTamanho(prod.sku);
@@ -247,7 +280,7 @@ window.UserList = class UserList {
                     } catch (err) {
 
                     }
-                })
+                });
 
                 let downloadLink = document.createElement("a");
                 let blob = new Blob(["\ufeff", csv]);
@@ -259,13 +292,12 @@ window.UserList = class UserList {
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
             }
-
         });
 
     }
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
-        OPLIstatusIDs.forEach((item, index) => {
+        window.utils.OPLIstatusIDs.forEach((item, index) => {
             ret.push({ label: item.name, value: index })
         })
         return ret;

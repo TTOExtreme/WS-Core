@@ -30,7 +30,7 @@ ClientEvents.on("usr/edt", (data) => {
         "<tr><td class='usr_edt_label'>Nome:</td><td><input id='usredtname' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Usuário:</td><td><input type='text' disabled value='" + data.username + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Nome:</td><td><input id='usredtemail' type='text' value='" + data.email + "'></td></tr>" +
-        "<tr><td class='usr_edt_label'>Usuário:</td><td><input id='usredttelefone' type='text' value='" + data.telefone + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Telefone:</td><td><input id='usredttelefone' type='text' value='" + data.telefone + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Criado Em:</td><td><input type='text' disabled value='" + formatTime(data.createdIn) + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Criado Por:</td><td><input type='text' disabled value='" + data.createdBy + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Desativado Em:</td><td><input type='text' disabled value='" + formatTime(data.deactivatedIn) + "'></td></tr>" +

@@ -35,44 +35,42 @@ class Socket {
         this._myself = Myself;
 
         /**
-         * List all os
+         * List Emissor
          */
         socket.on("wsop/emitente/lst", (req) => {
-            this._myself.checkPermission("WSOP/menu/emitente").then(() => {
-                this._EmitenteClass.ListAll().then((res) => {
-                    socket.emit("ClientEvents", {
-                        event: "wsop/emitente/add",
-                        data: res[0] || {
-                            name: "",
-                            responsavel: "",
-                            iscnpj: true,
-                            cpf_cnpj: "",
-                            cep: "",
-                            logradouro: "",
-                            numero: "",
-                            bairro: "",
-                            municipio: "",
-                            uf: "",
-                            logradouro: "",
-                            telefone: "",
-                            email: "",
-                            active: 1,
-                        }
-                    })
-                }).catch((err) => {
-                    this._log.error("On Listing OS")
-                    this._log.error(err);
-                    if (!this._myself.isLogged()) {
-                        socket.emit("logout", "");
+            this._EmitenteClass.ListAll().then((res) => {
+                socket.emit("ClientEvents", {
+                    event: "wsop/emitente/add",
+                    data: res[0] || {
+                        name: "",
+                        responsavel: "",
+                        iscnpj: true,
+                        cpf_cnpj: "",
+                        cep: "",
+                        logradouro: "",
+                        numero: "",
+                        bairro: "",
+                        municipio: "",
+                        uf: "",
+                        logradouro: "",
+                        telefone: "",
+                        email: "",
+                        active: 1,
                     }
-                    socket.emit("ClientEvents", {
-                        event: "system_mess",
-                        data: {
-                            status: "ERROR",
-                            mess: err,
-                            time: 1000
-                        }
-                    })
+                })
+            }).catch((err) => {
+                this._log.error("On Listing OS")
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
                 })
             })
         })
@@ -102,6 +100,16 @@ class Socket {
                         }
                     })
                 })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to edt Emissor: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -121,7 +129,7 @@ class Socket {
 
                     fs.writeFileSync(filepath + name, req[0].stream);
 
-                    if (req[0].ext == ".png" || req[0].ext == ".jpeg" || req[0].ext == ".gif" || req[0].ext == ".bmp" || req[0].ext == ".png") {
+                    if (req[0].ext == ".png" || req[0].ext == ".jpeg" || req[0].ext == ".gif" || req[0].ext == ".bmp" || req[0].ext == ".png" || req[0].ext == ".jpg") {
 
                         this._imageClass.thumb(filepath + name, (filepath + name).replace(".", "_thumb."), 300, 170).then(() => {
 
@@ -156,8 +164,17 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to edt Emissor Logo: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
-
         })
 
         /**
@@ -197,88 +214,19 @@ class Socket {
                         }
                     })
                 }
-            })
-        })
-
-        /**
-         * Diable cliente
-         */
-        socket.on("wsop/emitente/del", (req) => {
-            this._myself.checkPermission("WSOP/emitente/del").then(() => {
-                this._EmitenteClass.disableOS(req[0].id, req[0].active, this._myself.myself.id).then(() => {
-                    socket.emit("ClientEvents", {
-                        event: "system/removed/os",
-                        data: req
-                    })
-                }).catch((err) => {
-                    if (!this._myself.isLogged()) {
-                        socket.emit("logout", "");
+            }).catch((err) => {
+                this._log.warning("User Access Denied to edt Emissor info: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
                     }
-                    socket.emit("ClientEvents", {
-                        event: "system_mess",
-                        data: {
-                            status: "ERROR",
-                            mess: err,
-                            time: 1000
-                        }
-                    })
                 })
             })
         })
-
-
-
-        /**
-         * Context Menu List items with it calls for list of groups
-         */
-        socket.on("wsop/lst/emitente/ctx", (req) => {
-            let itemList = [];
-
-            //*/
-            if (this._myself.checkPermissionSync("WSOP/emitente/edt")) {
-                itemList.push({
-                    name: "Editar",
-                    active: true,
-                    event: {
-                        call: "wsop/emitente/edt",
-                        data: req[0].row
-                    }
-                });
-            } else {
-                itemList.push({
-                    name: "Editar",
-                    active: false
-                });
-            }
-            if (this._myself.checkPermissionSync("WSOP/emitente/del")) {
-                itemList.push({
-                    name: "Excluir",
-                    active: true,
-                    event: {
-                        call: "wsop/emitente/del",
-                        data: req[0].row
-                    }
-                });
-            } else {
-                itemList.push({
-                    name: "Excluir",
-                    active: false
-                });
-            }
-
-
-            socket.emit("ClientEvents", {
-                event: "CreateContext",
-                data: {
-                    data: req,
-                    items: itemList
-                }
-            })
-        });
-
     }
-
-
 }
 
 module.exports = {

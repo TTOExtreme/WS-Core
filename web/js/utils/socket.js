@@ -20,6 +20,9 @@ class UserStruct {
             if (user.name) {
                 this.name = user.name
             }
+            if (user.id) {
+                this.id = user.id
+            }
             if (user.username) {
                 this.username = user.username
             }

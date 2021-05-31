@@ -38,32 +38,40 @@ function init_loading() {
 
     svg.style.strokeDasharray = rd;
 }
-ClientEvents.setCoreEvent("startLoader")
-ClientEvents.on("startLoader", () => {
-    let svg = document.getElementById('loading_holderBg');
-    if (!svg) { setTimeout(() => { ClientEvents.emit("startLoader") }); return; }
-    svg.style.opacity = 1;
-    svg.style.top = "0";
-    svg.style.left = "0";
-    svg.style.backgroundColor = "#10101055";
-    svg.style.width = "100vw";
-    svg.style.height = "100vh";
-})
-ClientEvents.setCoreEvent("stopLoader");
-ClientEvents.on("stopLoader", () => {
-    let svg = document.getElementById('loading_holderBg');
-    if (!svg) { setTimeout(() => { ClientEvents.emit("stopLoader") }); return; }
-    svg.style.opacity = 0;
-    svg.style.top = "-200px";
-    svg.style.left = "calc(50vw - 50px)";
-    svg.style.backgroundColor = "let(--loader-bg)";
-    svg.style.width = "100px";
-    svg.style.height = "100px";
-});
+function init_end() {
+    if (ClientEvents != undefined) {
+        ClientEvents.setCoreEvent("startLoader")
+        ClientEvents.on("startLoader", () => {
+            let svg = document.getElementById('loading_holderBg');
+            if (!svg) { setTimeout(() => { ClientEvents.emit("startLoader") }); return; }
+            svg.style.opacity = 1;
+            svg.style.top = "0";
+            svg.style.left = "0";
+            svg.style.backgroundColor = "#10101055";
+            svg.style.width = "100vw";
+            svg.style.height = "100vh";
+        })
+        ClientEvents.setCoreEvent("stopLoader");
+        ClientEvents.on("stopLoader", () => {
+            let svg = document.getElementById('loading_holderBg');
+            if (!svg) { setTimeout(() => { ClientEvents.emit("stopLoader") }); return; }
+            svg.style.opacity = 0;
+            svg.style.top = "-200px";
+            svg.style.left = "calc(50vw - 50px)";
+            svg.style.backgroundColor = "let(--loader-bg)";
+            svg.style.width = "100px";
+            svg.style.height = "100px";
+        });
 
-ClientEvents.setCoreEvent("Page_Loaded")
-ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
-    //console.log("initializing Loader")
-    init_loading();
-    resolve();
-}));
+        ClientEvents.setCoreEvent("Page_Loaded")
+        ClientEvents.on("Page_Loaded", new Promise((resolve, reject) => {
+            //console.log("initializing Loader")
+            init_loading();
+            resolve();
+        }));
+    } else {
+        setTimeout(() => {
+            init_end();
+        }, 100);
+    }
+}

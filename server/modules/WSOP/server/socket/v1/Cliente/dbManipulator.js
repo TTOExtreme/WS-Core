@@ -45,12 +45,12 @@ class ClienteManipulator {
      * @param {String} email 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createCliente(name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, UserID) {
+    createCliente(name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, country, telefone, email, active, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Cliente" +
-            " (name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, createdBy, createdIn)" +
+            " (name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf,country, telefone, email, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + name + "','" + responsavel + "','" + cpf_cnpj + "'," + (iscnpj ? 1 : 0) + ",'" + cep + "','" + logradouro + "','" + numero + "','" + bairro + "','" + municipio + "','" + uf + "','" + telefone + "','" + email + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + name + "','" + responsavel + "','" + cpf_cnpj + "'," + (iscnpj ? 1 : 0) + ",'" + cep + "','" + logradouro + "','" + numero + "','" + bairro + "','" + municipio + "','" + uf + "','" + country + "','" + telefone + "','" + email + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
@@ -69,7 +69,7 @@ class ClienteManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editCliente(ID, name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, telefone, email, active, UserID) {
+    editCliente(ID, name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, numero, bairro, municipio, uf, country, telefone, email, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Cliente SET" +
             ((name != "") ? " name='" + name + "'," : " ") +
@@ -82,6 +82,7 @@ class ClienteManipulator {
             ((bairro != "") ? " bairro='" + bairro + "'," : " ") +
             ((municipio != "") ? " municipio='" + municipio + "'," : " ") +
             ((uf != "") ? " uf='" + uf + "'," : " ") +
+            ((country != "") ? " country='" + country + "'," : " ") +
             ((telefone != "") ? " telefone='" + telefone + "'," : " ") +
             ((email != "") ? " email='" + email + "'," : " ") +
             " active=" + (active ? 1 : 0) + "," +

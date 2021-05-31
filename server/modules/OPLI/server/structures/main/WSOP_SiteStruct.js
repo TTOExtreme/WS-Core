@@ -22,6 +22,8 @@ class OSStruct {
     dados_cliente;
     dados_li;
     id_li;
+    dados_trello;
+    id_trello;
     status;
     endingIn;
     createdIn;
@@ -44,6 +46,8 @@ class OSStruct {
             if (os.dados_cliente) { this.dados_cliente = os.dados_cliente }
             if (os.dados_li) { this.dados_li = os.dados_li }
             if (os.id_li) { this.id_li = os.id_li }
+            if (os.dados_trello) { this.dados_trello = os.dados_trello }
+            if (os.id_trello) { this.id_trello = os.id_trello }
             if (os.status) { this.status = os.status }
             if (os.endingIn) { this.endingIn = os.endingIn }
             if (os.createdIn) { this.createdIn = os.createdIn }
@@ -64,7 +68,9 @@ const _DB = {
     nome_cliente: "VARCHAR(200)",
     dados_cliente: "MEDIUMTEXT",
     dados_li: "MEDIUMTEXT",
-    id_li: "INT", //Id da loja integrada
+    id_li: "VARCHAR(60)", //Id da loja integrada
+    dados_trello: "MEDIUMTEXT",
+    id_trello: "VARCHAR(60)", //Id da loja integrada
     products: "MEDIUMTEXT", //Id da loja integrada
     status: "INT",
     name: "VARCHAR(200)",

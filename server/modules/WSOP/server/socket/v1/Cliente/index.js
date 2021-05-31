@@ -95,11 +95,12 @@ class Socket {
                     req[0].bairro &&
                     req[0].municipio &&
                     req[0].uf &&
+                    req[0].country &&
                     req[0].telefone &&
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._ClienteClass.createCliente(req[0].name, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
+                    this._ClienteClass.createCliente(req[0].name, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].country, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
                             event: "system/added/clientes",
                             data: req
@@ -118,7 +119,7 @@ class Socket {
                         })
                     })
                 } else {
-                    console.log(req)
+                    //console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -147,11 +148,12 @@ class Socket {
                     req[0].bairro &&
                     req[0].municipio &&
                     req[0].uf &&
+                    req[0].country &&
                     req[0].telefone &&
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._ClienteClass.editCliente(req[0].id, req[0].nome, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
+                    this._ClienteClass.editCliente(req[0].id, req[0].nome, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].country, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
                             event: "system/edited/clientes",
                             data: req
@@ -170,7 +172,7 @@ class Socket {
                         })
                     })
                 } else {
-                    console.log(req)
+                    //console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {

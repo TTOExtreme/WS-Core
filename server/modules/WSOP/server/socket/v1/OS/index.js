@@ -23,6 +23,25 @@ class Socket {
         this._events = WSMainServer.events;
         this._OsClass = new osManipulator(WSMainServer);
         this._imageClass = new imageManipulator();
+        this.db = WSMainServer.db;
+    }
+
+    /**
+     * 
+     * @param {ID_OS} id_os 
+     * @param {string} content 
+     * @param {string} data 
+     * @param {ID_User} UserID 
+     * @returns 
+     */
+    saveLog(id_os = 0, content, data, UserID) {
+        this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Log" +
+            " (id_os,contents,data, createdBy, createdIn)" +
+            " VALUES " +
+            " (" + id_os + ",\"" + content + "\",'" + data + "'," + UserID + "," + Date.now() + ");").catch(err => {
+                this._log.error("On saving Log WSOP");
+                this._log.error(err);
+            });
     }
 
     /**
@@ -38,26 +57,25 @@ class Socket {
          * List all os
          */
         socket.on("wsop/os/lst", (req) => {
-            this._myself.checkPermission("WSOP/menu/os").then(() => {
-                this._OsClass.ListAll().then((res) => {
-                    socket.emit("ClientEvents", {
-                        event: "wsop/os/lst",
-                        data: res
-                    })
-                }).catch((err) => {
-                    this._log.error("On Listing OS")
-                    this._log.error(err);
-                    if (!this._myself.isLogged()) {
-                        socket.emit("logout", "");
+            this._OsClass.ListAll().then((res) => {
+                this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
+                socket.emit("ClientEvents", {
+                    event: "wsop/os/lst",
+                    data: res
+                })
+            }).catch((err) => {
+                this._log.error("On Listing OS")
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
                     }
-                    socket.emit("ClientEvents", {
-                        event: "system_mess",
-                        data: {
-                            status: "ERROR",
-                            mess: err,
-                            time: 1000
-                        }
-                    })
                 })
             })
         })
@@ -67,8 +85,9 @@ class Socket {
          * Reload Edt os
          */
         socket.on("wsop/os/lst/edt", (req) => {
-            this._myself.checkPermission("WSOP/menu/os").then(() => {
-                this._OsClass.ListAll(req[0].id).then((res) => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                this._OsClass.ListID(req[0].id).then((res) => {
+                    this.saveLog(0, "Get OS data: " + req[0].id, "", this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "wsop/os/edt",
                         data: res[0]
@@ -88,6 +107,133 @@ class Socket {
                         }
                     })
                 })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to get OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+
+        /**
+         * Reload View os
+         */
+        socket.on("wsop/os/lst/view", (req) => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                this._OsClass.ListID(req[0].id).then((res) => {
+                    this.saveLog(0, "Get OS data: " + req[0].id, "", this._myself.myself.id);
+                    socket.emit("ClientEvents", {
+                        event: "wsop/os/view",
+                        data: res[0]
+                    })
+                }).catch((err) => {
+                    this._log.error("On getting OS: " + req[0].id)
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to see OS from User: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
+            })
+        })
+        /**
+         * Reload View os
+         */
+        socket.on("wsop/os/lst/viewos", (req) => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                this._OsClass.ListID(req[0].id).then((res) => {
+                    this.saveLog(0, "Get OS data: " + req[0].id, "", this._myself.myself.id);
+                    socket.emit("ClientEvents", {
+                        event: "wsop/os/print",
+                        data: res[0]
+                    })
+                }).catch((err) => {
+                    this._log.error("On getting OS: " + req[0].id)
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to see OS from User: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+        /**
+         * Reload View os
+         */
+        socket.on("wsop/os/lst/viewop", (req) => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                this._OsClass.ListID(req[0].id).then((res) => {
+                    this.saveLog(0, "Get OS data: " + req[0].id, "", this._myself.myself.id);
+                    socket.emit("ClientEvents", {
+                        event: "wsop/os/printop",
+                        data: res[0]
+                    })
+                }).catch((err) => {
+                    this._log.error("On getting OS: " + req[0].id)
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to see OS from User: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -96,7 +242,9 @@ class Socket {
          */
         socket.on("wsop/os/add", (req) => {
             this._myself.checkPermission("WSOP/os/add").then(() => {
-                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, req[0].active, this._myself.myself.id).then((results) => {
+                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
+
+                    this.saveLog(results.insertId, "Adding OS's", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "system/added/os",
                         data: { id: results.insertId }
@@ -116,6 +264,16 @@ class Socket {
                         }
                     })
                 })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Add OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -134,9 +292,10 @@ class Socket {
                     fs.writeFileSync(filepath + name, req[0].stream);
 
                     let thumb = "os/" + name;
-                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".png") {
+                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".jpg") {
                         thumb = "file_thumb.png";
                         this._OsClass.appendAnexo(req[0].id, req[0].name, "os/" + name, thumb, this._myself.myself.id).then((res) => {
+                            this.saveLog(req[0].id, "Adding file", JSON.stringify(req[0]), this._myself.myself.id);
                             socket.emit("ClientEvents", {
                                 event: "wsop/os/fileuploaded",
                                 data: {
@@ -151,6 +310,7 @@ class Socket {
                         this._imageClass.thumb(filepath + name, thumb, 300, 170).then(() => {
                             thumb = ("os/" + name).replace(".", "_thumb.");
                             this._OsClass.appendAnexo(req[0].id, req[0].name, "os/" + name, thumb, this._myself.myself.id).then((res) => {
+                                this.saveLog(req[0].id, "Adding file", JSON.stringify(req[0]), this._myself.myself.id);
                                 socket.emit("ClientEvents", {
                                     event: "wsop/os/fileuploaded",
                                     data: {
@@ -197,6 +357,16 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Add Attachment to OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
 
         })
@@ -210,6 +380,7 @@ class Socket {
                     req[0].qnt
                 ) {
                     this._OsClass.appendProduto(req[0].id_os, req[0].id, req[0].qnt, req[0].obs, this._myself.myself.id).then((id) => {
+                        this.saveLog(req[0].id_os, "Adding Products", JSON.stringify(req[0]), this._myself.myself.id);
                         socket.emit("ClientEvents", {
                             event: "wsop/os/produto/added",
                             data: {
@@ -240,6 +411,69 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Add Product to OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+        /**
+         * Edt Produto
+         */
+        socket.on("wsop/os/produto/edt", (req) => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                if (req[0].id &&
+                    req[0].qnt
+                ) {
+                    console.log(req[0])
+                    this._OsClass.edtProduto(req[0].id, req[0].qnt, req[0].obs, this._myself.myself.id).then((id) => {
+                        this.saveLog(req[0].id, "Editing Product on OS", JSON.stringify(req[0]), this._myself.myself.id);
+                        socket.emit("ClientEvents", {
+                            event: "wsop/os/produto/edited",
+                            data: {
+                            }
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                } else {
+                    this._log.error("On Editing Product OS")
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: "Favor Preencher todos os campos",
+                            time: 1000
+                        }
+                    })
+                }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to edt Product on OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -251,6 +485,7 @@ class Socket {
                 if (req[0].id
                 ) {
                     this._OsClass.delProduto(req[0].id, this._myself.myself.id).then((id) => {
+                        this.saveLog(req[0].id_os, "Removing Product from OS", JSON.stringify(req[0]), this._myself.myself.id);
                         socket.emit("ClientEvents", {
                             event: "wsop/os/produto/added",
                             data: {
@@ -281,6 +516,16 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Delete Product OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -292,13 +537,14 @@ class Socket {
         socket.on("wsop/os/anexo/del", (req) => {
             this._myself.checkPermission("WSOP/menu/os").then(() => {
                 this._OsClass.delAnexo(req[0].id, this._myself.myself.id).then(() => {
+                    this.saveLog(req[0].id_os, "Removing Attachment from OS", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "wsop/os/fileuploaded",
                         data: {
                         }
                     })
                 }).catch((err) => {
-                    this._log.error("On Listing OS")
+                    this._log.error("On Removing Attachment from OS")
                     this._log.error(err);
                     if (!this._myself.isLogged()) {
                         socket.emit("logout", "");
@@ -312,6 +558,16 @@ class Socket {
                         }
                     })
                 })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Delete Attachment OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
@@ -321,10 +577,10 @@ class Socket {
         socket.on("wsop/os/edt", (req) => {
             this._myself.checkPermission("WSOP/os/add").then(() => {
                 if (req[0].id &&
-                    req[0].description &&
                     req[0].status
                 ) {
-                    this._OsClass.editOS(req[0].id, req[0].description, req[0].status, req[0].active, this._myself.myself.id).then(() => {
+                    this._OsClass.editOS(req[0].id, req[0].description, req[0].status, req[0].formaEnvio, req[0].caixa, req[0].endereco, req[0].country, req[0].uf, req[0].statusChange, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
+                        this.saveLog(req[0].id, "Editing OS", JSON.stringify(req[0]), this._myself.myself.id);
                         socket.emit("ClientEvents", {
                             event: "system/edited/os",
                             data: req
@@ -352,8 +608,19 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to edt OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
+
         /**
          * Editar status OS
          */
@@ -362,7 +629,8 @@ class Socket {
                 if (req[0].id &&
                     req[0].status
                 ) {
-                    this._OsClass.editStatusOS(req[0].id, req[0].status, this._myself.myself.id).then(() => {
+                    this._OsClass.editStatusOS(req[0].id, req[0].status, req[0].statusChange, this._myself.myself.id).then(() => {
+                        this.saveLog(req.id, "Changing OS Status", "", this._myself.myself.id);
                         socket.emit("ClientEvents", {
                             event: "system/edited/os",
                             data: req
@@ -390,15 +658,26 @@ class Socket {
                         }
                     })
                 }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to change status OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
             })
         })
 
         /**
-         * Diable cliente
+         * Diable OS
          */
         socket.on("wsop/os/del", (req) => {
             this._myself.checkPermission("WSOP/os/del").then(() => {
                 this._OsClass.disableOS(req[0].id, req[0].active, this._myself.myself.id).then(() => {
+                    this.saveLog(req.id, "Deleted OS", "", this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "system/removed/os",
                         data: req
@@ -415,6 +694,16 @@ class Socket {
                             time: 1000
                         }
                     })
+                })
+            }).catch((err) => {
+                this._log.warning("User Access Denied to disable/delete OS: " + this._myself.myself.id)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
                 })
             })
         })

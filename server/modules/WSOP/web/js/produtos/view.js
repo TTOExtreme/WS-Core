@@ -1,7 +1,7 @@
 
 ClientEvents.on("wsop/produtos/view", (data) => {
     ClientEvents.emit("WSOP/produtos/view/close");
-    console.log(data)
+    //console.log(data)
     /**
      * create Show Page for user info
      */

@@ -1,20 +1,20 @@
 
 ClientEvents.on("wsop/os/printop", (data) => {
-    ClientEvents.emit("WSOP/os/printop/close");
+    ClientEvents.emit("close_menu", "wsop_printop_div");
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_print_div");
+    div.setAttribute("class", "wsop_print_div menu_dragger");
     div.setAttribute("id", "wsop_printop_div");
 
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
-        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/printop/close\")'>X</p></td></tr></table>" +
+        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_printop_div')>X</p></td></tr></table>" +
         "<div id='wsop_print' class='wsop_print'>" +
         "<table style='width:100%;'>" +
         //OS ID
-        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
+        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
@@ -36,9 +36,10 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
-        "<tr><td style='width:70%'>Descrição:</td><td class='wsop_printop_perdas'>Status</td><td class='wsop_printop_perdas'>Responsável</td><td class='wsop_printop_perdas'>Perdas</td></tr>" +
-        "<tr><td class='wsop_produto_item2' style='border:none;width:70%' rowspan=16>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") +
-        "</td><td class='wsop_printop_perdas'>Mockup:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td style='width:70%'>Descrição:</td><td class='wsop_printop_perdas'>Status</td><td class='wsop_printop_perdas'>Responsável</td><td class='wsop_printop_perdas'>Data Inicio</td><td class='wsop_printop_perdas'>Data Fim</td><td class='wsop_printop_perdas'>Perdas</td></tr>" +
+        "<tr><td class='wsop_produto_item2' rowspan=16>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td></tr>" +
+        "</tr><td class='wsop_printop_perdas'>Mockup:</td><td class='wsop_printop_perdas'></td>" +
+        "<td class='wsop_printop_perdas'>" + formatTime(new Date().getTime() - 3600000) + "</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'>" + formatTime(new Date().getTime() - 3600000) + "</td></tr>" +
         "<tr><td class='wsop_printop_perdas'>PDF Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
         "<tr><td class='wsop_printop_perdas'>Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
         "<tr><td class='wsop_printop_perdas'>Calandra:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
@@ -82,11 +83,6 @@ ClientEvents.on("wsop/os/printop", (data) => {
     produtosTable.innerHTML += htm;
 });
 
-ClientEvents.on("WSOP/os/printop/close", () => {
-    if (document.getElementById("wsop_printop_div")) {
-        document.body.removeChild(document.getElementById("wsop_printop_div"));
-    }
-});
 
 function PrintElem(elem) {
     var mywindow = window.open('', 'PRINT', 'width=210mm');
@@ -104,7 +100,7 @@ function PrintElem(elem) {
     mywindow.focus(); // necessary for IE >= 10*/
 
     mywindow.print();
-    console.log("printing")
+    //console.log("printing")
 
     return true;
 }

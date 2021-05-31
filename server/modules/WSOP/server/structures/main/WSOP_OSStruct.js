@@ -5,6 +5,7 @@
  * @property {number} id_cliente
  * @property {number} status
  * @property {timestamp} endingIn data limite da os
+ * @property {string} prazo codigo do tipo de prazo
  * @property {timestamp} createdIn
  * @property {number} createdBy
  * @property {timestamp} deactivatedIn
@@ -20,6 +21,7 @@ class OSStruct {
     id_cliente;
     status;
     endingIn;
+    prazo;
     createdIn;
     createdBy;
     deactivatedIn;
@@ -55,9 +57,17 @@ class OSStruct {
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
     id_cliente: "INT",
-    status: "INT",
+    status: "VARCHAR(60)",
     name: "VARCHAR(200)",
     endingIn: "BIGINT",
+    prazo: "VARCHAR(60)",
+    formaEnvio: "VARCHAR(60)",
+    desconto: "VARCHAR(60)",
+    precoEnvio: "VARCHAR(60)",
+    dataEnvio: "MEDIUMTEXT",
+    uf: "VARCHAR(45) NULL DEFAULT 'SP'",
+    country: "VARCHAR(45) NULL DEFAULT 'Brasil'",
+    caixa: "VARCHAR(45) NULL DEFAULT 'Caixa 2'",
     createdIn: "BIGINT",
     createdBy: "INT",
     deactivatedIn: "BIGINT",
@@ -67,6 +77,9 @@ const _DB = {
     tags: "MEDIUMTEXT",
     description: "MEDIUMTEXT",
     active: "INT",
+    statusChange: "MEDIUMTEXT",
+    rastreio: "MEDIUMTEXT",
+
 }
 
 

@@ -13,6 +13,13 @@ const _DB = [
         type: "OPLI",
         defaltAdd: 0
     },
+    {
+        name: "Aba API",
+        description: "Acesso Aba API Loja Integrada",
+        code: "OPLI/menu/site",
+        type: "OPLI",
+        defaltAdd: 0
+    },
 ]
 
 module.exports = { _DB }

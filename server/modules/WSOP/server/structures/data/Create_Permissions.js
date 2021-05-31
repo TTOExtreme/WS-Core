@@ -104,6 +104,34 @@ const _DB = [
         type: "WSOP",
         defaltAdd: 0
     },
+    {
+        name: "Visualizar OP",
+        description: "Editar Emitente",
+        code: "WSOP/os/opview",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Visualizar OS",
+        description: "Editar Emitente",
+        code: "WSOP/os/osview",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Aba Vendas",
+        description: "Acesso a aba vendas",
+        code: "WSOP/menu/vendas",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Ver todas as Vendas",
+        description: "Acesso a Todas as Vendas",
+        code: "WSOP/menu/vendas/all",
+        type: "WSOP",
+        defaltAdd: 0
+    }
 ]
 
 module.exports = { _DB }

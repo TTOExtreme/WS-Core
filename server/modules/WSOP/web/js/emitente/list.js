@@ -83,7 +83,7 @@ ClientEvents.on("cnpjchange", () => {
             if (err == "CEP inválido") { ClientEvents.emit("WSOP/emitente/error", err); }
             if (err == "CEP não encontrado") { ClientEvents.emit("WSOP/emitente/error", err); }
             if (err == "Tempo limite atingido") { ClientEvents.emit("WSOP/emitente/error", err); }
-            console.log(err);
+            //console.log(err);
         })
     }
 });
@@ -106,7 +106,7 @@ ClientEvents.on("cepchange", () => {
             if (err == "CEP inválido") { ClientEvents.emit("WSOP/emitente/error", err); }
             if (err == "CEP não encontrado") { ClientEvents.emit("WSOP/emitente/error", err); }
             if (err == "Tempo limite atingido") { ClientEvents.emit("WSOP/emitente/error", err); }
-            console.log(err);
+            //console.log(err);
         })
     }
 });

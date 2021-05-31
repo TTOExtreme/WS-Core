@@ -18,10 +18,8 @@ ClientEvents.on("usr/edt/pass", () => {
 
     document.body.appendChild(div);
 });
-//ClientEvents.emit("usr/add/add")
 
 ClientEvents.on("usr/edt/pass/close", () => {
-    console.log('Called')
     if (document.getElementById("change_pass_div")) {
         document.body.removeChild(document.getElementById("change_pass_div"));
     }

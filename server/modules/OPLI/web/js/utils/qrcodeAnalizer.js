@@ -31,6 +31,7 @@ ClientEvents.on("WSOP/site/qrcode", (data) => {
             }
             if (qrCodeMessage.indexOf(data.data) > -1) {
                 document.getElementById(data.id).checked = true;
+                document.getElementById(data.id).onchange();
                 try {
                     console.log("scannning stoped")
 
