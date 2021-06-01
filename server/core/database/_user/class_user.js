@@ -115,6 +115,7 @@ class User {
                 if (result[0]) {
                     this.log.info("Login In: <" + uuid + ">.");
                     this.myself = new UserStruct(result[0]);
+                    this.addAdmMenus();
                     return this._loadPermissions();
                 } else {
                     this.log.warning("Not Found user UUID: <" + uuid + "> in database.");
@@ -466,7 +467,7 @@ class User {
     }
 
     addAdmMenus() {
-        this._AdmMenus.push({
+        this._AdmMenus = [{
             Name: "Administração",
             Id: "menu/adm",
             Permission: "menu/adm",
@@ -509,7 +510,7 @@ class User {
                 }
             ],
             TopItems: [],
-        })
+        }]
     }
 
 }

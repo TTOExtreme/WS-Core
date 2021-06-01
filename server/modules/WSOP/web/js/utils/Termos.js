@@ -7,7 +7,7 @@ if (!window.Modules) {
 }
 window.Modules.WSOP.termos = {
 
-    termoCompraPrivateLabel: "<pre class='termos'>" +
+    termoCompraPrivateLabel: "<center style='font-size:14pt'>Termos de Contrato de Compra</center><pre class='termos'>" +
         "Termos e Condições de Compra e Venda de <b>Sand Walk Comercio de Artigos do Vestuario Eireli</b>, com sede em Valinhos, doravante denominada simplesmente Sand Walk, e, de outro lado, o cliente Sand Walk, qualificado no momento da compra dos produtos Sand Walk, doravante denominado simplesmente Cliente." +
         "\n\n" +
         "Considerando que a Sand Walk realiza venda de produtos e serviços pela internet e por contato direto com os vendedores contratados pela própia; Considerando o interesse do Cliente na compra dos produtos oferecidos pela Sand Walk (\"Produtos\") em seus canais de venda; O presente contrato tem por finalidade estabelecer as condições gerais de uso e compra de produtos e serviços do cliente do site Sand Walk e de clientes por meio dos vendedores internos." +
