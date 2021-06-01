@@ -260,4 +260,14 @@ window.Modules.WSOP.StatusID = class StatusID {
         });
         return ret;
     }
+
+    getStatusName(status = "orcamento") {
+        let ret = [];
+        this.statusIDs.forEach((item, index) => {
+            if (item.code == status) {
+                ret = item.name;
+            }
+        });
+        return ret;
+    }
 }

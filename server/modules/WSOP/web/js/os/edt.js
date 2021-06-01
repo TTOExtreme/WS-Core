@@ -15,7 +15,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status' disabled>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_edt_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Data Entrega:</td><td><input type='date' id='wsop_edt_endingIn' value='" + formatTimeAMD(data.endingIn) + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Forma Envio:</td><td><Select id='wsop_edt_formaEnvio' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +

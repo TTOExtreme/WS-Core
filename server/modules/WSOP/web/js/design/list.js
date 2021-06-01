@@ -144,7 +144,6 @@ window.UserList = class UserList {
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext
         });
-        console.log(new window.Modules.WSOP.StatusID().getStatusSector("design"));
         this.main_table.setFilter([{ field: "status2", type: "in", value: new window.Modules.WSOP.StatusID().getStatusSector("design") }]);
         this._init();
         ClientEvents.emit("SendSocket", "wsop/os/lst");

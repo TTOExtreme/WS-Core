@@ -36,17 +36,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
-        "<tr><td style='width:70%'>Descrição:</td><td class='wsop_printop_perdas'>Status</td><td class='wsop_printop_perdas'>Responsável</td><td class='wsop_printop_perdas'>Data Inicio</td><td class='wsop_printop_perdas'>Data Fim</td><td class='wsop_printop_perdas'>Perdas</td></tr>" +
-        "<tr><td class='wsop_produto_item2' rowspan=16>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td></tr>" +
-        "</tr><td class='wsop_printop_perdas'>Mockup:</td><td class='wsop_printop_perdas'></td>" +
-        "<td class='wsop_printop_perdas'>" + formatTime(new Date().getTime() - 3600000) + "</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'>" + formatTime(new Date().getTime() - 3600000) + "</td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>PDF Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>Calandra:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>Costura:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>Conferencia:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>Embalagem:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
-        "<tr><td class='wsop_printop_perdas'>Produçao:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
+        "<tr><td>Descrição:</td>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_print_anexos' class='wsop_print_anexos'>" +
         "<tr><td colspan=4><p class='wsop_print_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
@@ -81,8 +71,15 @@ ClientEvents.on("wsop/os/printop", (data) => {
     });
     htm += ("<tr class='wsop_produto_item1'><td></td><td><b>Qntidade Total:</td><td><b>" + totalqnt + "</td>")
     produtosTable.innerHTML += htm;
-});
 
+
+    htm = formatStatus(data.statusChange);
+
+
+    let logStatus = document.getElementById("wsop_logStatus");
+    logStatus.innerHTML = htm;
+
+});
 
 function PrintElem(elem) {
     var mywindow = window.open('', 'PRINT', 'width=210mm');

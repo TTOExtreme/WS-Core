@@ -9,8 +9,6 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 
 
 ClientEvents.emit("LoadExternal", [
-    "./js/libs/suneditor.min.js",
-    "./css/screen/suneditor.min.css",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/timeCalc.js",
     "./module/WSOP/js/utils/formaEnvio.js",
@@ -21,11 +19,13 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/clientes/add.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/view.js",
+    "./module/WSOP/js/os/history.js",
     "./module/WSOP/js/os/print.js",
     "./module/WSOP/js/os/printop.js",
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/os/edt.js",
     "./module/WSOP/js/os/edtstatus.js",
+    "./module/WSOP/js/os/history.js",
     "./module/WSOP/css/index.css",
     "./module/WSOP/css/print.css"
 ], () => {
@@ -92,6 +92,14 @@ window.UserList = class UserList {
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/os/view", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/os/osview")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-history");
+            bot.setAttribute("title", "Historico");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
             htm.appendChild(bot);
         }
 
@@ -196,10 +204,11 @@ window.UserList = class UserList {
         ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
         ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
     }
+
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
-        statusIDs.forEach((item, index) => {
-            ret.push({ label: item, value: index })
+        new window.Modules.WSOP.StatusID().statusIDs.forEach((item, index) => {
+            ret.push({ label: item.name, value: index })
         })
         return ret;
     }

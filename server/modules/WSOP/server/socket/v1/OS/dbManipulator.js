@@ -64,12 +64,12 @@ class osManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createOS(id_Cliente, description, status, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
+    createOS(id_Cliente, description, status, statusChange, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
         //console.log(endingIn)
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
-            " (id_Cliente, description, status, formaEnvio,caixa,country,uf, prazo, endingIn, active, createdBy, createdIn)" +
+            " (id_Cliente, description, status,statusChange, formaEnvio,caixa,country,uf, prazo, endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_Cliente + "','" + description + "','" + status + "','" + formaEnvio + "','" + caixa + "','" + country + "','" + uf + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + id_Cliente + "','" + description + "','" + status + "','" + statusChange + "','" + formaEnvio + "','" + caixa + "','" + country + "','" + uf + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
