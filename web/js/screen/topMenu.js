@@ -27,7 +27,7 @@ ClientEvents.on("call_TMI", (itemId) => {
                 if (!!item["EventCall"]) {
                     ClientEvents.emit(item.EventCall, item.EventData || "");
                 }
-                console.log(item)
+                //console.log(item)
             }
         }
     })

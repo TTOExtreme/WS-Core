@@ -1,0 +1,127 @@
+.wsop_print_label {
+    /* float:right; */
+    color: var(--div-text);
+    height: 20px;
+}
+
+.wsop_print_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.print_usr_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+.wsop_print_label {
+    float: right;
+    color: var(--div-text);
+    height: 20px;
+}
+
+.wsop_print_label_info {
+    color: red;
+    animation: opacity 1s linear;
+}
+
+
+.wsop_print_div {
+    color: white;
+    font-family: sans-serif;
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    padding-right: 20px;
+    border-radius: 10px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #606060;
+    height: calc(100vh - 90px);
+}
+
+.wsop_print_div p {
+    margin: 0;
+}
+
+.wsop_add_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+.wsop_anexo_item {
+    color: white;
+    border: 1px solid #606060;
+    width: 250px;
+    height: 160px;
+}
+
+.wsop_anexo_item img {
+    vertical-align: bottom;
+    max-height: 140px;
+}
+
+.wsop_print_anexos td {
+    width: 10px;
+}
+
+.wsop_print_produtos {
+    color: var(--div-text);
+}
+
+.wsop_anexo_img {
+    max-width: 80vw;
+    max-height: 70vh;
+}
+
+.wsop_produto_item1 {
+    border: 2px solid #606060;
+    border-bottom: none;
+}
+
+.wsop_produto_item1 td {
+    width: 100px;
+    border: 1px solid #303030;
+}
+
+.wsop_produto_item2 {
+    border: 2px solid #606060;
+    border-top: 1px solid #303030;
+}
+
+.wsop_produto_item2 td {
+    /* width: 250px; */
+    border: 1px solid #303030;
+}
+
+.wsop_print_img_thumb {
+    max-width: 250px;
+    max-height: 140px;
+}
+
+.wsop_emissor_logo {
+    max-width: 150px;
+    max-height: 90px;
+}
+
+.wsop_printop_perdas {
+    border: 1px solid #303030;
+    text-align: center;
+}

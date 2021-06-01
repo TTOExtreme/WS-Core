@@ -27,7 +27,7 @@ class UserServer {
      */
 
     createUserJson(user) {
-        return this.createUser(user.id, user.name, user.username, user.password, user.active)
+        return this.createUser(user.id, user.name, user.username, user.password, user.email, user.telefone, user.active)
     }
 
     /**
@@ -40,14 +40,14 @@ class UserServer {
      * @param {Int} myselfID 
      * @returns {Promise}
      */
-    createUser(id, name, username, pass, active, myselfID = 1) {
+    createUser(id, name, username, pass, email, telefone, active, myselfID = 1) {
         const salt = this.bcypher.generate_salt();
         this.log.warning("User With SHA512 Pass: " + this.bcypher.sha512(pass))
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._User" +
-            " (" + ((id != undefined) ? "id," : "") + "name,username,password,salt,active,createdBy,createdIn)" +
+            " (" + ((id != undefined) ? "id," : "") + "name,username,email,telefone,password,salt,active,createdBy,createdIn)" +
             " VALUES " +
-            " (" + ((id != undefined) ? id + "," : "") + "'" + name + "','" + username + "','" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "','" + salt + "'," + ((active) ? 1 : 0) + "," + myselfID + "," + Date.now() + ");");
+            " (" + ((id != undefined) ? id + "," : "") + "'" + name + "','" + username + "','" + email + "','" + telefone + "','" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "','" + salt + "'," + ((active) ? 1 : 0) + "," + myselfID + "," + Date.now() + ");");
     }
 
     /**
@@ -60,9 +60,22 @@ class UserServer {
      * @returns {Promise}
      */
     edtUser(id, name, pass, active, myselfID = 1) {
-
         return this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
             " SET name='" + name + ((active != undefined) ? "', active=" + ((active) ? 1 : 0) : "") + ", modifiedBy=" + myselfID + ", modifiedIn=" + Date.now() + "" +
+            " WHERE id=" + id + "");
+    }
+
+    /**
+     * Edit user password
+     * @param {Int} id 
+     * @param {String} pass 
+     * @param {Int} myselfID 
+     * @returns {Promise}
+     */
+    edtUserPass(id, pass, myselfID = 1) {
+        const salt = this.bcypher.generate_salt();
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+            " SET modifiedBy = " + myselfID + ", modifiedIn = " + Date.now() + ", password = '" + this.bcypher.sha512(salt + this.bcypher.sha512(pass)) + "', salt = '" + salt + "'" +
             " WHERE id=" + id + "");
     }
 
@@ -74,6 +87,8 @@ class UserServer {
             "U1.id," +
             "U1.name," +
             "U1.username," +
+            "U1.email," +
+            "U1.telefone," +
             "U1.createdIn," +
             "U2.username as createdBy," +
             "U1.modifiedIn," +
@@ -116,9 +131,45 @@ class UserServer {
         });
     }
 
+    /**
+     * Deactivated permission to user
+     * @param {Int} UserId id do Usuario a ser atribuido
+     * @param {Int} Id_Group id do grupo
+     * @param {Int} myId UserID que adicionou o Grupo
+     * @returns {Promise}
+     */
+    attribGroup(UserID, Id_Group, myId, active) {
+        return this.checkGroupUser(UserID, Id_Group).then(res => {
+            if (res.length == 0) {
+                return this.db.query(
+                    "INSERT INTO " + this.db.DatabaseName + ".rlt_User_Group" +
+                    " (id_Group,id_User,createdBy,createdIn,active) VALUES (" +
+                    Id_Group + "," + UserID + "," + myId + "," + Date.now() + "," + active + ");");
+            } else {
+                console.log("UPDATE " + this.db.DatabaseName + ".rlt_User_Group SET " +
+                    ((active == 1) ?
+                        " active=1, deactivatedBy=NULL, modifiedBy=" + myId + ", modifiedIn=" + Date.now() + ", deactivatedIn=NULL" :
+                        " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now() + "") +
+                    " WHERE id_User = " + UserID + " AND id_Group = " + Id_Group + ";");
+                return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_User_Group SET " +
+                    ((active == 1) ?
+                        " active=1, deactivatedBy=NULL, modifiedBy=" + myId + ", modifiedIn=" + Date.now() + ", deactivatedIn=NULL" :
+                        " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now() + "") +
+                    " WHERE id_User = " + UserID + " AND id_Group = " + Id_Group + ";"
+                );
+            }
+        });
+    }
+
+
     checkPermissionUser(userID, permissionCode) {
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Permissions" +
             " WHERE id_User=" + userID + " AND code_Permission='" + permissionCode + "';");
+    }
+
+    checkGroupUser(UserID, Id_Group) {
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + ".rlt_User_Group" +
+            " WHERE id_User=" + UserID + " AND id_Group='" + Id_Group + "';");
     }
 }
 

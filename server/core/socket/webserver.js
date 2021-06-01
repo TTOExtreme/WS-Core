@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const Express = require('express');
 const SocketIO = require('socket.io');
 const colors = require('colors');
@@ -31,6 +32,7 @@ class WServer {
 
     _app;
     _server;
+    _serverHTTPS;
     _io;
 
     /**
@@ -39,9 +41,21 @@ class WServer {
     init() {
         this._log.task("webserver", "Inicializing Webserver", 0);
         this._app = Express();
+        this._appHTTPS = Express();
 
-        this._server = http.createServer(this._app);
-        this._io = SocketIO(this._server);
+
+        if (fs.existsSync("sslcert/server.key")) {
+            let privateKey = fs.readFileSync("sslcert/server.key", 'utf8');
+            let certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+            let credentials = { key: privateKey, cert: certificate };
+
+            this._serverHTTPS = https.createServer(credentials, this._app);
+            this._io = SocketIO(this._serverHTTPS);
+        } else {
+            this._server = http.createServer(this._app);
+            this._io = SocketIO(this._server);
+        }
+
 
         this._webhost();
         this._socketHandler();
@@ -55,9 +69,16 @@ class WServer {
             });
         })
         //*/
-        this._server.listen(this._config.webPort, () => {
-            this._log.task("webserver", "Webserver on Port: " + colors.green(this._config.webPort), 1);
-        });
+        if (fs.existsSync("sslcert/server.key")) { //enter https or http
+            this._serverHTTPS.listen(this._config.webPort, () => {
+                this._log.task("webserver", "Webserver HTTPS on Port: " + colors.green(this._config.webPort), 1);
+            });
+
+        } else {
+            this._server.listen(this._config.webPort, () => {
+                this._log.task("webserver", "Webserver on Port: " + colors.green(this._config.webPort), 1);
+            });
+        }
     }
 
 
@@ -65,6 +86,11 @@ class WServer {
      * handler for the webfiles 
      */
     _webhost() {
+
+        this._appHTTPS.get(path(this._config.adminPage + "/login"), (req, res) => {
+            res.redirect('https://' + req.headers.host + req.url);
+        });
+
         this._app.use(bodyParser.urlencoded({
             extended: false
         }));

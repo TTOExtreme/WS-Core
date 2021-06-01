@@ -23,9 +23,11 @@ class ClientEvent {
      */
     emit(name, ...args) {
         /*
-        console.log(name);
-        console.log(args);
-        //*/
+                console.log("\\/Event emiter:");
+                console.log(name);
+                console.log(args);
+                console.log("/\\");
+                //*/
         if (this._events[name]) {
             this._events[name].forEach(event => {
                 if (typeof (event.then) === 'function') {
@@ -60,6 +62,22 @@ class ClientEvent {
         Object.keys(this._events).forEach(name => {
             if (this._coreEvents.find(e => e == name) == undefined) {
                 delete this._events[name];
+            }
+        })
+    }
+
+    /**
+     * Clear all listerners duplicated
+     * @param {String} name 
+     */
+    clearAllDupes() {
+        Object.keys(this._events).forEach(name => {
+            if (this._events[name]) {
+                this._events[name].forEach((event, index) => {
+                    if (index > 0)
+                        delete this._events[name][index];
+                });
+
             }
         })
     }

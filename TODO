@@ -1,7 +1,3 @@
-// Mudanças
-    - [x] Mudar painel Administrativo para /Administrativo
-    - [x] Adicionar Pagina 404
-
 // Menu Lateral
     - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
     - [x] Adicionar barra para abrir menu lateral
@@ -9,19 +5,41 @@
     - [x] Botão de Logout
 
 // Pagina de Configuração do sistema
-    - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
-    - [] Adicionar usuario
-    - [] Editar usuario
-    - [] Remover/Desativar usuario
-    - [] Criar aba de Grupos
-        - [] criar logica de hierarquia dos grupos / Permissões
-        - [] Adicionar grupos
-        - [] Editar grupos
-        - [] Atribuir grupos
-        - [] Atribuir permissioes
-    - [] criar troca de senha usuario
-    - [] Criar menu de permissioes do usuario (Administrativo)
-    - [] Criar menu de grupos do usuario
+    - [x] Aba Usuário
+        - [x] Criar
+        - [x] Atribuir Permissão
+        - [x] Editar
+        - [x] Desativar
+        - [x] Remover
+        - [x] Atribuir Grupo
+        - [x] Alterar senha
+        - [] Alteração do botão criação de usuário para um item da tabela
+    - [x] Aba Grupos
+        // mudar modo de mostrar os grupos (somente o associado como pai)
+        // corrigir hierarchy
+        - [x] Criar
+        - [x] Atribuir Permissão
+            - [x] Mostrar Permissão herdada de quem
+            - [x] Bloquear edição de permissao herdada 
+        - [x] Editar
+        - [x] Desativar
+        - [x] Remover
+        - [x] Atribuir Grupo
+        - [x] Logica de hierarquia
+        - [] Lista de usuários no grupo
+        - [] Alteração do botão criação de grupo para um item da tabela
+    - [] Interface Cliente
+        - [x] Trocar a propria senha
+        - [x] Ultimo Ip Conectado
+        - [x] Ultimo login
+        - [] Preferencias
+        - [] Acesso Rapido / Favoritos
+        - [] Tela principal com favoritos na barra superior
+        - [] Abertura de favorito automatico
+        - [] reordenação de favoritos
+    - [x] Alterar Creditos
+        - [x] Direito de uso em base GPL 3.0
+
 
 
 
@@ -31,12 +49,6 @@
 
 // Janelas
     - [x] posicionamento dinamico parra multiplas Janelas
-
-// usuario
-    - [] Mudar senha de usuario
-    - [x] carregar preferencias de usuario
-    - [x] salvar preferencias do usuario
-    - [] Criar tela de preferencias de usuario
 
 // Core
     - [x] Auto instalação apos configuração
@@ -48,8 +60,11 @@
             Running.js <-- Executar ao termino das inicializações
             Stop.js <-- Executar ao desligar o servidor
     - [x] Criar cache de dados dos modulos
+    - [x] Sistema de Favoritos na pagina principal
+        - [x] Alterar todos os itens de menu superior para menu interno da tabela
+    - [x] Todas as funçoes com context mover para coluna de ações da tabela
+    - [x] Adicionado Email e Telefone para o Usuário
 
-// Ideias
 
 //Modulo IPMA
     // Pagina de gerencia de Redes
@@ -104,3 +119,53 @@
             img/
             .../(estrutura de pastas de acesso estatico)
 
+//Modulo WSOP
+    WebServer Ordem de Produção
+    - [x] Clientes
+        - [x] Adicionar
+            - [x] Pesquisa de CNPJ (limitado a 3 por minuto)
+            - [x] Pesquisa de CEP
+        - [x] Editar
+        - [x] Excluir (desativar)
+    - [x] Produtos
+        // para cada modelo e tamanho cadastrar como item diferente EX. Camisa Manga Longa Tamanho P
+        // uso de estilo PBS (Product Based System)
+        - [x] Adicionar
+        - [x] Editar
+        - [x] Excluir (desativar)
+        - [x] Imagem associada
+            - [x] Thumbnails com diferentes resoluções
+            - [x] Fix Endereço salvo no BD para somente nome do arquivo
+        - [x] Itens adicionais no produto
+            - [x] Vies
+            - [x] Gola
+            - [] Tamanho (no cadastro de produto para cada OS/OP)
+    - [x] Emitente
+        - [x] Cadastro
+            - [x] Pesquisa de CEP
+            - [x] Pesquisa de CNPJ
+    - [x] OS/OP
+        - [x] Campo Descrição com wysiwyg
+        - [x] Adicionar
+            - [x] Abrir editor para adicionar items (anexos/produtos)
+        - [x] Editar
+        - [x] Excluir (desativar)
+        - [] Sistema de Tags
+        - [] Cores distintas para cada Status
+        - [] campo Expira/ Termino em
+        - [x] Anexos
+        - [x] Produtos com Pesquisa, quantidade, e Observação
+            - [] Criar redução do inventario quando associa;
+        - [x] Status
+            - [x] Botao atualizar
+            - [x] Listas com cada Status (terminais de Produçao) uso da lista principal filtrada
+                - [x] Botão para enviar pedido para o proximo Status
+        - [x] Impressão de OS (via do Cliente) e de OP (via da Produção)
+    - [x] Terminais com cada status
+        - [x] Botão para passagem para o proximo processo
+            
+    - [] Fix
+        - [x] Editar produto não carrega a imagem de thumbnail
+        - [x] Tamanho da tela de Edt Os incoerente com a tela do computador
+        - [] Travamento do Socket quando manda imprimir
+        

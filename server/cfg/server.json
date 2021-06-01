@@ -1,7 +1,7 @@
 {
     "webPort": 8080,
-    "webpageFolder": "/opt/servers/WS-Core/web",
-    "version": "1.3.1",
+    "webpageFolder": "/opt/Programas/WS-Core/web",
+    "version": "1.3.3",
     "hostname": "localhost",
     "adminPage": "/Administrativo",
     "DB": {

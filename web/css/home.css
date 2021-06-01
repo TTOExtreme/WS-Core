@@ -1,45 +1,67 @@
-body{
+body {
   background-image: url('../img/bg.png');
   background-repeat: no-repeat;
   background-size: cover;
   margin: 0;
-  padding:0;
+  padding: 0;
   transition: 1s opacity;
+  overflow: hidden;
 }
 
-.MainScreenHolder{
+.MainScreenHolder {
   position: absolute;
-  top:30px;
+  top: 30px;
   left: 30px;
   background-color: #30303030;
   width: calc(100vw - 30px);
   height: calc(100vh - 62px);
 }
 
-.MainScreen{
-}
+.MainScreen {}
 
 /*system messages*/
-.system_message_holder{
+.system_message_holder {
   position: absolute;
   top: 20px;
   right: 10px;
   z-index: 50;
 }
-.system_message{
-}
-   
-.system_message_div{
+
+.system_message {}
+
+.system_message_div {
   width: calc(100vw - 266px);
   border-radius: 5px;
   border: 1px solid var(--message-border);
   margin-top: 100px;
   height: 30px;
   opacity: 0;
-  transition: .5s opacity , .5s margin;
+  transition: .5s opacity, .5s margin;
 }
-.systemmess_data_table{
+
+.systemmess_data_table {
   float: right;
   align-self: middle;
   margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .MainScreenHolder {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background-color: #30303030;
+    width: calc(100vw - 30px);
+    height: calc(100vh - 90px);
+  }
+
+  .system_message_div {
+    width: calc(100vw - 30px);
+    border-radius: 5px;
+    border: 1px solid var(--message-border);
+    margin-top: 100px;
+    height: 30px;
+    opacity: 0;
+    transition: .5s opacity, .5s margin;
+  }
 }

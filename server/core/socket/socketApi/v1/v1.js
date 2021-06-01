@@ -41,13 +41,12 @@ class v1 {
                                 _socket = socket;
                                 this._loadModules(_socket, Myself);
 
-                                socket.emit("auth-ok", Myself.getUserClientData());
-
                                 var address = socket.handshake.address;
                                 Myself.LogIn({
                                     ip: clearIpv6(address)
                                 });
 
+                                socket.emit("auth-ok", Myself.getUserClientData());
                                 return Promise.resolve();
                             })
                         }).catch(() => {
@@ -93,10 +92,15 @@ class v1 {
 
         //load addons modules
         fs.readdirSync(path(__dirname + '/../../../../modules/')).forEach((mod) => {
-            //console.log("load: " + mod)
             if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))) {
-                let modSocket = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
-                modSocket.socket(socket, Myself);
+                try {
+                    this._log.task("api-mod-" + mod, "Loading API " + mod, 0);
+                    let modSocket = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
+                    modSocket.socket(socket, Myself);
+                } catch (err) {
+                    this._log.task("api-mod-" + mod, "Api " + mod + " Failed to Load", 3);
+                    this._log.error(err);
+                }
             }
         })
 

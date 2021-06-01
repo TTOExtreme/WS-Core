@@ -51,7 +51,8 @@ class DatabaseCreator {
 
                 this.log.info("Reading Structure From : " + table);
                 let str = require(__dirname + '/../structures/main/' + table)._DB;
-                this.log.info("Structure Readed : " + JSON.stringify(str));
+                this.log.info("Structure Readed");
+                //this.log.info("Structure Readed : " + JSON.stringify(str));
                 if (str) {
                     Object.keys(str).forEach((col) => {
                         sql += col + " " + str[col] + ", "
@@ -89,13 +90,15 @@ class DatabaseCreator {
 
                 this.log.info("Reading Structure From : " + table);
                 let str = require(__dirname + '/../structures/relations/' + table)._DB;
-                this.log.info("Structure Readed : " + JSON.stringify(str));
+                this.log.info("Structure Readed");
+                //this.log.info("Structure Readed : " + JSON.stringify(str));
                 if (str) {
                     Object.keys(str).forEach((col) => {
                         sql += col + " " + str[col] + ", "
                     })
                     sql = sql.substr(0, sql.length - 2);
                     sql += ");"
+                    console.log(sql);
                     arr.push(this.db.query(sql)
                         .catch((err) => {
                             this.log.error(err);
@@ -121,6 +124,7 @@ class DatabaseCreator {
         return new Promise((res, rej) => {
             let datas = fs.readdirSync(__dirname + '/../structures/data/')
 
+            const excludeTables = "_Permissions,"
             let arr = [];
             datas.forEach((table) => {
                 let tablename = "_" + table.replace(".js", "").replace("Create", "");
@@ -129,7 +133,8 @@ class DatabaseCreator {
 
                 this.log.info("Reading Structure From : " + table);
                 let str = require(__dirname + '/../structures/data/' + table)._DB;
-                this.log.info("Structure Readed : " + JSON.stringify(str));
+                this.log.info("Structure Readed");
+                //this.log.info("Structure Readed : " + JSON.stringify(str));
                 if (tablename == "_User") {
                     if (str) {
                         if (str.length > 0) {
@@ -148,6 +153,8 @@ class DatabaseCreator {
                                 sql += col + ", "
                             })
                             sql = sql.substr(0, sql.length - 2);
+                            if (excludeTables.indexOf(tablename) == -1)
+                                sql += ",createdBy,createdIn"
                             sql += ") VALUES "
 
                             //Append All Data
@@ -157,6 +164,8 @@ class DatabaseCreator {
                                     sql += "'" + item[col] + "', "
                                 })
                                 sql = sql.substr(0, sql.length - 2);
+                                if (excludeTables.indexOf(tablename) == -1)
+                                    sql += ",1," + Date.now();
                                 sql += "), "
                             })
                             sql = sql.substr(0, sql.length - 2);

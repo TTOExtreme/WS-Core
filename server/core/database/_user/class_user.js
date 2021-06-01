@@ -4,6 +4,7 @@
 const UserStruct = require('../structures/main/UserStruct').UserStruct;
 const WSMainServer = require('../../../main');
 const Bcypher = require("../../utils/bcypher").Bcypher;
+const Group_Server = require("../_group/class_group");
 
 /**
  * @typedef User
@@ -33,6 +34,7 @@ class User {
      * @param {WSMainServer} WSMain
      */
     constructor(WSMain) {
+        this._WSMainServer = WSMain;
         this.Menus = [new ClientMenus()]
         this.db = WSMain.db;
         this.log = WSMain.log;
@@ -64,14 +66,20 @@ class User {
                 }).then((result) => {
                     if (result[0]) {
                         this.myself = new UserStruct(result[0]);
-                        return this.resetUUID()
-                            .then(() => {
-                                return this._loadPermissions();
-                                return Promise.resolve(this.myself)
-                            }).catch((err) => {
-                                this.log.error(err);
-                                return Promise.reject("Not Able to reset UUID for user: <" + username + "> in database.");
-                            })
+
+                        if (this.myself.uuid != undefined || this.myself.uuid != null) {
+                            return this._loadPermissions();// reset quando nulo ou corrompido
+                        } else {
+                            return this.resetUUID()
+                                .then(() => {
+                                    return this._loadPermissions();
+                                    //return Promise.resolve(this.myself)
+                                }).catch((err) => {
+                                    this.log.error(err);
+                                    return Promise.reject("Not Able to reset UUID for user: <" + username + "> in database.");
+                                })
+                        }
+
                     } else {
                         return Promise.reject();
                     }
@@ -150,25 +158,31 @@ class User {
         let ud = JSON.parse(this.myself.toString());
         delete ud.password;
         delete ud.salt;
-        delete ud.createdBy;
-        delete ud.deactivatedBy;
-        delete ud.deactivatedIn;
-        delete ud.active;
-        delete ud.connected;
-        delete ud.id;
-        delete ud.permissions;
+        //delete ud.createdBy;
+        //delete ud.deactivatedBy;
+        //delete ud.deactivatedIn;
+        //delete ud.active;
+        //delete ud.connected;
+        //delete ud.id;
+        //delete ud.permissions;
         return (ud);
     }
 
     /**
      * Function for changing the user pass
-     * @param {string} oldPass 
      * @param {string} newPass 
      */
-    changePass(oldPass, newPass) {
-        // TODO
-
-        this.log.info("User change Password User: <" + username + ">.");
+    changePass(newPass) {
+        const salt = this.bcypher.generate_salt();
+        return new Promise((resolve, reject) => {
+            this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
+                " SET password='" + this.bcypher.sha512(salt + this.bcypher.sha512(newPass)) + "', salt='" + salt + "'" +
+                " WHERE id=" + this.myself.id + ";").then(() => {
+                    resolve();
+                }).catch(err => {
+                    this.log.error("Cannot Set Password:\n" + (err).toString());
+                })
+        })
     }
 
     /**
@@ -197,7 +211,7 @@ class User {
             this.db.query("SELECT preferences FROM " + this.db.DatabaseName + "._User" +
                 " WHERE id=" + this.myself.id + ";").then((result) => {
                     if (result[0]) {
-                        this.myself.preferences = result[0].preferences;
+                        this.myself.preferences = JSON.parse(result[0].preferences);
                         resolve(this.myself.preferences);
                     } else {
                         reject("Cannot Load Preferences: User not Found");
@@ -248,7 +262,7 @@ class User {
                 if (!this.checkPermissionSync("dev/usr/login")) {
                     this.LogOut(); //create a logout in case the user is blocked
                 }
-                return Promise.reject("Usuário sem permissão para a ação");
+                return Promise.reject("Usuário sem permissão para a ação: " + permissionCode);
             }
         }
     }
@@ -344,12 +358,46 @@ class User {
                     }
                 }).catch(() => {
                     this.log.error("User Without Any Permissions " + this.myself.toString())
+                    this.log.error(err)
                     reject("User Without Any Permissions");
                 })
             });
         } else {
             this.log.error("User not defined to load Permissions\n" + this.myself.toString())
             return Promise.reject("User not defined to load Permissions");
+        }
+    }
+
+
+    /**
+        SELECT * FROM WS_CORE_1_3_1._Permissions AS P 
+        LEFT JOIN (SELECT 
+        ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User
+        FROM WS_CORE_1_3_1.rlt_User_Permissions as up1 
+        LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id
+        LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id
+        WHERE id_User = 1) AS UP 
+        ON P.code = UP.code_Permission;
+     * 
+     * Function to load permissions from database
+     * @param {JSON} preferences 
+     */
+    _loadHierarchyGroups() {
+        if (this.myself.id) {
+            return new Promise((resolve, reject) => {
+                let gs = new Group_Server.Group(this._WSMainServer)
+                return gs.findmeidFromUser(this.myself.id).then((grps) => {
+                    //console.log(gs.listGroups());
+
+                    this.myself.groups = grps;
+                    //console.log(this.myself.groups)
+                    resolve(this.myself);
+                })
+
+            });
+        } else {
+            this.log.error("User not defined to load Groups\n" + this.myself.toString())
+            return Promise.reject("User not defined to load Groups");
         }
     }
 
@@ -365,7 +413,8 @@ class User {
      * @param {JSON} menus 
      */
     AppendMenus(menus) {
-        this.Menus = this.Menus.concat(this.Menus, menus);
+        this._AdmMenus = this._AdmMenus.concat(menus);
+        this._generateMenus();
     }
 
     /**
@@ -376,16 +425,24 @@ class User {
         return this.Menus;
     }
 
+    /**
+     * Function to get list of groups associated with user
+     * @param {JSON} menus 
+     */
+    GetGroups() {
+        return this.myself.groups;
+    }
+
 
     _generateMenus() {
         try {
             let _AdmMenus = this._AdmMenus; //create an separeted Instance for each user
             _AdmMenus.forEach((Menu, index, arr) => {
-                if (this.checkPermissionSync(Menu.Id)) {
+                if (this.checkPermissionSync(Menu.Permission)) {
                     Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
-                        if (this.checkPermissionSync(SubMenu.Id)) {
+                        if (this.checkPermissionSync(SubMenu.Permission)) {
                             SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
-                                if (this.checkPermissionSync(TopMenu.Id)) { } else {
+                                if (this.checkPermissionSync(TopMenu.Permission)) { } else {
                                     Toparr.splice(Topindex, 1);
                                 }
                             });
@@ -412,12 +469,14 @@ class User {
         this._AdmMenus.push({
             Name: "Administração",
             Id: "menu/adm",
+            Permission: "menu/adm",
             Icon: "",
             Event: () => { },
             SubItems: [
                 {
                     Name: "Usuários",
                     Id: "menu/adm/usr",
+                    Permission: "menu/adm/usr",
                     Icon: "",
                     EventCall: "Load",
                     EventData: "./js/core/user/list.js",
@@ -425,6 +484,7 @@ class User {
                         {
                             Name: "Adicionar",
                             Id: "menu/adm/usr/add",
+                            Permission: "menu/adm/usr/add",
                             EventCall: "Load",
                             EventData: "./js/core/user/add.js",
                         }
@@ -433,6 +493,7 @@ class User {
                 {
                     Name: "Grupos",
                     Id: "menu/adm/grp",
+                    Permission: "menu/adm/grp",
                     Icon: "",
                     EventCall: "Load",
                     EventData: "./js/core/group/list.js",
@@ -440,6 +501,7 @@ class User {
                         {
                             Name: "Adicionar",
                             Id: "menu/adm/grp/add",
+                            Permission: "menu/adm/grp/add",
                             EventCall: "Load",
                             EventData: "./js/core/group/add.js",
                         }

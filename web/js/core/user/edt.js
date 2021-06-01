@@ -1,6 +1,5 @@
 
 ClientEvents.on("usr/edt", (data) => {
-    console.log(data);
     ClientEvents.emit("usr/edt/close");
     /**
      * id
@@ -30,6 +29,8 @@ ClientEvents.on("usr/edt", (data) => {
         "<tr><td class='usr_edt_label'>ID:</td><td><input id='usredtid' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Nome:</td><td><input id='usredtname' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Usuário:</td><td><input type='text' disabled value='" + data.username + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Nome:</td><td><input id='usredtemail' type='text' value='" + data.email + "'></td></tr>" +
+        "<tr><td class='usr_edt_label'>Telefone:</td><td><input id='usredttelefone' type='text' value='" + data.telefone + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Criado Em:</td><td><input type='text' disabled value='" + formatTime(data.createdIn) + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Criado Por:</td><td><input type='text' disabled value='" + data.createdBy + "'></td></tr>" +
         "<tr><td class='usr_edt_label'>Desativado Em:</td><td><input type='text' disabled value='" + formatTime(data.deactivatedIn) + "'></td></tr>" +
@@ -56,7 +57,9 @@ ClientEvents.on("usr/edt/close", () => {
 ClientEvents.on("usr/edt/save", () => {
     ClientEvents.emit("SendSocket", "adm/usr/edt/save", {
         id_user: document.getElementById("usredtid").value,
-        name: document.getElementById("usredtname").value
+        name: document.getElementById("usredtname").value,
+        email: document.getElementById("usredtemail").value,
+        telefone: document.getElementById("usredttelefone").value
     });
     /**
      * save data and closes the page if success

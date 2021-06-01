@@ -1,5 +1,6 @@
 const userManipulator = require('../../../../database/_user/serverManipulator').UserServer;
 const class_user = require('../../../../database/_user/class_user').User;
+const class_group = require('../../../../database/_group/class_group').Group;
 
 class Socket {
 
@@ -95,6 +96,52 @@ class Socket {
         })
 
         /**
+         * User Groups
+         * Get list of group hierarchy
+         */
+        socket.on("adm/usr/grp/data", (data) => {
+            this._myself.checkPermission("adm/usr/grp").then(() => {
+                let search_user = new class_user(this._WSMainServer);
+                search_user.findmeid(data[0].id).then(() => {
+                    return search_user._loadHierarchyGroups().then((user) => {
+                        socket.emit("ClientEvents", {
+                            event: "adm/usr/grp/data",
+                            data: search_user.GetGroups()
+                        })
+                    }).catch(err => {
+                        this._log.error("error on loading groups from user")
+                        this._log.error(err)
+                    })
+                }).catch((err) => {
+                    this._log.error(err);
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Acesso Negado",
+                            status: "ERROR"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+
+        /**
          * User permissions set (server)
          */
         socket.on("adm/usr/perm/set", (data) => {
@@ -108,7 +155,37 @@ class Socket {
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User Group set (server)
+         */
+        socket.on("adm/usr/grp/set", (data) => {
+            this._myself.checkPermission("adm/usr/grp").then(() => {
+                this._userServer.attribGroup(data[0].id_user, data[0].id_group, this._myself.myself.id, data[0].active).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Alterado com sucesso",
+                            status: "OK"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -128,7 +205,7 @@ class Socket {
          */
         socket.on("adm/usr/add/save", (data) => {
             this._myself.checkPermission("adm/usr/add").then(() => {
-                this._userServer.createUser(data[0].id_user, data[0].name, data[0].username, data[0].pass, data[0].active, this._myself.myself.id).then(() => {
+                this._userServer.createUser(data[0].id_user, data[0].name, data[0].username, data[0].pass, data[0].email, data[0].telefone, data[0].active, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -139,7 +216,8 @@ class Socket {
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -158,7 +236,7 @@ class Socket {
          */
         socket.on("adm/usr/edt/save", (data) => {
             this._myself.checkPermission("adm/usr/edt").then(() => {
-                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, this._myself.myself.id).then(() => {
+                this._userServer.edtUser(data[0].id_user, data[0].name, data[0].pass, data[0].email, data[0].telefone, this._myself.myself.id).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -169,7 +247,8 @@ class Socket {
                         }
                     })
                 })
-            }).catch(() => {
+            }).catch((err) => {
+                this._log.error(err);
                 if (!this._myself.isLogged()) {
                     socket.emit("logout", "");
                 }
@@ -177,6 +256,117 @@ class Socket {
                     event: "system_mess",
                     data: {
                         mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User ChangePass
+         */
+        socket.on("usr/edt/pass", (data) => {
+            this._myself.checkPermission("def/usr/chgpass").then(() => {
+                this._myself.changePass(data[0].pass).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Alterado com sucesso",
+                            status: "OK"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+        /**
+         * User set Pass
+         */
+        socket.on("usr/set/pass", (data) => {
+            this._myself.checkPermission("adm/usr/edt").then(() => {
+                this._userServer.edtUserPass(data[0].id_user, data[0].pass, this._myself.myself.id).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            mess: "Editado com sucesso",
+                            status: "OK",
+                            call: "SendSocket",
+                            data: "adm/user/lst"
+                        }
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Acesso Negado",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User Set Preferences
+         */
+        socket.on("usr/edt/preferences", (data) => {
+            this._myself.checkPermission("def/usr/login").then(() => {
+                this._myself.savePreferences(data[0].preferences).then(() => {
+                    socket.emit("ClientEvents", {
+                        event: "savedPreferences",
+                        data: {}
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Erro ao salvar Preferencias do Usuário",
+                        status: "ERROR"
+                    }
+                })
+            })
+        })
+
+        /**
+         * User Get Preferences
+         */
+        socket.on("usr/get/preferences", (data) => {
+            this._myself.checkPermission("def/usr/login").then(() => {
+                this._myself.loadPreferences().then((prefs) => {
+                    socket.emit("ClientEvents", {
+                        event: "usr/get/preferences",
+                        data: prefs
+                    })
+                })
+            }).catch((err) => {
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        mess: "Erro ao salvar Preferencias do Usuário",
                         status: "ERROR"
                     }
                 })
@@ -270,6 +460,7 @@ class Socket {
             if (this._myself.checkPermissionSync("adm/usr/grp")) {
                 itemList.push({
                     name: "Grupos",
+                    active: true,
                     event: {
                         call: "usr/grp",
                         data: data[0].row

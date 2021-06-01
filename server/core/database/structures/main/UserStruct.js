@@ -6,6 +6,8 @@ const PermissionsStruct = require('../relations/User_Permissions').UserPermissio
  * @property {string} name
  * @property {string} username
  * @property {string} password
+ * @property {string} email
+ * @property {string} telefone
  * @property {string} uuid
  * @property {string} preferences
  * @property {timestamp} createdIn
@@ -17,7 +19,8 @@ const PermissionsStruct = require('../relations/User_Permissions').UserPermissio
  * @property {timestamp} lastConnection
  * @property {timestamp} lastTry
  * @property {string} lastIp
- * @property {string} permissions
+ * @property {JSON} permissions
+ * @property {JSON} groups
  */
 
 
@@ -26,6 +29,8 @@ class UserStruct {
     name;
     username;
     password;
+    email;
+    telefone;
     salt;
     uuid;
     preferences;
@@ -40,7 +45,8 @@ class UserStruct {
     lastConnection;
     lastTry;
     lastIp;
-    permissions = [new PermissionsStruct()];
+    permissions = [];
+    groups = [];
 
     /**
      * converte um JSON para o objeto USER
@@ -52,6 +58,8 @@ class UserStruct {
             if (user.name) { this.name = user.name }
             if (user.username) { this.username = user.username }
             if (user.password) { this.password = user.password }
+            if (user.email) { this.email = user.email }
+            if (user.telefone) { this.telefone = user.telefone }
             if (user.salt) { this.salt = user.salt }
             if (user.uuid) { this.uuid = user.uuid }
             if (user.preferences) { this.preferences = user.preferences }
@@ -78,6 +86,8 @@ class UserStruct {
             name: this.name,
             username: this.username,
             password: this.password,
+            email: this.email,
+            telefone: this.telefone,
             salt: this.salt,
             uuid: this.uuid,
             preferences: this.preferences,
@@ -91,7 +101,8 @@ class UserStruct {
             connected: this.connected,
             lastConnection: this.lastConnection,
             lastTry: this.lastTry,
-            lastIp: this.lastIp
+            lastIp: this.lastIp,
+            permissions: this.permissions
         })
     }
 }
@@ -100,6 +111,8 @@ const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
     name: "VARCHAR(200)",
     username: "VARCHAR(200)",
+    email: "VARCHAR(200)",
+    telefone: "VARCHAR(200)",
     password: "VARCHAR(4096)",
     salt: "VARCHAR(4096)",
     uuid: "VARCHAR(4096)",

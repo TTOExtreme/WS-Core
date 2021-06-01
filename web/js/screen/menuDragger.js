@@ -16,3 +16,22 @@ ClientEvents.on("move_menu", (ev, div) => {
     d.style.left = "calc(" + (ev.screenX - 20) + "px)";
     d.style.transform = "translate(0px,0px)";
 });
+ClientEvents.setCoreEvent("close_menu");
+ClientEvents.on("close_menu", (div) => {
+    if (div != undefined) {
+        if (document.getElementById(div) != undefined)
+            document.body.removeChild(document.getElementById(div));
+    } else {
+        let menus = document.getElementsByClassName("menu_dragger");
+        //Remove all childs with class menu_dragger
+        if (menus.length > 0) {
+            for (menu in menus) {
+                if (menus[menu] != undefined)
+                    try {
+                        document.body.removeChild(menus[menu]);
+                    } catch (err) {
+                    }
+            };
+        }
+    }
+});

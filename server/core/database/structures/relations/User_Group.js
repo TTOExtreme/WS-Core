@@ -6,6 +6,8 @@ const _DB = {
     createdBy: "INT",
     deactivatedIn: "BIGINT",
     deactivatedBy: "INT",
+    modifiedIn: "BIGINT",
+    modifiedBy: "INT",
     active: "INT(1)",
 }
 
