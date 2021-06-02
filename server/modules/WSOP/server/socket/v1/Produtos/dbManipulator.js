@@ -41,12 +41,12 @@ class ProdutosManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createProduto(name, description, barcode, price, cost, img, inventory, active, UserID) {
+    createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda, privatelabel, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Produtos" +
-            " (name, description, barcode, price, cost, img, inventory, active, createdBy, createdIn)" +
+            " (name, description, barcode, price, priceRevenda, cost, img, inventory, active,revenda,privatelabel, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + name + "','" + description + "','" + barcode + "','" + price + "','" + cost + "','" + img + "'," + inventory + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + name + "','" + description + "','" + barcode + "','" + price + "','" + priceRevenda + "','" + cost + "','" + img + "'," + inventory + "," + (active ? 1 : 0) + "," + (revenda ? 1 : 0) + "," + (privatelabel ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
@@ -65,13 +65,14 @@ class ProdutosManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editProduto(ID, name = "", description = "", barcode = "", price, cost, img, inventory = 0, active, UserID) {
+    editProduto(ID, name = "", description = "", barcode = "", price, priceRevenda, cost, img, inventory = 0, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Produtos SET" +
             ((name != "") ? " name='" + name + "'," : " ") +
             ((description != "") ? " description='" + description + "'," : " ") +
             ((barcode != "") ? " barcode='" + barcode + "'," : " ") +
             ((price != "") ? " price='" + price + "'," : " ") +
+            ((priceRevenda != "") ? " priceRevenda='" + priceRevenda + "'," : " ") +
             ((cost != "") ? " cost='" + cost + "'," : " ") +
             ((img != "") ? " img='" + img + "'," : " ") +
             ((inventory != "") ? " inventory='" + inventory + "'," : " ") +

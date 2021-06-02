@@ -80,6 +80,7 @@ const _DB = {
     bairro: "VARCHAR(100)",
     municipio: "VARCHAR(200)",
     uf: "VARCHAR(200)",
+    country: "VARCHAR(200)",
     telefone: "VARCHAR(200)",
     email: "VARCHAR(200)",
     active: "INT(1)",

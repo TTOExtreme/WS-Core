@@ -36,7 +36,7 @@ class Socket {
      */
     saveLog(id_os = 0, content, data, UserID) {
         this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Log" +
-            " (id_os,contents,data, createdBy, createdIn)" +
+            " (id_os,content,data, createdBy, createdIn)" +
             " VALUES " +
             " (" + id_os + ",\"" + content + "\",'" + data + "'," + UserID + "," + Date.now() + ");").catch(err => {
                 this._log.error("On saving Log WSOP");

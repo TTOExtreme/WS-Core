@@ -1,5 +1,5 @@
 ClientEvents.on("WSOP/produtos/add", () => {
-    ClientEvents.emit("WSOP/produtos/add/close");
+    ClientEvents.emit("close_menu", 'wsop_add_produtos_div')
     let data = {
         name: "",
         description: "",
@@ -7,6 +7,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
         barcode: "",
         cost: "",
         price: "",
+        priceRevenda: "",
         inventory: 0,
         active: 1
     }
@@ -20,7 +21,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_produtos_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/produtos/add/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_produtos_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_add_produtos_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_produto_name' type='text' value='" + data.name + "'></td></tr>" +
 
         "<tr><td class='wsop_edt_label'>Modelo:</td><td><select onchange='ClientEvents.emit(\"wsop/produtos/setVies\", \"\")' id='wsop_add_produto_modelo'>" + window.Modules.WSOP.Produtos.getModelos() + "</select></td></tr>" +
@@ -31,11 +32,14 @@ ClientEvents.on("WSOP/produtos/add", () => {
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_produto_description' type='text' value='" + data.description + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_add_produto_barcode' type='text'value='" + data.barcode + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_add_produto_price' type='text' value='" + data.price + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_add_produto_cost' type='text' value='" + data.cost + "'></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Preco Revenda:</td><td><input id='wsop_add_produto_priceRevenda' type='text' value='" + data.priceRevenda + "'></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_add_produto_cost' type='text' value='" + data.cost + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label' >Inventario:</td><td><input id='wsop_add_produto_inventory' type='text' value='" + data.inventory + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_add_produto_img_thumb' class='wsop_add_img_thumb' alt=''></td></tr>" +
         "<tr><td class='wsop_edt_label'></td><td><input id='wsop_add_produto_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")' value='" + data.img + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_produto_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
+        "<tr><td class='wsop_edt_label' title='Disponibiliza o produto para a revenda'>Revenda:</td><td><input id='wsop_add_produto_active' type='checkbox' " + ((data.revenda == 1) ? "Checked" : "") + "></td></tr>" +
+        "<tr><td class='wsop_edt_label' title='Disponibiliza o produto para o Private Label'>Private Label:</td><td><input id='wsop_add_produto_active' type='checkbox' " + ((data.privatelabel == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_produto_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"WSOP/produtos/save\")' ></td></tr>" +
         "</table>";
@@ -54,7 +58,9 @@ ClientEvents.on("wsop/produtos/setVies", () => {
     document.getElementById("wsop_add_produto_vies").innerHTML = window.Modules.WSOP.Produtos.getVies(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_gola").innerHTML = window.Modules.WSOP.Produtos.getGola(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_genero").innerHTML = window.Modules.WSOP.Produtos.getGenero(document.getElementById("wsop_add_produto_modelo").value);
+    document.getElementById("wsop_add_produto_tamanho").innerHTML = window.Modules.WSOP.Produtos.getTamanhos(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_price").value = window.Modules.WSOP.Produtos.getPreco(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
+    document.getElementById("wsop_add_produto_priceRevenda").value = window.Modules.WSOP.Produtos.getPrecoRevenda(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
     document.getElementById("wsop_add_produto_cost").value = window.Modules.WSOP.Produtos.getCusto(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
 })
 
@@ -67,7 +73,8 @@ ClientEvents.on("WSOP/produtos/save", () => {
             modelo: document.getElementById("wsop_add_produto_modelo").value,
             gola: document.getElementById("wsop_add_produto_gola").value,
             vies: document.getElementById("wsop_add_produto_vies").value,
-            genero: document.getElementById("wsop_add_produto_genero").value
+            genero: document.getElementById("wsop_add_produto_genero").value,
+            tamanho: document.getElementById("wsop_add_produto_tamanho").value
         }),
         barcode: document.getElementById("wsop_add_produto_barcode").value,
         price: document.getElementById("wsop_add_produto_price").value,
@@ -75,6 +82,8 @@ ClientEvents.on("WSOP/produtos/save", () => {
         inventory: document.getElementById("wsop_add_produto_inventory").value,
         img: document.getElementById("wsop_add_produto_img_thumb").getAttribute("loc"),
         active: document.getElementById("wsop_add_produto_active").checked,
+        revenda: false,
+        privatelabel: true
     });
     /**
      * save data and closes the page if success

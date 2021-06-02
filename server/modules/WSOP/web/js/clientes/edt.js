@@ -1,17 +1,17 @@
 
 ClientEvents.on("wsop/clientes/edt", (data) => {
-    ClientEvents.emit("WSOP/clientes/close");
+    ClientEvents.emit("close_menu", 'wsop_edt_clientes_div');
 
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_add_div");
-    div.setAttribute("id", "wsop_add_div");
+    div.setAttribute("class", "wsop_edt_clientes_div");
+    div.setAttribute("id", "wsop_edt_clientes_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/clientes/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_clientes_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\", 'wsop_edt_clientes_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td><input disabled id='wsop_add_id' type='text' value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Responsável:</td><td><input id='wsop_add_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +

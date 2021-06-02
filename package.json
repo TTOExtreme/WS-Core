@@ -27,7 +27,7 @@
     "libnmap": "^0.4.16",
     "local-network-scanner": "^0.2.0",
     "minimist": "^1.2.5",
-    "mysql": "^2.17.1",
+    "mysql": "^2.18.1",
     "net-ping": "^1.2.3",
     "net-snmp": "^1.2.4",
     "network-list": "^1.1.5",
@@ -42,7 +42,7 @@
     "socket.io": "^2.4.1",
     "tsc": "^1.20150623.0",
     "tsc-watch": "^4.0.0",
-    "typeorm": "^0.2.21",
+    "typeorm": "^0.2.33",
     "typescript": "^3.7.3",
     "unirest": "^0.6.0"
   },

@@ -59,6 +59,221 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
     ]
 
     _Modelos = [
+
+        //Modelos Corretos
+        {
+            name: "Agasalho Ziper",
+            tecidos: ["Dinamic"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 85.70,
+            precoRevenda: 85.70,
+            custo: 44.25
+        },
+        {
+            name: "Agasalho Canguru",
+            tecidos: ["Dinamic"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 85.70,
+            precoRevenda: 85.70,
+            custo: 29.30
+        },
+        {
+            name: "Agasalho Treino",
+            tecidos: ["Dinamic"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 60.00,
+            precoRevenda: 60.00,
+            custo: 25.00
+        },
+        {
+            name: "Bag",
+            tecidos: ["Dry"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["-"],
+            preco: 60.00,
+            precoRevenda: 60.00,
+            custo: 25.00
+        },
+        /* // Desativado no momento
+        {
+            name: "Bandana",
+            tecidos: ["Dry"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["-"],
+            preco: 60.00,
+            custo: 25.00
+        },
+        //*/
+        {
+            name: "Boné",
+            tecidos: ["Dry"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["-"],
+            preco: 29.90,
+            precoRevenda: 29.90,
+            custo: 29.90
+        },
+        {
+            name: "Chinelo",
+            tecidos: ["-"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["-"],
+            preco: 29.90,
+            precoRevenda: 29.90,
+            custo: 29.90
+        },
+        {
+            name: "Calça Termica (Legging)",
+            tecidos: ["Heavy Elastano"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 74.70,
+            precoRevenda: 74.70,
+            custo: 27.44
+        },
+        {
+            name: "Calça Treino",
+            tecidos: ["Helanca"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 74.70,
+            precoRevenda: 74.70,
+            custo: 27.44
+        },
+        {
+            name: "Manga Curta Futebol",
+            tecidos: ["Elastano", "Dry"],
+            vies: ["-"],
+            preco: 54.70,
+            precoRevenda: 54.70,
+            custo: 31.12
+        },
+        {
+            name: "Manga Curta Futevôlei",
+            tecidos: ["Elastano", "Dry"],
+            vies: ["-"],
+            preco: 54.70,
+            precoRevenda: 54.70,
+            custo: 33.44
+        },
+        {
+            name: "Manga Curta POLO",
+            tecidos: ["Dry"],
+            gola: ["POLO"],
+            vies: ["-"],
+            preco: 60.70,
+            precoRevenda: 60.70,
+            custo: 33.44
+        },
+        {
+            name: "Regata",
+            tecidos: ["Elastano", "Dry"],
+            gola: ["-"],
+            preco: 44.70,
+            precoRevenda: 44.70,
+            custo: 19.12
+        },
+        {
+            name: "Shorts com Bolso (Bermuda)",
+            tecidos: ["Dinamic"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 44.70,
+            precoRevenda: 44.70,
+            custo: 19.12
+        },
+        {
+            name: "Shorts Feminino Futevôlei",
+            tecidos: ["Elastano"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["Feminino"],
+            preco: 44.70,
+            precoRevenda: 44.70,
+            custo: 17.89
+        },
+        {
+            name: "Shorts Masculino Futevôlei",
+            tecidos: ["DRY"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["Masculino"],
+            preco: 42.70,
+            precoRevenda: 42.70,
+            custo: 20.18
+        },
+        {
+            name: "Shorts Saia",
+            tecidos: ["Elastano"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["Feminino"],
+            preco: 42.70,
+            precoRevenda: 42.70,
+            custo: 20.18
+        },
+        {
+            name: "Sunga",
+            tecidos: ["Heavy Elastano"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["Masculino"],
+            preco: 42.70,
+            precoRevenda: 42.70,
+            custo: 20.18
+        },
+        {
+            name: "TOP",
+            tecidos: ["Heavy Elastano"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["Masculino"],
+            preco: 49.90,
+            precoRevenda: 49.90,
+            custo: 19.97
+        },
+        {
+            name: "Viseira",
+            tecidos: ["-"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["-"],
+            preco: 29.90,
+            precoRevenda: 29.90,
+            custo: 29.90
+        },
+        {
+            name: "Bola",
+            tecidos: ["-"],
+            gola: ["-"],
+            vies: ["-"],
+            genero: ["-"],
+            preco: 244.90,
+            precoRevenda: 244.90,
+            custo: 244.90
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Modelos Teste
+        /*
         {
             name: "Regata Esportiva Padrão",
             tecidos: ["Dry"],
@@ -365,6 +580,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             preco: 60.00,
             custo: 25.00
         },
+        //*/
     ]
 
 
@@ -413,6 +629,16 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         })
         return ret;
     }
+
+    getPrecoRevenda(Modelo = "") {
+        let ret = 50.00;
+        this._Modelos.forEach((item, index) => {
+            if (item.name == Modelo)
+                ret = item.precoRevenda;
+        })
+        return ret;
+    }
+
     getCusto(Modelo = "") {
         let ret = 50.00;
         this._Modelos.forEach((item, index) => {

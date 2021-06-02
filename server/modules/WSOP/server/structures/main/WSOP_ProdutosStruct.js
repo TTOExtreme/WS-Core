@@ -87,6 +87,7 @@ const _DB = {
     description: "TEXT",
     barcode: "VARCHAR(200)",
     price: "VARCHAR(200)",
+    priceRevenda: "VARCHAR(200)",
     cost: "VARCHAR(200)",
     inventory: "BIGINT",
     img: "TEXT",
@@ -97,6 +98,8 @@ const _DB = {
     modifiedIn: "BIGINT",
     modifiedBy: "INT",
     active: "INT(1)",
+    revenda: "INT(1)",
+    privatelabel: "INT(1)",
 }
 
 

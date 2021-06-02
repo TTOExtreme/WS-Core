@@ -1,6 +1,6 @@
 
 ClientEvents.on("WSOP/clientes/add", () => {
-    ClientEvents.emit("WSOP/clientes/close");
+    ClientEvents.emit("close_menu", "wsop_add_div");
     let data = {
         name: "",
         responsavel: "",
@@ -28,7 +28,7 @@ ClientEvents.on("WSOP/clientes/add", () => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_clientes_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/clientes/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_clientes_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\", 'wsop_add_clientes_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_add_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Responsável:</td><td><input id='wsop_add_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>CNPJ?:</td><td><input id='wsop_add_iscnpj' type='checkbox' onchange='ClientEvents.emit(\"iscnpjchange\")' " + ((data.iscnpj == 1) ? "Checked" : "") + "></td></tr>" +
@@ -62,6 +62,7 @@ ClientEvents.on("cnpjchange", () => {
     if (document.getElementById("wsop_add_clientes_div")) {
         let cnpj = document.getElementById("wsop_add_cnpj").value;
         consultaCNPJ(cnpj).then(data => {
+            console.log(data);
             if (document.getElementById("wsop_add_name").value == "")
                 document.getElementById("wsop_add_name").setAttribute("value", data.nome);
             if (document.getElementById("wsop_add_responsavel").value == "") {
@@ -74,7 +75,7 @@ ClientEvents.on("cnpjchange", () => {
             document.getElementById("wsop_add_bairro").setAttribute("value", data.bairro);
             document.getElementById("wsop_add_municipio").setAttribute("value", data.municipio);
             document.getElementById("wsop_add_uf").setAttribute("value", data.uf);
-            document.getElementById("wsop_add_country").setAttribute("value", data.country);
+            document.getElementById("wsop_add_country").setAttribute("value", "Brasil");
             document.getElementById("wsop_add_telefone").setAttribute("value", data.telefone);
             document.getElementById("wsop_add_email").setAttribute("value", data.email);
 
@@ -150,6 +151,7 @@ ClientEvents.on("WSOP/clientes/save", () => {
         email: document.getElementById("wsop_add_email").value,
         iscnpj: document.getElementById("wsop_add_iscnpj").checked,
         active: document.getElementById("wsop_add_active").checked,
+        country: document.getElementById("wsop_add_country").value
     });
     /**
      * save data and closes the page if success

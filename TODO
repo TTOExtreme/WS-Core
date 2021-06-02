@@ -32,10 +32,10 @@
         - [x] Trocar a propria senha
         - [x] Ultimo Ip Conectado
         - [x] Ultimo login
-        - [] Preferencias
-        - [] Acesso Rapido / Favoritos
-        - [] Tela principal com favoritos na barra superior
-        - [] Abertura de favorito automatico
+        - [x] Preferencias
+        - [x] Acesso Rapido / Favoritos
+        - [x] Tela principal com favoritos na barra superior
+        - [x] Abertura de favorito automatico
         - [] reordenação de favoritos
     - [x] Alterar Creditos
         - [x] Direito de uso em base GPL 3.0
@@ -151,8 +151,8 @@
         - [x] Editar
         - [x] Excluir (desativar)
         - [] Sistema de Tags
-        - [] Cores distintas para cada Status
-        - [] campo Expira/ Termino em
+        - [x] Cores distintas para cada Status
+        - [x] campo Expira/ Termino em
         - [x] Anexos
         - [x] Produtos com Pesquisa, quantidade, e Observação
             - [] Criar redução do inventario quando associa;
