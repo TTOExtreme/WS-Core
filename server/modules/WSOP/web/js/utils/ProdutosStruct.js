@@ -585,37 +585,40 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
 
 
     getModelos(Modelo = "") {
-        let ret = "<option disabled selected>Selecione:</option>"
+        let ret = "<option disabled " + (Modelo == "" ? "selected" : "") + ">Selecione:</option>"
         this._Modelos.forEach((item, index) => {
             ret += "<option value='" + item.name + "' " + ((item == Modelo) ? "selected" : "") + ">" + item.name + "</option>";
         })
         return ret;
     }
 
-    getTamanhos(Modelo = "", selected = 0) {
+    getTamanhos(Modelo = "", selected = "") {
         let ret = "<option disabled selected>Selecione:</option>";
         ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].tamanhos : undefined) || this._Tamanhos).forEach((item, index) => {
             ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;
     }
-    getVies(Modelo = "", selected = 0) {
+    getVies(Modelo = "", selected = "") {
         let ret = "<option disabled selected>Selecione:</option>";
         ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].vies : undefined) || this._Vies).forEach((item, index) => {
+            if (selected == "") { selected = item };
             ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;
     }
-    getGola(Modelo = "", selected = 0) {
+    getGola(Modelo = "", selected = "") {
         let ret = "<option disabled selected>Selecione:</option>";
         ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].gola : undefined) || this._Gola).forEach((item, index) => {
+            if (selected == "") { selected = item };
             ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;
     }
-    getGenero(Modelo = "", selected = 0) {
+    getGenero(Modelo = "", selected = "") {
         let ret = "<option disabled selected>Selecione:</option>";
         ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].genero : undefined) || ["Masculino", "Feminino"]).forEach((item, index) => {
+            if (selected == "") { selected = item };
             ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
         return ret;

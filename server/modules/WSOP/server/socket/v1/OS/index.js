@@ -449,13 +449,11 @@ class Socket {
                 if (req[0].id &&
                     req[0].qnt
                 ) {
-                    console.log(req[0])
                     this._OsClass.edtProduto(req[0].id, req[0].qnt, req[0].obs, this._myself.myself.id).then((id) => {
                         this.saveLog(req[0].id, "Editing Product on OS", JSON.stringify(req[0]), this._myself.myself.id);
                         socket.emit("ClientEvents", {
                             event: "wsop/os/produto/edited",
-                            data: {
-                            }
+                            data: req[0]
                         })
                     }).catch((err) => {
                         if (!this._myself.isLogged()) {

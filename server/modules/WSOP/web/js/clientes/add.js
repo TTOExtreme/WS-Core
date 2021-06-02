@@ -1,6 +1,6 @@
 
 ClientEvents.on("WSOP/clientes/add", () => {
-    ClientEvents.emit("close_menu", "wsop_add_div");
+    ClientEvents.emit("close_menu", "wsop_add_clientes_div");
     let data = {
         name: "",
         responsavel: "",

@@ -23,8 +23,8 @@ ClientEvents.on("wsop/produtos/edt", (data) => {
         window.Modules.WSOP.Produtos.getGola(data.description.modelo, data.description.gola) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Genero:</td><td><select id='wsop_edt_produto_genero'>" +
         window.Modules.WSOP.Produtos.getGenero(data.description.modelo, data.description.genero) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Tamanho:</td><td><select id='wsop_edt_produto_tamanho'>" +
-        window.Modules.WSOP.Produtos.getGenero(data.description.modelo, data.description.tamanho) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Tamanho:</td><td><select id='wsop_edt_produto_tamanho'>" +
+        window.Modules.WSOP.Produtos.getTamanhos(data.description.modelo, data.description.tamanho) + "</select></td></tr>" +
 
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_edt_description' type='text' value='" + data.description.description + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_edt_barcode' type='text'value='" + data.barcode + "'></td></tr>" +

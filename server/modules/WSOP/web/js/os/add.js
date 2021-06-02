@@ -1,5 +1,5 @@
 ClientEvents.on("WSOP/os/add", () => {
-    ClientEvents.emit("close_menu", "wsop_add_div");
+    ClientEvents.emit("close_menu", "wsop_add_os_div");
     let data = {
         cliente: "",
         id_cliente: "",
@@ -19,11 +19,11 @@ ClientEvents.on("WSOP/os/add", () => {
      */
     let div = document.createElement("div");
     div.setAttribute("class", "wsop_add_div menu_dragger");
-    div.setAttribute("id", "wsop_add_div");
+    div.setAttribute("id", "wsop_add_os_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_add_div')>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_os_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_add_os_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' value='" + data.cliente + "'><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSOP/clientes/add\")'></td></tr>" +
         "<tr style='display:none;'><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
@@ -68,8 +68,8 @@ ClientEvents.on("WSOP/os/add", () => {
 });
 
 ClientEvents.on("WSOP/os/close", () => {
-    if (document.getElementById("wsop_add_div")) {
-        document.body.removeChild(document.getElementById("wsop_add_div"));
+    if (document.getElementById("wsop_add_os_div")) {
+        document.body.removeChild(document.getElementById("wsop_add_os_div"));
     }
 });
 

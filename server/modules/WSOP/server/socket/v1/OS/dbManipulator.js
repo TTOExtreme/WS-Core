@@ -82,7 +82,6 @@ class osManipulator {
      * @param {*} UserID 
      */
     editOS(ID, description, status, formaEnvio, caixa, country, uf, statusChange, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
-        console.log("precoenvio: " + precoEnvio)
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
             " status='" + status + "'," +
@@ -175,10 +174,6 @@ class osManipulator {
 
 
     edtProduto(ID, qnt, obs, UserID) {
-        console.log("UPDATE  " + this.db.DatabaseName + ".rlt_Produtos_OS SET " +
-            " qnt=" + qnt + ", obs='" + obs + "'," +
-            " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +
-            " WHERE id=" + ID + ";")
         return this.db.query("UPDATE  " + this.db.DatabaseName + ".rlt_Produtos_OS SET " +
             " qnt=" + qnt + ", obs='" + obs + "'," +
             " modifiedBy=" + UserID + ", modifiedIn='" + Date.now() + "' " +

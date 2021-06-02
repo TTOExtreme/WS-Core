@@ -12,34 +12,41 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
             ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data.id_os });
         }
     }
+    console.log(data);
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_add_div menu_dragger");
+    div.setAttribute("class", "wsop_edt_div menu_dragger");
     div.setAttribute("id", "wsop_edt_product_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_product_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_product_div')>X</p></td></tr>" +
-        "<tr><td class='wsop_edt_label'>ID RLT:</td><td><input id='wsop_edt_products_id' type='text' disabled value='" + data.id + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_products_id_produtos' type='text' disabled value='" + data.id_produtos + "'></td></tr>" +
+        "<tr><td id='move_menu_wsop_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_product_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_edt_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_product_div')>X</p></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>ID RLT:</td><td><input id='wsop_edt_products_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_products_id_produtos' type='text' disabled value='" + data.id_produtos + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>OS:</td><td><input id='wsop_edt_products_id_os' type='text' disabled value='" + data.id_os + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_edt_products_name' type='text' disabled value='" + data.name + "'></td></tr>" +
 
-        "<tr><td class='wsop_edt_label'>Modelo:</td><td><input id='wsop_edt_products_produto_modelo' disabled value='" + data.description.modelo + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Vies:</td><td><input id='wsop_edt_products_produto_vies' disabled value='" + data.description.vies + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Gola:</td><td><input id='wsop_edt_products_produto_gola' disabled value='" + data.description.gola + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Genero:</td><td><input id='wsop_edt_products_produto_genero' disabled value='" + data.description.genero + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Modelo:</td><td><select onchange='ClientEvents.emit(\"wsop/produtos/setVies/edt\", \"\")' id='wsop_edt_produto_modelo'>" +
+        window.Modules.WSOP.Produtos.getModelos(data.description.modelo) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Vies:</td><td><select id='wsop_edt_produto_vies'>" +
+        window.Modules.WSOP.Produtos.getVies(data.description.modelo, data.description.vies) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Gola:</td><td><select id='wsop_edt_produto_gola'>" +
+        window.Modules.WSOP.Produtos.getGola(data.description.modelo, data.description.gola) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Genero:</td><td><select id='wsop_edt_produto_genero'>" +
+        window.Modules.WSOP.Produtos.getGenero(data.description.modelo, data.description.genero) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Tamanho:</td><td><select id='wsop_edt_produto_tamanho'>" +
+        window.Modules.WSOP.Produtos.getTamanhos(data.description.modelo, data.description.tamanho) + "</select></td></tr>" +
 
         "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_edt_products_barcode' type='text' disabled value='" + data.barcode + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Qnt:</td><td><input id='wsop_edt_products_qnt' type='text' value='" + data.qnt + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_edt_products_price' type='text' value='" + data.price + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_cost' type='text' value='" + data.cost + "'></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_cost' type='text' value='" + data.cost + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_desc' type='text' value='" + data.description + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_product_description'class='sun-editor-editable'>" + data.obs + "</textarea></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_add_produto_img_thumb' class='wsop_add_produto_img_thumb' alt='' src='./module/WSOP/img/" + data.img.replace(".", "_thumb.") + "' loc='" + data.img + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_add_produto_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_edt_produto_img_thumb' class='wsop_edt_produto_img_thumb' alt='' src='./module/WSOP/img/" + data.img.replace(".", "_thumb.") + "' loc='" + data.img + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_edt_produto_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_products_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_edt_products_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/produtos/edt\")'></td></tr>" +
@@ -84,6 +91,18 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
         }
     });
 });
+
+
+ClientEvents.on("wsop/produtos/setVies", () => {
+    document.getElementById("wsop_edt_produto_vies").innerHTML = window.Modules.WSOP.Produtos.getVies(document.getElementById("wsop_edt_produto_modelo").value);
+    document.getElementById("wsop_edt_produto_gola").innerHTML = window.Modules.WSOP.Produtos.getGola(document.getElementById("wsop_edt_produto_modelo").value);
+    document.getElementById("wsop_edt_produto_genero").innerHTML = window.Modules.WSOP.Produtos.getGenero(document.getElementById("wsop_edt_produto_modelo").value);
+    document.getElementById("wsop_edt_produto_tamanho").innerHTML = window.Modules.WSOP.Produtos.getTamanhos(document.getElementById("wsop_edt_produto_modelo").value);
+    document.getElementById("wsop_edt_products_price").value = window.Modules.WSOP.Produtos.getPreco(document.getElementById("wsop_edt_produto_modelo").value).toFixed(2);
+    document.getElementById("wsop_edt_products_priceRevenda").value = window.Modules.WSOP.Produtos.getPrecoRevenda(document.getElementById("wsop_edt_produto_modelo").value).toFixed(2);
+    document.getElementById("wsop_edt_products_cost").value = window.Modules.WSOP.Produtos.getCusto(document.getElementById("wsop_edt_produto_modelo").value).toFixed(2);
+})
+
 ClientEvents.clear("WSOP/os/produtos/edt")
 ClientEvents.on("WSOP/os/produtos/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/os/produto/edt", {
@@ -93,7 +112,7 @@ ClientEvents.on("WSOP/os/produtos/edt", () => {
         price: document.getElementById("wsop_edt_products_price").value,
         cost: document.getElementById("wsop_edt_products_cost").value,
         qnt: document.getElementById("wsop_edt_products_qnt").value,
-        img: document.getElementById("wsop_add_produto_img_thumb").getAttribute("loc"),
+        img: document.getElementById("wsop_edt_produto_img_thumb").getAttribute("loc"),
     });
 })
 
@@ -102,10 +121,16 @@ ClientEvents.on("wsop/os/produto/edited", () => {
     ClientEvents.emit("SendSocket", "wsop/produtos/edt", {
         id: document.getElementById("wsop_edt_products_id_produtos").value,
         id_os: document.getElementById("wsop_edt_products_id_os").value,
+        description: JSON.stringify({
+            modelo: document.getElementById("wsop_edt_produto_modelo").value,
+            gola: document.getElementById("wsop_edt_produto_gola").value,
+            vies: document.getElementById("wsop_edt_produto_vies").value,
+            genero: document.getElementById("wsop_edt_produto_genero").value,
+            tamanho: document.getElementById("wsop_edt_produto_tamanho").value
+        }),
         price: document.getElementById("wsop_edt_products_price").value,
         cost: document.getElementById("wsop_edt_products_cost").value,
-        qnt: document.getElementById("wsop_edt_products_qnt").value,
-        img: document.getElementById("wsop_add_produto_img_thumb").getAttribute("loc")
+        img: document.getElementById("wsop_edt_produto_img_thumb").getAttribute("loc"),
     });
 })
 
