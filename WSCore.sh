@@ -28,7 +28,8 @@ restart)
    	;;
 status)
    	if [ -e /var/run/wscore.pid ]; then
-      		echo wscore is running, pid=`cat /var/run/wscore.pid`, log=`cat /opt/Programas/WS-Core/log/log0.log`
+      		echo wscore is running, pid=`cat /var/run/wscore.pid`, log=
+		cat /opt/Programas/WS-Core/log/log0.log
    	else
       		echo wscore.sh is NOT running
       		exit 1
