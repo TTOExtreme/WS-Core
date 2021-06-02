@@ -39,7 +39,12 @@ ClientEvents.on("wsop/os/print", (data) => {
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
-        //os
+        //Hide Data
+        "<tr style='display:none'><td class='wsop_edt_label'>Forma Envio:</td><td><Select id='wsop_edt_formaEnvio' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Pais:</td><td><Select id='wsop_edt_formaEnvio_country' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCountry(data.C_country) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Estado:</td><td><Select id='wsop_edt_formaEnvio_uf' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListEstado(data.C_uf) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Caixa:</td><td><Select id='wsop_edt_formaEnvio_caixa' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCaixa(data.caixa) + "</select><sizecaixa id='wsop_edt_formaEnvio_size'>" + new window.Modules.WSOP.formaEnvio().getSizeCaixa(data.caixa) + "</td></tr>" +
+        //OS
         "<tr><td>Descrição:</td></tr>" +
         "<tr><td class='wsop_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
         "</table><hr>" +
@@ -82,12 +87,33 @@ ClientEvents.on("wsop/os/print", (data) => {
     });
     //htm += "<tr class='wsop_produto_item1'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
 
-    htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Frete:</td><td>R$ " + parseFloat(data.precoEnvio).toFixed(2) + "</td>";
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
+    htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
+    if (data.desconto != undefined) {
+        if (data.desconto > 0) {
+            htm += "<tr><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
+        } else {
+            data.desconto = 0;
+        }
+    }
+    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
+    htm += "<tr><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + data.price + "</td>";
+
+    ClientEvents.on("wsop_changeBoxSize", () => {
+        let newprEnvio = new window.Modules.WSOP.formaEnvio().getPrice(
+            document.getElementById("wsop_edt_formaEnvio_country").value,
+            document.getElementById("wsop_edt_formaEnvio_uf").value,
+            document.getElementById("wsop_edt_formaEnvio").value,
+            document.getElementById("wsop_edt_formaEnvio_caixa").value,
+            parseInt(document.getElementById("qnttotal").innerText));
+
+        let npacotes = new window.Modules.WSOP.formaEnvio().getNCaixas(document.getElementById("wsop_edt_formaEnvio_caixa").value, parseInt(document.getElementById("qnttotal").innerText));
+        document.getElementById("wsop_edt_formaEnvio_precoenvio_show").innerText = "R$ " + newprEnvio +
+            " (" + npacotes + ((npacotes > 1) ? " Pacotes)" : " Pacote)");
+
+    });
 
     produtosTable.innerHTML += htm;
+    ClientEvents.emit("wsop_changeBoxSize");
 });
 
 function PrintElem(elem) {

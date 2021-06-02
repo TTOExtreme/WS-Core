@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
         "./js/screen/menuDragger.js",
         "./js/screen/credits.js",
         "./js/screen/sideMenu.js",
-        //"./js/screen/topMenu.js",
         "./js/screen/contextCreator.js",
         "./js/core/user/changepass.js",
         "./js/libs/tabulator.min.js",
