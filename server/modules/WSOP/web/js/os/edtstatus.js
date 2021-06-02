@@ -15,7 +15,7 @@ ClientEvents.on("wsop/os/edtstatus", (data) => {
         "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
         "<tr><td>Anterior: </td><td id='wsop_edt_oldStatus'>" + data.status + "</td></tr>" +
-        "<tr><td>Log: </td><td id='wsop_edt_statusChange'>" + (data.statusChange == undefined ? "[]" : JSON.stringify(data.statusChange)) + "</td></tr>" +
+        "<tr style='display:none'><td>Log: </td><td id='wsop_edt_statusChange'>" + (data.statusChange == undefined ? "[]" : JSON.stringify(data.statusChange)) + "</td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edtstatus\")'></td></tr>" +
         "</table>";

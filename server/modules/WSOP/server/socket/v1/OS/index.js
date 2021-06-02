@@ -650,7 +650,11 @@ class Socket {
                     if (req[0].statusChange == undefined) {
 
                     } else {
-                        statusChange = JSON.parse(JSON.parse(req[0].statusChange));
+                        try {
+                            statusChange = JSON.parse(JSON.parse(req[0].statusChange));
+                        } catch (err) {
+                            statusChange = [];
+                        }
                     }
                     // writes to last change the timestamp
                     if (statusChange.length > 0) {

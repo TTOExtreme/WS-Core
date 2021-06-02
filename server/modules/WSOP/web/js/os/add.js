@@ -131,12 +131,16 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
         a.setAttribute("id", this.id + "autocomplete-list");
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
+        let lim = 8;
         for (i = 0; i < arr.length; i++) {
-            if ((arr[i].name + "").substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+            let name = arr[i].name + " | " + arr[i].responsavel;
+            if ((name + "").toLowerCase().indexOf((val + "").toLowerCase()) > -1 && lim >= 0) {
+                lim--;
                 b = document.createElement("DIV");
                 b.setAttribute("id", arr[i].id)
-                b.innerHTML = "<strong>" + (arr[i].name + "").substr(0, val.length) + "</strong>";/*make the matching letters bold:*/
-                b.innerHTML += (arr[i].name + "").substr(val.length);
+                let namehtml = ((name).replace(new RegExp((val).toLowerCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
+                namehtml = ((namehtml).replace(new RegExp((val).toUpperCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
+                b.innerHTML = namehtml;
                 b.innerHTML += "<input type='hidden' value='" + (arr[i].name + "") + "'>";
                 b.addEventListener("click", function (e) {
                     inp.value = this.getElementsByTagName("input")[0].value;

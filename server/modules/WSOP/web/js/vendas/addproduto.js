@@ -57,6 +57,7 @@ ClientEvents.on("WSOP/produtos/add/close", () => {
     }
 });
 
+ClientEvents.clear("wsop/produtos/setVies");
 ClientEvents.on("wsop/produtos/setVies", () => {
     document.getElementById("wsop_add_produto_vies").innerHTML = window.Modules.WSOP.Produtos.getVies(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_gola").innerHTML = window.Modules.WSOP.Produtos.getGola(document.getElementById("wsop_add_produto_modelo").value);
@@ -68,6 +69,7 @@ ClientEvents.on("wsop/produtos/setVies", () => {
 })
 
 
+ClientEvents.clear("WSOP/produtos/save");
 ClientEvents.on("WSOP/produtos/save", () => {
     ClientEvents.emit("SendSocket", "wsop/produtos/add", {
         name: document.getElementById("wsop_add_produto_name").value,

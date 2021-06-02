@@ -175,7 +175,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         });
         editor1.onChange = function (contents, core) { document.getElementById("wsop_edt_description_produto").innerHTML = contents; }
     }
-    //ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
+    ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
     ClientEvents.emit("wsop_changeBoxSize");
 });
 
@@ -280,14 +280,18 @@ ClientEvents.on("wsop/os/produtos/lst", (arr) => {
         a.setAttribute("id", this.id + "autocomplete-list");
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
-        let lim = 4;
+        let lim = 8;
         for (i = 0; i < arr.length; i++) {
-            let name = arr[i].barcode + " | " + arr[i].name;
+            let name = arr[i].barcode + " | " + arr[i].name + " | Estoque(" + arr[i].inventory + ")";
+            ;
             if ((name + "").toLowerCase().indexOf((val + "").toLowerCase()) > -1 && lim > 0) {
                 lim--;
                 b = document.createElement("DIV");
                 b.setAttribute("id", arr[i].id)
-                let namehtml = ((arr[i].barcode + "").replace(new RegExp((val + ""), "g"), "<strong>" + (val + "").toUpperCase() + "</strong>")) + " | " + ((arr[i].name + "").replace(new RegExp((val + ""), "g"), "<strong>" + (val + "").toUpperCase() + "</strong>")) + " | Estoque(" + arr[i].inventory + ")";
+
+                let namehtml = ((name).replace(new RegExp((val).toLowerCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
+                namehtml = ((namehtml).replace(new RegExp((val).toUpperCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
+
                 b.innerHTML = namehtml;
                 b.innerHTML += "<input type='hidden' value='" + (name + " | Estoque(" + arr[i].inventory + ")") + "'>";
                 b.addEventListener("click", function (e) {

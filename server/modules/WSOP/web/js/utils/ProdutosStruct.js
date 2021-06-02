@@ -173,6 +173,14 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             custo: 33.44
         },
         {
+            name: "Manga Longa",
+            tecidos: ["Dry", "Elastano"],
+            vies: ["-"],
+            preco: 60.70,
+            precoRevenda: 60.70,
+            custo: 27.02
+        },
+        {
             name: "Regata",
             tecidos: ["Elastano", "Dry"],
             gola: ["-"],
@@ -258,6 +266,33 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             preco: 244.90,
             precoRevenda: 244.90,
             custo: 244.90
+        },
+        {
+            name: "Conjunto Regata e Shorts",
+            tecidos: ["-"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 74.70,
+            precoRevenda: 74.70,
+            custo: 39.30
+        },
+        {
+            name: "Conjunto Manga Longa e Shorts",
+            tecidos: ["-"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 94.70,
+            precoRevenda: 94.70,
+            custo: 47.20
+        },
+        {
+            name: "Kit Manga Longa, Regata e Shorts",
+            tecidos: ["-"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 129.90,
+            precoRevenda: 129.90,
+            custo: 66.32
         },
 
 
