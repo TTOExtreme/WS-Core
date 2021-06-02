@@ -23,7 +23,7 @@ ClientEvents.on("wsop/emitente/add", (data) => {
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_emitente_div");
+    div.setAttribute("class", "wsop_add_div");
     div.setAttribute("id", "wsop_emitente_div");
 
     div.innerHTML = "" +
