@@ -325,12 +325,12 @@ class User {
     }
 
     /**
-        SELECT * FROM WS_CORE_1_3_1._Permissions AS P 
+        SELECT * FROM " + this.db.DatabaseName + "._Permissions AS P 
         LEFT JOIN (SELECT 
         ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User
-        FROM WS_CORE_1_3_1.rlt_User_Permissions as up1 
-        LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id
-        LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id
+        FROM " + this.db.DatabaseName + ".rlt_User_Permissions as up1 
+        LEFT JOIN " + this.db.DatabaseName + "._User as ut1 on up1.createdBy=ut1.id
+        LEFT JOIN " + this.db.DatabaseName + "._User as ut2 on up1.deactivatedBy=ut2.id
         WHERE id_User = 1) AS UP 
         ON P.code = UP.code_Permission;
      * 
@@ -345,8 +345,8 @@ class User {
                     " (SELECT " +
                     " ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User" +
                     " FROM " + this.db.DatabaseName + ".rlt_User_Permissions as up1" +
-                    " LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id" +
-                    " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
+                    " LEFT JOIN " + this.db.DatabaseName + "._User as ut1 on up1.createdBy=ut1.id" +
+                    " LEFT JOIN " + this.db.DatabaseName + "._User as ut2 on up1.deactivatedBy=ut2.id" +
                     " WHERE id_User=" + this.myself.id + " ) AS UP" +
                     " ON P.code = UP.code_Permission;"
                 ).then((result) => {
@@ -371,12 +371,12 @@ class User {
 
 
     /**
-        SELECT * FROM WS_CORE_1_3_1._Permissions AS P 
+        SELECT * FROM " + this.db.DatabaseName + "._Permissions AS P 
         LEFT JOIN (SELECT 
         ut1.username as createdBy,ut2.username as deactivatedBy, up1.active,up1.code_Permission, up1.createdIn,up1.deactivatedIn,up1.id_User
-        FROM WS_CORE_1_3_1.rlt_User_Permissions as up1 
-        LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id
-        LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id
+        FROM " + this.db.DatabaseName + ".rlt_User_Permissions as up1 
+        LEFT JOIN " + this.db.DatabaseName + "._User as ut1 on up1.createdBy=ut1.id
+        LEFT JOIN " + this.db.DatabaseName + "._User as ut2 on up1.deactivatedBy=ut2.id
         WHERE id_User = 1) AS UP 
         ON P.code = UP.code_Permission;
      * 

@@ -288,9 +288,9 @@ class Group {
             " RGG.modifiedIn," +
             " RGG.deactivatedIn" +
             " FROM " + this.db.DatabaseName + "._Group AS RGG " +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut1 ON RGG.createdBy=ut1.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut2 ON RGG.deactivatedBy=ut2.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut3 ON RGG.modifiedBy=ut3.id;"
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut1 ON RGG.createdBy=ut1.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut2 ON RGG.deactivatedBy=ut2.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut3 ON RGG.modifiedBy=ut3.id;"
         );
     }
 
@@ -311,10 +311,10 @@ class Group {
             " up1.modifiedIn," +
             " up1.id_group" +
             " FROM " + this.db.DatabaseName + ".rlt_Group_Permissions as up1" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut1 on up1.createdBy=ut1.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut2 on up1.deactivatedBy=ut2.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut3 on up1.modifiedBy=ut3.id" +
-            " LEFT JOIN WS_CORE_1_3_1._Group as g1 on up1.id_Group=g1.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut1 on up1.createdBy=ut1.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut2 on up1.deactivatedBy=ut2.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut3 on up1.modifiedBy=ut3.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._Group as g1 on up1.id_Group=g1.id" +
             " WHERE up1.id_Group=" + id + " and g1.active=1) AS UP" +
             " ON P.code = UP.code_Permission;"
         );
@@ -336,9 +336,9 @@ class Group {
             " RGG.deactivatedIn" +
             " FROM " + this.db.DatabaseName + ".rlt_Group_Group AS RGG " +
             " LEFT JOIN " + this.db.DatabaseName + "._Group AS G ON RGG.id_Group_Father=G.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut1 ON RGG.createdBy=ut1.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut2 ON RGG.deactivatedBy=ut2.id" +
-            " LEFT JOIN WS_CORE_1_3_1._User as ut3 ON RGG.modifiedBy=ut3.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut1 ON RGG.createdBy=ut1.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut2 ON RGG.deactivatedBy=ut2.id" +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as ut3 ON RGG.modifiedBy=ut3.id" +
             " WHERE RGG.id_Group_Child = " + id + " and RGG.active = 1;"
         );
     }
