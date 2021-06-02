@@ -32,7 +32,7 @@ class ProdutosManipulator {
     }
 
     /**
-     * Criar Cliente
+     * Criar Produto
      * @param {String} name 
      * @param {String} description 
      * @param {String} barcode 
@@ -41,7 +41,33 @@ class ProdutosManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda, privatelabel, UserID) {
+    createProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda, privatelabel, UserID) {
+
+        return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Produtos" +
+            " (name, description, barcode, price, priceRevenda, cost, img, url, inventory, active,revenda,privatelabel, createdBy, createdIn)" +
+            " VALUES " +
+            " ('" + name + "','" + description + "','" + barcode + "','" + price + "','" + priceRevenda + "','" + cost + "','" + img + "','" + url + "'," + inventory + "," + (active ? 1 : 0) + "," + (revenda ? 1 : 0) + "," + (privatelabel ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+    }
+
+    /**
+     * Atualizar caso exista ou criar caso não Produto
+     * @param {String} name 
+     * @param {String} description 
+     * @param {String} barcode 
+     * @param {String} price 
+     * @param {String} cost 
+     * @param {String} inventory 
+     * @param {Number} UserID ID do usuario cadastrando
+     */
+    updateProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda = 1, privatelabel = 1, UserID = 1) {
+        return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
+            " WHERE C.barcode='" + barcode + "';").then(result => {
+                if (result[0] == undefined) {
+                    return this.createProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda, privatelabel, UserID);
+                } else {
+                    return this.editProduto(result[0].id, name, description, barcode, price, "", "", img, url, "", active, UserID);
+                }
+            });
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Produtos" +
             " (name, description, barcode, price, priceRevenda, cost, img, inventory, active,revenda,privatelabel, createdBy, createdIn)" +
@@ -65,7 +91,7 @@ class ProdutosManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editProduto(ID, name = "", description = "", barcode = "", price, priceRevenda, cost, img, inventory = 0, active, UserID) {
+    editProduto(ID, name = "", description = "", barcode = "", price, priceRevenda, cost, img, url, inventory = 0, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Produtos SET" +
             ((name != "") ? " name='" + name + "'," : " ") +
@@ -75,6 +101,7 @@ class ProdutosManipulator {
             ((priceRevenda != "") ? " priceRevenda='" + priceRevenda + "'," : " ") +
             ((cost != "") ? " cost='" + cost + "'," : " ") +
             ((img != "") ? " img='" + img + "'," : " ") +
+            ((url != "") ? " url='" + url + "'," : " ") +
             ((inventory != "") ? " inventory='" + inventory + "'," : " ") +
             " active=" + (active ? 1 : 0) + "," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +

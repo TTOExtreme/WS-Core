@@ -119,7 +119,7 @@ class Socket {
                     req[0].img &&
                     req[0].inventory
                 ) {
-                    this._ProdutosClass.createProduto(req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].priceRevenda, req[0].cost, req[0].img, req[0].inventory, req[0].active, req[0].revenda, req[0].privatelabel, this._myself.myself.id).then(() => {
+                    this._ProdutosClass.createProduto(req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].priceRevenda, req[0].cost, req[0].img, req[0].url, req[0].inventory, req[0].active, req[0].revenda, req[0].privatelabel, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
                             event: "system/added/produtos",
                             data: req
@@ -234,7 +234,7 @@ class Socket {
                 if (req[0].id &&
                     req[0].img
                 ) {
-                    this._ProdutosClass.editProduto(req[0].id, req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].priceRevenda, req[0].cost, req[0].img, req[0].inventory, req[0].active, this._myself.myself.id).then(() => {
+                    this._ProdutosClass.editProduto(req[0].id, req[0].name, req[0].description, req[0].barcode, req[0].price, req[0].priceRevenda, req[0].cost, req[0].img, req[0].url, req[0].inventory, req[0].active, this._myself.myself.id).then(() => {
                         socket.emit("ClientEvents", {
                             event: "system/edited/produtos",
                             data: req
