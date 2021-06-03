@@ -41,7 +41,6 @@ class WServer {
     init() {
         this._log.task("webserver", "Inicializing Webserver", 0);
         this._app = Express();
-        this._appHTTPS = Express();
 
 
         if (fs.existsSync("sslcert/server.key")) {
@@ -87,19 +86,19 @@ class WServer {
      */
     _webhost() {
 
-        this._appHTTPS.get(path(this._config.adminPage + "/login"), (req, res) => {
-            res.redirect('https://' + req.headers.host + req.url);
-        });
-
         this._app.use(bodyParser.urlencoded({
             extended: false
         }));
         this._app.use(bodyParser.json());
 
         this._app.get(path(this._config.adminPage + "/login"), (req, res) => {
-            res.sendFile('./login.html', {
-                root: this._config.webpageFolder
-            });
+            if (req.headers.host != this._config.webHost) {
+                res.redirect('https://' + this._config.webHost + req.url);
+            } else {
+                res.sendFile('./login.html', {
+                    root: this._config.webpageFolder
+                });
+            }
         })
         this._app.post(path(this._config.adminPage + "/login/request"), (req, res) => {
 
@@ -138,16 +137,20 @@ class WServer {
         })
 
         this._app.get(path(this._config.adminPage + "/"), (req, res) => {
-            if (req.url == this._config.adminPage) {
-                res.redirect(302, ".." + this._config.adminPage + "/")
+            if (req.headers.host != this._config.webHost) {
+                res.redirect('https://' + this._config.webHost + req.url);
             } else {
-                let cookies = this._parseCookies(req);
-                if ((cookies["wscore"])) { //check if cookie is present and redirect if is not
-                    res.sendFile('./home.html', {
-                        root: this._config.webpageFolder
-                    });
+                if (req.url == this._config.adminPage) {
+                    res.redirect(302, ".." + this._config.adminPage + "/")
                 } else {
-                    res.redirect(302, "./login")
+                    let cookies = this._parseCookies(req);
+                    if ((cookies["wscore"])) { //check if cookie is present and redirect if is not
+                        res.sendFile('./home.html', {
+                            root: this._config.webpageFolder
+                        });
+                    } else {
+                        res.redirect(302, "./login")
+                    }
                 }
             }
         })

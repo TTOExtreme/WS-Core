@@ -1,6 +1,7 @@
 
 class WSConfigStruct {
     webPort = 8080;
+    webHost = "localhost";
     webpageFolder = "/opt/WS-Core/web";
     version = "1.3.1";
     adminPage = "/Administrativo";
