@@ -57,27 +57,34 @@ ClientEvents.on("wsop/os/printop", (data) => {
     anexosTable.innerHTML += htm;
 
     let produtosTable = document.getElementById("wsop_print_produtos");
-    htm = "<tr class='wsop_produto_item1'><td>Código:</td><td>Item:</td><td>Quantidade:</td></tr>";
+    htm = "";
     let total = 0;
     let totalqnt = 0;
     data.produtos.forEach((produto) => {
+        try {
+            produto.description = JSON.parse(produto.description)
+        } catch (err) {
+            console.log(err);
+            console.log(produto);
+            produto.description = { gola: "-", vies: "-", genero: "-", modelo: "-" }
+        }
         total += (produto.qnt * produto.price);
         totalqnt += produto.qnt;
         htm += "<tr class='wsop_produto_item1'>" +
-            "<td>" + produto.barcode + "</td>" +
-            "<td>" + produto.name + "</td>" +
-            "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
+            "<td>Cod: " + produto.barcode + "</td>" +
+            "<td>Nome: " + produto.name + "</td>" +
+            "<td>Genero: " + produto.description.genero + "</td>" +
+            "<td>QNT: " + produto.qnt + "</td>" +
+            "</tr><tr class='wsop_produto_item3'>" +
+            "<td>Vies: " + produto.description.vies + "</td>" +
+            "<td>Gola: " + produto.description.gola + "</td>" +
+            "<td>Modelo: " + produto.description.modelo + "</td>" +
+            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
+            "<td colspan=3 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
     });
-    htm += ("<tr class='wsop_produto_item1'><td></td><td><b>Qntidade Total:</td><td><b>" + totalqnt + "</td>")
+    htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
     produtosTable.innerHTML += htm;
 
-
-    htm = formatStatus(data.statusChange);
-
-
-    let logStatus = document.getElementById("wsop_logStatus");
-    logStatus.innerHTML = htm;
 
 });
 

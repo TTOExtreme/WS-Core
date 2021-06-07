@@ -90,13 +90,13 @@ ClientEvents.on("wsop/os/print", (data) => {
     htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
     if (data.desconto != undefined) {
         if (data.desconto > 0) {
-            htm += "<tr><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
+            htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
         } else {
             data.desconto = 0;
         }
     }
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + data.price + "</td>";
+    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
+    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + data.price + "</td>";
 
     ClientEvents.on("wsop_changeBoxSize", () => {
         let newprEnvio = new window.Modules.WSOP.formaEnvio().getPrice(

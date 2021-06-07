@@ -2,6 +2,7 @@ ClientEvents.clearAll();
 
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
+ClientEvents.emit("close_menu");
 
 ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/produtos/add.js",
@@ -23,8 +24,23 @@ window.UserList = class UserList {
 
     /**Defines of Table */
     actionFunction = "null";
-    actionName = "";
-    actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
+    actionName = "Ações";
+    //actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
+    actionIcon = function (cell, formatterParams, onRendered) { //plain text value
+        //console.log(cell);
+        let rowdata = cell._cell.row.data;
+        //console.log(rowdata);
+        let htm = document.createElement("div");
+
+        let bot = document.createElement("i");
+        bot.setAttribute("class", "fa fa-globe");
+        bot.setAttribute("title", "Visitar URL");
+        bot.style.marginRight = "5px";
+        bot.onclick = () => { window.open(rowdata.url, "_blanck") };
+        htm.appendChild(bot);
+
+        return htm;
+    };
     actionfield = "0";
     actionCallback = null;
     confirmExecution = false;
@@ -66,11 +82,44 @@ window.UserList = class UserList {
             },
             { title: 'Codigo', field: 'barcode', headerFilter: "input" },
             { title: 'Nome', field: 'name', headerFilter: "input" },
-            { title: 'Modelo', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).modelo), headerFilter: "input" },
-            { title: 'Gola', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).gola), headerFilter: "input" },
-            { title: 'Vies', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).vies), headerFilter: "input" },
-            { title: 'Genero', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).genero), headerFilter: "input" },
-            { title: 'Descrição', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).description), headerFilter: "input" },
+            {
+                title: 'Modelo', field: 'description', formatter: ((data) => {
+                    try {
+                        return JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).modelo;
+                    } catch (err) { }
+                    return "-";
+                }), headerFilter: "input"
+            },
+            {
+                title: 'Gola', field: 'description', formatter: ((data) => {
+                    try {
+                        return JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).gola;
+                    } catch (err) { }
+                    return "-"
+                }), headerFilter: "input"
+            },
+            {
+                title: 'Vies', field: 'description', formatter: ((data) => {
+                    try {
+                        return JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).vies;
+                    } catch (err) { } return "-"
+                }), headerFilter: "input"
+            },
+            {
+                title: 'Genero', field: 'description', formatter: ((data) => {
+                    try {
+                        return JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).genero;
+                    } catch (err) { } return "-"
+                }), headerFilter: "input"
+            },
+            {
+                title: 'Descrição', field: 'description', formatter: ((data) => {
+                    try {
+                        return JSON.parse(JSON.parse(JSON.stringify(data.getRow().getData().description))).description;
+                    } catch (err) { }
+                    return "-";
+                }), headerFilter: "input"
+            },
 
             { title: 'Inventario', field: 'inventory', headerFilter: "input" },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" }
@@ -122,6 +171,7 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/produtos/lst", (data) => {
             if (data) {
+                console.log(data);
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
             }
@@ -133,11 +183,21 @@ window.UserList = class UserList {
 
         ClientEvents.on("WSOP/produtos/dnl", () => {
             if (this.UserListData != undefined) {
-                let csv = "codigo;nome;genero;modelo;gola;vies;descricao;ativo";
+                let csv = "codigo;codigonovo;nome;genero;modelo;gola;vies;preco;url;descricao;ativo";
 
                 this.UserListData.forEach(os => {
                     try {
-                        csv += "\n" + os.barcode + ";" + os.name + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).genero + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).modelo + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).gola + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).vies + ";" + JSON.parse(JSON.parse(JSON.stringify(os.description))).description + ";" + (os.active == 1 ? "Sim" : "Não");
+                        csv += "\n" + os.barcode + ";"
+                            + ";"
+                            + os.name + ";"
+                            + JSON.parse(JSON.parse(JSON.stringify(os.description))).genero + ";"
+                            + JSON.parse(JSON.parse(JSON.stringify(os.description))).modelo + ";"
+                            + JSON.parse(JSON.parse(JSON.stringify(os.description))).gola + ";"
+                            + JSON.parse(JSON.parse(JSON.stringify(os.description))).vies + ";"
+                            + os.price + ";"
+                            + os.url + ";"
+                            + JSON.parse(JSON.parse(JSON.stringify(os.description))).description + ";"
+                            + (os.active == 1 ? "Sim" : "Não");
 
 
 
@@ -148,7 +208,7 @@ window.UserList = class UserList {
                         { title: 'Vies', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).vies), headerFilter: "input" },
                         { title: 'Genero', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).genero), headerFilter: "input" },
                         { title: 'Descrição', field: 'description', formatter: ((data) => JSON.parse(JSON.parse(JSON.stringify(os.description))).description), headerFilter: "input" },
-
+    
                         
                         "[{"altura":9,"disponibilidade":6,"id":97982435,"largura":27,"linha":1,"ncm":"",
                         "nome":"Conjunto Regata e Shorts |PRETO |  MIKASA OPEN - ETAPA SÃO PAULO",

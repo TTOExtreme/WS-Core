@@ -2,6 +2,7 @@ ClientEvents.clearAll();
 
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
+ClientEvents.emit("close_menu");
 
 ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/clientes/add.js",
@@ -18,12 +19,12 @@ if (window.UserList) { // usa a mesma interface global para todas as listas
 
 ClientEvents.on("wsop/emitente/add", (data) => {
     window.Emitente = data;
-    ClientEvents.emit("WSOP/emitente/close");
+    ClientEvents.emit("close_menu", "wsop_emitente_div");
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_add_div");
+    div.setAttribute("class", "wsop_add_div menu_dragger");
     div.setAttribute("id", "wsop_emitente_div");
 
     div.innerHTML = "" +

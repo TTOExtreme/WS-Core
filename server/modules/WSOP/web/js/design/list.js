@@ -2,6 +2,7 @@ ClientEvents.clearAll();
 
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
+ClientEvents.emit("close_menu");
 
 //load emitente Data
 ClientEvents.on("wsop/emitente/add", (data) => { window.Emitente = data; });

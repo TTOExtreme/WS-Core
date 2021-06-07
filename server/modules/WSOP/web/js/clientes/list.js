@@ -2,6 +2,7 @@ ClientEvents.clearAll();
 
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
+ClientEvents.emit("close_menu");
 
 ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/clientes/add.js",

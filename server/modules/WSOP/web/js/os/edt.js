@@ -7,7 +7,6 @@ ClientEvents.on("wsop/os/edt", (data) => {
     let div = document.createElement("div");
     div.setAttribute("class", "wsop_edt_div  menu_dragger");
     div.setAttribute("id", "wsop_edt_div");
-    console.log(data);
 
     div.innerHTML = "" +
         "<table>" +
@@ -98,11 +97,11 @@ ClientEvents.on("wsop/os/edt", (data) => {
     }
 
     htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
+    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
     htm += "<tr style='display:none'><td id='wsop_edt_formaEnvio_precoenvio'>" + data.precoEnvio + "</td>";
     htm += "<tr style='display:none'><td id='wsop_edt_price'>" + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
-    htm += "<tr><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
+    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
+    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
 
     htm += "<tr><td style='border:none; padding-top:20px' colspan='4'></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>";
     produtosTable.innerHTML += htm;

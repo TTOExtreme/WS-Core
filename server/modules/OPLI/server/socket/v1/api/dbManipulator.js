@@ -4,6 +4,7 @@ const WSOP_Product = require('../../../../../WSOP/server/socket/v1/Produtos/dbMa
 const fs = require('fs');
 const request = require('request');
 const path = require('path').join;
+const { exception } = require("console");
 
 let WSOP_ProductClass;
 let apiOPLIManipulator;
@@ -559,6 +560,8 @@ class apiUtils {
         return data;
     }
 
+    updatePhoto = true; /**VARIAVEL PARA LIBERAR O UPDATE DE IMAGENS */
+
     //curl -H "Content-Type: application/json" -H "Authorization: chave_api xxxxxxxxx aplicacao xxxxxxxxx" -X GET https://api.awsli.com.br/v1/categoria/
     /**
      * Coleta o Produto da Loja Integrada
@@ -585,8 +588,44 @@ class apiUtils {
                     json += chunk;
                 });
                 res.on('end', function () {
-                    //Process json of products
+
+
+
+
+                    var optionsprice = {
+                        host: 'api.awsli.com.br',
+                        port: 443,
+                        path: '/v1/produto_preco/' + ID,
+                        method: 'GET',
+                        headers: { 'Content-Type': "application/json", 'Authorization': "chave_api " + api + " aplicacao " + aplication + "" }
+                    };
                     json = JSON.parse(json);
+
+                    let jsonprice = "";
+                    /*
+                    var reqprice = https.request(optionsprice, function (resprice) {
+                        resprice.setEncoding('utf8');
+                        resprice.on('data', function (chunk) {
+                            jsonprice += chunk;
+                        });
+                        resprice.on('end', function () {
+                            //*/
+
+                    try {
+                        jsonprice = JSON.parse(jsonprice);
+                    } catch (err) {
+                        jsonprice = { cheio: "0.0" };
+                    }
+                    if (jsonprice.cheio == null || jsonprice.cheio == undefined) {
+                        jsonprice = { cheio: "0.0" };
+                    }
+
+
+                    //Process json of products
+
+                    //carrega o preco do produto
+                    //https://api.awsli.com.br/v1/produto_preco/
+
                     let img = ""
                     if (json.descricao_completa) {
                         json.descricao_completa = json.descricao_completa.replace(new RegExp("\r\n", "g"), " ").replace(new RegExp("\n", "g"), " ").replace(new RegExp("<br />", "g"), "").replace(new RegExp("<br/", "g"), "").replace(new RegExp("/p", "g"), "").replace(new RegExp("<p>", "g"), "").replace(new RegExp("<", "g"), "").replace(new RegExp("/b", "g"), "").replace(new RegExp(">", "g"), "")
@@ -607,9 +646,18 @@ class apiUtils {
 
                         WSOP_ProductClass.ListByBarcode(barcode).then((products) => {
                             if (!products[0]) {
-                                resolve(); //necessario rodar 2 vezes o processo de cadastro pois os pais nem sempre vem antes dos filhos
+                                //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
+                                WSOP_ProductClass.updateProduto(json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
+                                    resolve();
+                                }).catch(err => {
+                                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                    this.log.error("On creating product from Loja Integrada")
+                                    this.log.error(json)
+                                    this.log.error(err)
+                                })
                             } else {
-                                WSOP_ProductClass.createProduto(products[0].name, products[0].description || description, json.sku, 0, 0, products[0].img, 0, json.ativo, 1).then(() => {
+                                //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
+                                WSOP_ProductClass.updateProduto(json.nome, (products[0].description || description), json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), products[0].img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
                                     resolve();
                                 }).catch(err => {
                                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
@@ -620,12 +668,14 @@ class apiUtils {
                             }
                         })
                     } else {
-                        if (json.imagem_principal) {
+                        if (json.imagem_principal && this.updatePhoto) {
+
                             new apiUtils()._downloadItem(json.imagem_principal.grande, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + ".jpg")).then(() => {
 
                                 new apiUtils()._downloadItem(json.imagem_principal.pequena, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + "_thumb.jpg")).then(() => {
 
-                                    WSOP_ProductClass.createProduto(json.nome, description || "", json.sku, 0, 0, "produtos/" + barcode + ".jpg", 0, json.ativo, 1).then(() => {
+                                    //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
+                                    WSOP_ProductClass.updateProduto(json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), "produtos/" + barcode + ".jpg", json.url, 0, json.ativo, 1, 1, 1).then(() => {
                                         resolve();
                                     }).catch(err => {
                                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
@@ -636,16 +686,33 @@ class apiUtils {
                                 })
                             })
                         } else {
-                            WSOP_ProductClass.createProduto(json.nome, description || "", json.sku, 0, 0, img, 0, json.ativo, 1).then(() => {
+                            WSOP_ProductClass.updateProduto(json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
                                 resolve();
+                            }).catch(err => {
+                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                this.log.error("On creating product from Loja Integrada")
+                                this.log.error(json)
+                                this.log.error(err)
                             })
                         }
                     }
+                    /*
                 });
+
+            });
+
+            reqprice.on('error', function (e) {
+                console.log('problem with reqpriceuest: ' + e.message);
+            });
+
+            reqprice.end();
+            //*/
+                })
             });
 
             req.on('error', function (e) {
                 console.log('problem with request: ' + e.message);
+                resolve()
             });
 
             req.end();
@@ -897,6 +964,7 @@ class apiUtils {
 
             req.on('error', function (e) {
                 console.log('problem with request: ' + e.message);
+
             });
 
             req.end();
@@ -952,7 +1020,7 @@ class apiUtils {
 
                                 setTimeout(() => {
                                     new apiUtils()._LoadListProducts(socket, api, aplication, offset + 20).then(() => { resolve(); });
-                                }, (60 * 1000) / (50 / 20)) //recall de 50 requests por minuto
+                                }, (60 * 1000) / (500 / 20)) //recall de 150 requests por minuto
                             })
                         } else {
                             socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos os produtos Cadastrados" })
@@ -967,6 +1035,7 @@ class apiUtils {
 
             req.on('error', function (e) {
                 console.log('problem with request: ' + e.message);
+                resolve();
             });
 
             req.end();
