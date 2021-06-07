@@ -7,7 +7,6 @@ ClientEvents.on("wsop/os/edt", (data) => {
     let div = document.createElement("div");
     div.setAttribute("class", "wsop_edt_div  menu_dragger");
     div.setAttribute("id", "wsop_edt_div");
-    console.log(data);
 
     div.innerHTML = "" +
         "<table>" +

@@ -81,6 +81,7 @@
     color: black;
 }
 
+
 .wsop_produto_item1 {
     border: 2px solid #606060;
     border-bottom: none;
@@ -93,12 +94,23 @@
 
 .wsop_produto_item2 {
     border: 2px solid #606060;
-    border-top: 1px solid #303030;
+    border-top: none;
 }
 
 .wsop_produto_item2 td {
-    /* width: 250px; */
+    width: 100px;
     border: 1px solid #303030;
+}
+
+.wsop_produto_item3 td {
+    width: 100px;
+    border: 1px solid #303030;
+}
+
+.wsop_produto_item3 {
+    width: 100px;
+    border-right: 2px solid #606060;
+    border-left: 2px solid #606060;
 }
 
 .wsop_print_img_thumb {

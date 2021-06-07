@@ -79,7 +79,7 @@ ClientEvents.on("wsop/os/print", (data) => {
             "<td>R$ " + (produto.qnt * (produto.price).replace(" ", "")).toFixed(2) + "</td>" +
             "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:50%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
     });
-    htm += "<tr class='wsop_produto_item1'><td></td><td><b>Qntidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
+    htm += "<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
     produtosTable.innerHTML += htm;
 });
 
