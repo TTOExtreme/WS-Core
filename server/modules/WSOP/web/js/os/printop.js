@@ -78,7 +78,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
             "</tr><tr class='wsop_produto_item3'>" +
             "<td>Vies: " + produto.description.vies + "</td>" +
             "<td>Gola: " + produto.description.gola + "</td>" +
-            "<td>Modelo: " + produto.description.modelo + "</td>" +
+            "<td colspan='2'>Modelo: " + produto.description.modelo + "</td>" +
             "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
             "<td colspan=3 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
     });

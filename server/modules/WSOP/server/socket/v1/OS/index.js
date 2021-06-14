@@ -430,6 +430,7 @@ class Socket {
                 }
             }).catch((err) => {
                 this._log.warning("User Access Denied to Add Product to OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -481,6 +482,7 @@ class Socket {
                 }
             }).catch((err) => {
                 this._log.warning("User Access Denied to edt Product on OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -533,6 +535,7 @@ class Socket {
                 }
             }).catch((err) => {
                 this._log.warning("User Access Denied to Delete Product OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -575,6 +578,7 @@ class Socket {
                 })
             }).catch((err) => {
                 this._log.warning("User Access Denied to Delete Attachment OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -625,6 +629,7 @@ class Socket {
                 }
             }).catch((err) => {
                 this._log.warning("User Access Denied to edt OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -694,8 +699,8 @@ class Socket {
                     })
                 }
             }).catch((err) => {
-                this._log.error(err);
                 this._log.warning("User Access Denied to change status OS: " + this._myself.myself.id)
+                this._log.error(err);
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {

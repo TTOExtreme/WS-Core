@@ -83,6 +83,7 @@ class ProdutosStruct {
 
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
+    id_li: "VARCHAR(60)",
     name: "VARCHAR(200)",
     description: "TEXT",
     barcode: "VARCHAR(200)",
@@ -91,6 +92,7 @@ const _DB = {
     cost: "VARCHAR(200)",
     inventory: "BIGINT",
     img: "TEXT",
+    url: "VARCHAR(600)",
     createdIn: "BIGINT",
     createdBy: "INT",
     deactivatedIn: "BIGINT",

@@ -1,16 +1,16 @@
 
 ClientEvents.on("wsop/os/edt", (data) => {
-    ClientEvents.emit("WSOP/os/edt/close");
+    ClientEvents.emit("close_menu", 'wsop_edt_site_div');
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_edt_div");
-    div.setAttribute("id", "wsop_edt_div");
+    div.setAttribute("class", "wsop_edt_div menu_dragger");
+    div.setAttribute("id", "wsop_edt_site_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/edt/close\")'>X</p></td></tr>" +
+        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", 'wsop_edt_site_div');'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
@@ -114,8 +114,8 @@ ClientEvents.on("wsop/os/edt", (data) => {
 });
 
 ClientEvents.on("WSOP/os/edt/close", () => {
-    if (document.getElementById("wsop_edt_div")) {
-        document.body.removeChild(document.getElementById("wsop_edt_div"));
+    if (document.getElementById("wsop_edt_site_div")) {
+        document.body.removeChild(document.getElementById("wsop_edt_site_div"));
     }
 });
 

@@ -1,5 +1,6 @@
 ClientEvents.on("wsop/site/view", (data) => {
     ClientEvents.emit("WSOP/site/view/close");
+    data = data[0];
     /**
      * create Show Page for user info
      */
@@ -19,7 +20,7 @@ ClientEvents.on("wsop/site/view", (data) => {
         "<table style='width:100%;'>" +
         //os
         "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='opli_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
+        "<tr><td class='opli_produto_item2' style='border:none'>" + (data.description + "").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_edt_anexos' class='opli_edt_anexos'>" +
         "<tr><td colspan=4><p class='opli_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
@@ -85,12 +86,12 @@ ClientEvents.on("wsop/site/view", (data) => {
             barcode = barcode.replace("-pp", "")
             barcode = barcode.replace("-p", "")
             barcode = barcode.replace("-m", "")
-            barcode = barcode.replace("-g", "")
             barcode = barcode.replace("-gg", "")
             barcode = barcode.replace("-exg", "")
             barcode = barcode.replace("-exgg", "")
             barcode = barcode.replace("-g3", "")
             barcode = barcode.replace("-g4", "")
+            barcode = barcode.replace("-g", "")
 
             htm += "<tr class='opli_produto_item1'>" +
                 "<td>" + produto.sku + "</td>" +

@@ -2,6 +2,7 @@ ClientEvents.clearAll();
 
 ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
+ClientEvents.emit("close_menu");
 
 //load emitente Data
 ClientEvents.on("wsop/emitente/add", (data) => { window.Emitente = data; });
@@ -74,21 +75,21 @@ window.UserList = class UserList {
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/site/edt", (rowdata)) };
             htm.appendChild(bot);
-        }
+        }//*/
         if (Myself.checkPermission("WSOP/site/edt")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-mail-forward");
             bot.setAttribute("title", "Mudar Status");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/site/edtstatus", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("WSOP/site/changestatus", rowdata) };
             htm.appendChild(bot);
-        }//*/
+        }
         if (Myself.checkPermission("WSOP/site/edt")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { console.log(rowdata); ClientEvents.emit("WSOP/site/lstid", { id: rowdata.id }); };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/site/lstid", { id: rowdata.id }); };
             htm.appendChild(bot);
         }
         return htm;
@@ -194,7 +195,7 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");
-            ClientEvents.emit("WSOP/produtos/close"); formatTime
+            ClientEvents.emit("WSOP/produtos/close");
         });
         ClientEvents.on("system/added/clientes", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
@@ -204,16 +205,15 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
         ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
         ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
-        ClientEvents.on("system/edited/site", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Status Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); ClientEvents.emit("WSOP/site/changestatus/close"); ClientEvents.emit("WSOP/site/view/close"); });
 
         ClientEvents.on("wsop/site/download", (data) => {
-            //console.log(data);
+            console.log(data);
             ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
             data.forEach(dataitem => {
                 this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
             })
             this.DownloadedData = this.DownloadedData.concat(data);
-            console.log(this.RetrievingData);
+            //console.log(this.RetrievingData);
             if (this.RetrievingData.length < 1) {
                 ClientEvents.emit("WSOP/site/dnlsave", {});
             }
@@ -221,10 +221,11 @@ window.UserList = class UserList {
 
         ClientEvents.on("WSOP/site/dnl", () => {
             if (this.UserListData != undefined) {
-
+                let id = 0;
                 this.UserListData.forEach(os => {
+                    id++;
                     this.RetrievingData.push(os.id);
-                    if (os.id % 100 == 0) {
+                    if (id % 100 == 0) {
                         ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: os.id });
                     }
                 })
@@ -298,7 +299,8 @@ window.UserList = class UserList {
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
         window.utils.OPLIstatusIDs.forEach((item, index) => {
-            ret.push({ label: item.name, value: index })
+            if (item.name != "Checar STATUS")
+                ret.push({ label: item.name, value: index })
         })
         return ret;
     }

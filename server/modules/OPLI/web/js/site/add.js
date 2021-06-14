@@ -1,5 +1,5 @@
 ClientEvents.on("WSOP/os/add", () => {
-    ClientEvents.emit("WSOP/os/close");
+    ClientEvents.emit("close_menu", 'wsop_add_site_div');
     let data = {
         cliente: "",
         id_cliente: "",
@@ -16,12 +16,12 @@ ClientEvents.on("WSOP/os/add", () => {
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_add_div");
-    div.setAttribute("id", "wsop_add_div");
+    div.setAttribute("class", "wsop_add_div menu_dragger");
+    div.setAttribute("id", "wsop_add_site_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/close\")'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", 'wsop_add_site_div')'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' value='" + data.cliente + "'><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSOP/clientes/add\")'></td></tr>" +
         "<tr style='display:none;'><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + StatusIdToOptList(data.status) + "</select></td></tr>" +
@@ -61,12 +61,6 @@ ClientEvents.on("WSOP/os/add", () => {
     });
     editor.onChange = function (contents, core) { document.getElementById("wsop_add_description").innerHTML = contents; }
     ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
-});
-
-ClientEvents.on("WSOP/os/close", () => {
-    if (document.getElementById("wsop_add_div")) {
-        document.body.removeChild(document.getElementById("wsop_add_div"));
-    }
 });
 
 

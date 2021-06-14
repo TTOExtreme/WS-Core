@@ -46,7 +46,15 @@ class apiManipulator {
      */
     ListSite(ID = 0) {
         return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " LIMIT 100;");
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " LIMIT 100 Order By C.id Desc;");
+    }
+
+    /**
+     * Lista todos as Vendas de Site 50 por vez
+     */
+    ListSingleSite(ID = 0) {
+        return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " LIMIT 1;");
     }
 
 
@@ -57,10 +65,31 @@ class apiManipulator {
      * @param {Number} UserID 
      */
     editStatusOS(idSite, status, UserID) {
-        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Site SET" +
-            " status='" + status + "'," +
-            " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
-            " WHERE id='" + idSite + "';");
+
+        return new Promise((resolve, reject) => {
+            this.ListAll().then((APIS) => {
+                if (APIS[0]) {
+                    console.log(new apiUtils()._getStatus(status), status);
+                    if (new apiUtils()._getStatus(status) != "") {
+                        return new apiUtils()._setStatus(null, APIS[0].api, APIS[0].aplication, idSite, new apiUtils()._getStatus(status)).then(() => {
+                            return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Site SET" +
+                                " status='" + status + "'," +
+                                " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
+                                " WHERE id='" + idSite + "';")
+                                .then(() => {
+                                    resolve();
+                                })
+                        })
+                    } else {
+                        reject("Status Invalido");
+                    }
+                } else {
+                    reject("Nenhuma API Cadastrada");
+                }
+            })
+        })
+
+
     }
 
 
@@ -138,7 +167,7 @@ class apiManipulator {
      * @param {Socket} socket 
      * 
      */
-    updateProducts(socket) {
+    updateProducts(socket, offset = 0) {
         return new Promise((resolve, reject) => {
             this.ListAll().then((APIS) => {
                 if (APIS[0]) {
@@ -153,7 +182,7 @@ class apiManipulator {
                         APIS[0].trelloList,
                         APIS[0].trelloLabels
                     );
-                    return new apiUtils()._LoadListProducts(socket, APIS[0].api, APIS[0].aplication, 0).then(() => {
+                    return new apiUtils()._LoadListProducts(socket, APIS[0].api, APIS[0].aplication, parseInt(offset), true).then(() => {
                         resolve();
                     })
                 } else {
@@ -207,7 +236,7 @@ class apiManipulator {
      * @param {Socket} socket 
      * 
      */
-    updateSells(socket) {
+    updateSells(socket, offset = 0) {
         return new Promise((resolve, reject) => {
             this.ListAll().then((APIS) => {
                 if (APIS[0]) {
@@ -222,7 +251,7 @@ class apiManipulator {
                         APIS[0].trelloList,
                         APIS[0].trelloLabels
                     );
-                    return new apiUtils()._LoadListSells(socket, APIS[0].api, APIS[0].aplication, 0).then(() => { // NUMERO DE ENTRADA DA BASE DE DADOS *********************************************************************************************************************
+                    return new apiUtils()._LoadListSells(socket, APIS[0].api, APIS[0].aplication, parseInt(offset)).then(() => { // NUMERO DE ENTRADA DA BASE DE DADOS *********************************************************************************************************************
                         resolve();
                         //Loop de Caregamento
                     })
@@ -246,7 +275,7 @@ class apiManipulator {
      * @param {Socket} socket 
      * 
      */
-    updateSellsTrello(socket) {
+    updateSellsTrello(socket, offset = 0) {
         return new Promise((resolve, reject) => {
             this.ListAll().then((APIS) => {
                 if (APIS[0]) {
@@ -261,7 +290,7 @@ class apiManipulator {
                         APIS[0].trelloList,
                         APIS[0].trelloLabels
                     );
-                    return new apiUtils()._LoadListSellsTrello(socket, APIS[0].api, APIS[0].aplication, 0).then(() => { // NUMERO DE ENTRADA DA BASE DE DADOS *********************************************************************************************************************
+                    return new apiUtils()._LoadListSellsTrello(socket, APIS[0].api, APIS[0].aplication, parseInt(offset)).then(() => { // NUMERO DE ENTRADA DA BASE DE DADOS *********************************************************************************************************************
                         resolve();
                         //Loop de Caregamento
                     })
@@ -356,39 +385,43 @@ class trelloIntegration {
      */
     _CreateCard(socket, name, description, dueDate, dueStatus, dueEnable = true) {
         return new Promise((resolve, rej) => {
-            let pa = '/1/cards?key=' + this.key + '&token=' + this.token + '&idList=' + this.idList + '&name=' + name + '&desc=' + description + '&pos=0' + (dueEnable ? '&due=' + dueDate + '&dueComplete=' + (dueStatus ? "true" : "false") : "")
+            if (this.key != '0') {
+                let pa = '/1/cards?key=' + this.key + '&token=' + this.token + '&idList=' + this.idList + '&name=' + name + '&desc=' + description + '&pos=0' + (dueEnable ? '&due=' + dueDate + '&dueComplete=' + (dueStatus ? "true" : "false") : "")
 
-            //replace linejumps and spaces
-            pa = pa.replace(new RegExp(" ", "g"), "%20").replace(new RegExp("#", "g"), "%23").replace(new RegExp("\r\n", "g"), "%0A").replace(new RegExp("\n", "g"), "%0A");
+                //replace linejumps and spaces
+                pa = pa.replace(new RegExp(" ", "g"), "%20").replace(new RegExp("#", "g"), "%23").replace(new RegExp("\r\n", "g"), "%0A").replace(new RegExp("\n", "g"), "%0A");
 
-            var optionstrello = {
-                host: 'api.trello.com',
-                port: 443,
-                path: pa,
-                method: 'POST',
-                headers: { 'Content-Type': "application/json" }
-            };
-            let trellojson = "";
-            var reqtrello = https.request(optionstrello, function (res) {
-                res.setEncoding('utf8');
-                res.on('data', function (chunk) {
-                    trellojson += chunk;
+                var optionstrello = {
+                    host: 'api.trello.com',
+                    port: 443,
+                    path: pa,
+                    method: 'POST',
+                    headers: { 'Content-Type': "application/json" }
+                };
+                let trellojson = "";
+                var reqtrello = https.request(optionstrello, function (res) {
+                    res.setEncoding('utf8');
+                    res.on('data', function (chunk) {
+                        trellojson += chunk;
+                    });
+                    res.on('end', function () {
+                        if (trellojson != "") {
+                            resolve(trellojson);
+                        } else {
+                            console.log("Retorno de Criação do Card Nulo");
+                            rej(pa);
+                        }
+                    });
                 });
-                res.on('end', function () {
-                    if (trellojson != "") {
-                        resolve(trellojson);
-                    } else {
-                        console.log("Retorno de Criação do Card Nulo");
-                        rej(pa);
-                    }
+
+                reqtrello.on('error', function (e) {
+                    console.log('problem with request: ' + e.message);
                 });
-            });
 
-            reqtrello.on('error', function (e) {
-                console.log('problem with request: ' + e.message);
-            });
-
-            reqtrello.end();
+                reqtrello.end();
+            } else {
+                resolve();
+            }
         });
     }
 
@@ -509,6 +542,82 @@ class apiUtils {
     block = false; // variavel de blockeio de operação (permite uma comutação apenas)
 
 
+    /**
+     * 
+     * @param {Id} StatusID 
+     * @returns Status id String
+     */
+    _getStatus(StatusID) {
+
+        /*
+        0  Checar Status L.I.
+        1  Checar Status L.I.
+        2  Aguardando Pagamento
+        3  Pagamento em Analise
+        4  Pago
+        5  Checar Status L.I.
+        6  Pagamento em disputa
+        7  Pagamento devolvido
+        8  Cancelado
+        9  Efetuado
+        10 Checar Status L.I.
+        11 Enviado
+        12 Checar Status L.I.
+        13 Pronto para Retirada
+        14 Entregue
+        15 Pedido em Separação
+        16 Pagamento em chargeback
+        17 Em Produção
+"em_producao","pedido_enviado","pedido_pago","pronto_para_retirada","pedido_cancelado","pedido_efetuado","pedido_em_separacao","pedido_entregue","pagamento_devolvido","pagamento_em_analise","pedido_chargeback","pagamento_em_disputa"]
+        //*/
+        switch (StatusID) {
+            case "2":
+                return "aguardando_pagamento";
+                break;
+            case "3":
+                return "pagamento_em_analise";
+                break;
+            case "4":
+                return "pedido_pago";
+                break;
+            case "6":
+                return "pagamento_em_disputa";
+                break;
+            case "7":
+                return "pagamento_devolvido";
+                break;
+            case "8":
+                return "pedido_cancelado";
+                break;
+            case "9":
+                return "pedido_efetuado";
+                break;
+            case "11":
+                return "pedido_enviado";
+                break;
+            case "13":
+                return "pronto_para_retirada";
+                break;
+            case "14":
+                return "pedido_entregue";
+                break;
+            case "15":
+                return "pedido_em_separacao";
+                break;
+            case "16":
+                return "pedido_chargeback";
+                break;
+            case "17":
+                return "em_producao";
+                break;
+            default:
+                return "";
+                break;
+        }
+
+    }
+
+
 
     _jsonParseble(json) {
         try {
@@ -550,12 +659,12 @@ class apiUtils {
         data = data.replace("-pp", "")
         data = data.replace("-p", "")
         data = data.replace("-m", "")
-        data = data.replace("-g", "")
         data = data.replace("-gg", "")
         data = data.replace("-exg", "")
         data = data.replace("-exgg", "")
         data = data.replace("-g3", "")
         data = data.replace("-g4", "")
+        data = data.replace("-g", "")
 
         return data;
     }
@@ -602,7 +711,7 @@ class apiUtils {
                     json = JSON.parse(json);
 
                     let jsonprice = "";
-                    /*
+
                     var reqprice = https.request(optionsprice, function (resprice) {
                         resprice.setEncoding('utf8');
                         resprice.on('data', function (chunk) {
@@ -611,71 +720,89 @@ class apiUtils {
                         resprice.on('end', function () {
                             //*/
 
-                    try {
-                        jsonprice = JSON.parse(jsonprice);
-                    } catch (err) {
-                        jsonprice = { cheio: "0.0" };
-                    }
-                    if (jsonprice.cheio == null || jsonprice.cheio == undefined) {
-                        jsonprice = { cheio: "0.0" };
-                    }
+                            try {
+                                jsonprice = JSON.parse(jsonprice);
+                            } catch (err) {
+                                jsonprice = { cheio: "0.0" };
+                            }
+                            if (jsonprice.cheio == null || jsonprice.cheio == undefined) {
+                                jsonprice = { cheio: "0.0" };
+                            }
 
 
-                    //Process json of products
+                            //Process json of products
 
-                    //carrega o preco do produto
-                    //https://api.awsli.com.br/v1/produto_preco/
+                            //carrega o preco do produto
+                            //https://api.awsli.com.br/v1/produto_preco/
 
-                    let img = ""
-                    if (json.descricao_completa) {
-                        json.descricao_completa = json.descricao_completa.replace(new RegExp("\r\n", "g"), " ").replace(new RegExp("\n", "g"), " ").replace(new RegExp("<br />", "g"), "").replace(new RegExp("<br/", "g"), "").replace(new RegExp("/p", "g"), "").replace(new RegExp("<p>", "g"), "").replace(new RegExp("<", "g"), "").replace(new RegExp("/b", "g"), "").replace(new RegExp(">", "g"), "")
-                    } else {
-                        json.descricao_completa = "";
-                    }
-                    let description = '{\"description\":\"' + json.descricao_completa + '\",\"gola\":\"-\",\"vies\":\"Preto\",\"genero\":\"' + ((json.nome || "" + json.descricao_completa || "").toLowerCase().indexOf("fem") > -1 ? "Feminino" : "Masculino") + '\",\"modelo\":\"0\"}';
-                    if (json.imagem_principal) {
-                        if (json.imagem_principal.grande) {
-                            img = json.imagem_principal.grande;
-                        }
-                    }
-                    let barcode = json.sku || "";
-                    barcode = new apiUtils().cleanSize(barcode)
+                            let img = ""
+                            if (json.descricao_completa) {
+                                json.descricao_completa = json.descricao_completa.replace(new RegExp("\r\n", "g"), " ").replace(new RegExp("\n", "g"), " ").replace(new RegExp("<br />", "g"), "").replace(new RegExp("<br/", "g"), "").replace(new RegExp("/p", "g"), "").replace(new RegExp("<p>", "g"), "").replace(new RegExp("<", "g"), "").replace(new RegExp("/b", "g"), "").replace(new RegExp(">", "g"), "")
+                            } else {
+                                json.descricao_completa = "";
+                            }
+                            let description = '{\"description\":\"' + json.descricao_completa + '\",\"gola\":\"-\",\"vies\":\"Preto\",\"genero\":\"' + ((json.nome || "" + json.descricao_completa || "").toLowerCase().indexOf("fem") > -1 ? "Feminino" : "Masculino") + '\",\"modelo\":\"-\"}';
+                            if (json.imagem_principal) {
+                                if (json.imagem_principal.grande) {
+                                    img = json.imagem_principal.grande;
+                                }
+                            }
+                            let barcode = json.sku || "";
+                            barcode = new apiUtils().cleanSize(barcode)
 
-                    if (!json.nome) {
-                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Carregado: " + ID })
+                            if (json.ativo == true || json.ativo == 1 || (json.ativo + "").toLowerCase() == "sim") {
+                                json.ativo = 1;
+                            } else {
+                                json.ativo = 0;
+                            }
 
-                        WSOP_ProductClass.ListByBarcode(barcode).then((products) => {
-                            if (!products[0]) {
-                                //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
-                                WSOP_ProductClass.updateProduto(json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
-                                    resolve();
-                                }).catch(err => {
-                                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
-                                    this.log.error("On creating product from Loja Integrada")
-                                    this.log.error(json)
-                                    this.log.error(err)
+                            if (!json.nome) {
+                                //socket.emit("ClientEvents", { event: "opli/appendlog", data: "Carregado: " + ID })
+
+                                WSOP_ProductClass.ListByBarcode(barcode).then((products) => {
+                                    if (!products[0]) {
+                                        //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
+                                        WSOP_ProductClass.createProduto("-", description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), img, json.url, 0, json.ativo, 1, 1, 1, ID).then(() => {
+                                            resolve();
+                                        }).catch(err => {
+                                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                            this.log.error("On creating product from Loja Integrada")
+                                            this.log.error(json)
+                                            this.log.error(err)
+                                        })
+                                    } else {
+                                        if (products[0].name != "-") { json.nome = products[0].name }
+                                        //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
+                                        WSOP_ProductClass.editProduto(products[0].id, products[0].name, (products[0].description || description), json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), products[0].img, json.url, 0, json.ativo, 1, ID).then(() => {
+                                            resolve();
+                                        }).catch(err => {
+                                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                            this.log.error("On creating product from Loja Integrada")
+                                            this.log.error(json)
+                                            this.log.error(err)
+                                        })
+                                    }
                                 })
                             } else {
-                                //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
-                                WSOP_ProductClass.updateProduto(json.nome, (products[0].description || description), json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), products[0].img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
-                                    resolve();
-                                }).catch(err => {
-                                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
-                                    this.log.error("On creating product from Loja Integrada")
-                                    this.log.error(json)
-                                    this.log.error(err)
-                                })
-                            }
-                        })
-                    } else {
-                        if (json.imagem_principal && this.updatePhoto) {
+                                if (json.imagem_principal && this.updatePhoto) {
 
-                            new apiUtils()._downloadItem(json.imagem_principal.grande, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + ".jpg")).then(() => {
+                                    new apiUtils()._downloadItem(json.imagem_principal.grande, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + ".jpg")).then(() => {
 
-                                new apiUtils()._downloadItem(json.imagem_principal.pequena, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + "_thumb.jpg")).then(() => {
+                                        new apiUtils()._downloadItem(json.imagem_principal.pequena, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + barcode + "_thumb.jpg")).then(() => {
 
-                                    //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
-                                    WSOP_ProductClass.updateProduto(json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), "produtos/" + barcode + ".jpg", json.url, 0, json.ativo, 1, 1, 1).then(() => {
+                                            //createProduto(name, description, barcode, price, priceRevenda, cost, img, inventory, active, revenda = 1, privatelabel = 1, UserID = 1)
+                                            WSOP_ProductClass.updateProduto(ID, json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), "produtos/" + barcode + ".jpg", json.url, 0, json.ativo, 1, 1, 1).then(() => {
+                                                resolve();
+                                            }).catch(err => {
+                                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                                this.log.error("On creating product from Loja Integrada")
+                                                this.log.error(json)
+                                                this.log.error(err)
+                                            })
+                                        })
+                                    })
+                                } else {
+                                    WSOP_ProductClass.updateProduto(ID, json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
                                         resolve();
                                     }).catch(err => {
                                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
@@ -683,30 +810,19 @@ class apiUtils {
                                         this.log.error(json)
                                         this.log.error(err)
                                     })
-                                })
-                            })
-                        } else {
-                            WSOP_ProductClass.updateProduto(json.nome, description || "", json.sku, parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), parseFloat(jsonprice.cheio), img, json.url, 0, json.ativo, 1, 1, 1).then(() => {
-                                resolve();
-                            }).catch(err => {
-                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
-                                this.log.error("On creating product from Loja Integrada")
-                                this.log.error(json)
-                                this.log.error(err)
-                            })
-                        }
-                    }
-                    /*
-                });
+                                }
+                            }
 
-            });
+                        });
 
-            reqprice.on('error', function (e) {
-                console.log('problem with reqpriceuest: ' + e.message);
-            });
+                    });
 
-            reqprice.end();
-            //*/
+                    reqprice.on('error', function (e) {
+                        console.log('problem with reqpriceuest: ' + e.message);
+                    });
+
+                    reqprice.end();
+                    //*/
                 })
             });
 
@@ -726,7 +842,7 @@ class apiUtils {
      * @param {String} api 
      * @param {String} aplication 
      * @param {String} ID Id da Venda
-     * @param {String} Status Id do Status ["em_producao","pedido_enviado","pedido_pago","pronto_para_retirada","pedido_cancelado","pedido_efetuado","pedido_em_separacao","pedido_entregue","pagamento_devolvido","pagamento_em_analise","pedido_chargeback","pagamento_em_disputa"]
+     * @param {String} Status Id do Status ["em_producao","pedido_enviado","pedido_pago","pronto_para_retirada","pedido_cancelado","pedido_efetuado","pedido_em_separacao","pedido_entregue","pagamento_devolvido","    pagamento_em_analise","pedido_chargeback","pagamento_em_disputa"]
      * @returns {Promise}
      */
     //https://api.awsli.com.br/v1/situacao/pedido/<id> --data-binary '{"info": {"status": 4}}'
@@ -859,51 +975,56 @@ class apiUtils {
 
                             if (json.situacao.id == 4 || json.situacao.id == 17) {
                                 trelloManipulator._CreateCard(socket, name, descriptiontrello, json.data_expiracao, dueComplete, true).then(trelloCardret => {
-                                    let trelloCard = {};
-                                    try {
-                                        if (new apiUtils()._jsonParseble(trelloCardret)) {
-                                            trelloCard = JSON.parse(trelloCardret);
-                                        } else {
-                                            trelloCard = trelloCardret;
-                                        }
+                                    if (trelloCardret != undefined) {
+                                        let trelloCard = {};
+                                        try {
+                                            if (new apiUtils()._jsonParseble(trelloCardret)) {
+                                                trelloCard = JSON.parse(trelloCardret);
+                                            } else {
+                                                trelloCard = trelloCardret;
+                                            }
 
-                                        if (trelloCard.id != undefined) {
-                                            apiOPLIManipulator.editTrelloOS(ID, trelloCard.id, JSON.stringify(trelloCard)).then(() => {
-                                                //verifica a existencia do arquivo para adicionar como capa
-                                                if (fs.existsSync(path(__dirname + "/../../../../../WSOP/web/img/produtos/" + productCover + "_thumb.jpg"))) {
-                                                    trelloManipulator._AddAttachment(socket, trelloCard.id, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + productCover + "_thumb.jpg")).then(() => {
+                                            if (trelloCard.id != undefined) {
+                                                apiOPLIManipulator.editTrelloOS(ID, trelloCard.id, JSON.stringify(trelloCard)).then(() => {
+                                                    //verifica a existencia do arquivo para adicionar como capa
+                                                    if (fs.existsSync(path(__dirname + "/../../../../../WSOP/web/img/produtos/" + productCover + "_thumb.jpg"))) {
+                                                        trelloManipulator._AddAttachment(socket, trelloCard.id, path(__dirname + "/../../../../../WSOP/web/img/produtos/" + productCover + "_thumb.jpg")).then(() => {
 
-                                                    }).catch(err => {
-                                                        console.log(err)
-                                                    })
-                                                }
-                                                trelloManipulator._addLabel(trelloCard.id, 17).then(() => {
-                                                    console.log("Mudar status ID: " + ID + " .. " + trelloCard.id);
-                                                    resolve();
-                                                    new apiUtils()._setStatus(socket, api, aplication, ID, "em_producao").then((result) => {
+                                                        }).catch(err => {
+                                                            console.log(err)
+                                                        })
+                                                    }
+                                                    trelloManipulator._addLabel(trelloCard.id, 17).then(() => {
+                                                        console.log("Mudar status ID: " + ID + " .. " + trelloCard.id);
                                                         resolve();
+                                                        new apiUtils()._setStatus(socket, api, aplication, ID, "em_producao").then((result) => {
+                                                            resolve();
+                                                        }).catch(err => {
+                                                            console.log(err)
+                                                        })//*/
                                                     }).catch(err => {
                                                         console.log(err)
-                                                    })//*/
+                                                        rej(err);
+                                                    })
                                                 }).catch(err => {
-                                                    console.log(err)
+                                                    console.log(err);
                                                     rej(err);
                                                 })
-                                            }).catch(err => {
-                                                console.log(err);
-                                                rej(err);
-                                            })
 
-                                        } else {
-                                            console.log("Erro de criação do card do trello");
+                                            } else {
+                                                console.log("Erro de criação do card do trello");
+                                                console.log(trelloCardret);
+                                                rej("Erro Criação card");
+                                            }
+
+                                        } catch (err) {
+                                            console.log('problem with converting json: ');
                                             console.log(trelloCardret);
-                                            rej("Erro Criação card");
+                                            console.log(err);
+                                            rej(err);
                                         }
-                                    } catch (err) {
-                                        console.log('problem with converting json: ');
-                                        console.log(trelloCardret);
-                                        console.log(err);
-                                        rej(err);
+                                    } else {
+                                        resolve();
                                     }
                                 }).catch(err => {
                                     console.log("[ERRO] Card: \nName:" + name + "\nDesc: " + descriptiontrello);
@@ -981,7 +1102,7 @@ class apiUtils {
      * @param {Int} offset 
      * @returns 
      */
-    _LoadListProducts(socket, api, aplication, offset) {
+    _LoadListProducts(socket, api, aplication, offset, first = false) {
         return new Promise((resolve, rej) => {
             var options = {
                 host: 'api.awsli.com.br',
@@ -1001,7 +1122,13 @@ class apiUtils {
                 res.on('end', function () {
                     //Process json of products
                     json = JSON.parse(json);
-                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Produtos: " + json.meta.total_count })
+                    if (json.meta != undefined) {
+                        if (first) socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Produtos: " + json.meta.total_count })
+                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Percent: " + (((offset) / json.meta.total_count) * 100).toFixed(2) + " | Offset: " + (offset) })
+
+                    } else {
+                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Erro JSON: " + JSON.stringify(json) })
+                    }
 
                     let arr = [];
 
@@ -1011,7 +1138,6 @@ class apiUtils {
                                 if (json.objects[i])
                                     if (json.objects[i].id) {
                                         //console.log("Percent: " + (((i + offset) / json.meta.total_count) * 100).toFixed(2));
-                                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Percent: " + (((i + offset) / json.meta.total_count) * 100).toFixed(2) })
 
                                         new apiUtils()._LoadProduct(socket, api, aplication, json.objects[i].id)
                                     }

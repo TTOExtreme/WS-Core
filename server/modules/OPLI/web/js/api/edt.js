@@ -41,16 +41,40 @@ ClientEvents.on("OPLI/api/edt", (data) => {
         "<tr><td class='opli_edt_label'>Ativo:</td><td><input id='opli_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='opli_edt_label_info' id='opli_add_info'></td></tr>" +
         "<tr><td></td><td><input id='opli_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"opli/clientes/edt\")'></td></tr>" +
-        "<tr><td></td><td><input id='opli_upproducts' value='Carregar Produtos' type='button' onclick='ClientEvents.emit(\"SendSocket\", \"opli/api/loadproducts\")'></td></tr>" +
+        "<tr><td></td><td><input id='opli_upproducts' value='Carregar Produtos' type='button' onclick='ClientEvents.emit(\"opli/api/loadproducts\")'></td></tr>" +
         "<tr><td></td><td><input id='opli_upclientes' value='Carregar Clientes' type='button' onclick='ClientEvents.emit(\"SendSocket\", \"opli/api/loadclients\")'></td></tr>" +
-        "<tr><td></td><td><input id='opli_upvendas' value='Carregar Vendas' type='button' onclick='ClientEvents.emit(\"SendSocket\", \"opli/api/loadsells\")'></td></tr>" +
-        "<tr><td></td><td><input id='opli_upvendas' value='Carregar Vendas em produção' type='button' onclick='ClientEvents.emit(\"SendSocket\", \"opli/api/loadsellstrello\")'></td></tr>" +
+        "<tr><td></td><td><input id='opli_upvendas' value='Carregar Vendas' type='button' onclick='ClientEvents.emit(\"opli/api/loadsells\")'></td></tr>" +
+        "<tr><td></td><td><input id='opli_upvendas' value='Carregar Vendas em produção' type='button' onclick='ClientEvents.emit(\"opli/api/loadsellstrello\")'></td></tr>" +
         "<tr><td></td><td><input id='opli_upvendas' value='Carregar Vendas Pagas' type='button' onclick='ClientEvents.emit(\"SendSocket\", \"opli/api/loadpaidsells\")'></td></tr>" +
         "<tr><td colspan=2><textarea id='opli_log' disabled style='width: 100%;height: 400px;'></textarea></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
 });
+ClientEvents.on("opli/api/loadproducts", () => {
+    var value = prompt("Offset de Carregamento: ", 0);
+    if (value != undefined) {
+        ClientEvents.emit("SendSocket", "opli/api/loadproducts", {
+            offset: value
+        });
+    }
+})
+ClientEvents.on("opli/api/loadsells", () => {
+    var value = prompt("Offset de Carregamento: ", 0);
+    if (value != undefined) {
+        ClientEvents.emit("SendSocket", "opli/api/loadsells", {
+            offset: value
+        });
+    }
+})
+ClientEvents.on("opli/api/loadsellstrello", () => {
+    var value = prompt("Offset de Carregamento: ", 0);
+    if (value != undefined) {
+        ClientEvents.emit("SendSocket", "opli/api/loadsellstrello", {
+            offset: value
+        });
+    }
+})
 
 ClientEvents.on("opli/clientes/edt", () => {
     ClientEvents.emit("SendSocket", "opli/api/edt", {

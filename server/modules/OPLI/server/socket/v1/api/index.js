@@ -126,26 +126,24 @@ class Socket {
          */
         socket.on("WSOP/site/lstid", (req) => {
             if (req[0].id != undefined) {
-                this._myself.checkPermission("WSOP/menu/os").then(() => {
-                    this._ApiClass.ListSite(req[0].id).then((results) => {
-                        socket.emit("ClientEvents", {
-                            event: "wsop/site/view",
-                            data: results
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
+                this._ApiClass.ListSingleSite(req[0].id).then((results) => {
+                    socket.emit("ClientEvents", {
+                        event: "wsop/site/view",
+                        data: results
+                    })
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    this._log.error("On Editing Api for Loja Integrada")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
                         }
-                        this._log.error("On Editing Api for Loja Integrada")
-                        this._log.error(err);
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
-                            }
-                        })
                     })
                 })
             } else {
@@ -208,8 +206,7 @@ class Socket {
                 ) {
                     this._ApiClass.editStatusOS(req[0].id, req[0].status, this._myself.myself.id).then((results) => {
                         socket.emit("ClientEvents", {
-                            event: "system/edited/site",
-                            data: req
+                            event: "system/edited/site"
                         })
                     }).catch((err) => {
                         if (!this._myself.isLogged()) {
@@ -244,7 +241,7 @@ class Socket {
          */
         socket.on("opli/api/loadproducts", (req) => {
             this._myself.checkPermission("OPLI/menu/Api").then(() => {
-                this._ApiClass.updateProducts(socket).then(() => {
+                this._ApiClass.updateProducts(socket, req[0].offset).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system/updated/products",
                     })
@@ -300,7 +297,7 @@ class Socket {
          */
         socket.on("opli/api/loadsells", (req) => {
             this._myself.checkPermission("OPLI/menu/Api").then(() => {
-                this._ApiClass.updateSells(socket).then(() => {
+                this._ApiClass.updateSells(socket, req[0].offset).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system/updated/sells",
                     })
@@ -328,7 +325,7 @@ class Socket {
          */
         socket.on("opli/api/loadsellstrello", (req) => {
             this._myself.checkPermission("OPLI/menu/Api").then(() => {
-                this._ApiClass.updateSellsTrello(socket).then(() => {
+                this._ApiClass.updateSellsTrello(socket, req[0].offset).then(() => {
                     socket.emit("ClientEvents", {
                         event: "system/updated/sells",
                     })

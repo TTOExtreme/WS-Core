@@ -28,7 +28,7 @@ class ProdutosManipulator {
 
     ListByBarcode(barcode) {
         return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory, C.img FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
-            " WHERE C.active=1 AND C.barcode like '%" + (barcode || "") + "%';");
+            " WHERE C.active=1 AND C.name<>'null' AND C.barcode like '%" + (barcode || "") + "%';");
     }
 
     /**
@@ -41,12 +41,12 @@ class ProdutosManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda, privatelabel, UserID) {
+    createProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda, privatelabel, UserID, id_li = 0) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_Produtos" +
-            " (name, description, barcode, price, priceRevenda, cost, img, url, inventory, active,revenda,privatelabel, createdBy, createdIn)" +
+            " (id_li ,name, description, barcode, price, priceRevenda, cost, img, url, inventory, active,revenda,privatelabel, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + name + "','" + description + "','" + barcode + "','" + price + "','" + priceRevenda + "','" + cost + "','" + img + "','" + url + "'," + inventory + "," + (active ? 1 : 0) + "," + (revenda ? 1 : 0) + "," + (privatelabel ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + id_li + "','" + name + "','" + description + "','" + barcode + "','" + price + "','" + priceRevenda + "','" + cost + "','" + img + "','" + url + "'," + inventory + "," + (active ? 1 : 0) + "," + (revenda ? 1 : 0) + "," + (privatelabel ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
@@ -59,13 +59,13 @@ class ProdutosManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    updateProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda = 1, privatelabel = 1, UserID = 1) {
+    updateProduto(id_li, name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda = 1, privatelabel = 1, UserID = 1) {
         return this.db.query("SELECT * FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
-            " WHERE C.barcode='" + barcode + "';").then(result => {
+            " WHERE C.id_li='" + id_li + "';").then(result => {
                 if (result[0] == undefined) {
-                    return this.createProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda, privatelabel, UserID);
+                    return this.createProduto(name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, revenda, privatelabel, UserID, id_li);
                 } else {
-                    return this.editProduto(result[0].id, name, description, barcode, price, "", "", img, url, "", active, UserID);
+                    return this.editProduto(result[0].id, name, description, barcode, price, priceRevenda, cost, img, url, inventory, active, UserID, id_li);
                 }
             });
 
@@ -91,9 +91,10 @@ class ProdutosManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editProduto(ID, name = "", description = "", barcode = "", price, priceRevenda, cost, img, url, inventory = 0, active, UserID) {
+    editProduto(ID, name = "", description = "", barcode = "", price, priceRevenda, cost, img, url, inventory = 0, active, UserID, id_li = 0) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Produtos SET" +
+            ((id_li != 0) ? " id_li='" + id_li + "'," : " ") +
             ((name != "") ? " name='" + name + "'," : " ") +
             ((description != "") ? " description='" + description + "'," : " ") +
             ((barcode != "") ? " barcode='" + barcode + "'," : " ") +
