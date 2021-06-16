@@ -34,63 +34,62 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
         headerFilterPlaceholder: "Filtrar",
         index: "id",
         dataTree: true,
-        dataTreeStartExpanded: false,
-        columns: [{
-            title: 'Status',
-            field: 'active',
-            formatter: "tickCross",
-            headerFilter: "select",
-            headerFilterParams: [{
-                label: "-",
-                value: ""
-            }, {
-                label: "Permitido",
-                value: "1"
-            }, {
-                label: "Negado",
-                value: "0"
+        dataTreeStartExpanded: false, columns: [{
+            title: "",
+            headerMenu: [{
+                label: "Novo",
+                action: function (e, column) {
+                    ClientEvents.emit("SendSocket", "WSMK/calendario/lstid", { id: 0, start: new Date(data.start).getTime() + (6 * 3600 * 1000) })
+                }
             }],
-            cellClick: function (e, cell) {
-                var row = cell.getData();
-                row.reloadMulti = true;
-                ClientEvents.emit("WSMK/calendario/edt", [row]);
-            }
-        },
-        {
-            title: 'Titulo',
-            field: 'title',
-            headerFilter: "input"
-        },
-        {
-            title: 'Descrição',
-            field: 'description',
-            formatter: ((data) => { return data.description; }),
-            headerFilter: "input"
-        },
+            columns: [
 
-        {
-            title: 'Adicionado Em',
-            field: 'createdIn',
-            formatter: ((data) => formatTime(data.getRow().getData().createdIn)),
-            headerFilter: "input"
-        },
-        {
-            title: 'Adicionado Por',
-            field: 'createdBy',
-            headerFilter: "input"
-        },
-        {
-            title: 'Desativado Em',
-            field: 'deactivatedIn',
-            formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)),
-            headerFilter: "input"
-        },
-        {
-            title: 'Desativado Por',
-            field: 'deactivatedBy',
-            headerFilter: "input"
-        }
-        ],
+                {
+                    title: 'Ações',
+                    formatter: ((data) => {
+                        return "<i class='fa fa-pencil' aria-hidden='true'></i>";
+                    }),
+                    cellClick: function (e, cell) {
+                        var row = cell.getData();
+                        ClientEvents.emit("SendSocket", "WSMK/calendario/lstid", { id: row.id, reloadMulti: true });
+                    }
+                },
+                {
+                    title: 'Titulo',
+                    field: 'title',
+                    headerFilter: "input"
+                },
+                {
+                    title: 'Descrição',
+                    field: 'description',
+                    formatter: ((data) => { return data.description; }),
+                    headerFilter: "input"
+                },
+
+                {
+                    title: 'Adicionado Em',
+                    field: 'createdIn',
+                    formatter: ((data) => formatTime(data.getRow().getData().createdIn)),
+                    headerFilter: "input"
+                },
+                {
+                    title: 'Adicionado Por',
+                    field: 'createdBy',
+                    headerFilter: "input"
+                },
+                {
+                    title: 'Desativado Em',
+                    field: 'deactivatedIn',
+                    formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)),
+                    headerFilter: "input"
+                },
+                {
+                    title: 'Desativado Por',
+                    field: 'deactivatedBy',
+                    headerFilter: "input"
+                }
+            ]
+        }],
         paginationButtonCount: 3,
         pagination: "local",
         paginationSize: 15,

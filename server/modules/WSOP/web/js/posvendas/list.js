@@ -78,19 +78,26 @@ ClientEvents.on("wsop/posvendas/lst", (datain) => {
     if (thisMonth == undefined) {
         thisMonth = month
         thisYear = year;
+    } else {
+        if (thisMonth != month || thisYear != year) {
+            day = new Date(thisYear, thisMonth + 1, 0).getDate();
+        }
     }
 
     html += "<tr><td colspan='3'>" +
-        "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSOP/posvendas/lst\",\'" + JSON.stringify({ thisMonth: thisMonthLast, thisYear: thisYearLast }) + "') class='fa fa-arrow-left' aria-hidden='true'></i></td>" +
-        "<td>" + (thisMonth + 1) + "-" + (thisYear) + "</td>" +
+        "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSOP/posvendas/lst\",\'" + JSON.stringify({ thisMonth: thisMonthLast, thisYear: thisYearLast }) + "') class='fa fa-arrow-left' aria-hidden='true' style='color:#000'></i></td>" +
+        "<td><center>" + (thisMonth + 1) + "-" + (thisYear) + "</td>" +
         "<td colspan='3'>" +
-        "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSOP/posvendas/lst\",\'" + JSON.stringify({ thisMonth: thisMonthNext, thisYear: thisYearNext }) + "') class='fa fa-arrow-right' style='float:right' aria-hidden='true'></i></td>" +
+        "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSOP/posvendas/lst\",\'" + JSON.stringify({ thisMonth: thisMonthNext, thisYear: thisYearNext }) + "') class='fa fa-arrow-right' style='float:right;color:#000' aria-hidden='true'></i></td>" +
         "</td><tr>"
+
+
+    html += "<tr><td><center>Domingo</center></td><td><center>Segunda-Feira</center></td><td><center>Terça-Feira</center></td><td><center>Quarta-Feira</center></td><td><center>Quinta-Feira</center></td><td><center>Sexta-Feira</center></td><td><center>Sábado</center></td><tr>";
 
 
     let wkd = 0;
     html += "<tr>";
-    for (wkd = 0; wkd < new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay(); wkd++) {
+    for (wkd = 0; wkd < new Date(thisYear, thisMonth, 1).getDay(); wkd++) {
         html += "<td></td>";
     }
     for (let d = 1; d < day; d++) {
@@ -121,7 +128,7 @@ ClientEvents.on("wsop/posvendas/lst", (datain) => {
         html += "<td>" + createDay(0, day, thisMonth, thisYear, "#00000090", "#00000030", dcard.length, 0, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
     }
     wkd = date.getDay() + 1;
-    for (let d = day + 1; d <= new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() && d <= 31; d++) {
+    for (let d = day + 1; d <= new Date(thisYear, thisMonth + 1, 0).getDate() && d <= 31; d++) {
         dcard = getDays(d, thisMonth, thisYear);
         if (dcard[0] != undefined) {
             let qntPendentes = 0;

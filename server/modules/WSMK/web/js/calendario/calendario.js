@@ -15,17 +15,19 @@ if (window.UserList) { // usa a mesma interface global para todas as listas
     document.getElementById("MainScreen").innerHTML = "";
 }
 
-ClientEvents.on("WSMK/calendario/lst", (data) => {
+ClientEvents.on("WSMK/calendario/lst", (datain) => {
+    let data = datain.data;
+    if (datain.thisMonth == undefined) { return; }
+
     function createDay(id, img, title, day, month, year, color, bgcolor, qnt = 0, highlight = false, edt = true) {
         return "<div id='wsmk_day_card' class='wsmk_day_card' style='" +
             ((img != undefined && img != "" && img != "undefined") ? "background-image:url(./module/WSMK/img/" + (img + "").replace(".jpg", "_thumb.jpg") + ");background-repeat: round;" : "background:" + bgcolor + ";") +
             "border: 1px solid " + color + ";" + (highlight ? "border:1px solid #ff0000;border-radius:0;" : "") + "'>" +
             "<span class='wsmk_day_num'>" + day + (qnt > 1 ? " +" + (qnt - 1) : "") + "</span>" +
             "<span class='wsmk_day_edt'>" +
-            (qnt <= 1 ?
+            (qnt < 1 ?
                 (edt ?
-                    "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" +
-                    "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: id }) + "') class='fa fa-pencil' aria-hidden='true'></i>" : "")
+                    "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" : "")
                 : (edt ?
                     "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" +
                     "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstids\",\'" + JSON.stringify({ id: id, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-pencil' aria-hidden='true'></i>" : "")) +
@@ -67,18 +69,45 @@ ClientEvents.on("WSMK/calendario/lst", (data) => {
     let year = date.getFullYear();
 
 
+    let thisMonth = datain.thisMonth;
+    let thisYear = datain.thisYear;
+
+    let thisMonthLast = thisMonth - 1; thisMonthNext = thisMonth + 1; thisYearLast = thisYear; thisYearNext = thisYear;
+
+    if (thisMonthLast < 0) { thisMonthLast = 11; thisYearLast--; }
+    if (thisMonthNext > 11) { thisMonthNext = 0; thisYearNext++; }
+
+
+    if (thisMonth == undefined) {
+        thisMonth = month
+        thisYear = year;
+    } else {
+        if (thisMonth != month || thisYear != year) {
+            day = new Date(thisYear, thisMonth + 1, 0).getDate();
+        }
+    }
+
+    html += "<tr><td colspan='3'>" +
+        "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lst\",\'" + JSON.stringify({ thisMonth: thisMonthLast, thisYear: thisYearLast }) + "') class='fa fa-arrow-left' aria-hidden='true' style='color:#000'></i></td>" +
+        "<td><center>" + (thisMonth + 1) + "-" + (thisYear) + "</td>" +
+        "<td colspan='3'>" +
+        "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lst\",\'" + JSON.stringify({ thisMonth: thisMonthNext, thisYear: thisYearNext }) + "') class='fa fa-arrow-right' style='float:right;color:#000' aria-hidden='true'></i></td>" +
+        "</td><tr>";
+
+    html += "<tr><td><center>Domingo</center></td><td><center>Segunda-Feira</center></td><td><center>Terça-Feira</center></td><td><center>Quarta-Feira</center></td><td><center>Quinta-Feira</center></td><td><center>Sexta-Feira</center></td><td><center>Sábado</center></td><tr>";
+
 
     let wkd = 0;
     html += "<tr>";
-    for (wkd = 0; wkd < new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay(); wkd++) {
+    for (wkd = 0; wkd < new Date(thisYear, thisMonth, 1).getDay(); wkd++) {
         html += "<td></td>";
     }
     for (let d = 1; d < day; d++) {
-        let dcard = getDays(d, month, year);
+        let dcard = getDays(d, thisMonth, thisYear);
         if (dcard[0] != undefined) {
-            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, d, month, year, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
+            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, d, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
         } else {
-            html += "<td>" + createDay(0, "", "", d, month, year, "#00000090", "#00000030") + "</td>";
+            html += "<td>" + createDay(0, "", "", d, thisMonth, thisYear, "#00000090", "#00000030") + "</td>";
         }
         wkd++;
         if (wkd >= 7) {
@@ -86,19 +115,19 @@ ClientEvents.on("WSMK/calendario/lst", (data) => {
             html += "</tr><tr>";
         }
     }
-    let dcard = getDays(day, month, year);
+    let dcard = getDays(day, thisMonth, thisYear);
     if (dcard[0] != undefined) {
-        html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, day, month, year, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length, true) + "</td>";
+        html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, day, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
     } else {
-        html += "<td>" + createDay(0, "", "", day, month, year, "#00000090", "#00000030", 0, true) + "</td>";
+        html += "<td>" + createDay(0, "", "", day, thisMonth, thisYear, "#00000090", "#00000030", 0, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
     }
     wkd = date.getDay() + 1;
-    for (let d = day + 1; d <= new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() && d <= 31; d++) {
-        dcard = getDays(d, month, year);
+    for (let d = day + 1; d <= new Date(thisYear, thisMonth + 1, 0).getDate() && d <= 31; d++) {
+        dcard = getDays(d, thisMonth, thisYear);
         if (dcard[0] != undefined) {
-            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, d, month, year, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
+            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, d, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
         } else {
-            html += "<td>" + createDay(0, "", "", d, month, year, "#00000090", "#00000030") + "</td>";
+            html += "<td>" + createDay(0, "", "", d, thisMonth, thisYear, "#00000090", "#00000030") + "</td>";
         }
         wkd++;
         if (wkd >= 7) {
@@ -117,5 +146,5 @@ ClientEvents.on("WSMK/calendario/lst", (data) => {
     //document.body.appendChild(div);
 });
 
-ClientEvents.emit("SendSocket", "WSMK/calendario/lst")
+ClientEvents.emit("SendSocket", "WSMK/calendario/lst", { thisMonth: new Date().getMonth(), thisYear: new Date().getFullYear() })
 //ClientEvents.emit("WSMK/calendario/lst", []);

@@ -35,11 +35,15 @@
     float: right;
 }
 
+.WSOP_posvendas_table {
+    color: #fff;
+}
+
 .WSOP_posvendas_table div {
-    width: calc((100vw - 140px) / 7);
+    width: calc((100vw - 145px) / 7);
     height: calc((100vw - 140px) / 7);
     max-width: 100px;
-    max-height: 100px;
+    max-height: calc((100vh - 140px) / 7);
     overflow: hidden;
     border: 1px solid #00000000;
     border-radius: 10px;

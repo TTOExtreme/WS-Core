@@ -36,27 +36,29 @@ ClientEvents.on("WSMK/calendario/edt", (data) => {
     document.body.appendChild(div);
 
     ClientEvents.clear('system/calendario/edited');
-    ClientEvents.on("system/calendario/edited", () => {
+    ClientEvents.on("system/calendario/edited", (newdata) => {
         ClientEvents.emit("system_mess", { status: "OK", mess: "Evento salvo", time: 1000 });
         ClientEvents.emit("SendSocket", "WSMK/calendario/lst")
         if (data.reloadMulti) {
-            ClientEvents.emit("close_menu", 'wsmk_edt_div');
             ClientEvents.emit("SendSocket", "WSMK/calendario/lstids", JSON.stringify({ start: data.description.start }));
         } else {
             ClientEvents.emit("SendSocket", "WSMK/calendario/lstid", JSON.stringify(data));
         }
+        ClientEvents.emit("close_menu", 'wsmk_edt_div');
+        ClientEvents.emit("SendSocket", "WSMK/calendario/lst", { thisMonth: new Date(data.description.start).getMonth(), thisYear: new Date(data.description.start).getFullYear() })
     });
 
     ClientEvents.clear('system/calendario/added');
-    ClientEvents.on("system/calendario/added", () => {
+    ClientEvents.on("system/calendario/added", (newdata) => {
         ClientEvents.emit("system_mess", { status: "OK", mess: "Evento Criado", time: 1000 });
         ClientEvents.emit("SendSocket", "WSMK/calendario/lstid")
         if (data.reloadMulti) {
-            ClientEvents.emit("close_menu", 'wsmk_edt_div');
             ClientEvents.emit("SendSocket", "WSMK/calendario/lstids", JSON.stringify({ start: data.description.start }));
         } else {
-            ClientEvents.emit("SendSocket", "WSMK/calendario/lstid", JSON.stringify(data));
+            ClientEvents.emit("SendSocket", "WSMK/calendario/lstid", { id: newdata.id });
         }
+        ClientEvents.emit("close_menu", 'wsmk_edt_div');
+        ClientEvents.emit("SendSocket", "WSMK/calendario/lst", { thisMonth: new Date(data.description.start).getMonth(), thisYear: new Date(data.description.start).getFullYear() })
     });
 
 });

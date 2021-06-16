@@ -43,22 +43,25 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
             ClientEvents.emit("close_menu", 'wsop_posvendas_edt_div');
             ClientEvents.emit("SendSocket", "WSOP/posvendas/lstids", JSON.stringify({ start: data.description.start }));
         } else {
-            ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid", JSON.stringify(data));
+            ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid", { id: data.id });
         }
+        ClientEvents.emit("close_menu", 'wsop_posvendas_edt_div');
+        ClientEvents.emit("SendSocket", "WSOP/posvendas/lst", { thisMonth: new Date(data.description.start).getMonth(), thisYear: new Date(data.description.start).getFullYear() })
     });
 
     ClientEvents.clear('system/posvendas/added');
-    ClientEvents.on("system/posvendas/added", () => {
+    ClientEvents.on("system/posvendas/added", (newdata) => {
         ClientEvents.emit("system_mess", { status: "OK", mess: "Evento Criado", time: 1000 });
         ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid")
         if (data.reloadMulti) {
             ClientEvents.emit("close_menu", 'wsop_posvendas_edt_div');
             ClientEvents.emit("SendSocket", "WSOP/posvendas/lstids", JSON.stringify({ start: data.description.start }));
         } else {
-            ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid", JSON.stringify(data));
+            ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid", { id: newdata.id });
         }
+        ClientEvents.emit("close_menu", 'wsop_posvendas_edt_div');
+        ClientEvents.emit("SendSocket", "WSOP/posvendas/lst", { thisMonth: new Date(data.description.start).getMonth(), thisYear: new Date(data.description.start).getFullYear() })
     });
-
 });
 
 ClientEvents.on("WSOP/posvendas/edtsave", () => {

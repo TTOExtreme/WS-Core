@@ -41,9 +41,17 @@ class Socket {
         socket.on("WSMK/calendario/lst", (req) => {
             this._myself.checkPermission("WSMK/menu/calendario").then(() => {
                 this._Calendario.ListAll().then((res) => {
+                    if (req[0] != null) {
+                        if (typeof (req[0]) === typeof ("asd")) {
+                            req[0] = JSON.parse(req[0]);
+                        }
+                        req[0].data = res;
+                    } else {
+                        req[0] = { data: [] };
+                    }
                     socket.emit("ClientEvents", {
                         event: "WSMK/calendario/lst",
-                        data: res || []
+                        data: req[0]
                     })
                 }).catch((err) => {
                     this._log.error("On loading Calendario WSMK")
@@ -91,6 +99,9 @@ class Socket {
                     })
                 } else {
                     this._Calendario.ListSingle(req[0].id).then((res) => {
+                        if (req[0].reloadMulti) {
+                            res[0].reloadMulti = true;
+                        }
                         socket.emit("ClientEvents", {
                             event: "WSMK/calendario/edt",
                             data: res
