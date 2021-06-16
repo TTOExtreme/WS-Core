@@ -62,10 +62,9 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
                 {
                     title: 'Descrição',
                     field: 'description',
-                    formatter: ((data) => { return data.description; }),
+                    formatter: ((data) => { return (data.getData().description.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&gt;", "g"), ">"); }),
                     headerFilter: "input"
                 },
-
                 {
                     title: 'Adicionado Em',
                     field: 'createdIn',
@@ -75,17 +74,6 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
                 {
                     title: 'Adicionado Por',
                     field: 'createdBy',
-                    headerFilter: "input"
-                },
-                {
-                    title: 'Desativado Em',
-                    field: 'deactivatedIn',
-                    formatter: ((data) => formatTime(data.getRow().getData().deactivatedIn)),
-                    headerFilter: "input"
-                },
-                {
-                    title: 'Desativado Por',
-                    field: 'deactivatedBy',
                     headerFilter: "input"
                 }
             ]

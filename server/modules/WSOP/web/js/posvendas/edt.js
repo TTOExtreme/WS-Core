@@ -21,7 +21,7 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
         "<tr><td id='move_menu_wsop_posvendas_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_posvendas_edt_div')>&#9776;</td><td class='wsop_posvendas_edt_label'><p class='WSOP_posvendas_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_posvendas_edt_div')>X</p></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>ID:</td><td><input id='wsop_posvendas_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Cliente:</td><td><input id='wsop_posvendas_edt_name' type='text' value='" + data.title + "'></td></tr>" +
-        "<tr><td class='wsop_posvendas_edt_label'>Descrição:</td><td><input id='wsop_posvendas_edt_description' type='text' value='" + data.description.description + "'></td></tr>" +
+        "<tr><td class='wsop_posvendas_edt_label'>Descrição:</td><td><textarea id='wsop_posvendas_edt_description'class='sun-editor-editable'>" + data.description.description + "</textarea></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Data:</td><td><input id='wsop_posvendas_edt_start' type='date' value='" + formatTimeAMD(data.description.start) + "'></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Vendedor:</td><td><input id='wsop_posvendas_edt_vendedor' type='text' value='" + data.description.vendedor + "'></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Telefone:</td><td><input id='wsop_posvendas_edt_tel' type='text' value='" + data.description.tel + "'></td></tr>" +
@@ -62,13 +62,41 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
         ClientEvents.emit("close_menu", 'wsop_posvendas_edt_div');
         ClientEvents.emit("SendSocket", "WSOP/posvendas/lst", { thisMonth: new Date(data.description.start).getMonth(), thisYear: new Date(data.description.start).getFullYear() })
     });
+
+    const editor = SUNEDITOR.create((document.getElementById('wsop_posvendas_edt_description') || 'wsop_posvendas_edt_description'), {
+        width: "calc(100vw - 350px)",
+        buttonList: [
+            ['font', 'fontSize'],
+            ['bold', 'underline', 'italic'],
+            ['fontColor', 'hiliteColor'],
+            ['outdent', 'indent'],
+            ['align', 'horizontalRule', 'list', 'lineHeight'],
+            ['table', 'link'],
+            ['fullScreen', 'showBlocks', 'codeView']
+        ],
+        colorList: [
+            '#ff0000', '#ff5e00', '#ffe400', '#abf200', '#00d8ff', '#0055ff', '#6600ff', '#ff00dd', '#000000',
+            '#ffd8d8', '#fae0d4', '#faf4c0', '#e4f7ba', '#d4f4fa', '#d9e5ff', '#e8d9ff', '#ffd9fa', '#f1f1f1',
+            '#ffa7a7', '#ffc19e', '#faed7d', '#cef279', '#b2ebf4', '#b2ccff', '#d1b2ff', '#ffb2f5', '#bdbdbd',
+            '#f15f5f', '#f29661', '#e5d85c', '#bce55c', '#5cd1e5', '#6699ff', '#a366ff', '#f261df', '#8c8c8c',
+            '#980000', '#993800', '#998a00', '#6b9900', '#008299', '#003399', '#3d0099', '#990085', '#353535',
+            '#670000', '#662500', '#665c00', '#476600', '#005766', '#002266', '#290066', '#660058', '#222222'
+        ],
+        lineHeights: [
+            { text: '1', value: 1 },
+            { text: '1.15', value: 1.15 },
+            { text: '1.5', value: 1.5 },
+            { text: '2', value: 2 }
+        ],
+    });
+    editor.onChange = function (contents, core) { document.getElementById("wsop_posvendas_edt_description").innerHTML = contents; }
 });
 
 ClientEvents.on("WSOP/posvendas/edtsave", () => {
     if (document.getElementById("wsop_posvendas_edt_id").value != '0') {
         ClientEvents.emit("SendSocket", "WSOP/posvendas/edt", {
             id: document.getElementById("wsop_posvendas_edt_id").value,
-            title: document.getElementById("wsop_posvendas_edt_name").value,
+            title: (document.getElementById("wsop_posvendas_edt_name").value).replace(new RegExp("\"", "g"), "&quot;"),
             description: JSON.stringify({
                 description: document.getElementById("wsop_posvendas_edt_description").value,
                 color: document.getElementById("wsop_posvendas_edt_color").value,
@@ -83,7 +111,7 @@ ClientEvents.on("WSOP/posvendas/edtsave", () => {
         });
     } else {
         ClientEvents.emit("SendSocket", "WSOP/posvendas/add", {
-            title: document.getElementById("wsop_posvendas_edt_name").value,
+            title: (document.getElementById("wsop_posvendas_edt_name").value).replace(new RegExp("\"", "g"), "&quot;"),
             description: JSON.stringify({
                 description: document.getElementById("wsop_posvendas_edt_description").value,
                 color: document.getElementById("wsop_posvendas_edt_color").value,

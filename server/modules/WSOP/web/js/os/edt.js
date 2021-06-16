@@ -13,7 +13,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_div')>&#9776;</td><td class='wsop_edt_label' colspan=3><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + (data.description).replace(new RegExp("&quot;", "g"), "\"") + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status' disabled>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_edt_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Data Entrega:</td><td><input type='date' id='wsop_edt_endingIn' value='" + formatTimeAMD(data.endingIn) + "'></td></tr>" +
@@ -83,7 +83,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
                 "<td>" + produto.name + "</td>" +
                 "<td>" + produto.qnt + "</td>" +
                 "<td>" + produto.price + " R$</td>" +
-                "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
+                "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + (produto.obs).replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
         });
     }
 
@@ -182,7 +182,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
 ClientEvents.on("WSOP/os/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edt", {
         id: document.getElementById("wsop_edt_id").value,
-        description: document.getElementById("wsop_edt_description").innerHTML,
+        description: (document.getElementById("wsop_edt_description").innerHTML).replace(new RegExp("\"", "g"), "&quot;"),
         status: document.getElementById("wsop_edt_status").value,
         prazo: document.getElementById("wsop_edt_prazo").value,
         country: document.getElementById("wsop_edt_formaEnvio_country").value,
@@ -202,7 +202,7 @@ ClientEvents.on("WSOP/os/edtproduct", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edtproduct", {
         id: document.getElementById("wsop_edt_id_produto").value | "",
         id_os: document.getElementById("wsop_edt_id").value | "",
-        description: document.getElementById("wsop_edt_description").innerHTML,
+        description: (document.getElementById("wsop_edt_description").innerHTML).replace(new RegExp("\"", "g"), "&quot;"),
         status: document.getElementById("wsop_edt_status").value,
         active: document.getElementById("wsop_edt_active").checked,
     });
@@ -235,7 +235,7 @@ ClientEvents.on("wsop/os/produto/add", () => {
         id: document.getElementById("wsop_edt_id_produto").value | "",
         id_os: document.getElementById("wsop_edt_id").value | "",
         qnt: document.getElementById("wsop_edt_qnt_produto").value | "",
-        obs: document.getElementById("wsop_edt_description_produto").innerHTML
+        obs: (document.getElementById("wsop_edt_description_produto").innerHTML).replace(new RegExp("\"", "g"), "&quot;")
     }
     ClientEvents.emit("SendSocket", "wsop/os/produto/add", data)
 })

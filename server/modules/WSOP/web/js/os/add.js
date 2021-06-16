@@ -77,7 +77,7 @@ ClientEvents.on("WSOP/os/close", () => {
 ClientEvents.on("WSOP/os/save", () => {
     ClientEvents.emit("SendSocket", "wsop/os/add", {
         id_cliente: document.getElementById("wsop_add_id_cliente").value,
-        description: document.getElementById("wsop_add_description").value,
+        description: (document.getElementById("wsop_add_description").value).replace(new RegExp("\"", "g"), "&quot;"),
         active: document.getElementById("wsop_add_active").checked,
         status: document.getElementById("wsop_add_status").value,
         prazo: document.getElementById("wsop_add_prazo").value,
