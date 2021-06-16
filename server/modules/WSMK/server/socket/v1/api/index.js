@@ -80,7 +80,6 @@ class Socket {
             this._myself.checkPermission("WSMK/menu/calendario").then(() => {
                 try { req[0] = JSON.parse(req[0]) } catch (err) { }
                 if (req[0].id == 0 || req[0].id == "0") {
-                    console.log(req[0])
                     socket.emit("ClientEvents", {
                         event: "WSMK/calendario/edt",
                         data: [{
@@ -163,7 +162,6 @@ class Socket {
          */
         socket.on("WSMK/calendario/edt", (req) => {
             this._myself.checkPermission("WSMK/menu/calendario/edt").then(() => {
-                console.log(req[0]);
                 this._Calendario.edtCalendario(req[0].id, req[0].title, req[0].description, req[0].img, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
                         event: "system/calendario/edited",
@@ -191,7 +189,6 @@ class Socket {
          * Add Calendario Cards
          */
         socket.on("WSMK/calendario/add", (req) => {
-            console.log(req[0]);
             this._myself.checkPermission("WSMK/menu/calendario/add").then(() => {
                 this._Calendario.addCalendario(req[0].title, req[0].description, req[0].img, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {

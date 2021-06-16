@@ -29,6 +29,13 @@ ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
         actionOptions = [];
         //*/
 
+    function unclearDesc(desc) {
+        return desc.replace(new RegExp("&qt;", "g"), "\"").replace(new RegExp("&quot;", "g"), "=")
+            .replace(new RegExp("&eq;", "g"), "=").replace(new RegExp("&eql;", "g"), "=")
+            .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
+            .replace(new RegExp("&lt;", "g"), ">").replace(new RegExp("&let;", "g"), "<")
+            .replace(new RegExp("&space;", "g"), " ");
+    }
     /**Initialize  Table */
     window.table_usr_perm = new Tabulator("#perm_table", {
         headerFilterPlaceholder: "Filtrar",
@@ -77,7 +84,9 @@ ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
                 {
                     title: 'Descrição',
                     field: 'description',
-                    formatter: ((data) => { return (data.getData().description.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&gt;", "g"), ">"); }),
+                    formatter: ((data) => {
+                        return unclearDesc(data.getData().description.description)
+                    }),
                     headerFilter: "input"
                 },
                 {

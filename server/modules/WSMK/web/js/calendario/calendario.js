@@ -7,6 +7,7 @@ ClientEvents.emit("close_menu");
 ClientEvents.emit("LoadExternal", [
     "./module/WSMK/css/calendario.css",
     "./module/WSMK/js/calendario/edt.js",
+    "./module/WSMK/js/calendario/view.js",
     "./module/WSMK/js/calendario/edtMultiples.js"
 ], () => { }, false)
 
@@ -18,18 +19,26 @@ if (window.UserList) { // usa a mesma interface global para todas as listas
 ClientEvents.on("WSMK/calendario/lst", (datain) => {
     let data = datain.data;
     if (datain.thisMonth == undefined) { return; }
+    function createDay(id, img, title, description, day, month, year, color, bgcolor, qnt = 0, highlight = false, edt = true) {
 
-    function createDay(id, img, title, day, month, year, color, bgcolor, qnt = 0, highlight = false, edt = true) {
-        return "<div id='wsmk_day_card' class='wsmk_day_card' style='" +
+        function clearDesc(desc) {
+            return desc.replace(new RegExp("\"", "g"), "&qt;").replace(new RegExp("&quot;", "g"), "&qt;")
+                .replace(new RegExp("=", "g"), "&eql;").replace(new RegExp("&eq;", "g"), "&eql;")
+                .replace(new RegExp(">", "g"), "&get;").replace(new RegExp("&gt;", "g"), "&get;")
+                .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
+                .replace(new RegExp(" ", "g"), "&space;")
+        }
+
+        return "<div id='wsmk_day_card' onclick=ClientEvents.emit(\"WSMK/view\",{img:'" + img + "',title:'" + title + "',description:'" + clearDesc(description) + "'}) class='wsmk_day_card' style='" +
             ((img != undefined && img != "" && img != "undefined") ? "background-image:url(./module/WSMK/img/" + (img + "").replace(".jpg", "_thumb.jpg") + ");background-repeat: round;" : "background:" + bgcolor + ";") +
             "border: 1px solid " + color + ";" + (highlight ? "border:1px solid #ff0000;border-radius:0;" : "") + "'>" +
             "<span class='wsmk_day_num'>" + day + (qnt > 1 ? " +" + (qnt - 1) : "") + "</span>" +
-            "<span class='wsmk_day_edt'>" +
+
             (qnt < 1 ?
-                (edt ?
-                    "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" : "")
-                : (edt ?
-                    "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" +
+                (edt && Myself.checkPermission("WSMK/menu/calendario/edt") ?
+                    "<span class='wsmk_day_edt'>" + "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" : "")
+                : (edt && Myself.checkPermission("WSMK/menu/calendario/edt") ?
+                    "<span class='wsmk_day_edt'>" + "<i style='margin-right:10px' onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstid\",\'" + JSON.stringify({ id: 0, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-plus' aria-hidden='true'></i>" +
                     "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lstids\",\'" + JSON.stringify({ id: id, start: new Date(year, month, day).getTime() + (6 * 3600 * 1000) }) + "') class='fa fa-pencil' aria-hidden='true'></i>" : "")) +
             "</span>" +
             (title != "" ? "<center style='margin-top:22px'><span class='wsmk_day_title'>" + title + "</span></center>" : "") +
@@ -105,9 +114,9 @@ ClientEvents.on("WSMK/calendario/lst", (datain) => {
     for (let d = 1; d < day; d++) {
         let dcard = getDays(d, thisMonth, thisYear);
         if (dcard[0] != undefined) {
-            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, d, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
+            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, dcard[0].description.description, d, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
         } else {
-            html += "<td>" + createDay(0, "", "", d, thisMonth, thisYear, "#00000090", "#00000030") + "</td>";
+            html += "<td>" + createDay(0, "", "", "", d, thisMonth, thisYear, "#00000090", "#00000030") + "</td>";
         }
         wkd++;
         if (wkd >= 7) {
@@ -117,17 +126,17 @@ ClientEvents.on("WSMK/calendario/lst", (datain) => {
     }
     let dcard = getDays(day, thisMonth, thisYear);
     if (dcard[0] != undefined) {
-        html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, day, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
+        html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, dcard[0].description.description, day, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
     } else {
-        html += "<td>" + createDay(0, "", "", day, thisMonth, thisYear, "#00000090", "#00000030", 0, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
+        html += "<td>" + createDay(0, "", "", "", day, thisMonth, thisYear, "#00000090", "#00000030", 0, ((thisMonth != undefined) ? (thisMonth == month && thisYear == year ? true : false) : true)) + "</td>";
     }
     wkd = date.getDay() + 1;
     for (let d = day + 1; d <= new Date(thisYear, thisMonth + 1, 0).getDate() && d <= 31; d++) {
         dcard = getDays(d, thisMonth, thisYear);
         if (dcard[0] != undefined) {
-            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, d, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
+            html += "<td>" + createDay(dcard[0].id, dcard[0].img, dcard[0].title, dcard[0].description.description, d, thisMonth, thisYear, dcard[0].description.color, dcard[0].description.bgcolor, dcard.length) + "</td>";
         } else {
-            html += "<td>" + createDay(0, "", "", d, thisMonth, thisYear, "#00000090", "#00000030") + "</td>";
+            html += "<td>" + createDay(0, "", "", "", d, thisMonth, thisYear, "#00000090", "#00000030") + "</td>";
         }
         wkd++;
         if (wkd >= 7) {

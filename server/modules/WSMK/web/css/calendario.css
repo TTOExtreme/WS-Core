@@ -32,6 +32,7 @@
     background: var(--menu-item-bg);
     width: 20px;
     text-align: center;
+    float: right;
 }
 
 .wsmk_calendar_table {

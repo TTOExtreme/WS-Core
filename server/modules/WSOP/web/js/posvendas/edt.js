@@ -12,6 +12,22 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
     /**
      * create Show Page for user info
      */
+
+    function unclearDesc(desc) {
+        return desc.replace(new RegExp("&qt;", "g"), "\"").replace(new RegExp("&quot;", "g"), "=")
+            .replace(new RegExp("&eq;", "g"), "=").replace(new RegExp("&eql;", "g"), "=")
+            .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
+            .replace(new RegExp("&lt;", "g"), ">").replace(new RegExp("&let;", "g"), "<")
+            .replace(new RegExp("&space;", "g"), " ");
+    }
+
+    function clearDesc(desc) {
+        return desc.replace(new RegExp("\"", "g"), "&qt;").replace(new RegExp("&quot;", "g"), "&qt;")
+            .replace(new RegExp("=", "g"), "&eql;").replace(new RegExp("&eq;", "g"), "&eql;")
+            .replace(new RegExp(">", "g"), "&get;").replace(new RegExp("&gt;", "g"), "&get;")
+            .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
+            .replace(new RegExp(" ", "g"), "&space;")
+    }
     let div = document.createElement("div");
     div.setAttribute("class", "WSOP_posvendas_div menu_dragger");
     div.setAttribute("id", "wsop_posvendas_edt_div");
@@ -20,8 +36,8 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
         "<table>" +
         "<tr><td id='move_menu_wsop_posvendas_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_posvendas_edt_div')>&#9776;</td><td class='wsop_posvendas_edt_label'><p class='WSOP_posvendas_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_posvendas_edt_div')>X</p></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>ID:</td><td><input id='wsop_posvendas_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
-        "<tr><td class='wsop_posvendas_edt_label'>Cliente:</td><td><input id='wsop_posvendas_edt_name' type='text' value='" + data.title + "'></td></tr>" +
-        "<tr><td class='wsop_posvendas_edt_label'>Descrição:</td><td><textarea id='wsop_posvendas_edt_description'class='sun-editor-editable'>" + data.description.description + "</textarea></td></tr>" +
+        "<tr><td class='wsop_posvendas_edt_label'>Cliente:</td><td><input id='wsop_posvendas_edt_name' type='text' value='" + unclearDesc(data.title) + "'></td></tr>" +
+        "<tr><td class='wsop_posvendas_edt_label'>Descrição:</td><td><textarea id='wsop_posvendas_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description.description) + "</textarea></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Data:</td><td><input id='wsop_posvendas_edt_start' type='date' value='" + formatTimeAMD(data.description.start) + "'></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Vendedor:</td><td><input id='wsop_posvendas_edt_vendedor' type='text' value='" + data.description.vendedor + "'></td></tr>" +
         "<tr><td class='wsop_posvendas_edt_label'>Telefone:</td><td><input id='wsop_posvendas_edt_tel' type='text' value='" + data.description.tel + "'></td></tr>" +
@@ -90,42 +106,42 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
         ],
     });
     editor.onChange = function (contents, core) { document.getElementById("wsop_posvendas_edt_description").innerHTML = contents; }
+
+    ClientEvents.on("WSOP/posvendas/edtsave", () => {
+        if (document.getElementById("wsop_posvendas_edt_id").value != '0') {
+            ClientEvents.emit("SendSocket", "WSOP/posvendas/edt", {
+                id: document.getElementById("wsop_posvendas_edt_id").value,
+                title: clearDesc(document.getElementById("wsop_posvendas_edt_name").value),
+                description: JSON.stringify({
+                    description: clearDesc(document.getElementById("wsop_posvendas_edt_description").value),
+                    color: document.getElementById("wsop_posvendas_edt_color").value,
+                    bgcolor: document.getElementById("wsop_posvendas_edt_bgcolor").value,
+                    vendedor: document.getElementById("wsop_posvendas_edt_vendedor").value,
+                    tel: document.getElementById("wsop_posvendas_edt_tel").value,
+                    start: new Date(document.getElementById("wsop_posvendas_edt_start").value).getTime() + (12 * 3600 * 1000),
+                    end: new Date(document.getElementById("wsop_posvendas_edt_end").value).getTime() + (12 * 3600 * 1000),
+                    pendente: document.getElementById("wsop_posvendas_edt_pendente").checked,
+                }),
+                active: document.getElementById("wsop_posvendas_edt_active").checked,
+            });
+        } else {
+            ClientEvents.emit("SendSocket", "WSOP/posvendas/add", {
+                title: clearDesc(document.getElementById("wsop_posvendas_edt_name").value),
+                description: JSON.stringify({
+                    description: clearDesc(document.getElementById("wsop_posvendas_edt_description").value),
+                    color: document.getElementById("wsop_posvendas_edt_color").value,
+                    bgcolor: document.getElementById("wsop_posvendas_edt_bgcolor").value,
+                    vendedor: document.getElementById("wsop_posvendas_edt_vendedor").value,
+                    tel: document.getElementById("wsop_posvendas_edt_tel").value,
+                    start: new Date(document.getElementById("wsop_posvendas_edt_start").value).getTime() + (12 * 3600 * 1000),
+                    end: new Date(document.getElementById("wsop_posvendas_edt_end").value).getTime() + (12 * 3600 * 1000),
+                    pendente: document.getElementById("wsop_posvendas_edt_pendente").checked,
+                }),
+                active: document.getElementById("wsop_posvendas_edt_active").checked,
+            });
+        }
+    })
+
+
 });
-
-ClientEvents.on("WSOP/posvendas/edtsave", () => {
-    if (document.getElementById("wsop_posvendas_edt_id").value != '0') {
-        ClientEvents.emit("SendSocket", "WSOP/posvendas/edt", {
-            id: document.getElementById("wsop_posvendas_edt_id").value,
-            title: (document.getElementById("wsop_posvendas_edt_name").value).replace(new RegExp("\"", "g"), "&quot;"),
-            description: JSON.stringify({
-                description: document.getElementById("wsop_posvendas_edt_description").value,
-                color: document.getElementById("wsop_posvendas_edt_color").value,
-                bgcolor: document.getElementById("wsop_posvendas_edt_bgcolor").value,
-                vendedor: document.getElementById("wsop_posvendas_edt_vendedor").value,
-                tel: document.getElementById("wsop_posvendas_edt_tel").value,
-                start: new Date(document.getElementById("wsop_posvendas_edt_start").value).getTime() + (12 * 3600 * 1000),
-                end: new Date(document.getElementById("wsop_posvendas_edt_end").value).getTime() + (12 * 3600 * 1000),
-                pendente: document.getElementById("wsop_posvendas_edt_pendente").checked,
-            }),
-            active: document.getElementById("wsop_posvendas_edt_active").checked,
-        });
-    } else {
-        ClientEvents.emit("SendSocket", "WSOP/posvendas/add", {
-            title: (document.getElementById("wsop_posvendas_edt_name").value).replace(new RegExp("\"", "g"), "&quot;"),
-            description: JSON.stringify({
-                description: document.getElementById("wsop_posvendas_edt_description").value,
-                color: document.getElementById("wsop_posvendas_edt_color").value,
-                bgcolor: document.getElementById("wsop_posvendas_edt_bgcolor").value,
-                vendedor: document.getElementById("wsop_posvendas_edt_vendedor").value,
-                tel: document.getElementById("wsop_posvendas_edt_tel").value,
-                start: new Date(document.getElementById("wsop_posvendas_edt_start").value).getTime() + (12 * 3600 * 1000),
-                end: new Date(document.getElementById("wsop_posvendas_edt_end").value).getTime() + (12 * 3600 * 1000),
-                pendente: document.getElementById("wsop_posvendas_edt_pendente").checked,
-            }),
-            active: document.getElementById("wsop_posvendas_edt_active").checked,
-        });
-    }
-})
-
-
 ClientEvents.emit("SendSocket", "WSOP/posvendas/lst");
