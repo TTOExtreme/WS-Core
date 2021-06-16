@@ -9,6 +9,15 @@ class Core {
         Event: () => { },
         SubItems: [
             {
+                Name: "Pós Vendas",
+                Id: "WSOP/menu/PosVendas",
+                Permission: "WSOP/menu/posvendas",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./module/WSOP/js/posvendas/list.js",
+                TopItems: [],
+            },
+            {
                 Name: "Vendas",
                 Id: "WSOP/menu/Vendas",
                 Permission: "WSOP/menu/vendas",
@@ -92,7 +101,7 @@ class Core {
             {
                 Name: "Emitente",
                 Id: "WSOP/menu/emitente",
-                Permission: "WSOP/menu/OS",
+                Permission: "WSOP/menu/emitente",
                 Icon: "",
                 EventCall: "Load",
                 EventData: "./module/WSOP/js/emitente/list.js",

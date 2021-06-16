@@ -126,6 +126,48 @@ const _DB = [
         defaltAdd: 0
     },
     {
+        name: "Aba PrePress",
+        description: "Acesso Aba PrePress",
+        code: "WSOP/menu/prepress",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Aba Pós Vendas",
+        description: "Acesso Aba Pós Vendas",
+        code: "WSOP/menu/posvendas",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Aba Design",
+        description: "Acesso Aba Design",
+        code: "WSOP/menu/design",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Aba Calandra",
+        description: "Acesso Aba Calandra",
+        code: "WSOP/menu/calandra",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Aba Costura",
+        description: "Acesso Aba Costura",
+        code: "WSOP/menu/costura",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Aba Expedição",
+        description: "Acesso Aba Expedição",
+        code: "WSOP/menu/expedicao",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
         name: "Ver todas as Vendas",
         description: "Acesso a Todas as Vendas",
         code: "WSOP/menu/vendas/all",

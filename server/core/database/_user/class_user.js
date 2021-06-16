@@ -274,8 +274,8 @@ class User {
      */
     checkPermissionSync(permissionCode) {
         if (this.myself.permissions) {
-            if (this.myself.permissions.filter(perm => (perm.code_Permission === permissionCode & perm.active === 1))[0] != undefined ||
-                this.myself.permissions.filter(perm => (perm.code_Permission === "adm/system" & perm.active === 1))[0] != undefined) {
+            if (this.myself.permissions.filter(perm => (perm.code_Permission == permissionCode & perm.active === 1))[0] != undefined ||
+                this.myself.permissions.filter(perm => (perm.code_Permission == "adm/system" & perm.active === 1))[0] != undefined) {
                 return true;
             }
         }
@@ -441,6 +441,7 @@ class User {
             _AdmMenus.forEach((Menu, index, arr) => {
                 if (this.checkPermissionSync(Menu.Permission)) {
                     Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
+                        console.log(SubMenu.Permission);
                         if (this.checkPermissionSync(SubMenu.Permission)) {
                             SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
                                 if (this.checkPermissionSync(TopMenu.Permission)) { } else {
@@ -448,7 +449,7 @@ class User {
                                 }
                             });
                         } else {
-                            Subarr.splice(Subindex, 1);
+                            Subarr[Subindex] = {};
                         }
                     });
                     Menu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
@@ -457,7 +458,7 @@ class User {
                         }
                     });
                 } else {
-                    arr.splice(index, 1);
+                    arr[index] = {};
                 }
             })
             this.Menus = _AdmMenus;

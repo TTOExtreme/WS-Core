@@ -47,10 +47,12 @@ ClientEvents.on("LeftMenu-SetItems", (items) => {
         let LeftMenuTable = document.getElementById("LeftMenuTable");
         LeftMenuTable.innerHTML = "";
         MenuItems.forEach(item => {
-            let mitem = new LeftMenuItem(item)
-            if (mitem) {
-                LeftMenuTable.appendChild(mitem.getItem());
-                LeftMenuTable.appendChild(mitem.getSubitems());
+            if (item.Id != undefined) {
+                let mitem = new LeftMenuItem(item)
+                if (mitem) {
+                    LeftMenuTable.appendChild(mitem.getItem());
+                    LeftMenuTable.appendChild(mitem.getSubitems());
+                }
             }
         });
     }
@@ -193,9 +195,11 @@ class LeftMenuItem {
             tab.setAttribute("class", "LMI LMIHidden")
             tab.id = "sub_" + this.Id;
             this.SubItems.forEach(subitem => {
-                let subi = new LeftMenuItem(subitem);
-                tab.appendChild(subi.getItem());
-                tab.appendChild(subi.getSubitems());
+                if (subitem.Id != undefined) {
+                    let subi = new LeftMenuItem(subitem);
+                    tab.appendChild(subi.getItem());
+                    tab.appendChild(subi.getSubitems());
+                }
             });
             td.appendChild(tab);
             si2.appendChild(td);
