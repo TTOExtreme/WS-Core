@@ -37,6 +37,17 @@ function formatTimeDMA(data) {
     return ret;
 }
 
+function formatTimeMA(data) {
+    let ret = "-"
+    if (data != undefined && data != "") {
+        let date = new Date(parseInt(data));
+        let month = "0" + (date.getMonth() + 1);
+        let year = date.getFullYear();
+        ret = (month.substr(-2) + '-' + year);
+    }
+    return ret;
+}
+
 function formatTimeSpend(data) {
     let ret = "-"
     if (data != undefined && data != "") {
