@@ -162,7 +162,7 @@ class Socket {
          * edit Calendario Cards
          */
         socket.on("WSMK/calendario/edt", (req) => {
-            this._myself.checkPermission("WSMK/calendario/edt").then(() => {
+            this._myself.checkPermission("WSMK/menu/calendario/edt").then(() => {
                 console.log(req[0]);
                 this._Calendario.edtCalendario(req[0].id, req[0].title, req[0].description, req[0].img, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
@@ -192,7 +192,7 @@ class Socket {
          */
         socket.on("WSMK/calendario/add", (req) => {
             console.log(req[0]);
-            this._myself.checkPermission("WSMK/calendario/add").then(() => {
+            this._myself.checkPermission("WSMK/menu/calendario/add").then(() => {
                 this._Calendario.addCalendario(req[0].title, req[0].description, req[0].img, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
                         event: "system/calendario/added",
@@ -219,7 +219,7 @@ class Socket {
          * add file
          */
         socket.on("WSMK/calendario/file", (req) => {
-            this._myself.checkPermission("WSMK/calendario/add").then(() => {
+            this._myself.checkPermission("WSMK/menu/calendario/add").then(() => {
                 try {
                     let name = new BCypher().generate_salt(48) + req[0].ext;
                     let filepath = path(__dirname + "/../../../../web/img/calendario/")
