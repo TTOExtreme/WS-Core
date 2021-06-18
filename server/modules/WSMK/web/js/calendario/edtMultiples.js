@@ -13,7 +13,7 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_WSMK_calendario' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'WSMK_calendario_edtmulti_div')>&#9776;</td><td class='WSMK_calendario_label'><p class='WSMK_calendario_closeButton' onclick=ClientEvents.emit(\"close_menu\",'WSMK_calendario_edtmulti_div')>X</p></td></tr>" +
+        "<tr><td id='move_menu_WSMK_calendario' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'WSMK_calendario_edtmulti_div')>&#9776;</td><td class='WSMK_calendario_label'><p class='wsmk_calendario_closeButton' onclick=ClientEvents.emit(\"close_menu\",'WSMK_calendario_edtmulti_div')>X</p></td></tr>" +
         "<tr><td></td><td colspan='2' style='float:none' class='WSMK_calendario_label'><center>Dia: " + formatTimeDMA(data.start) + "<center></td></tr>" +
         "<tr><td colspan=2><div id='perm_table' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
         "</table>";
