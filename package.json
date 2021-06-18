@@ -51,7 +51,7 @@
   },
   "scripts": {
     "install": "node _install.js",
-    "debug": "node --inspect-brk=9229 server.js",
+    "debug": "node --inspect-brk=9229 _server.js",
     "start": "nodemon _server.js --ignore ./server/modules/WSOP/web/img/produtos"
   },
   "author": "",

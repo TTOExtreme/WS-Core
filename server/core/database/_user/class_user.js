@@ -441,7 +441,6 @@ class User {
             _AdmMenus.forEach((Menu, index, arr) => {
                 if (this.checkPermissionSync(Menu.Permission)) {
                     Menu.SubItems.forEach((SubMenu, Subindex, Subarr) => {
-                        console.log(SubMenu.Permission);
                         if (this.checkPermissionSync(SubMenu.Permission)) {
                             SubMenu.TopItems.forEach((TopMenu, Topindex, Toparr) => {
                                 if (this.checkPermissionSync(TopMenu.Permission)) { } else {

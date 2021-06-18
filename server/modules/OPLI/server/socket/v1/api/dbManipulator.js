@@ -36,9 +36,9 @@ class apiManipulator {
     /**
      * Lista todos as Vendas de Site
      */
-    ListAllSite() {
+    ListAllSite(ID = 0, Limit = 100) {
         return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id desc;");
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id desc LIMIT " + ID + "," + Limit + ";");
     }
 
     /**

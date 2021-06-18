@@ -174,7 +174,6 @@ class Socket {
                                 }
                             })
                         }).catch(() => {
-                            console.log(data);
                             this._groupServer.attribGroup(data[0].id_origin, data[0].id_group, this._myself.myself.id, ((data[0].active == 0) ? 1 : 0)).then(() => {
 
                                 socket.emit("ClientEvents", {

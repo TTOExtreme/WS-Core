@@ -193,12 +193,20 @@ window.UserList = class UserList {
             if (data) {
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
+                /*
                 setTimeout(() => { //moved to here for broadcasting problems
                     ClientEvents.emit("SendSocket", "WSOP/site/lst");
-                }, 10 * 1000);
+                }, 60 * 1000);//*/
             }
         });
 
+
+        /**Receive user list and append to Table */
+        ClientEvents.on("wsop/site/lst/append", (data) => {
+            if (data) {
+                this.main_table.updateOrAddData(data);
+            }
+        });
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");

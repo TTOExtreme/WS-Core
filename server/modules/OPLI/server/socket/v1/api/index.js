@@ -98,11 +98,29 @@ class Socket {
          */
         socket.on("WSOP/site/lst", (req) => {
             this._myself.checkPermission("WSOP/menu/os").then(() => {
-                this._ApiClass.ListAllSite().then((results) => {
+                this._ApiClass.ListAllSite(0, 10).then((results) => {
+
                     socket.emit("ClientEvents", {
                         event: "wsop/site/lst",
                         data: results
                     })
+                    let res = results, counter = 0, last = results.length;
+                    function nextPackage(_ApiClass, id, limit) {
+                        if (res.length > 0 && counter < 10) {
+                            _ApiClass.ListAllSite(id, 10).then((results2) => {
+
+                                socket.emit("ClientEvents", {
+                                    event: "wsop/site/lst/append",
+                                    data: results2
+                                })
+                                res = results2;
+                                counter++;
+                                last += results2.length;
+                                nextPackage(_ApiClass, last, limit);
+                            })
+                        }
+                    }
+                    nextPackage(this._ApiClass, last, 10); //SET LIMIT FOR EACH SEND
                 }).catch((err) => {
                     if (!this._myself.isLogged()) {
                         socket.emit("logout", "");
