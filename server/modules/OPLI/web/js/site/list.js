@@ -157,6 +157,13 @@ window.UserList = class UserList {
                     ClientEvents.emit("WSOP/site/dnl", {});
                 }
             })
+        this.newCollums[0].headerMenu.push(
+            {
+                label: "Download Em Produção para CSV",
+                action: function (e, column) {
+                    ClientEvents.emit("WSOP/site/dnl/emproducao", {});
+                }
+            })
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
             data: this.UserListData,
@@ -218,6 +225,18 @@ window.UserList = class UserList {
                 ClientEvents.emit("WSOP/site/dnlsave", {});
             }
         })
+        ClientEvents.on("wsop/site/download/emproducao", (data) => {
+            console.log(data);
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
+            data.forEach(dataitem => {
+                this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
+            })
+            this.DownloadedData = this.DownloadedData.concat(data);
+            //console.log(this.RetrievingData);
+            if (this.RetrievingData.length < 1) {
+                ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
+            }
+        })
 
         ClientEvents.on("WSOP/site/dnl", () => {
             if (this.UserListData != undefined) {
@@ -230,6 +249,19 @@ window.UserList = class UserList {
                     }
                 })
                 ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: 0 });
+            }
+        });
+        ClientEvents.on("WSOP/site/dnl/emproducao", () => {
+            if (this.UserListData != undefined) {
+                let id = 0;
+                this.UserListData.forEach(os => {
+                    id++;
+                    this.RetrievingData.push(os.id);
+                    if (id % 100 == 0) {
+                        ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: os.id });
+                    }
+                })
+                ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: 0 });
             }
         });
 
@@ -278,6 +310,70 @@ window.UserList = class UserList {
                             "produto":"/api/v1/produto/68522024","produto_pai":"/api/v1/produto/68522020",
                             "profundidade":17,"quantidade":"1.000","sku":"ZX3SK62BR-g-SJ0LMJNDC","tipo":"atributo_opcao"}]"//*/
                         })
+                    } catch (err) {
+
+                    }
+                });
+
+                let downloadLink = document.createElement("a");
+                let blob = new Blob(["\ufeff", csv]);
+                let url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+                downloadLink.download = "data.csv";
+
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+        });
+
+        ClientEvents.on("WSOP/site/dnlsave/emproducao", () => {
+            if (this.UserListData != undefined) {
+                let csv = "OS;status;data;mensagem;codigo;produtos;tamanho;qnt";
+
+
+                let getTamanho = (barcode) => {
+
+                    if (barcode.indexOf("-pp") > -1) { return "PP"; }
+                    if (barcode.indexOf("-gg") > -1) { return "GG"; }
+                    if (barcode.indexOf("-exg") > -1) { return "EXG"; }
+                    if (barcode.indexOf("-exgg") > -1) { return "EXGG"; }
+                    if (barcode.indexOf("-g3") > -1) { return "G3"; }
+                    if (barcode.indexOf("-g4") > -1) { return "G4"; }
+                    if (barcode.indexOf("-p") > -1) { return "P"; }
+                    if (barcode.indexOf("-m") > -1) { return "M"; }
+                    if (barcode.indexOf("-g") > -1) { return "G"; }
+                    if (barcode.indexOf("-rn") > -1) { return "RN"; }
+                    if (barcode.indexOf("-2") > -1) { return "2"; }
+                    if (barcode.indexOf("-4") > -1) { return "4"; }
+                    if (barcode.indexOf("-6") > -1) { return "6"; }
+                    if (barcode.indexOf("-8") > -1) { return "8"; }
+                    if (barcode.indexOf("-10") > -1) { return "10"; }
+                    if (barcode.indexOf("-12") > -1) { return "12"; }
+                    if (barcode.indexOf("-14") > -1) { return "14"; }
+                    if (barcode.indexOf("-16") > -1) { return "16"; }
+                }
+
+                this.DownloadedData.forEach(os => {
+                    try {
+                        if (os.status == "17") {
+                            csv += "\n#" + os.id_li + ";" + window.utils.OPLIStatusIdToName(os.status) + ";" + formatTime(os.endingIn) + ";" + os.description.replace(new RegExp("\n", "g"), " ") + ";;";
+                            let prods = JSON.parse(os.products);
+                            prods.forEach(prod => {
+                                let tam = getTamanho(prod.sku);
+                                csv += "\n;;;;\"" + prod.sku + "\";\"" + prod.nome + "\"";
+                                csv += ";\"" + tam + "\"";
+                                csv += ";\"" + parseInt(prod.quantidade) + "\"";
+
+
+                                /*"[{"altura":9,"disponibilidade":6,"id":97982435,"largura":27,"linha":1,"ncm":"",
+                                "nome":"Conjunto Regata e Shorts |PRETO |  MIKASA OPEN - ETAPA SÃO PAULO",
+                                "pedido":"/api/v1/pedido/4419","peso":"0.400","preco_cheio":"115.6000","preco_custo":null,
+                                "preco_promocional":"99.0000","preco_subtotal":"99.0000","preco_venda":"99.0000",
+                                "produto":"/api/v1/produto/68522024","produto_pai":"/api/v1/produto/68522020",
+                                "profundidade":17,"quantidade":"1.000","sku":"ZX3SK62BR-g-SJ0LMJNDC","tipo":"atributo_opcao"}]"//*/
+                            })
+                        }
                     } catch (err) {
 
                     }

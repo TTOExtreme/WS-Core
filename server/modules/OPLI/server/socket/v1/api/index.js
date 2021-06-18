@@ -97,7 +97,6 @@ class Socket {
          * List all Site itens
          */
         socket.on("WSOP/site/lst", (req) => {
-            console.log("list Site")
             this._myself.checkPermission("WSOP/menu/os").then(() => {
                 this._ApiClass.ListAllSite().then((results) => {
                     socket.emit("ClientEvents", {
@@ -166,6 +165,45 @@ class Socket {
                     this._ApiClass.ListSite(req[0].id).then((results) => {
                         socket.emit("ClientEvents", {
                             event: "wsop/site/download",
+                            data: results
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        this._log.error("On Editing Api for Loja Integrada")
+                        this._log.error(err);
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                })
+            } else {
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Request Incomplete",
+                        time: 1000
+                    }
+                })
+            }
+        })
+
+        /**
+         * List Site by id DOWNLOAD
+         */
+        socket.on("WSOP/site/lstdownload/emproducao", (req) => {
+            if (req[0].id != undefined) {
+                this._myself.checkPermission("WSOP/menu/os").then(() => {
+                    this._ApiClass.ListSite(req[0].id).then((results) => {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/site/download/emproducao",
                             data: results
                         })
                     }).catch((err) => {

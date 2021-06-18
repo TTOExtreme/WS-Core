@@ -46,7 +46,7 @@ class apiManipulator {
      */
     ListSite(ID = 0) {
         return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " LIMIT 100 Order By C.id Desc;");
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " Order By C.id Desc LIMIT 100;");
     }
 
     /**
@@ -243,7 +243,7 @@ class apiManipulator {
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "Loading API" })
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "API: " + APIS[0].api })
                     socket.emit("ClientEvents", { event: "opli/appendlog", data: "Aplication: " + APIS[0].aplication })
-                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "Iniciando Cadastro de Produtos" })
+                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "Iniciando Cadastro de Vendas" })
                     trelloManipulator = new trelloIntegration(
                         APIS[0].trelloToken,
                         APIS[0].trelloKey,
@@ -321,7 +321,7 @@ class apiManipulator {
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "Loading API" })
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "API: " + APIS[0].api })
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "Aplication: " + APIS[0].aplication })
-                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Iniciando Cadastro de Produtos" })
+                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Iniciando Cadastro de Vendas Pagas" })
                     }
                     trelloManipulator = new trelloIntegration(
                         APIS[0].trelloToken,
@@ -334,7 +334,7 @@ class apiManipulator {
                         resolve();
                         //Loop de Caregamento
                         setTimeout(() => {
-                            console.log("Recarregando Vendas")
+                            console.log("Recarregando Vendas pagas")
                             apiOPLIManipulator.updatePaidSells(socket);
 
                         }, 60 * 1000);
@@ -1359,13 +1359,13 @@ class apiUtils {
                             })
                         } else {
                             if (socket != null) {
-                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Cadastrados" })
+                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Cadastradas e enviadas ao Trello" })
                             }
                             resolve();
                         }
                     } else {
                         if (socket != null) {
-                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Cadastrados" })
+                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Cadastradas e enviadas ao Trello" })
                         }
                         resolve();
                     }
@@ -1416,7 +1416,7 @@ class apiUtils {
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Vendas: " + json.meta.total_count })
                     } else {
                         if (json.meta.total_count > 0) {
-                            console.log("Cadastrando Vendas: " + json.meta.total_count)
+                            console.log("Cadastrando Vendas Pagas: " + json.meta.total_count)
                         }
                     }
                     let arr = [];
@@ -1445,13 +1445,13 @@ class apiUtils {
                             })
                         } else {
                             if (socket != null) {
-                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Cadastrados" })
+                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Pagas Cadastradas" })
                             }
                             resolve();
                         }
                     } else {
                         if (socket != null) {
-                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Cadastrados" })
+                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Pagas Cadastradas" })
                         }
                         resolve();
                     }
