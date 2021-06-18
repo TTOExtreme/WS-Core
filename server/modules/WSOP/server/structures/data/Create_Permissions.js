@@ -140,6 +140,20 @@ const _DB = [
         defaltAdd: 0
     },
     {
+        name: "Edt Pós Vendas",
+        description: "Editar Pós Vendas",
+        code: "WSOP/posvendas/edt",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Add Pós Vendas",
+        description: "Adicionar Pós Vendas",
+        code: "WSOP/posvendas/add",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
         name: "Aba Design",
         description: "Acesso Aba Design",
         code: "WSOP/menu/design",

@@ -30,7 +30,7 @@ ClientEvents.on("WSMK/calendario/lst", (datain) => {
         }
 
         return "<div id='wsmk_day_card' onclick=ClientEvents.emit(\"WSMK/view\",{img:'" + img + "',title:'" + title + "',description:'" + clearDesc(description) + "'}) class='wsmk_day_card' style='" +
-            ((img != undefined && img != "" && img != "undefined") ? "background-image:url(./module/WSMK/img/" + (img + "").replace(".jpg", "_thumb.jpg") + ");background-repeat: round;" : "background:" + bgcolor + ";") +
+            ((img != undefined && img != "" && img != "undefined") ? "background-image:url(./module/WSMK/img/" + (img + "").replace(".", "_thumb.") + ");background-repeat: round;" : "background:" + bgcolor + ";") +
             "border: 1px solid " + color + ";" + (highlight ? "border:1px solid #ff0000;border-radius:0;" : "") + "'>" +
             "<span class='wsmk_day_num'>" + day + (qnt > 1 ? " +" + (qnt - 1) : "") + "</span>" +
 

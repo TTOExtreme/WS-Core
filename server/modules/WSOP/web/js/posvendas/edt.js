@@ -106,7 +106,7 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
         ],
     });
     editor.onChange = function (contents, core) { document.getElementById("wsop_posvendas_edt_description").innerHTML = contents; }
-
+    ClientEvents.clear("WSOP/posvendas/edtsave");
     ClientEvents.on("WSOP/posvendas/edtsave", () => {
         if (document.getElementById("wsop_posvendas_edt_id").value != '0') {
             ClientEvents.emit("SendSocket", "WSOP/posvendas/edt", {
