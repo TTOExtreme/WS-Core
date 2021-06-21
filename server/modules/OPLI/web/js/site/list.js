@@ -76,7 +76,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/site/edt", (rowdata)) };
             htm.appendChild(bot);
         }//*/
-        if (Myself.checkPermission("WSOP/site/edt")) {
+        if (Myself.checkPermission("OPLI/menu/site")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-mail-forward");
             bot.setAttribute("title", "Mudar Status");
@@ -84,7 +84,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("WSOP/site/changestatus", rowdata) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/site/edt")) {
+        if (Myself.checkPermission("OPLI/menu/site")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
