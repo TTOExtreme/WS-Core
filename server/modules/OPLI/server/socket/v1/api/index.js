@@ -97,7 +97,7 @@ class Socket {
          * List all Site itens
          */
         socket.on("WSOP/site/lst", (req) => {
-            this._myself.checkPermission("WSOP/menu/os").then(() => {
+            this._myself.checkPermission("OPLI/menu/site").then(() => {
                 this._ApiClass.ListAllSite(0, 10).then((results) => {
 
                     socket.emit("ClientEvents", {
@@ -179,7 +179,7 @@ class Socket {
          */
         socket.on("WSOP/site/lstdownload", (req) => {
             if (req[0].id != undefined) {
-                this._myself.checkPermission("WSOP/menu/os").then(() => {
+                this._myself.checkPermission("OPLI/menu/site").then(() => {
                     this._ApiClass.ListSite(req[0].id).then((results) => {
                         socket.emit("ClientEvents", {
                             event: "wsop/site/download",
@@ -218,7 +218,7 @@ class Socket {
          */
         socket.on("WSOP/site/lstdownload/emproducao", (req) => {
             if (req[0].id != undefined) {
-                this._myself.checkPermission("WSOP/menu/os").then(() => {
+                this._myself.checkPermission("OPLI/menu/site").then(() => {
                     this._ApiClass.ListSite(req[0].id).then((results) => {
                         socket.emit("ClientEvents", {
                             event: "wsop/site/download/emproducao",
@@ -256,7 +256,7 @@ class Socket {
          * Change Site status
          */
         socket.on("WSOP/site/edtstatus", (req) => {
-            this._myself.checkPermission("WSOP/menu/os").then(() => {
+            this._myself.checkPermission("OPLI/menu/site").then(() => {
                 if (req[0].id &&
                     req[0].status
                 ) {
