@@ -59,9 +59,9 @@ class UserServer {
      * @param {Int} myselfID 
      * @returns {Promise}
      */
-    edtUser(id, name, pass, active, myselfID = 1) {
+    edtUser(id, name, pass, email, tel, active, myselfID = 1) {
         return this.db.query("UPDATE " + this.db.DatabaseName + "._User" +
-            " SET name='" + name + ((active != undefined) ? "', active=" + ((active) ? 1 : 0) : "") + ", modifiedBy=" + myselfID + ", modifiedIn=" + Date.now() + "" +
+            " SET name='" + name + "',email='" + email + "',telefone='" + tel + ((active != undefined) ? "', active=" + ((active) ? 1 : 0) : "") + ", modifiedBy=" + myselfID + ", modifiedIn=" + Date.now() + "" +
             " WHERE id=" + id + "");
     }
 
