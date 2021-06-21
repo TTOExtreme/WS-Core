@@ -74,32 +74,20 @@ class Socket {
          * List all Produtos para Edição de OS
          */
         socket.on("wsop/os/produtos/lst", (req) => {
-            this._myself.checkPermission("WSOP/menu/produtos").then(() => {
-                this._ProdutosClass.ListAllOs().then((res) => {
-                    socket.emit("ClientEvents", {
-                        event: "wsop/os/produtos/lst",
-                        data: res
-                    })
-                }).catch((err) => {
-                    if (!this._myself.isLogged()) {
-                        socket.emit("logout", "");
-                    }
-                    socket.emit("ClientEvents", {
-                        event: "system_mess",
-                        data: {
-                            status: "ERROR",
-                            mess: err,
-                            time: 1000
-                        }
-                    })
+            this._ProdutosClass.ListAllOs().then((res) => {
+                socket.emit("ClientEvents", {
+                    event: "wsop/os/produtos/lst",
+                    data: res
                 })
             }).catch((err) => {
-                this._log.warning("User Access Denied to List OS Products: " + this._myself.myself.id)
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
                         status: "ERROR",
-                        mess: "Acesso Negado",
+                        mess: err,
                         time: 1000
                     }
                 })
