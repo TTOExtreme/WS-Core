@@ -34,7 +34,7 @@ ClientEvents.on("WSOP/os/add", () => {
     document.body.appendChild(div);
 
     const editor = SUNEDITOR.create((document.getElementById('wsop_add_description') || 'wsop_add_description'), {
-        width: "calc(100vw - 200px)",
+        width: "100%",
         buttonList: [
             ['font', 'fontSize'],
             ['bold', 'underline', 'italic'],

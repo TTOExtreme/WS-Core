@@ -65,7 +65,7 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
     });
 
     const editor = SUNEDITOR.create((document.getElementById('wsop_posvendas_edt_description') || 'wsop_posvendas_edt_description'), {
-        width: "calc(100vw - 350px)",
+        width: "100%",
         buttonList: [
             ['font', 'fontSize'],
             ['bold', 'underline', 'italic'],

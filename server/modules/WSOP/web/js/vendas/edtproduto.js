@@ -54,7 +54,7 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
     document.body.appendChild(div);
 
     let editor = SUNEDITOR.create((document.getElementById('wsop_edt_product_description') || 'wsop_edt_product_description'), {
-        width: "calc(100vw - 350px)",
+        width: "100%",
         buttonList: [
             ['font', 'fontSize'],
             ['bold', 'underline', 'italic'],

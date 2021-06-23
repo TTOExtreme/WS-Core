@@ -18,10 +18,10 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>" +
         "</table><hr>" +
-        "<table style='width: calc(100vw - 250px);'><tbody id='wsop_edt_anexos' class='wsop_edt_anexos'>" +
+        "<table style=''><tbody id='wsop_edt_anexos' class='wsop_edt_anexos'>" +
         "<tr><td colspan=4><p class='wsop_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p><input id='wsop_edt_img' style='float:right' type='button' value='Adicionar' onclick='ClientEvents.emit(\"wsop/os/uploadIMG\",\"" + data.id + "\")'></td></tr>" +
         "</table><hr>" +
-        "<table style='width: calc(100vw - 250px);; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
+        "<table style='; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
         "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
         "<tr><td colspan=4><input id='wsop_edt_produto' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'><input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></td></tr>" +
         "<tr><td colspan=4><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
@@ -57,7 +57,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data.id });
     })
     const editor = SUNEDITOR.create((document.getElementById('wsop_edt_description') || 'wsop_edt_description'), {
-        width: "calc(100vw - 350px)",
+        width: "100%",
         buttonList: [
             ['font', 'fontSize'],
             ['bold', 'underline', 'italic'],

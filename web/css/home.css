@@ -1,11 +1,14 @@
 body {
   background-image: url('../img/bg.png');
   background-repeat: no-repeat;
-  background-size: cover;
+  /* background-size: cover; */
+  background-size: 100% 100%;
   margin: 0;
   padding: 0;
+  border: none;
   transition: 1s opacity;
   overflow: hidden;
+  height: 100vh;
 }
 
 .MainScreenHolder {
@@ -51,8 +54,8 @@ body {
     top: 30px;
     left: 30px;
     background-color: #30303030;
-    width: calc(100vw - 30px);
-    height: calc(100vh - 90px);
+    width: calc(100vw - 32px);
+    height: calc(100vh - 62px);
   }
 
   .system_message_div {
