@@ -64,7 +64,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "prepress")) {
+        if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "calandra")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
@@ -139,7 +139,7 @@ window.UserList = class UserList {
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext
         });
-        this.main_table.setFilter([{ field: "status2", type: "in", value: new window.Modules.WSOP.StatusID().getStatusSector("prepress") }]);
+        this.main_table.setFilter([{ field: "status2", type: "in", value: new window.Modules.WSOP.StatusID().getStatusSector("calandra") }]);
         this._init();
         ClientEvents.emit("SendSocket", "wsop/os/lst");
     }

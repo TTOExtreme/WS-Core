@@ -645,7 +645,7 @@ class Socket {
          * Editar status OS
          */
         socket.on("wsop/os/edtstatus", (req) => {
-            this._myself.checkPermission("WSOP/os/add").then(() => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
                 if (req[0].id &&
                     req[0].status &&
                     req[0].oldStatus
