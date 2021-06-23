@@ -19,6 +19,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/utils/consulta.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
     "./module/WSOP/js/produtos/add.js",
+    "./module/WSOP/js/vendas/edtproduto.js",
     "./module/WSOP/js/clientes/add.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/view.js",
