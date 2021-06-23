@@ -171,7 +171,7 @@ window.UserList = class UserList {
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
         new window.Modules.WSOP.StatusID().statusIDs.forEach((item, index) => {
-            ret.push({ label: item.name, value: index })
+            ret.push({ label: item.name, value: item.code })
         })
         return ret;
     }
