@@ -29,7 +29,7 @@ ClientEvents.on("WSOP/os/add", () => {
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_add_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>FormaEnvio:</td><td><Select id='wsop_add_formaEnvio'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_add_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_add_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"WSOP/os/save\")' ></td></tr>" +
@@ -77,7 +77,7 @@ ClientEvents.on("WSOP/os/close", () => {
 ClientEvents.on("WSOP/os/save", () => {
     ClientEvents.emit("SendSocket", "wsop/os/add", {
         id_cliente: document.getElementById("wsop_add_id_cliente").value,
-        description: (document.getElementById("wsop_add_description").value).replace(new RegExp("\"", "g"), "&quot;"),
+        description: clearDesc(document.getElementById("wsop_add_description").value),
         active: document.getElementById("wsop_add_active").checked,
         status: document.getElementById("wsop_add_status").value,
         prazo: document.getElementById("wsop_add_prazo").value,

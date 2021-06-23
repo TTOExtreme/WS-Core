@@ -37,7 +37,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<table style='width:100%;'>" +
         //os
         "<tr><td style='width:70%'>Descrição:</td><td class='wsop_printop_perdas'>Status</td><td class='wsop_printop_perdas'>Responsável</td><td class='wsop_printop_perdas'>Perdas</td></tr>" +
-        "<tr><td class='wsop_produto_item2' style='border:none;width:70%' rowspan=16>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") +
+        "<tr><td class='wsop_produto_item2' style='border:none;width:70%' rowspan=16>" + unclearDesc(data.description) +
         "</td><td class='wsop_printop_perdas'>Mockup:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
         "<tr><td class='wsop_printop_perdas'>PDF Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
         "<tr><td class='wsop_printop_perdas'>Impressão:</td><td class='wsop_printop_perdas'></td><td class='wsop_printop_perdas'></td></tr>" +
@@ -76,7 +76,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
+            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:75%'>OBS:" + unclearDesc(produto.obs) + "</td>";
     });
     htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
     produtosTable.innerHTML += htm;

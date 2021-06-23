@@ -46,7 +46,7 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<tr style='display:none'><td class='wsop_edt_label'>Caixa:</td><td><Select id='wsop_edt_formaEnvio_caixa' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCaixa(data.caixa) + "</select><sizecaixa id='wsop_edt_formaEnvio_size'>" + new window.Modules.WSOP.formaEnvio().getSizeCaixa(data.caixa) + "</td></tr>" +
         //OS
         "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='wsop_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
+        "<tr><td class='wsop_produto_item2' style='border:none'>" + unclearDesc(data.description) + "</p></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_print_anexos' class='wsop_print_anexos'>" +
         "<tr><td colspan=4><p class='wsop_print_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
@@ -83,7 +83,7 @@ ClientEvents.on("wsop/os/print", (data) => {
             "<td>" + produto.qnt + "</td>" +
             "<td>R$ " + parseFloat(produto.price.replace(",", ".").replace(" ", "")) + "</td>" +
             "<td>R$ " + (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", ""))).toFixed(2) + "</td>" +
-            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:50%'>OBS:" + (produto.obs).replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
+            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:50%'>OBS:" + unclearDesc(produto.obs) + "</td>";
     });
     //htm += "<tr class='wsop_produto_item1'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
 

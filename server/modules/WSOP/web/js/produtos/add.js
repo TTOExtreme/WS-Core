@@ -30,7 +30,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
         "<tr><td class='wsop_edt_label'>Genero:</td><td><select id='wsop_add_produto_genero'><option disabled selected>Selecione:</option></select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Tamanho:</td><td><select id='wsop_add_produto_tamanho'><option disabled selected>Selecione:</option></select></td></tr>" +
 
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_produto_description' type='text' value='" + data.description + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_produto_description' type='text' value='" + unclearDesc(data.description) + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_add_produto_barcode' type='text'value='" + data.barcode + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_add_produto_price' type='text' value='" + data.price + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Preço Revenda:</td><td><input id='wsop_add_produto_priceRevenda' type='text' value='" + data.priceRevenda + "'></td></tr>" +
@@ -68,7 +68,7 @@ ClientEvents.on("WSOP/produtos/save", () => {
     ClientEvents.emit("SendSocket", "wsop/produtos/add", {
         name: document.getElementById("wsop_add_produto_name").value,
         description: JSON.stringify({
-            description: document.getElementById("wsop_add_produto_description").value,
+            description: clearDesc(document.getElementById("wsop_add_produto_description").value),
             modelo: document.getElementById("wsop_add_produto_modelo").value,
             gola: document.getElementById("wsop_add_produto_gola").value,
             vies: document.getElementById("wsop_add_produto_vies").value,

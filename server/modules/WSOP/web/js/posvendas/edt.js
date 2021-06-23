@@ -13,21 +13,6 @@ ClientEvents.on("WSOP/posvendas/edt", (data) => {
      * create Show Page for user info
      */
 
-    function unclearDesc(desc) {
-        return desc.replace(new RegExp("&qt;", "g"), "\"").replace(new RegExp("&quot;", "g"), "=")
-            .replace(new RegExp("&eq;", "g"), "=").replace(new RegExp("&eql;", "g"), "=")
-            .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
-            .replace(new RegExp("&lt;", "g"), ">").replace(new RegExp("&let;", "g"), "<")
-            .replace(new RegExp("&space;", "g"), " ");
-    }
-
-    function clearDesc(desc) {
-        return desc.replace(new RegExp("\"", "g"), "&qt;").replace(new RegExp("&quot;", "g"), "&qt;")
-            .replace(new RegExp("=", "g"), "&eql;").replace(new RegExp("&eq;", "g"), "&eql;")
-            .replace(new RegExp(">", "g"), "&get;").replace(new RegExp("&gt;", "g"), "&get;")
-            .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
-            .replace(new RegExp(" ", "g"), "&space;")
-    }
     let div = document.createElement("div");
     div.setAttribute("class", "WSOP_posvendas_div menu_dragger");
     div.setAttribute("id", "wsop_posvendas_edt_div");

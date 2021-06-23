@@ -1,6 +1,7 @@
 
 ClientEvents.on("wsop/os/history", (data) => {
     ClientEvents.emit("close_menu", 'wsop_history_div')
+
     /**
      * create Show Page for user info
      */
@@ -9,15 +10,18 @@ ClientEvents.on("wsop/os/history", (data) => {
     div.setAttribute("id", "wsop_history_div");
 
     let htm = "";
+
     let sc = JSON.parse(data.statusChange);
+    console.log(sc);
     if (sc != undefined) {
         if (sc.length >= 0) {
-            sc.forEach(status => {
+            sc.forEach((status, index) => {
                 htm += "<tr class='wsop_hist_data'><td style='Background:" + new window.Modules.WSOP.StatusID().StatusIdToBgColor(status.status) + "'>" + new window.Modules.WSOP.StatusID().getStatusName(status.status) + "</td>" +
                     "<td>" + status.inUser + "</td>" +
                     "<td><center>" + formatTimeSpend((status.out != undefined ? status.out : new Date().getTime()) - status.in) + "</td>" +
                     "<td><center>" + formatTime(status.in) + "</td>" +
-                    "<td><center>" + (status.out != undefined ? formatTime(status.out) : "-") + "</td></tr>";
+                    "<td><center>" + (status.out != undefined ? formatTime(status.out) : "-") + "</td></tr>" +
+                    "<tr class='wsop_hist_data' id='toggleobs_" + index + "'><td></td><td>OBS:</td><td colspan =3>" + unclearDesc(status.obs) + "</td></tr>";
             });
         }
     }

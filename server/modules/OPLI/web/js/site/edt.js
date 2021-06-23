@@ -13,7 +13,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", 'wsop_edt_site_div');'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + data.description + "</textarea></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status'>" + StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Editar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>" +
@@ -122,7 +122,7 @@ ClientEvents.on("WSOP/os/edt/close", () => {
 ClientEvents.on("WSOP/os/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edt", {
         id: document.getElementById("wsop_edt_id").value,
-        description: document.getElementById("wsop_edt_description").innerHTML,
+        description: clearDesc(document.getElementById("wsop_edt_description").innerHTML),
         status: document.getElementById("wsop_edt_status").value,
         active: document.getElementById("wsop_edt_active").checked,
     });
@@ -156,7 +156,7 @@ ClientEvents.on("wsop/os/produto/add", () => {
         id: document.getElementById("wsop_edt_id_produto").value | "",
         id_os: document.getElementById("wsop_edt_id").value | "",
         qnt: document.getElementById("wsop_edt_qnt_produto").value | "",
-        obs: document.getElementById("wsop_edt_description_produto").innerHTML
+        obs: clearDesc(document.getElementById("wsop_edt_description_produto").innerHTML)
     }
     ClientEvents.emit("SendSocket", "wsop/os/produto/add", data)
 })

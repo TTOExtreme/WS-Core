@@ -62,7 +62,7 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
                 {
                     title: 'Descrição',
                     field: 'description',
-                    formatter: ((data) => { return (data.getData().description.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&gt;", "g"), ">"); }),
+                    formatter: ((data) => { return unclearDesc(data.getData().description.description); }),
                     headerFilter: "input"
                 },
                 {

@@ -21,14 +21,6 @@ ClientEvents.on("WSMK/calendario/lst", (datain) => {
     if (datain.thisMonth == undefined) { return; }
     function createDay(id, img, title, description, day, month, year, color, bgcolor, qnt = 0, highlight = false, edt = true) {
 
-        function clearDesc(desc) {
-            return desc.replace(new RegExp("\"", "g"), "&qt;").replace(new RegExp("&quot;", "g"), "&qt;")
-                .replace(new RegExp("=", "g"), "&eql;").replace(new RegExp("&eq;", "g"), "&eql;")
-                .replace(new RegExp(">", "g"), "&get;").replace(new RegExp("&gt;", "g"), "&get;")
-                .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
-                .replace(new RegExp(" ", "g"), "&space;")
-        }
-
         return "<div id='wsmk_day_card' onclick=ClientEvents.emit(\"WSMK/view\",{img:'" + img + "',title:'" + title + "',description:'" + clearDesc(description) + "'}) class='wsmk_day_card' style='" +
             ((img != undefined && img != "" && img != "undefined") ? "background-image:url(./module/WSMK/img/" + (img + "").replace(".", "_thumb.") + ");background-repeat: round;" : "background:" + bgcolor + ";") +
             "border: 1px solid " + color + ";" + (highlight ? "border:1px solid #ff0000;border-radius:0;" : "") + "'>" +
