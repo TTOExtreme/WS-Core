@@ -123,7 +123,8 @@ window.Modules.WSOP.StatusID = class StatusID {
         {
             name: "Liberado Calandra", color: "#ffffff", bgColor: "#ff8d13",
             code: "liberado_calandra", changeto: ["calandrado"],
-            edit: ["calandra"]
+            edit: ["calandra"],
+            view: ["vendas", "calandra"]
         },
         {
             name: "Calandrado", color: "#ffffff", bgColor: "#b98522",

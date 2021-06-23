@@ -24,14 +24,6 @@ ClientEvents.on("wsop/os/edtstatus", (data) => {
 });
 
 ClientEvents.on("WSOP/os/edtstatus", () => {
-    let data = {
-        id: document.getElementById("wsop_edt_id").value,
-        status: document.getElementById("wsop_edt_status").value,
-        oldStatus: document.getElementById("wsop_edt_oldStatus").value,
-        statusChange: document.getElementById("wsop_edt_statusChange").value,
-        cliente: document.getElementById("wsop_edt_cliente").value
-    }
-    console.log(data);
     ClientEvents.emit("SendSocket", "wsop/os/edtstatus", {
         id: document.getElementById("wsop_edt_id").value,
         status: document.getElementById("wsop_edt_status").value,
