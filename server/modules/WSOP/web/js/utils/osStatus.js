@@ -128,11 +128,17 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Calandrado", color: "#ffffff", bgColor: "#b98522",
-            code: "calandrado", changeto: ["costura"],
+            code: "calandrado", changeto: ["liberado_costura"],
             edit: ["calandra", "costura"],
             view: ["vendas", "calandra"]
         },
         //costura
+        {
+            name: "Liberado Costura", color: "#ffffff", bgColor: "#b98522",
+            code: "liberado_costura", changeto: ["costura"],
+            edit: ["costura"],
+            view: ["vendas", "costura"]
+        },
         {
             name: "Costura", color: "#ffffff", bgColor: "#2c30f1",
             code: "costura", changeto: ["costurado"],
@@ -146,6 +152,12 @@ window.Modules.WSOP.StatusID = class StatusID {
             view: ["vendas", "costura", "expedicao"]
         },
         //Conferencia e expedição
+        {
+            name: "Liberado Conferência", color: "#ffffff", bgColor: "#b98522",
+            code: "liberado_conferencia", changeto: ["conferencia"],
+            edit: ["expedicao"],
+            view: ["vendas", "expedicao"]
+        },
         {
             name: "Conferência", color: "#ffffff", bgColor: "#2bbd5a",
             code: "conferencia", changeto: ["empacotamento"],
@@ -161,7 +173,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         {
             name: "Aguardando Liberação de Envio", color: "#ffffff", bgColor: "#2bbd5a",
             code: "aguardando_liberar_envio", changeto: ["liberado_expedicao"],
-            edit: ["expedicao"],
+            edit: ["vendas", "expedicao"],
             view: ["vendas", "expedicao"]
         },
         {
