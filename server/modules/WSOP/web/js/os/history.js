@@ -11,8 +11,8 @@ ClientEvents.on("wsop/os/history", (data) => {
 
     let htm = "";
 
+    console.log(data.statusChange);
     let sc = JSON.parse(data.statusChange);
-    console.log(sc);
     if (sc != undefined) {
         if (sc.length >= 0) {
             sc.forEach((status, index) => {
@@ -21,7 +21,7 @@ ClientEvents.on("wsop/os/history", (data) => {
                     "<td><center>" + formatTimeSpend((status.out != undefined ? status.out : new Date().getTime()) - status.in) + "</td>" +
                     "<td><center>" + formatTime(status.in) + "</td>" +
                     "<td><center>" + (status.out != undefined ? formatTime(status.out) : "-") + "</td></tr>" +
-                    "<tr class='wsop_hist_data' id='toggleobs_" + index + "'><td></td><td>OBS:</td><td colspan =3>" + unclearDesc(status.obs) + "</td></tr>";
+                    "<tr class='wsop_hist_data' id='toggleobs_" + index + "'><td></td><td>OBS:</td><td colspan =3><pre>" + unclearDesc(status.obs) + "</td></tr>";
             });
         }
     }
