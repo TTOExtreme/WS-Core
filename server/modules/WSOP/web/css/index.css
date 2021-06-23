@@ -57,11 +57,12 @@
     background: var(--menu-bg);
     top: 50vh;
     left: 50vw;
-    transform: translate(-50%, -50%);
+    transform: translate(calc(-50% + 15px), -50%);
     padding: 10px;
     padding-right: 20px;
     border-radius: 10px;
     max-height: calc(100vh - 90px);
+    max-width: calc(100vw - 66px);
     overflow-y: auto;
     overflow-x: hidden;
     border: 1px solid #606060;
@@ -206,7 +207,7 @@ input[type="text"]:disabled {
 }
 
 .sun-editor {
-    width: calc(100vw - 200px);
+    /* width: calc(100vw - 200px); */
 }
 
 .termos {

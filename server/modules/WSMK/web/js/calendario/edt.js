@@ -61,7 +61,7 @@ ClientEvents.on("WSMK/calendario/edt", (data) => {
     });
 
     const editor = SUNEDITOR.create((document.getElementById('wsmk_edt_description') || 'wsmk_edt_description'), {
-        width: "calc(100vw - 350px)",
+        width: "100%",
         buttonList: [
             ['font', 'fontSize'],
             ['bold', 'underline', 'italic'],
