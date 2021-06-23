@@ -189,7 +189,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/site/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.replaceData(this.UserListData);
+                this.main_table.updateOrAddData(this.UserListData);
                 /*
                 setTimeout(() => { //moved to here for broadcasting problems
                     ClientEvents.emit("SendSocket", "WSOP/site/lst");

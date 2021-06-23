@@ -10,6 +10,8 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 
 
 ClientEvents.emit("LoadExternal", [
+    "./module/WSOP/js/utils/desconto.js",
+    "./module/WSOP/js/utils/Termos.js",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/timeCalc.js",
     "./module/WSOP/js/utils/formaEnvio.js",
@@ -20,7 +22,6 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/clientes/add.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/view.js",
-    "./module/WSOP/js/os/history.js",
     "./module/WSOP/js/os/print.js",
     "./module/WSOP/js/os/printop.js",
     "./module/WSOP/js/os/del.js",
@@ -123,7 +124,12 @@ window.UserList = class UserList {
         headerMenu: [],
         columns: [
             { title: this.actionName, formatter: this.actionIcon },
-            { title: 'ID', field: 'id', headerFilter: "input" },
+            {
+                title: 'ID', field: 'id', headerFilter: "input",
+                formatter: function (cell) {
+                    return parseInt(cell.getRow().getData().id);
+                }, sorter: "number"
+            },
             { title: 'Cliente', field: 'cliente', headerFilter: "input" },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
@@ -133,7 +139,17 @@ window.UserList = class UserList {
                     return new window.Modules.WSOP.StatusID().StatusIdToName(cell.getRow().getData().status);
                 }
             },
-            { title: 'Expira Em', field: 'endingIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
+
+            {
+                title: 'Expira Em', field: 'endingIn',
+                formatter: function (cell) {
+
+                    cell._cell.element.style.background = new window.Modules.WSOP.TimeCalc().getPrazosBgColor(cell.getRow().getData().endingIn);
+                    cell._cell.element.style.color = new window.Modules.WSOP.TimeCalc().getPrazosColor(cell.getRow().getData().endingIn);
+
+                    return formatTimeDMA(cell.getRow().getData().endingIn);
+                }
+            },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
         ]
     }];
@@ -174,6 +190,9 @@ window.UserList = class UserList {
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext
         });
+        this.main_table.setSort([
+            { column: "id", dir: "desc" }, //sort by this first
+        ]);
         this._init();
         ClientEvents.emit("SendSocket", "wsop/os/lst");
     }
@@ -183,8 +202,9 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
-                //this.UserListData = data;
-                this.main_table.replaceData(data);
+                console.log(data);
+                this.UserListData = data;
+                this.main_table.updateOrAddData(data);
             }
         });
 

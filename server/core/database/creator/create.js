@@ -98,7 +98,6 @@ class DatabaseCreator {
                     })
                     sql = sql.substr(0, sql.length - 2);
                     sql += ");"
-                    console.log(sql);
                     arr.push(this.db.query(sql)
                         .catch((err) => {
                             this.log.error(err);
