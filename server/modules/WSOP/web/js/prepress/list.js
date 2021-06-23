@@ -78,7 +78,7 @@ window.UserList = class UserList {
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
             htm.appendChild(bot);
-        } s
+        }
 
         return htm;
     };

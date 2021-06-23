@@ -20,7 +20,7 @@ ClientEvents.on("wsop/site/view", (data) => {
         "<table style='width:100%;'>" +
         //os
         "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='opli_produto_item2' style='border:none'>" + (data.description + "").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
+        "<tr><td class='opli_produto_item2' style='border:none'>" + unclearDesc(data.description + "") + "</p></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_edt_anexos' class='opli_edt_anexos'>" +
         "<tr><td colspan=4><p class='opli_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +

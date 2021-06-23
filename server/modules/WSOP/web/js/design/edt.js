@@ -13,7 +13,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_div')>&#9776;</td><td class='wsop_edt_label' colspan=3><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td class='wsop_os_descr' id='wsop_edt_id' type='text'>" + data.id + "</td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td class='wsop_os_descr' id='wsop_edt_cliente' type='text'>" + data.cliente + "</td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td class='wsop_os_descr' id='wsop_edt_description' >" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</textarea></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td class='wsop_os_descr' id='wsop_edt_description' >" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status' disabled>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_edt_prazo' disabled>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Data Entrega:</td><td class='wsop_os_descr' id='wsop_edt_endingIn'>" + formatTimeAMD(data.endingIn) + "</td></tr>" +
@@ -59,7 +59,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + (produto.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
+            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
     });
 
     produtosTable.innerHTML += htm;

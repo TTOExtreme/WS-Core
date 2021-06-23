@@ -36,8 +36,8 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
         "<tr style='display:none'><td class='wsop_edt_label'>Qnt:</td><td><input id='wsop_edt_products_qnt' type='text' value='" + data.qnt + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_edt_products_price' type='text' value='" + data.price + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_cost' type='text' value='" + data.cost + "'></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Description:</td><td><input id='wsop_edt_products_desc' type='text' value='" + data.description + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td id='wsop_edt_product_description' disabled>" + (data.obs).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</textarea></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Description:</td><td><input id='wsop_edt_products_desc' type='text' value='" + unclearDesc(data.description) + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Descrição:</td><td id='wsop_edt_product_description' disabled>" + unclearDesc(data.obs) + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_add_produto_img_thumb' class='wsop_add_produto_img_thumb' alt='' src='./module/WSOP/img/" + data.img.replace(".", "_thumb.") + "' loc='" + data.img + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'></td><td><input id='wsop_add_produto_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_products_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +

@@ -20,7 +20,7 @@ ClientEvents.on("wsop/os/view", (data) => {
         "<table style='width:100%;'>" +
         //os
         "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='wsop_produto_item2' style='border:none'>" + (data.description).replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</p></td></tr>" +
+        "<tr><td class='wsop_produto_item2' style='border:none'>" + unclearDesc(data.description) + "</p></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_edt_anexos' class='wsop_edt_anexos'>" +
         "<tr><td colspan=4><p class='wsop_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
@@ -47,7 +47,7 @@ ClientEvents.on("wsop/os/view", (data) => {
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + (produto.obs).replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
+            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
     });
     produtosTable.innerHTML += htm;
 

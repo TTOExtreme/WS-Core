@@ -42,7 +42,7 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
         "<tr><td class='wsop_edt_label'>Qnt:</td><td><input id='wsop_edt_products_qnt' type='text' value='" + data.qnt + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_edt_products_price' type='text' value='" + data.price + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_cost' type='text' value='" + data.cost + "'></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_desc' type='text' value='" + data.description + "'></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_desc' type='text' value='" + unclearDesc(data.description) + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_product_description'class='sun-editor-editable'>" + data.obs + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_edt_produto_img_thumb' class='wsop_edt_produto_img_thumb' alt='' src='./module/WSOP/img/" + data.img.replace(".", "_thumb.") + "' loc='" + data.img + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'></td><td><input id='wsop_edt_produto_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")'></td></tr>" +

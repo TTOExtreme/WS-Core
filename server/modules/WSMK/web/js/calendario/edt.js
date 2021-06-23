@@ -20,7 +20,7 @@ ClientEvents.on("WSMK/calendario/edt", (data) => {
         "<tr><td id='move_menu_wsmk_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsmk_edt_div')>&#9776;</td><td class='wsmk_edt_label'><p class='wsmk_calendario_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsmk_edt_div')>X</p></td></tr>" +
         "<tr><td class='wsmk_edt_label'>ID:</td><td><input id='wsmk_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsmk_edt_label'>Titulo:</td><td><input id='wsmk_edt_name' type='text' value='" + data.title + "'></td></tr>" +
-        "<tr><td class='wsmk_edt_label'>Descrição:</td><td><textarea id='wsmk_edt_description'class='sun-editor-editable'>" + (data.description.description).replace(new RegExp("&quot;", "g"), "\"") + "</textarea></td></tr>" +
+        "<tr><td class='wsmk_edt_label'>Descrição:</td><td><textarea id='wsmk_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description.description) + "</textarea></td></tr>" +
         "<tr><td class='wsmk_edt_label'>Inicio:</td><td><input id='wsmk_edt_start' type='date' value='" + formatTimeAMD(data.description.start) + "'></td></tr>" +
         "<tr style='display:none'><td class='wsmk_edt_label'>Fim:</td><td><input id='wsmk_edt_end' type='date' value='" + formatTimeAMD(data.description.end) + "'></td></tr>" +
         "<tr><td class='wsmk_edt_label'>Cor Fundo:</td><td><input id='wsmk_edt_bgcolor' type='color' value='" + data.description.bgcolor + "'></td></tr>" +
@@ -96,7 +96,7 @@ ClientEvents.on("wsmk/calendario/edt", () => {
             id: document.getElementById("wsmk_edt_id").value,
             title: document.getElementById("wsmk_edt_name").value,
             description: JSON.stringify({
-                description: (document.getElementById("wsmk_edt_description").value).replace(new RegExp("\"", "g"), "&quot;"),
+                description: clearDesc(document.getElementById("wsmk_edt_description").value),
                 color: document.getElementById("wsmk_edt_color").value,
                 bgcolor: document.getElementById("wsmk_edt_bgcolor").value,
                 start: new Date(document.getElementById("wsmk_edt_start").value).getTime() + (12 * 3600 * 1000),
@@ -109,7 +109,7 @@ ClientEvents.on("wsmk/calendario/edt", () => {
         ClientEvents.emit("SendSocket", "WSMK/calendario/add", {
             title: document.getElementById("wsmk_edt_name").value,
             description: JSON.stringify({
-                description: (document.getElementById("wsmk_edt_description").value).replace(new RegExp("\"", "g"), "&quot;"),
+                description: clearDesc(document.getElementById("wsmk_edt_description").value),
                 color: document.getElementById("wsmk_edt_color").value,
                 bgcolor: document.getElementById("wsmk_edt_bgcolor").value,
                 start: new Date(document.getElementById("wsmk_edt_start").value).getTime() + (12 * 3600 * 1000),
