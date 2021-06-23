@@ -126,7 +126,6 @@ class Socket {
                         })
                     })
                 } else {
-                    //console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -241,7 +240,6 @@ class Socket {
                         })
                     })
                 } else {
-                    //console.log(req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {

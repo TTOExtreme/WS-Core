@@ -27,9 +27,7 @@ window.UserList = class UserList {
     actionName = "Ações";
     //actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
     actionIcon = function (cell, formatterParams, onRendered) { //plain text value
-        //console.log(cell);
         let rowdata = cell._cell.row.data;
-        //console.log(rowdata);
         let htm = document.createElement("div");
 
         let bot = document.createElement("i");
@@ -48,7 +46,6 @@ window.UserList = class UserList {
     actionRowFormatter = (data) => { };
     UserListData = [];
     rowContext = (ev, row) => {
-        //console.log(ev);
         ClientEvents.emit("SendSocket", "wsop/lst/produtos/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
@@ -171,7 +168,6 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/produtos/lst", (data) => {
             if (data) {
-                console.log(data);
                 this.UserListData = data;
                 this.main_table.replaceData(this.UserListData);
             }

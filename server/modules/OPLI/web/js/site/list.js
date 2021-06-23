@@ -47,9 +47,7 @@ window.UserList = class UserList {
     actionName = "Ações";
     //actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
     actionIcon = function (cell, formatterParams, onRendered) { //plain text value
-        //console.log(cell);
         let rowdata = cell._cell.row.data;
-        //console.log(rowdata);
         let htm = document.createElement("div");
         /*
         if (Myself.checkPermission("WSOP/menu/site")) {
@@ -103,7 +101,6 @@ window.UserList = class UserList {
     RetrievingData = []; // quais itens faltam carregar
     DownloadedData = []; //Itens carregados para download
     rowContext = (ev, row) => {
-        //console.log(ev);
         ClientEvents.emit("SendSocket", "wsop/lst/site/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.
@@ -222,25 +219,21 @@ window.UserList = class UserList {
         ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
 
         ClientEvents.on("wsop/site/download", (data) => {
-            console.log(data);
             ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
             data.forEach(dataitem => {
                 this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
             })
             this.DownloadedData = this.DownloadedData.concat(data);
-            //console.log(this.RetrievingData);
             if (this.RetrievingData.length < 1) {
                 ClientEvents.emit("WSOP/site/dnlsave", {});
             }
         })
         ClientEvents.on("wsop/site/download/emproducao", (data) => {
-            console.log(data);
             ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
             data.forEach(dataitem => {
                 this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
             })
             this.DownloadedData = this.DownloadedData.concat(data);
-            //console.log(this.RetrievingData);
             if (this.RetrievingData.length < 1) {
                 ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
             }

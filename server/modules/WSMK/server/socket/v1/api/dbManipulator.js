@@ -36,7 +36,6 @@ class apiManipulator {
      * Lista todos as Vendas de Site 50 por vez
      */
     ListDate(start = 0) {
-        console.log(start);
         let end = start + (12 * 3600 * 1000);
         return new Promise((res, rej) => {
             this.db.query("SELECT C.* FROM " + this.db.DatabaseName + "._WSMK_Calendario AS C " +

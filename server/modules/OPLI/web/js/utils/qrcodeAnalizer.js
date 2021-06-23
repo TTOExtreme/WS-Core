@@ -33,9 +33,6 @@ ClientEvents.on("WSOP/site/qrcode", (data) => {
                 document.getElementById(data.id).checked = true;
                 document.getElementById(data.id).onchange();
                 try {
-                    console.log("scannning stoped")
-
-
                     document.getElementsByTagName('video')[0].pause();
                     document.getElementsByTagName('video')[0].srcObject = null;
                     window.html5QrcodeScanner.html5Qrcode.stop().then(() => {

@@ -183,7 +183,6 @@ ClientEvents.on("WSOP/os/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edt", {
         id: document.getElementById("wsop_edt_id").value,
         description: (document.getElementById("wsop_edt_description").innerHTML).replace(new RegExp("\"", "g"), "&quot;"),
-        status: document.getElementById("wsop_edt_status").value,
         prazo: document.getElementById("wsop_edt_prazo").value,
         country: document.getElementById("wsop_edt_formaEnvio_country").value,
         uf: document.getElementById("wsop_edt_formaEnvio_uf").value,

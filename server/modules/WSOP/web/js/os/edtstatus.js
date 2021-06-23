@@ -1,7 +1,6 @@
 
 ClientEvents.on("wsop/os/edtstatus", (data) => {
     ClientEvents.emit("close_menu", 'wsop_edtstatus_div')
-    console.log(data);
     /**
      * create Show Page for user info
      */
@@ -21,15 +20,22 @@ ClientEvents.on("wsop/os/edtstatus", (data) => {
         "</table>";
     document.body.appendChild(div);
     ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
+
+});
+
+ClientEvents.on("system/edited/osstatus", (data) => {
+    ClientEvents.emit("system_mess", { status: "OK", mess: "OS Status Editado com Exito", time: 1000 });
+    ClientEvents.emit("SendSocket", "wsop/os/lst");
+    ClientEvents.emit("wsop/os/edtstatus", data);
 });
 
 ClientEvents.on("WSOP/os/edtstatus", () => {
-    ClientEvents.emit("SendSocket", "wsop/os/edtstatus", {
+    let data = {
         id: document.getElementById("wsop_edt_id").value,
         status: document.getElementById("wsop_edt_status").value,
         oldStatus: document.getElementById("wsop_edt_oldStatus").innerText,
         statusChange: document.getElementById("wsop_edt_statusChange").innerText,
         cliente: document.getElementById("wsop_edt_cliente").value
-    });
-    //ClientEvents.emit("wsop/os/edtstatus", data);
+    };
+    ClientEvents.emit("SendSocket", "wsop/os/edtstatus", data);
 })

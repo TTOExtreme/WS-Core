@@ -26,6 +26,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/os/del.js",
     "./module/WSOP/js/design/edt.js",
     "./module/WSOP/js/os/edtstatus.js",
+    "./module/WSOP/js/os/history.js",
     "./module/WSOP/css/index.css",
     "./module/WSOP/css/print.css"
 ], () => {
@@ -49,9 +50,7 @@ window.UserList = class UserList {
     actionName = "Ações";
     //actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
     actionIcon = function (cell, formatterParams, onRendered) { //plain text value
-        //console.log(cell);
         let rowdata = cell._cell.row.data;
-        //console.log(rowdata);
         let htm = document.createElement("div");
 
         if (Myself.checkPermission("WSOP/os/edt") && new window.Modules.WSOP.StatusID().enableEdit(cell.getRow().getData().status, "design")) {
@@ -78,6 +77,14 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/view", (rowdata)) };
             htm.appendChild(bot);
         }
+        if (Myself.checkPermission("WSOP/os/opview")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-history");
+            bot.setAttribute("title", "Historico");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
+            htm.appendChild(bot);
+        }
 
         return htm;
     };
@@ -88,7 +95,6 @@ window.UserList = class UserList {
     actionRowFormatter = (data) => { };
     UserListData = [];
     rowContext = (ev, row) => {
-        //console.log(ev);
         ClientEvents.emit("SendSocket", "wsop/lst/os/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.

@@ -244,22 +244,12 @@ class Socket {
             this._myself.checkPermission("WSOP/os/add").then(() => {
 
 
-                let statusChange = []
-                if (req[0].statusChange == undefined) {
-
-                } else {
-                    statusChange = JSON.parse(JSON.parse(req[0].statusChange));
-                }
-                // writes to last change the timestamp
-                if (statusChange.length > 0) {
-                    statusChange[statusChange.length - 1].out = new Date().getTime();
-                    statusChange[statusChange.length - 1].outUser = this._myself.myself.name;
-                }
+                let statusChange = [];
                 //writes a new input
-                statusChange.push({ status: req[0].status, in: new Date().getTime(), inUser: this._myself.myself.name, out: null });
+                statusChange.push({ status: req[0].status, in: new Date().getTime(), inUser: this._myself.myself.name });
 
 
-                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, JSON.stringify(statusChange), req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
+                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
 
                     this.saveLog(results.insertId, "Adding OS's", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
@@ -595,38 +585,25 @@ class Socket {
          */
         socket.on("wsop/os/edt", (req) => {
             this._myself.checkPermission("WSOP/os/add").then(() => {
-                if (req[0].id &&
-                    req[0].status
-                ) {
-                    this._OsClass.editOS(req[0].id, req[0].description, req[0].status, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].statusChange, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
-                        this.saveLog(req[0].id, "Editing OS", JSON.stringify(req[0]), this._myself.myself.id);
-                        socket.emit("ClientEvents", {
-                            event: "system/edited/os",
-                            data: req
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
-                        }
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
-                            }
-                        })
+                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
+                    this.saveLog(req[0].id, "Editing OS", JSON.stringify(req[0]), this._myself.myself.id);
+                    socket.emit("ClientEvents", {
+                        event: "system/edited/os",
+                        data: req
                     })
-                } else {
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
-                            status: "INFO",
-                            mess: "Favor Preencher todos os campos",
+                            status: "ERROR",
+                            mess: err,
                             time: 1000
                         }
                     })
-                }
+                })
             }).catch((err) => {
                 this._log.warning("User Access Denied to edt OS: " + this._myself.myself.id)
                 this._log.error(err)
@@ -650,44 +627,54 @@ class Socket {
                     req[0].status &&
                     req[0].oldStatus
                 ) {
+                    if (req[0].status != req[0].oldStatus) {
+                        let statusChange = []
+                        if (req[0].statusChange == undefined) {
 
-                    let statusChange = []
-                    if (req[0].statusChange == undefined) {
-
-                    } else {
-                        try {
-                            statusChange = JSON.parse(JSON.parse(req[0].statusChange));
-                        } catch (err) {
-                            statusChange = [];
-                        }
-                    }
-                    // writes to last change the timestamp
-                    if (statusChange.length > 0) {
-                        statusChange[statusChange.length - 1].out = new Date().getTime();
-                        statusChange[statusChange.length - 1].outUser = this._myself.myself.name;
-                    }
-                    //writes a new input
-                    statusChange.push({ status: req[0].status, in: new Date().getTime(), inUser: this._myself.myself.name, out: null });
-
-                    this._OsClass.editStatusOS(req[0].id, req[0].status, JSON.stringify(statusChange), this._myself.myself.id).then(() => {
-                        this.saveLog(req.id, "Changing OS Status", "", this._myself.myself.id);
-                        socket.emit("ClientEvents", {
-                            event: "system/edited/os",
-                            data: req
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
-                        }
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
+                        } else {
+                            try {
+                                statusChange = JSON.parse(JSON.parse(req[0].statusChange));
+                            } catch (err) {
+                                statusChange = [];
                             }
+                        }
+                        // writes to last change the timestamp
+                        if (statusChange.length > 0) {
+                            statusChange[statusChange.length - 1].out = new Date().getTime();
+                            statusChange[statusChange.length - 1].outUser = this._myself.myself.name;
+                        }
+                        //writes a new input
+                        statusChange.push({ status: req[0].status, in: new Date().getTime(), inUser: this._myself.myself.name });
+
+                        this.saveLog(req.id, "Changing OS Status", "", this._myself.myself.id);
+                        this._OsClass.editStatusOS(req[0].id, req[0].status, JSON.stringify(statusChange), this._myself.myself.id).then(() => {
+                            return this._OsClass.ListID(req[0].id).then((result) => {
+                                socket.emit("ClientEvents", {
+                                    event: "system/edited/osstatus",
+                                    data: result[0]
+                                })
+                            });
+                        }).catch((err) => {
+                            if (!this._myself.isLogged()) {
+                                socket.emit("logout", "");
+                            }
+                            socket.emit("ClientEvents", {
+                                event: "system_mess",
+                                data: {
+                                    status: "ERROR",
+                                    mess: err,
+                                    time: 1000
+                                }
+                            })
                         })
-                    })
+                    } else {
+                        return this._OsClass.ListID(req[0].id).then((result) => {
+                            socket.emit("ClientEvents", {
+                                event: "system/edited/osstatus",
+                                data: result[0]
+                            })
+                        });
+                    }
                 } else {
                     socket.emit("ClientEvents", {
                         event: "system_mess",

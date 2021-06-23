@@ -62,7 +62,6 @@ ClientEvents.on("cnpjchange", () => {
     if (document.getElementById("wsop_add_clientes_div")) {
         let cnpj = document.getElementById("wsop_add_cnpj").value;
         consultaCNPJ(cnpj).then(data => {
-            console.log(data);
             if (document.getElementById("wsop_add_name").value == "")
                 document.getElementById("wsop_add_name").setAttribute("value", data.nome);
             if (document.getElementById("wsop_add_responsavel").value == "") {
@@ -85,7 +84,6 @@ ClientEvents.on("cnpjchange", () => {
             if (err == "CEP inválido") { ClientEvents.emit("WSOP/clientes/error", err); }
             if (err == "CEP não encontrado") { ClientEvents.emit("WSOP/clientes/error", err); }
             if (err == "Tempo limite atingido") { ClientEvents.emit("WSOP/clientes/error", err); }
-            //console.log(err);
         })
     }
 });
@@ -95,7 +93,6 @@ ClientEvents.on("cepchange", () => {
     if (document.getElementById("wsop_add_clientes_div")) {
         let cep = document.getElementById("wsop_add_cep").value;
         consultaCEP(cep).then(data => {
-            console.log(data);
             document.getElementById("wsop_add_logradouro").setAttribute("value", data.logradouro);
             document.getElementById("wsop_add_numero").setAttribute("value", data.complemento);
             document.getElementById("wsop_add_bairro").setAttribute("value", data.bairro);
@@ -109,7 +106,6 @@ ClientEvents.on("cepchange", () => {
             if (err == "CEP inválido") { ClientEvents.emit("WSOP/clientes/error", err); }
             if (err == "CEP não encontrado") { ClientEvents.emit("WSOP/clientes/error", err); }
             if (err == "Tempo limite atingido") { ClientEvents.emit("WSOP/clientes/error", err); }
-            //console.log(err);
         })
     }
 });

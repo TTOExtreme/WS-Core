@@ -1,6 +1,5 @@
 ClientEvents.on("WSOP/os/anexo/edt", (data) => {
     ClientEvents.emit("WSOP/os/anexo/close");
-    //console.log(data)
     /**
      * create Show Page for user info
      */
@@ -25,7 +24,6 @@ ClientEvents.on("WSOP/os/anexo/edt", (data) => {
 
 ClientEvents.on("WSOP/os/anexo/view", (data) => {
     ClientEvents.emit("WSOP/os/anexo/close");
-    //console.log(data)
     if (data.thumb == undefined && data.img != undefined) {
         data.thumb = data.img.replace(".", "_thumb.");
     }

@@ -2,7 +2,6 @@
 
 ClientEvents.on("WSMK/calendario/edt", (data) => {
     ClientEvents.emit("close_menu", 'wsmk_edt_div')
-    console.log(data);
     try {
         data[0].description = JSON.parse(JSON.parse(JSON.stringify(data[0].description)))
     } catch (err) {
@@ -127,7 +126,6 @@ ClientEvents.emit("SendSocket", "WSMK/calendario/lst");
 
 
 ClientEvents.on("uploadIMG", () => {
-    console.log("upload")
     if (document.getElementById("wsmk_edt_img")) {
         let input = document.getElementById("wsmk_edt_img");
         if (input.files && input.files[0]) {

@@ -64,8 +64,6 @@ ClientEvents.on("wsop/os/printop", (data) => {
         try {
             produto.description = JSON.parse(produto.description)
         } catch (err) {
-            console.log(err);
-            console.log(produto);
             produto.description = { gola: "-", vies: "-", genero: "-", modelo: "-" }
         }
         total += (produto.qnt * produto.price);
@@ -104,7 +102,6 @@ function PrintElem(elem) {
     mywindow.focus(); // necessary for IE >= 10*/
 
     mywindow.print();
-    //console.log("printing")
 
     return true;
 }

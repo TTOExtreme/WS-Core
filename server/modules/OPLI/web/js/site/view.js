@@ -132,5 +132,4 @@ ClientEvents.on('WSOP/site/checkstatus', (data) => {
 })
 
 ClientEvents.on('WSOP/site/changestatus', (data) => {
-    //console.log(data)
 })

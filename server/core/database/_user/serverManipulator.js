@@ -146,11 +146,6 @@ class UserServer {
                     " (id_Group,id_User,createdBy,createdIn,active) VALUES (" +
                     Id_Group + "," + UserID + "," + myId + "," + Date.now() + "," + active + ");");
             } else {
-                console.log("UPDATE " + this.db.DatabaseName + ".rlt_User_Group SET " +
-                    ((active == 1) ?
-                        " active=1, deactivatedBy=NULL, modifiedBy=" + myId + ", modifiedIn=" + Date.now() + ", deactivatedIn=NULL" :
-                        " active=0, deactivatedBy=" + myId + ", deactivatedIn=" + Date.now() + "") +
-                    " WHERE id_User = " + UserID + " AND id_Group = " + Id_Group + ";");
                 return this.db.query("UPDATE " + this.db.DatabaseName + ".rlt_User_Group SET " +
                     ((active == 1) ?
                         " active=1, deactivatedBy=NULL, modifiedBy=" + myId + ", modifiedIn=" + Date.now() + ", deactivatedIn=NULL" :

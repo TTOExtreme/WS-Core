@@ -93,7 +93,6 @@ ClientEvents.on("WSOP/os/save", () => {
 
 
 ClientEvents.on("wsop/os/clientes/lst", (arr) => {
-    console.log(arr)
     let inp = document.getElementById("wsop_add_cliente");
     var currentFocus;
 
@@ -132,6 +131,7 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
         a.setAttribute("class", "autocomplete-items");
         this.parentNode.appendChild(a);
         let lim = 8;
+        let set = false;
         for (i = 0; i < arr.length; i++) {
             let name = arr[i].name + " | " + arr[i].responsavel;
             if ((name + "").toLowerCase().indexOf((val + "").toLowerCase()) > -1 && lim >= 0) {
@@ -147,6 +147,10 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
                     document.getElementById("wsop_add_id_cliente").value = this.getAttribute("id");
                     closeAllLists();
                 });
+                if (!set) {
+                    set = true;
+                    document.getElementById("wsop_add_id_cliente").value = arr[i].id;// set do primeiro item como selecionado
+                }
                 a.appendChild(b);
             }
         }

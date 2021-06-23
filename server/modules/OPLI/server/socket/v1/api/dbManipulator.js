@@ -69,7 +69,6 @@ class apiManipulator {
         return new Promise((resolve, reject) => {
             this.ListAll().then((APIS) => {
                 if (APIS[0]) {
-                    console.log(new apiUtils()._getStatus(status), status);
                     if (new apiUtils()._getStatus(status) != "") {
                         return new apiUtils()._setStatus(null, APIS[0].api, APIS[0].aplication, idSite, new apiUtils()._getStatus(status)).then(() => {
                             return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Site SET" +
@@ -334,7 +333,6 @@ class apiManipulator {
                         resolve();
                         //Loop de Caregamento
                         setTimeout(() => {
-                            console.log("Recarregando Vendas pagas")
                             apiOPLIManipulator.updatePaidSells(socket);
 
                         }, 60 * 1000);
@@ -408,7 +406,7 @@ class trelloIntegration {
                         if (trellojson != "") {
                             resolve(trellojson);
                         } else {
-                            console.log("Retorno de Criação do Card Nulo");
+                            console.log("Retorno de Criação do Card Nulo: ", pa);
                             rej(pa);
                         }
                     });
@@ -971,8 +969,6 @@ class apiUtils {
 
                         //Carrega para o Trello Caso A venda esteja no status PAGO e Liberado a criação
                         if (pipeTrello) {
-                            console.log("Piping Trello");
-
                             if (json.situacao.id == 4 || json.situacao.id == 17) {
                                 trelloManipulator._CreateCard(socket, name, descriptiontrello, json.data_expiracao, dueComplete, true).then(trelloCardret => {
                                     if (trelloCardret != undefined) {
@@ -1202,7 +1198,6 @@ class apiUtils {
                     if (socket != null) {
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Vendas: " + json.meta.total_count })
                     }
-                    console.log("Total de Vendas: " + json.meta.total_count)
                     let arr = [];
 
 
@@ -1311,7 +1306,6 @@ class apiUtils {
                     if (socket != null) {
                         socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Vendas: " + json.meta.total_count })
                     }
-                    console.log("Total de Vendas: " + json.meta.total_count)
                     let arr = [];
 
                     if (json.objects) {

@@ -2,7 +2,6 @@
 ClientEvents.on("wsop/produtos/view", (data) => {
     ClientEvents.emit("WSOP/produtos/view/close");
     ClientEvents.emit("close_menu", 'wsop_view_div')
-    //console.log(data)
     /**
      * create Show Page for user info
      */

@@ -68,8 +68,8 @@ function formatTimeSpend(data) {
         let dias = s / 30;
 
         if (dias > 0 && ret == "-") ret = (dias) + " " + pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
-        if (hrs > 0 && ret == "-") ret = pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
-        if (ret == "-") ret = pad(mins) + ':' + pad(secs);
+        if (hrs >= 0 && ret == "-") ret = pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+        if (ret == "-") ret = pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
     }
     return ret;
 }

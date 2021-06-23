@@ -388,10 +388,8 @@ class User {
             return new Promise((resolve, reject) => {
                 let gs = new Group_Server.Group(this._WSMainServer)
                 return gs.findmeidFromUser(this.myself.id).then((grps) => {
-                    //console.log(gs.listGroups());
 
                     this.myself.groups = grps;
-                    //console.log(this.myself.groups)
                     resolve(this.myself);
                 })
 

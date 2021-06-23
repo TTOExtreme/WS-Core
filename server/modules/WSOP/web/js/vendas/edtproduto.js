@@ -12,7 +12,6 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
             ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data.id_os });
         }
     }
-    console.log(data);
     /**
      * create Show Page for user info
      */

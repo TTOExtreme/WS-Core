@@ -1,7 +1,6 @@
 
 ClientEvents.on("WSOP/site/changestatus", (data) => {
     ClientEvents.emit("close_menu", 'wsop_edtstatus_site_div');
-    console.log(data);
     /**
      * create Show Page for user info
      */
@@ -29,7 +28,6 @@ ClientEvents.on("WSOP/site/changestatus/save", () => {
     });
 })
 ClientEvents.on("system/edited/site", () => {
-    console.log("message");
     ClientEvents.emit("system_mess", { status: "OK", mess: "Status Editado com Exito", time: 1000 });
     ClientEvents.emit("SendSocket", "WSOP/site/lst");
     ClientEvents.emit("close_menu", 'wsop_edtstatus_site_div');

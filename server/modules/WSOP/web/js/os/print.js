@@ -132,7 +132,6 @@ function PrintElem(elem) {
     mywindow.focus(); // necessary for IE >= 10*/
 
     mywindow.print();
-    //console.log("printing")
 
     return true;
 }

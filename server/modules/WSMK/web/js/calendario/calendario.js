@@ -61,8 +61,6 @@ ClientEvents.on("WSMK/calendario/lst", (datain) => {
         }
     });
 
-    //console.log(data);
-
     /**
      * create Show Page for user info
      */

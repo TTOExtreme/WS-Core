@@ -246,7 +246,6 @@ class Group {
             this.myself.permissions = [];
             let listProm = [];
             ListGroups.forEach(groupItem => {
-                console.log("processando grupo: " + groupItem.id)
                 listProm.push(new Promise((resolve, reject) => {
                     this.getPermissionsOfGroup(groupItem.id).then((result) => {
                         if (result[0]) {
@@ -388,14 +387,11 @@ class Group {
                     })
                     return Promise.all(allProm)
                         .then((data) => {
-                            console.log(data);
                             data.forEach(d => {
                                 grps = d.concat(grps);
                             })
                         })
                         .finally((data) => {
-                            console.log("final");
-                            console.log(grps);
                             resolve(grps.concat(this.myself.allgroups));
                         })
                 } else {

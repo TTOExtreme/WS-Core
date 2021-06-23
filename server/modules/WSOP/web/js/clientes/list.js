@@ -32,7 +32,6 @@ window.UserList = class UserList {
     actionRowFormatter = (data) => { };
     UserListData = [];
     rowContext = (ev, row) => {
-        //console.log(ev);
         ClientEvents.emit("SendSocket", "wsop/lst/clientes/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
 
         ev.preventDefault(); // prevent the browsers default context menu form appearing.

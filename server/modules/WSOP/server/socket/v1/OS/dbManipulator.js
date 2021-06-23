@@ -65,11 +65,11 @@ class osManipulator {
      * @param {Number} UserID ID do usuario cadastrando
      */
     createOS(id_Cliente, description, status, statusChange, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
-        //console.log(endingIn)
-        return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
-            " (id_Cliente, description, status,statusChange, formaEnvio,caixa,country,uf, prazo, endingIn, active, createdBy, createdIn)" +
+        let sql = "INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
+            " (id_Cliente, description, status,statusChange, formaEnvio, prazo, endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_Cliente + "','" + description + "','" + status + "','" + statusChange + "','" + formaEnvio + "','" + caixa + "','" + country + "','" + uf + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
+        return this.db.query(sql);
     }
 
     /**
@@ -81,15 +81,13 @@ class osManipulator {
      * @param {*} active 
      * @param {*} UserID 
      */
-    editOS(ID, description, status, formaEnvio, caixa, country, uf, statusChange, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
+    editOS(ID, description, formaEnvio, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
-            " status='" + status + "'," +
             " formaEnvio='" + formaEnvio + "'," +
             " caixa='" + caixa + "'," +
             " country='" + country + "'," +
             " uf='" + uf + "'," +
-            " statusChange='" + statusChange + "'," +
             " prazo='" + prazo + "'," +
             " price='" + price + "'," +
             " precoEnvio='" + precoEnvio + "'," +
