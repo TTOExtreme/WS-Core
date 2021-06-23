@@ -19,6 +19,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/utils/consulta.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
     "./module/WSOP/js/produtos/add.js",
+    "./module/WSOP/js/vendas/edtproduto.js",
     "./module/WSOP/js/clientes/add.js",
     "./module/WSOP/js/os/add.js",
     "./module/WSOP/js/os/view.js",
@@ -202,7 +203,6 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
-                console.log(data);
                 this.UserListData = data;
                 this.main_table.updateOrAddData(data);
             }

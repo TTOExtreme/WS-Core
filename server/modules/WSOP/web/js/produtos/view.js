@@ -18,7 +18,7 @@ ClientEvents.on("wsop/produtos/view", (data) => {
         "<tr><td class='wsop_edt_label'>Código:</td><td><input id='wsop_add_barcode' type='text' disabled value='" + data.barcode + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Preço:</td><td><input id='wsop_add_price' type='text' disabled value='" + data.price + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_add_cost' type='text' disabled value='" + data.cost + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Inventario:</td><td><input id='wsop_add_inventory' type='text' disabled value='" + data.inventory + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Inventario:</td><td><input id='wsop_add_inventory' type='number' disabled value='" + data.inventory + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_add_img_thumb' class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/" + data.img.replace(".", "_thumb.") + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' disabled type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
