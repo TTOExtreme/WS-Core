@@ -202,7 +202,6 @@ window.UserList = class UserList {
         /**Receive user list and append to Table */
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
-                console.log(data);
                 this.UserListData = data;
                 this.main_table.updateOrAddData(data);
             }
