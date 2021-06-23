@@ -130,22 +130,47 @@ window.Modules.WSOP.TimeCalc = class TimeCalc {
         },
         {
             time: 30 * 24 * 3600 * 1000,//1 mes restante
-            bgColor: "#b0ff00",
-            color: "#ffffff",
+            bgColor: "#c0c000",
+            color: "#000000",
         },
         {
             time: 21 * 24 * 3600 * 1000,//3 semana restante
-            bgColor: "#ffff00",
+            bgColor: "#90aa00",
             color: "#000000",
         },
         {
             time: 14 * 24 * 3600 * 1000,//2 semana restante
-            bgColor: "#ffB000",
-            color: "#ffffff",
+            bgColor: "#559000",
+            color: "#000000",
         },
         {
             time: 7 * 24 * 3600 * 1000,//1 semana restante
+            bgColor: "#ffff00",
+            color: "#000000",
+        },
+        {
+            time: 4 * 24 * 3600 * 1000,//4 dias restante
+            bgColor: "#ffff00",
+            color: "#000000",
+        },
+        {
+            time: 3 * 24 * 3600 * 1000,//3 dias restante
+            bgColor: "#ffaa00",
+            color: "#000000",
+        },
+        {
+            time: 2 * 24 * 3600 * 1000,//2 dias restante
+            bgColor: "#dd0000",
+            color: "#ffffff",
+        },
+        {
+            time: 1 * 24 * 3600 * 1000,//1 dias restante
             bgColor: "#ff0000",
+            color: "#ffffff",
+        },
+        {
+            time: 0,//Atrasado
+            bgColor: "#000000",
             color: "#ffffff",
         },
     ]

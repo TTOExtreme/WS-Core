@@ -57,12 +57,41 @@ class Socket {
          * List all os
          */
         socket.on("wsop/os/lst", (req) => {
-            this._OsClass.ListAll().then((res) => {
+            this._OsClass.ListAll(0).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lst",
                     data: res
                 })
+                function rec(_OsClass, next, count) {
+                    if (count < 500) {
+                        _OsClass.ListAll(next).then((res) => {
+                            if (res.length >= 50) {
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: { status: "INFO", mess: "Carregando OSs " + next + "-" + next + res.length, time: 100 }
+                                })
+                                socket.emit("ClientEvents", {
+                                    event: "wsop/os/lst",
+                                    data: res
+                                })
+                                rec(next + 50, count + 1);
+                            } else {
+                                socket.emit("ClientEvents", {
+                                    event: "wsop/os/lst",
+                                    data: res
+                                })
+                            }
+                        })
+                    } else {
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: { status: "OK", mess: "Todas as OS Carregadas ", time: 1000 }
+                        })
+                    }
+                }
+                rec(this._OsClass, 50, 0);
+
             }).catch((err) => {
                 this._log.error("On Listing OS")
                 this._log.error(err);

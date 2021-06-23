@@ -101,7 +101,12 @@ window.UserList = class UserList {
         headerMenu: [],
         columns: [
             { title: this.actionName, formatter: this.actionIcon },
-            { title: 'ID', field: 'id', headerFilter: "input" },
+            {
+                title: 'ID', field: 'id', headerFilter: "input",
+                formatter: function (cell) {
+                    return parseInt(cell.getRow().getData().id);
+                }, sorter: "number"
+            },
             { title: 'Cliente', field: 'cliente', headerFilter: "input" },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
@@ -156,7 +161,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.replaceData(this.UserListData);
+                this.main_table.updateOrAddData(this.UserListData);
             }
         });
 

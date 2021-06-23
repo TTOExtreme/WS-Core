@@ -112,7 +112,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/clientes/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.replaceData(this.UserListData);
+                this.main_table.updateOrAddData(this.UserListData);
             }
         });
 

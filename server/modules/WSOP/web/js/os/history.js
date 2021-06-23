@@ -10,8 +10,6 @@ ClientEvents.on("wsop/os/history", (data) => {
     div.setAttribute("id", "wsop_history_div");
 
     let htm = "";
-
-    console.log(data.statusChange);
     let sc = JSON.parse(data.statusChange);
     if (sc != undefined) {
         if (sc.length >= 0) {
