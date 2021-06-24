@@ -1,18 +1,18 @@
-ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
-    ClientEvents.emit("close_menu", 'WSMK_calendario_edtmulti_div');
+ClientEvents.on("WSOP/posvendas/listaall", (data) => {
+    ClientEvents.emit("close_menu", 'WSMK_calendario_listall_div');
 
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
     div.setAttribute("class", "wsmk_calendario_div menu_dragger");
-    div.setAttribute("id", "WSMK_calendario_edtmulti_div");
+    div.setAttribute("id", "WSMK_calendario_listall_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_WSMK_calendario' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'WSMK_calendario_edtmulti_div')>&#9776;</td><td class='WSMK_calendario_label'><p class='wsmk_calendario_closeButton' onclick=ClientEvents.emit(\"close_menu\",'WSMK_calendario_edtmulti_div')>X</p></td></tr>" +
-        "<tr><td></td><td colspan='2' style='float:none' class='WSMK_calendario_label'><center>Dia: " + formatTimeDMA(data.start) + "<center></td></tr>" +
-        "<tr><td colspan=2><div id='perm_table' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
+        "<tr><td id='move_menu_WSMK_calendario' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'WSMK_calendario_listall_div')>&#9776;</td><td class='WSMK_calendario_label'><p class='wsmk_calendario_closeButton' onclick=ClientEvents.emit(\"close_menu\",'WSMK_calendario_listall_div')>X</p></td></tr>" +
+        "<tr><td></td><td colspan='2' style='float:none' class='WSMK_calendario_label'><center>Lista Geral<center></td></tr>" +
+        "<tr><td colspan=2><div id='listallPosvendas' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
@@ -26,11 +26,17 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
         actionOptions = [];
         //*/
 
+    function unclearDesc(desc) {
+        return desc.replace(new RegExp("&qt;", "g"), "\"").replace(new RegExp("&quot;", "g"), "=")
+            .replace(new RegExp("&eq;", "g"), "=").replace(new RegExp("&eql;", "g"), "=")
+            .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
+            .replace(new RegExp("&lt;", "g"), ">").replace(new RegExp("&let;", "g"), "<")
+            .replace(new RegExp("&space;", "g"), " ");
+    }
     /**Initialize  Table */
-    let wsmk_calendar = new Tabulator("#perm_table", {
+    let listallPosvendas = new Tabulator("#listallPosvendas", {
         headerFilterPlaceholder: "Filtrar",
-        index: "id",
-        data: data.data,
+        data: data,
         dataTree: true,
         dataTreeStartExpanded: false, columns: [{
             title: "",
@@ -85,6 +91,4 @@ ClientEvents.on("WSMK/calendario/edtmulti", (data) => {
         rowFormatter: this.actionRowFormatter,
         rowContext: this.rowContext
     });
-
-    window.table_usr_perm.setData(data.data);
 });

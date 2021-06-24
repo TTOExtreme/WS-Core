@@ -1,18 +1,18 @@
+ClientEvents.on("WSOP/posvendas/listaall", (data) => {
+    ClientEvents.emit("close_menu", 'WSOP_posvendas_listall_div');
 
-ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
-    ClientEvents.emit("close_menu", 'WSOP_posvendas_edtmulti_div');
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
     div.setAttribute("class", "WSOP_posvendas_div menu_dragger");
-    div.setAttribute("id", "WSOP_posvendas_edtmulti_div");
+    div.setAttribute("id", "WSOP_posvendas_listall_div");
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_WSOP_posvendas' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'WSOP_posvendas_edtmulti_div')>&#9776;</td><td class='WSOP_posvendas_label'><p class='WSOP_posvendas_closeButton' onclick=ClientEvents.emit(\"close_menu\",'WSOP_posvendas_edtmulti_div')>X</p></td></tr>" +
-        "<tr><td></td><td colspan='2' style='float:none' class='WSOP_posvendas_label'><center>Dia: " + formatTimeDMA(data.start) + "<center></td></tr>" +
-        "<tr><td colspan=2><div id='perm_table' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
+        "<tr><td id='move_menu_WSOP_posvendas' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'WSOP_posvendas_listall_div')>&#9776;</td><td class='WSOP_posvendas_label'><p class='WSOP_posvendas_closeButton' onclick=ClientEvents.emit(\"close_menu\",'WSOP_posvendas_listall_div')>X</p></td></tr>" +
+        "<tr><td></td><td colspan='2' style='float:none' class='WSOP_posvendas_label'><center>Lista Geral<center></td></tr>" +
+        "<tr><td colspan=2><div id='listallPosvendas' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
@@ -34,10 +34,10 @@ ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
             .replace(new RegExp("&space;", "g"), " ");
     }
     /**Initialize  Table */
-    let listEdtPosvendas = new Tabulator("#perm_table", {
+    let listallPosvendas = new Tabulator("#listallPosvendas", {
         headerFilterPlaceholder: "Filtrar",
+        data: data,
         index: "id",
-        data: data.data,
         dataTree: true,
         dataTreeStartExpanded: false,
         columns: [{
@@ -45,7 +45,7 @@ ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
             headerMenu: [{
                 label: "Novo",
                 action: function (e, column) {
-                    ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid", { id: 0, start: new Date(data.start).getTime() + (6 * 3600 * 1000) })
+                    ClientEvents.emit("SendSocket", "WSOP/posvendas/lstid", { id: 0, start: new Date().getTime() + (6 * 3600 * 1000) })
                 }
             }],
             columns: [
@@ -80,6 +80,14 @@ ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
                     }),
                 },
                 {
+                    title: 'Dia',
+                    field: 'description',
+                    headerFilter: "input",
+                    formatter: ((data) => {
+                        return formatTimeDMA(data.getData().description.start);
+                    }),
+                },
+                {
                     title: 'Descrição',
                     field: 'description',
                     formatter: ((data) => {
@@ -109,5 +117,5 @@ ClientEvents.on("WSOP/posvendas/edtmulti", (data) => {
         layout: "fitColumns",
         rowFormatter: this.actionRowFormatter,
         rowContext: this.rowContext
-    })
+    });
 });
