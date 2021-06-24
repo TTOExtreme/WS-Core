@@ -16,7 +16,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_add_div");
+    div.setAttribute("class", "wsop_add_div menu_dragger");
     div.setAttribute("id", "wsop_add_produtos_div");
 
     div.innerHTML = "" +

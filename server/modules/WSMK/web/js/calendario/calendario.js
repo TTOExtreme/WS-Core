@@ -8,7 +8,8 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSMK/css/calendario.css",
     "./module/WSMK/js/calendario/edt.js",
     "./module/WSMK/js/calendario/view.js",
-    "./module/WSMK/js/calendario/edtMultiples.js"
+    "./module/WSMK/js/calendario/edtMultiples.js",
+    "./module/WSMK/js/calendario/listall.js"
 ], () => { }, false)
 
 if (window.UserList) { // usa a mesma interface global para todas as listas
@@ -86,7 +87,15 @@ ClientEvents.on("WSMK/calendario/lst", (datain) => {
         }
     }
 
-    html += "<tr><td colspan='3'>" +
+    ClientEvents.clear("wsmk_listall");
+    ClientEvents.on("wsmk_listall", () => {
+        ClientEvents.emit("WSOP/posvendas/listaall", data);
+    });
+
+    html += "" +
+        "<tr><td colspan='7'>" +
+        "<center><i onclick=ClientEvents.emit('wsmk_listall') class='fa fa-list' aria-hidden='true' style='color:#000'></i></td>" +
+        "<tr><td colspan='3'>" +
         "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSMK/calendario/lst\",\'" + JSON.stringify({ thisMonth: thisMonthLast, thisYear: thisYearLast }) + "') class='fa fa-arrow-left' aria-hidden='true' style='color:#000'></i></td>" +
         "<td><center>" + (thisMonth + 1) + "-" + (thisYear) + "</td>" +
         "<td colspan='3'>" +

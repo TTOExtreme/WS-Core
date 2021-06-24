@@ -7,7 +7,8 @@ ClientEvents.emit("close_menu");
 ClientEvents.emit("LoadExternal", [
     "./module/WSOP/css/posvendas.css",
     "./module/WSOP/js/posvendas/edt.js",
-    "./module/WSOP/js/posvendas/edtMultiples.js"
+    "./module/WSOP/js/posvendas/edtMultiples.js",
+    "./module/WSOP/js/posvendas/listall.js"
 ], () => { }, false)
 
 if (window.UserList) { // usa a mesma interface global para todas as listas
@@ -83,8 +84,16 @@ ClientEvents.on("wsop/posvendas/lst", (datain) => {
             day = new Date(thisYear, thisMonth + 1, 0).getDate();
         }
     }
+    ClientEvents.clear("wsop_posvendas_openall");
+    ClientEvents.on("wsop_posvendas_openall", () => {
+        ClientEvents.emit("WSOP/posvendas/listaall", data);
+    });
 
-    html += "<tr><td colspan='3'>" +
+    html += "" +
+        "<tr><td colspan='7'>" +
+        "<center><i onclick=ClientEvents.emit('wsop_posvendas_openall') class='fa fa-list' aria-hidden='true' style='color:#000'></i></td>" +
+        "</td><tr>" +
+        "<tr><td colspan='3'>" +
         "<i onclick=ClientEvents.emit(\"SendSocket\",\"WSOP/posvendas/lst\",\'" + JSON.stringify({ thisMonth: thisMonthLast, thisYear: thisYearLast }) + "') class='fa fa-arrow-left' aria-hidden='true' style='color:#000'></i></td>" +
         "<td><center>" + (thisMonth + 1) + "-" + (thisYear) + "</td>" +
         "<td colspan='3'>" +
