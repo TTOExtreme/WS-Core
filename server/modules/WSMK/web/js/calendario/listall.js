@@ -70,6 +70,14 @@ ClientEvents.on("WSOP/posvendas/listaall", (data) => {
                     headerFilter: "input"
                 },
                 {
+                    title: 'Dia',
+                    field: 'description',
+                    headerFilter: "input",
+                    formatter: ((data) => {
+                        return formatTimeDMA(data.getData().description.start);
+                    }),
+                },
+                {
                     title: 'Adicionado Em',
                     field: 'createdIn',
                     formatter: ((data) => formatTime(data.getRow().getData().createdIn)),
