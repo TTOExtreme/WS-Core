@@ -50,9 +50,10 @@
     "nodemon": "^2.0.4"
   },
   "scripts": {
-    "install": "node _install.js",
+    "installDB": "node _install.js",
     "debug": "node --inspect-brk=9229 _server.js",
-    "start": "nodemon _server.js --ignore ./server/modules/WSOP/web/img/produtos"
+    "start": "node _server.js",
+    "nodemon": "nodemon _server.js --ignore ./server/modules/WSOP/web/img/produtos"
   },
   "author": "",
   "license": "ISC"

@@ -10,6 +10,13 @@
             "name": "Cluster",
             "program": "${workspaceFolder}/server.js",
             "autoAttachChildProcesses": true
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node"
         }
     ]
 }
