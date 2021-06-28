@@ -1,6 +1,6 @@
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
-    nome: "VARCHAR(600)",
+    name: "VARCHAR(600)",
     description: "MEDIUMTEXT",
     valueAttached: "VARCHAR(60)",
     valueReserved: "VARCHAR(60)",

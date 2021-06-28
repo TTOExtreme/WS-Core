@@ -1,13 +1,10 @@
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
-    title: "VARCHAR(600)",
-    description: "MEDIUMTEXT",
+    id_item: "INT",
     createdIn: "BIGINT",
     createdBy: "INT",
-    deactivatedIn: "BIGINT",
-    deactivatedBy: "INT",
-    modifiedIn: "BIGINT",
-    modifiedBy: "INT",
+    content: "VARCHAR(300)",
+    data: "MEDIUMTEXT"
 }
 
 

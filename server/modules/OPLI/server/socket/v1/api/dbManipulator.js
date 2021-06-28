@@ -1410,55 +1410,66 @@ class apiUtils {
                 });
                 res.on('end', function () {
                     //Process json of products
-                    json = JSON.parse(json);
-                    if (socket != null) {
-                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Vendas: " + json.meta.total_count })
-                    } else {
-                        if (json.meta.total_count > 0) {
-                            console.log("Cadastrando Vendas Pagas: " + json.meta.total_count)
-                        }
-                    }
-                    let arr = [];
-
-
-                    if (json.objects) {
-                        if (json.objects.length > 0) {
-                            let lastid = 0;
-                            for (let i = 0; i < json.objects.length; i++) {
-                                if (json.objects[i])
-                                    if (json.objects[i].numero) {
-                                        if (lastid < json.objects[i].numero) {
-                                            lastid = json.objects[i].numero;
-                                        }
-                                        //console.log("Percent: " + (((i + offset) / json.meta.total_count) * 100).toFixed(2));
-                                        //socket.emit("ClientEvents", { event: "opli/appendlog", data: "Percent: " + (((i + offset) / json.meta.total_count) * 100).toFixed(2) })
-                                        new apiUtils()._LoadSell(socket, api, aplication, json.objects[i].numero).then().catch();
-
-                                    }
+                    try {
+                        json = JSON.parse(json);
+                        if (socket != null) {
+                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "Total de Vendas: " + json.meta.total_count })
+                        } else {
+                            if (json.meta.total_count > 0) {
+                                console.log("Cadastrando Vendas Pagas: " + json.meta.total_count)
                             }
-                            return Promise.all(arr).then(() => {
-                                setTimeout(() => {
-                                    new apiUtils()._LoadListPaidSells(socket, api, aplication, lastid + 1).then(() => { resolve(); });
-                                }, (30 * 1000))
-                                // sao 300 por minuto mas estamos fazendo 40 para não exceder ou seja 20 a cada 30 segundos
-                            })
+                        }
+                        let arr = [];
+
+
+                        if (json.objects) {
+                            if (json.objects.length > 0) {
+                                let lastid = 0;
+                                for (let i = 0; i < json.objects.length; i++) {
+                                    if (json.objects[i])
+                                        if (json.objects[i].numero) {
+                                            if (lastid < json.objects[i].numero) {
+                                                lastid = json.objects[i].numero;
+                                            }
+                                            //console.log("Percent: " + (((i + offset) / json.meta.total_count) * 100).toFixed(2));
+                                            //socket.emit("ClientEvents", { event: "opli/appendlog", data: "Percent: " + (((i + offset) / json.meta.total_count) * 100).toFixed(2) })
+                                            new apiUtils()._LoadSell(socket, api, aplication, json.objects[i].numero).then().catch();
+
+                                        }
+                                }
+                                return Promise.all(arr).then(() => {
+                                    setTimeout(() => {
+                                        new apiUtils()._LoadListPaidSells(socket, api, aplication, lastid + 1)
+                                            .then(() => { resolve(); })
+                                            .catch(err => {
+                                                console.log("[Erro] on processing multiple sells: ", err)
+                                            });
+                                    }, (30 * 1000))
+                                    // sao 300 por minuto mas estamos fazendo 40 para não exceder ou seja 20 a cada 30 segundos
+                                })
+                            } else {
+                                if (socket != null) {
+                                    socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Pagas Cadastradas" })
+                                }
+                                resolve();
+                            }
                         } else {
                             if (socket != null) {
                                 socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Pagas Cadastradas" })
                             }
                             resolve();
                         }
-                    } else {
-                        if (socket != null) {
-                            socket.emit("ClientEvents", { event: "opli/appendlog", data: "Todos as Vendas Pagas Cadastradas" })
-                        }
-                        resolve();
+
+                    } catch (err) {
+                        console.log("Erro ao processar JSON OPLI > _LoadListPaidSells:", err)
+                        rej("Erro ao processar JSON OPLI > _LoadListPaidSells:");
                     }
                 });
             });
 
             req.on('error', function (e) {
                 console.log('problem with request: ' + e.message);
+                rej("Request Error");
             });
 
             req.end();
