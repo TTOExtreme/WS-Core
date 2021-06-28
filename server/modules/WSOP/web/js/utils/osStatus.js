@@ -119,6 +119,12 @@ window.Modules.WSOP.StatusID = class StatusID {
             edit: ["prepress", "calandra"],
             view: ["vendas", "prepress", "calandra"]
         },
+        {
+            name: "Reimpressão", color: "#ffffff", bgColor: "#ff0000",
+            code: "reimpressao", changeto: ["liberado_calandra"],
+            edit: ["prepress", "calandra"],
+            view: ["vendas", "prepress", "calandra"]
+        },
         //Calandra
         {
             name: "Liberado Calandra", color: "#ffffff", bgColor: "#ff6000",
@@ -128,7 +134,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Calandra", color: "#ffffff", bgColor: "#000089",
-            code: "calandra", changeto: ["calandrado"],
+            code: "calandra", changeto: ["calandrado", "reimpressao"],
             edit: ["calandra"],
             view: ["vendas", "calandra"]
         },
@@ -147,7 +153,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Costura", color: "#ffffff", bgColor: "#000089",
-            code: "costura", changeto: ["costurado"],
+            code: "costura", changeto: ["costurado", "reimpressao"],
             edit: ["costura"],
             view: ["vendas", "costura"]
         },
@@ -166,7 +172,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Conferência", color: "#ffffff", bgColor: "#000050",
-            code: "conferencia", changeto: ["empacotamento"],
+            code: "conferencia", changeto: ["empacotamento", "reimpressao"],
             edit: ["expedicao"],
             view: ["vendas", "expedicao"]
         },
