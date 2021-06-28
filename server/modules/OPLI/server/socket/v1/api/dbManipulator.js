@@ -289,7 +289,7 @@ class apiManipulator {
                         APIS[0].trelloList,
                         APIS[0].trelloLabels
                     );
-                    return new apiUtils()._LoadListSellsTrello(socket, APIS[0].api, APIS[0].aplication, parseInt(offset)).then(() => { // NUMERO DE ENTRADA DA BASE DE DADOS *********************************************************************************************************************
+                    return new apiUtils()._LoadListSellsTrello(socket, APIS[0].api, APIS[0].aplication, parseInt(offset), (APIS[0].pullsells == 1 ? true : false)).then(() => { // NUMERO DE ENTRADA DA BASE DE DADOS *********************************************************************************************************************
                         resolve();
                         //Loop de Caregamento
                     })
@@ -369,7 +369,12 @@ class trelloIntegration {
         this.token = trelloToken;
         this.key = trelloKey;
         this.idList = trelloList;
-        this.Labels = JSON.parse(trelloLabels);
+        this.Labels = [];
+        try {
+            this.Labels = JSON.parse(trelloLabels);
+        } catch (err) {
+
+        }
     }
 
     /**
@@ -1283,7 +1288,7 @@ class apiUtils {
      * @param {Int} offset 
      * @returns 
      */
-    _LoadListSellsTrello(socket, api, aplication, offset) {
+    _LoadListSellsTrello(socket, api, aplication, offset, uploadTrello = true) {
         return new Promise((resolve, rej) => {
             var options = {
                 host: 'api.awsli.com.br',
@@ -1337,7 +1342,7 @@ class apiUtils {
                                             16 Pagamento em chargeback
                                             17 Em Produção
                                         */
-                                        new apiUtils()._LoadSell(socket, api, aplication, json.objects[i].numero, true).then(result => {
+                                        new apiUtils()._LoadSell(socket, api, aplication, json.objects[i].numero, uploadTrello).then(result => {
                                             //resolve();
                                         }).catch(err => {
 
@@ -1347,7 +1352,7 @@ class apiUtils {
                             }
                             return Promise.all(arr).then(() => {
                                 setTimeout(() => {
-                                    new apiUtils()._LoadListSellsTrello(socket, api, aplication, lastid + 1).then(() => { resolve(); }).catch(err => { });
+                                    new apiUtils()._LoadListSellsTrello(socket, api, aplication, lastid + 1, uploadTrello).then(() => { resolve(); }).catch(err => { });
                                 }, (30 * 1000))
                                 // sao 300 por minuto mas estamos fazendo 40 para não exceder ou seja 20 a cada 30 segundos
                             })
