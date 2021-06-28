@@ -132,6 +132,7 @@ window.UserList = class UserList {
                 }, sorter: "number"
             },
             { title: 'Cliente', field: 'cliente', headerFilter: "input" },
+            { title: 'Vendedor', field: 'createdBy', headerFilter: "input", visible: true },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
                 formatter: function (cell) {
@@ -140,7 +141,6 @@ window.UserList = class UserList {
                     return new window.Modules.WSOP.StatusID().StatusIdToName(cell.getRow().getData().status);
                 }
             },
-
             {
                 title: 'Expira Em', field: 'endingIn',
                 formatter: function (cell) {

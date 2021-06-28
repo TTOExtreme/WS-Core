@@ -80,7 +80,7 @@ function unclearDesc(desc) {
         return desc.replace(new RegExp("&qt;", "g"), "\"").replace(new RegExp("&quot;", "g"), "=")
             .replace(new RegExp("&eq;", "g"), "=").replace(new RegExp("&eql;", "g"), "=")
             .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
-            .replace(new RegExp("&lt;", "g"), ">").replace(new RegExp("&let;", "g"), "<")
+            .replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&let;", "g"), "<")
             .replace(new RegExp("&space;", "g"), " ").replace(new RegExp("&jp;", "g"), "\n")
     } else {
         return desc;
