@@ -22,7 +22,7 @@ class ProdutosManipulator {
     }
 
     ListAllOs(barcode = "1") {
-        return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory, C.img FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
+        return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
             " WHERE C.active=1 AND barcode LIKE'%" + barcode + "%' LIMIT 10;");
     }
 
