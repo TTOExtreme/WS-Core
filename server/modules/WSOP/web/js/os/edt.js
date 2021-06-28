@@ -30,13 +30,19 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "</table><hr>" +
         "<table style='; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
         "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
-        "<tr><td colspan=5><input id='wsop_edt_produto' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'><input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></td></tr>" +
+        "<tr><td colspan=5><input id='wsop_edt_produto' onchange='ClientEvents.emit(\"searchprod\")' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'><input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></td></tr>" +
         "<tr><td colspan=5><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
         "<tr><td colspan=5 style='height:20px'>  </td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
 
+    ClientEvents.on("searchprod", () => {
+        if (document.getElementById("wsop_edt_produto") != undefined) {
+
+            ClientEvents.emit("SendSocket", "wsop/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
+        }
+    })
     ClientEvents.on("wsop_changeBoxSize", () => {
         document.getElementById("wsop_edt_formaEnvio_size").innerHTML = new window.Modules.WSOP.formaEnvio().getSizeCaixa(document.getElementById("wsop_edt_formaEnvio_caixa").value)
 
@@ -174,7 +180,6 @@ ClientEvents.on("wsop/os/edt", (data) => {
         });
         editor1.onChange = function (contents, core) { document.getElementById("wsop_edt_description_produto").innerHTML = contents; }
     }
-    ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
     ClientEvents.emit("wsop_changeBoxSize");
 });
 

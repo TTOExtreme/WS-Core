@@ -74,7 +74,7 @@ class Socket {
          * List all Produtos para Edição de OS
          */
         socket.on("wsop/os/produtos/lst", (req) => {
-            this._ProdutosClass.ListAllOs().then((res) => {
+            this._ProdutosClass.ListAllOs(req[0].barcode).then((res) => {
                 socket.emit("ClientEvents", {
                     event: "wsop/os/produtos/lst",
                     data: res
