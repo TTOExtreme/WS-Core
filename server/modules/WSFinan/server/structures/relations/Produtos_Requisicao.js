@@ -1,7 +1,7 @@
 
 const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
-    id_os: "INT",
+    id_req: "INT",
     id_produtos: "INT",
     obs: "MEDIUMTEXT",
     qnt: "INT",
