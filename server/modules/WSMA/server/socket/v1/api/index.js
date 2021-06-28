@@ -33,10 +33,36 @@ class Socket {
         /**
          *  Lista os produtos por nome ou id Limit 30
          */
-        socket.on("wsma/materiais/lst", (req) => {
+        socket.on("WSMA/materiais/lst", (req) => {
             this._MateriaisClass.ListMateriais(req[0].id, req[0].name, req[0].description).then((res) => {
                 socket.emit("ClientEvents", {
-                    event: "wsma/materiais/list",
+                    event: "WSMA/materiais/lst",
+                    data: res
+                })
+            }).catch((err) => {
+                this._log.error("On listing Materiais")
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+        /**
+         *  Lista os produtos por nome ou id Limit 30
+         */
+        socket.on("WSMA/servicos/lst", (req) => {
+            this._MateriaisClass.ListServicos(req[0].id, req[0].name, req[0].description).then((res) => {
+                socket.emit("ClientEvents", {
+                    event: "WSMA/servicos/lst",
                     data: res || []
                 })
             }).catch((err) => {
@@ -59,10 +85,36 @@ class Socket {
         /**
          *  Lista os produtos por nome ou id Limit 30
          */
-        socket.on("wsma/servicos/lst", (req) => {
-            this._MateriaisClass.ListServicos(req[0].id, req[0].name, req[0].description).then((res) => {
+        socket.on("WSMA/materiais/lstauto", (req) => {
+            this._MateriaisClass.ListMateriaisauto(req[0].name).then((res) => {
                 socket.emit("ClientEvents", {
-                    event: "wsma/servicos/list",
+                    event: "WSMA/materiais/lstauto",
+                    data: res
+                })
+            }).catch((err) => {
+                this._log.error("On listing Materiais")
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
+
+        /**
+         *  Lista os produtos por nome ou id Limit 30
+         */
+        socket.on("WSMA/servicos/lstauto", (req) => {
+            this._MateriaisClass.ListServicosauto(req[0].name).then((res) => {
+                socket.emit("ClientEvents", {
+                    event: "WSMA/servicos/listauto",
                     data: res || []
                 })
             }).catch((err) => {
@@ -85,7 +137,7 @@ class Socket {
         /**
          * Add material
          */
-        socket.on("wsma/materiais/add", (req) => {
+        socket.on("WSMA/materiais/add", (req) => {
             this._myself.checkPermission("WSMA/materiais/add").then(() => {
                 this._MateriaisClass.AddMaterial(req[0].name, req[0].description, req[0].inventory, req[0].inventoryMin, req[0].inventoryMax, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
@@ -112,7 +164,7 @@ class Socket {
         /**
          * edit Material
          */
-        socket.on("wsma/materiais/edt", (req) => {
+        socket.on("WSMA/materiais/edt", (req) => {
             this._myself.checkPermission("WSMA/materiais/edt").then(() => {
                 this._MateriaisClass.EdtMaterial(req[0].id, req[0].name, req[0].description, req[0].inventory, req[0].inventoryMin, req[0].inventoryMax, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
@@ -138,13 +190,13 @@ class Socket {
         })
 
         /**
-         * Add material
+         * Add servico
          */
-        socket.on("wsma/servicos/add", (req) => {
+        socket.on("WSMA/servicos/add", (req) => {
             this._myself.checkPermission("WSMA/servico/add").then(() => {
-                this._MateriaisClass.AddServico(req[0].name, req[0].description, req[0].interval, req[0].active, this._myself.myself.id).then((results) => {
+                this._MateriaisClass.AddServico(req[0].name, req[0].description, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
-                        event: "system/added/servico",
+                        event: "system/added/servicos",
                         data: { id: results.insertId }
                     })
                 }).catch((err) => {
@@ -167,11 +219,11 @@ class Socket {
         /**
          * edit servico
          */
-        socket.on("wsma/servicos/edt", (req) => {
+        socket.on("WSMA/servicos/edt", (req) => {
             this._myself.checkPermission("WSMA/servico/edt").then(() => {
-                this._MateriaisClass.EdtServico(req[0].id, req[0].name, req[0].description, req[0].interval, req[0].active, this._myself.myself.id).then((results) => {
+                this._MateriaisClass.EdtServico(req[0].id, req[0].name, req[0].description, req[0].active, this._myself.myself.id).then((results) => {
                     socket.emit("ClientEvents", {
-                        event: "system/edited/servico",
+                        event: "system/edited/servicos",
                         data: { id: results.insertId }
                     })
                 }).catch((err) => {
