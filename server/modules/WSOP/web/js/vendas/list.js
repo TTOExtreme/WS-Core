@@ -196,25 +196,54 @@ window.UserList = class UserList {
             movableColumns: true,
             layout: "fitColumns",
             rowFormatter: this.actionRowFormatter,
-            rowContext: this.rowContext
+            rowContext: this.rowContext,
+            dataFiltering: function (filters) {
+                ClientEvents.emit("wsop_OS_filtertable");
+            },
         });
         if (!Myself.checkPermission("WSOP/menu/vendas/all")) {
             this.main_table.setFilter([{ field: "creatorId", type: "in", value: [Myself.id] }]);
         }
+        this.main_table.setSort([
+            { column: "id", dir: "desc" }, //sort by this first
+        ]);
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/os/lst");
+        ClientEvents.emit("SendSocket", "wsop/os/lst", {});
     }
 
     _init() {
 
-        /**Receive user list and append to Table */
+
+        /**Receive user list and reset Table  uses only for update without filtering*/
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.updateOrAddData(this.UserListData);
+                this.main_table.setData(data);
             }
         });
 
+        /**Receive user list and append to Table */
+        ClientEvents.on("wsop/os/lstappend", (data) => {
+            if (data) {
+                this.UserListData = data;
+                this.main_table.updateOrAddData(data);
+            }
+        });
+        let timeouttimer = new Date().getTime();
+        let lsearch = "";
+        /**Receive user list and append to Table */
+        ClientEvents.on("wsop_OS_filtertable", () => {
+            let headerFilters = this.main_table.getHeaderFilters();
+            let sendfilters = {};
+            headerFilters.forEach(element => {
+                sendfilters[element.field] = element.value;
+            });
+            if (headerFilters.length > 0 && timeouttimer - new Date().getTime() < 0 && lsearch != JSON.stringify(sendfilters)) {
+                lsearch = JSON.stringify(sendfilters);
+                timeouttimer = new Date().getTime() + (1 * 100);
+                ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
+            }
+        });
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");

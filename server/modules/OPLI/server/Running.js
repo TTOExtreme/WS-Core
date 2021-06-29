@@ -15,7 +15,7 @@ class Running {
     }
 
     Init() {
-        //this._apiManipulator.updatePaidSells(null);
+        this._apiManipulator.updatePaidSells(null);
     }
 }
 

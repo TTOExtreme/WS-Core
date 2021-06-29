@@ -30,7 +30,13 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "</table><hr>" +
         "<table style='; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
         "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
-        "<tr><td colspan=5><input id='wsop_edt_produto' onchange='ClientEvents.emit(\"searchprod\")' placeholder='Produto' type='text'><input id='wsop_edt_id_produto' style='display:none' type='text'><input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'><input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'><input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></td></tr>" +
+        "<tr><td colspan=5>" +
+        "<input id='wsop_searchbot' type='button' onclick='ClientEvents.emit(\"searchprod\")' value='Buscar'></input>" +
+        "<input id='wsop_edt_produto' placeholder='Produto' type='text' list='prodsearchlist'></input><datalist id='prodsearchlist'></datalist>" +
+        "<input id='wsop_edt_id_produto' style='display:none' type='text'></input>" +
+        "<input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'></input>" +
+        "<input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'></input>" +
+        "<input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></input></td></tr>" +
         "<tr><td colspan=5><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
         "<tr><td colspan=5 style='height:20px'>  </td></tr>" +
         "</table>";
@@ -39,7 +45,8 @@ ClientEvents.on("wsop/os/edt", (data) => {
 
     ClientEvents.on("searchprod", () => {
         if (document.getElementById("wsop_edt_produto") != undefined) {
-
+            document.getElementById("wsop_searchbot").value = "Buscando...";
+            document.getElementById("wsop_searchbot").disabled = true;
             ClientEvents.emit("SendSocket", "wsop/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
         }
     })
@@ -236,7 +243,7 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
 
 ClientEvents.on("wsop/os/produto/add", () => {
     let data = {
-        id: document.getElementById("wsop_edt_id_produto").value | "",
+        id: document.getElementById("wsop_edt_produto").value | "",
         id_os: document.getElementById("wsop_edt_id").value | "",
         qnt: document.getElementById("wsop_edt_qnt_produto").value | "",
         obs: clearDesc(document.getElementById("wsop_edt_description_produto").innerHTML)
@@ -244,10 +251,35 @@ ClientEvents.on("wsop/os/produto/add", () => {
     ClientEvents.emit("SendSocket", "wsop/os/produto/add", data)
 })
 
-/**Lista de produtos Autocomplete */
+//Lista de produtos Autocomplete
 ClientEvents.on("wsop/os/produtos/lst", (arr) => {
-    let inp = document.getElementById("wsop_edt_produto");
+
+    if (arr.length > 0) {
+        document.getElementById("wsop_searchbot").value = "Buscar";
+        document.getElementById("wsop_searchbot").disabled = false;
+    } else {
+        setTimeout(() => {
+            document.getElementById("wsop_searchbot").value = "Buscar";
+            document.getElementById("wsop_searchbot").disabled = false;
+        }, 5000);
+    }
+
+    let inp = document.getElementById("prodsearchlist");
+    let val = document.getElementById("wsop_edt_produto");
+
     if (inp == undefined) return;
+    inp.innerHTML = "";
+    let htm = ""
+
+    arr.forEach(item => {
+        let name = item.barcode + " | " + item.name + " | Estoque(" + item.inventory + ")";
+        let namehtml = ((name).replace(new RegExp((val.value).toLowerCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
+        namehtml = ((namehtml).replace(new RegExp((val.value).toUpperCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
+        htm += "<option value='" + item.id + "'>" + namehtml + "</option>";
+    })
+    inp.innerHTML = htm;
+
+    /*
     var currentFocus;
 
 
@@ -273,7 +305,7 @@ ClientEvents.on("wsop/os/produtos/lst", (arr) => {
         }
     }
 
-    /*execute a function when someone writes in the text field:*/
+    //execute a function when someone writes in the text field
     inp.addEventListener("input", function (e) {
         var a, b, i, val = this.value;
         closeAllLists();
@@ -327,4 +359,5 @@ ClientEvents.on("wsop/os/produtos/lst", (arr) => {
     document.addEventListener("click", function (e) {
         closeAllLists(e.target);
     });
+    //*/
 });

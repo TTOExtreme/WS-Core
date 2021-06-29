@@ -41,7 +41,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         {
             name: "Liberado Produção", color: "#ffffff", bgColor: "#ff6000",
             code: "liberado_producao", changeto: ["falta_informacao", "montagem_arquivos"],
-            edit: ["vendas", "prepress"],
+            edit: ["prepress"],
             view: ["vendas", "prepress"]
         },
         //Design
@@ -185,7 +185,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         {
             name: "Aguardando Liberação de Envio", color: "#ffffff", bgColor: "#00d200",
             code: "aguardando_liberar_envio", changeto: ["liberado_expedicao"],
-            edit: ["vendas", "expedicao"],
+            edit: ["expedicao"],
             view: ["vendas", "expedicao"]
         },
         {

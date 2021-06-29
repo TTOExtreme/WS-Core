@@ -15,11 +15,30 @@ class osManipulator {
     /**
      * Lista todos As OS cadastrados sem filtro
      */
-    ListAll(id = 0) {
-        return this.db.query("SELECT OS.*, OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, U.email as U_email, U.telefone as U_telefone, C.name as cliente, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.country as C_country, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+    ListAll(id = "", createdBy = "", cliente = "", status = "") {
+        let st = "";
+        if (typeof (status) == typeof ([])) {
+            st = " AND";
+            status.forEach((sts, index) => {
+                st += (index > 0 ? " OR" : " ") + " OS.status = '" + sts + "' ";
+            })
+            status = st;
+        } else {
+            if (status != "") {
+                st = " AND OS.status LIKE '%" + status + "%'";
+            }
+        }
+        return this.db.query("SELECT OS.id, OS.createdIn, OS.endingIn,OS.price, OS.statusChange, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
-            " WHERE OS.active=1 ORDER BY id DESC LIMIT " + id + ",50;");
+            " WHERE OS.active=1 " +
+
+            (id != "" ? " AND OS.id =" + id + "" : "") +
+            (createdBy != "" ? " AND U.name LIKE'%" + createdBy + "%'" : "") +
+            (cliente != "" ? " AND C.name LIKE'%" + cliente + "%'" : "") +
+            st +
+
+            " ORDER BY OS.id DESC LIMIT 50;");
     }
 
     /**

@@ -51,38 +51,41 @@ ClientEvents.on("wsop/os/printop", (data) => {
 
     let anexosTable = document.getElementById("wsop_print_anexos");
     let htm = "";
-    data.anexos.forEach((anexo, index) => {
-        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
-    });
-    anexosTable.innerHTML += htm;
-
+    if (data.anexos != undefined) {
+        data.anexos.forEach((anexo, index) => {
+            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+        });
+        anexosTable.innerHTML += htm;
+    }
     let produtosTable = document.getElementById("wsop_print_produtos");
     htm = "";
     let total = 0;
     let totalqnt = 0;
-    data.produtos.forEach((produto) => {
-        try {
-            produto.description = JSON.parse(produto.description)
-        } catch (err) {
-            produto.description = { gola: "-", vies: "-", genero: "-", modelo: "-" }
-        }
-        total += (produto.qnt * produto.price);
-        totalqnt += produto.qnt;
-        htm += "<tr class='wsop_produto_item1'>" +
-            "<td>Cod: " + produto.barcode + "</td>" +
-            "<td>Nome: " + produto.name + "</td>" +
-            "<td>Genero: " + produto.description.genero + "</td>" +
-            "<td>QNT: " + produto.qnt + "</td>" +
-            "</tr><tr class='wsop_produto_item3'>" +
-            "<td>Vies: " + produto.description.vies + "</td>" +
-            "<td>Gola: " + produto.description.gola + "</td>" +
-            "<td colspan='2'>Modelo: " + produto.description.modelo + "</td>" +
-            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
-            "<td colspan=3 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
-    });
-    htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
-    produtosTable.innerHTML += htm;
 
+    if (data.anexos != undefined) {
+        data.produtos.forEach((produto) => {
+            try {
+                produto.description = JSON.parse(produto.description)
+            } catch (err) {
+                produto.description = { gola: "-", vies: "-", genero: "-", modelo: "-" }
+            }
+            total += (produto.qnt * produto.price);
+            totalqnt += produto.qnt;
+            htm += "<tr class='wsop_produto_item1'>" +
+                "<td>Cod: " + produto.barcode + "</td>" +
+                "<td>Nome: " + produto.name + "</td>" +
+                "<td>Genero: " + produto.description.genero + "</td>" +
+                "<td>QNT: " + produto.qnt + "</td>" +
+                "</tr><tr class='wsop_produto_item3'>" +
+                "<td>Vies: " + produto.description.vies + "</td>" +
+                "<td>Gola: " + produto.description.gola + "</td>" +
+                "<td colspan='2'>Modelo: " + produto.description.modelo + "</td>" +
+                "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
+                "<td colspan=3 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
+        });
+        htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
+        produtosTable.innerHTML += htm;
+    }
 
 });
 

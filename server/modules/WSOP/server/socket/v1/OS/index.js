@@ -57,41 +57,20 @@ class Socket {
          * List all os
          */
         socket.on("wsop/os/lst", (req) => {
-            this._OsClass.ListAll(0).then((res) => {
+            if (req[0] == undefined) {
+                req = [{
+                    id: "",
+                    cliente: "",
+                    createdBy: "",
+                    status: ""
+                }]
+            }
+            this._OsClass.ListAll(req[0].id, req[0].cliente, req[0].createdBy, req[0].status).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lst",
                     data: res
                 })
-                function rec(_OsClass, next, count) {
-                    if (count < 500) {
-                        _OsClass.ListAll(next).then((res) => {
-                            if (res.length >= 50) {
-                                socket.emit("ClientEvents", {
-                                    event: "system_mess",
-                                    data: { status: "INFO", mess: "Carregando OSs " + next + "-" + next + res.length, time: 100 }
-                                })
-                                socket.emit("ClientEvents", {
-                                    event: "wsop/os/lst",
-                                    data: res
-                                })
-                                rec(next + 50, count + 1);
-                            } else {
-                                socket.emit("ClientEvents", {
-                                    event: "wsop/os/lst",
-                                    data: res
-                                })
-                            }
-                        })
-                    } else {
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: { status: "OK", mess: "Todas as OS Carregadas ", time: 1000 }
-                        })
-                    }
-                }
-                rec(this._OsClass, 50, 0);
-
             }).catch((err) => {
                 this._log.error("On Listing OS")
                 this._log.error(err);
@@ -109,6 +88,40 @@ class Socket {
             })
         })
 
+        /**
+         * List all os
+         */
+        socket.on("wsop/os/lstappend", (req) => {
+            if (req[0] == undefined) {
+                req = [{
+                    id: "",
+                    cliente: "",
+                    createdBy: "",
+                    status: ""
+                }]
+            }
+            this._OsClass.ListAll(req[0].id, req[0].cliente, req[0].createdBy, req[0].status).then((res) => {
+                this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
+                socket.emit("ClientEvents", {
+                    event: "wsop/os/lstappend",
+                    data: res
+                })
+            }).catch((err) => {
+                this._log.error("On Listing OS")
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
 
         /**
          * Reload Edt os
@@ -436,8 +449,7 @@ class Socket {
                         })
                     })
                 } else {
-                    this._log.error("On Adding OS")
-                    this._log.error(err);
+                    this._log.error("On Adding prod to OS", req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {

@@ -37,9 +37,10 @@ class Socket {
         /**
          * List all produtos
          */
-        socket.on("wsop/produtos/lst", (req) => {
+        socket.on("WSOP/produtos/lst", (req) => {
             this._myself.checkPermission("WSOP/menu/produtos").then(() => {
-                this._ProdutosClass.ListAll().then((res) => {
+                if (req[0] == undefined) { req = [{ name: "", barcode: "" }] }
+                this._ProdutosClass.ListAll(req[0].name, req[0].barcode).then((res) => {
                     socket.emit("ClientEvents", {
                         event: "wsop/produtos/lst",
                         data: res
