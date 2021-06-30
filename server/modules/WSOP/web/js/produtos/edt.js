@@ -45,7 +45,7 @@ ClientEvents.on("wsop/produtos/edt", (data) => {
         document.getElementById("wsop_edt_produto_vies").innerHTML = window.Modules.WSOP.Produtos.getVies(document.getElementById("wsop_edt_produto_modelo").value);
         document.getElementById("wsop_edt_produto_gola").innerHTML = window.Modules.WSOP.Produtos.getGola(document.getElementById("wsop_edt_produto_modelo").value);
         document.getElementById("wsop_edt_produto_genero").innerHTML = window.Modules.WSOP.Produtos.getGenero(document.getElementById("wsop_edt_produto_modelo").value);
-        document.getElementById("wsop_add_produto_tamanho").innerHTML = window.Modules.WSOP.Produtos.getTamanhos(document.getElementById("wsop_add_produto_modelo").value);
+        //document.getElementById("wsop_add_produto_tamanho").innerHTML = window.Modules.WSOP.Produtos.getTamanhos(document.getElementById("wsop_add_produto_modelo").value);
         document.getElementById("wsop_add_produto_price").value = window.Modules.WSOP.Produtos.getPreco(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
         document.getElementById("wsop_add_produto_priceRevenda").value = window.Modules.WSOP.Produtos.getPrecoRevenda(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
         document.getElementById("wsop_add_produto_cost").value = window.Modules.WSOP.Produtos.getCusto(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
@@ -62,7 +62,7 @@ ClientEvents.on("WSOP/produtos/edt", () => {
             gola: document.getElementById("wsop_edt_produto_gola").value,
             vies: document.getElementById("wsop_edt_produto_vies").value,
             genero: document.getElementById("wsop_edt_produto_genero").value,
-            tamanho: document.getElementById("wsop_add_produto_tamanho").value
+            //tamanho: document.getElementById("wsop_add_produto_tamanho").value
         }),
         barcode: document.getElementById("wsop_edt_barcode").value,
         price: document.getElementById("wsop_edt_price").value,
