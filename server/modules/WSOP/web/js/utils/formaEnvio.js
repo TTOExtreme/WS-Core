@@ -46,6 +46,14 @@ window.Modules.WSOP.formaEnvio = class formaEnvio {
 
     prazos = [
         {
+            name: "Retirar Pessoalmente",
+            code: "retirada",
+            country: [
+            ],
+            preco: 0.00,
+            prazo: "0 Dias Uteis"
+        },
+        {
             name: "SEDEX",
             code: "SEDEX",
             country: [
@@ -190,7 +198,7 @@ window.Modules.WSOP.formaEnvio = class formaEnvio {
                     ]
                 },
             ],
-            preco: 0.00,
+            preco: 490.0,
             prazo: "0 Dias Uteis"
         },
         {

@@ -7,6 +7,7 @@ const _DB = {
     endingIn: "BIGINT",
     prazo: "VARCHAR(60)",
     formaEnvio: "VARCHAR(60)",
+    formaPagamento: "VARCHAR(60)",
     desconto: "VARCHAR(60)",
     precoEnvio: "VARCHAR(60)",
     price: "VARCHAR(60)",

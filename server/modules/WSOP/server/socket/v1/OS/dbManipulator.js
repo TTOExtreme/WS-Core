@@ -83,11 +83,11 @@ class osManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createOS(id_Cliente, description, status, statusChange, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
+    createOS(id_Cliente, description, status, statusChange, formaEnvio, formaPagamento, caixa, country, uf, prazo, endingIn, active, UserID) {
         let sql = "INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
-            " (id_Cliente, description, status,statusChange, formaEnvio, prazo, endingIn, active, createdBy, createdIn)" +
+            " (id_Cliente, description, status,statusChange, formaEnvio, formaPagamento, prazo, endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
+            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + formaPagamento + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
         return this.db.query(sql);
     }
 
@@ -100,10 +100,11 @@ class osManipulator {
      * @param {*} active 
      * @param {*} UserID 
      */
-    editOS(ID, description, formaEnvio, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
+    editOS(ID, description, formaEnvio, formaPagamento, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
             " formaEnvio='" + formaEnvio + "'," +
+            " formaPagamento='" + formaPagamento + "'," +
             " caixa='" + caixa + "'," +
             " country='" + country + "'," +
             " uf='" + uf + "'," +
