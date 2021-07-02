@@ -28,7 +28,7 @@ class osManipulator {
                 st = " AND OS.status LIKE '%" + status + "%'";
             }
         }
-        return this.db.query("SELECT OS.id, OS.createdIn, OS.endingIn,OS.price, OS.statusChange, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+        return this.db.query("SELECT OS.id, OS.createdIn, OS.endingIn,OS.price, OS.statusChange,OS.payment, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
             " WHERE OS.active=1 " +
@@ -129,6 +129,19 @@ class osManipulator {
             " status='" + status + "'," +
             " statusChange='" + statusChange + "'," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
+            " WHERE id='" + ID + "';");
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} status 
+     * @param {*} UserID 
+     */
+    editPaymentOS(ID, payment) {
+
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
+            " payment='" + payment + "'" +
             " WHERE id='" + ID + "';");
     }
 

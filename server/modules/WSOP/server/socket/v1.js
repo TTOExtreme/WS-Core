@@ -1,4 +1,5 @@
 const core = require('./v1/Core').Core;
+const api = require('./v1/api').Socket;
 const cliente = require('./v1/Cliente').Socket;
 const produto = require('./v1/Produtos').Socket;
 const emitente = require('./v1/Emitente').Socket;
@@ -19,6 +20,8 @@ class Socket {
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
 
+        this._api = new api(WSMainServer);
+
         this._clienteModule = new cliente(WSMainServer);
         this._produtoModule = new produto(WSMainServer);
         this._osModule = new os(WSMainServer);
@@ -36,6 +39,8 @@ class Socket {
         this._myself = Myself;
 
         this._coreModule = new core(this._socket, this._myself);
+
+        this._api.socket(this._socket, this._myself);
         this._clienteModule.socket(this._socket, this._myself);
         this._produtoModule.socket(this._socket, this._myself);
         this._osModule.socket(this._socket, this._myself);

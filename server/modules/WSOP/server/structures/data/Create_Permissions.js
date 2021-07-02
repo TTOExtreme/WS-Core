@@ -7,6 +7,27 @@ const _DB = [
         defaltAdd: 0
     },
     {
+        name: "Aba API",
+        description: "Acesso a Aba API WSOP",
+        code: "WSOP/menu/api",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Gerar pagamentos",
+        description: "Acesso a Geração de Pagamentos pelo Pagar.me",
+        code: "WSOP/menu/api/pagarme/gerarlink",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
+        name: "Faturar OS",
+        description: "Acesso a Geração de Pagamentos pelo Pagar.me",
+        code: "WSOP/os/faturar",
+        type: "WSOP",
+        defaltAdd: 0
+    },
+    {
         name: "Aba OP",
         description: "Acesso Aba Ordem de Produção",
         code: "WSOP/menu/os",
