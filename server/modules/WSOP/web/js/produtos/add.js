@@ -110,8 +110,10 @@ ClientEvents.on("uploadIMG", () => {
     }
 })
 ClientEvents.on("wsop/produtos/fileuploaded", (data) => {
-    let img = document.getElementById("wsop_add_produto_img_thumb")
-    img.setAttribute('src', "./module/WSOP/img/" + data.file)
-    img.setAttribute('loc', data.file)
-    img.setAttribute('onclick', "ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: "", thumb: data.file }) + ")")
+    if (document.getElementById("wsop_add_produto_img")) {
+        let img = document.getElementById("wsop_add_produto_img_thumb")
+        img.setAttribute('src', "./module/WSOP/img/" + data.file)
+        img.setAttribute('loc', data.file)
+        img.setAttribute('onclick', "ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: "", thumb: data.file }) + ")")
+    }
 })

@@ -8,13 +8,16 @@
     border-radius: 10px;
 }
 
-.edt_usr_closeButton {
+.edt_usr_closeButton,
+.wsop_add_closeButton,
+.wsop_edt_closeButton {
     padding: 0;
     margin: 0;
     cursor: pointer;
     background: var(--menu-item-bg);
     width: 20px;
     text-align: center;
+    float: right;
 }
 
 .wsop_edt_label {
@@ -73,14 +76,6 @@
     margin: 0;
 }
 
-.wsop_add_closeButton {
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    background: var(--menu-item-bg);
-    width: 20px;
-    text-align: center;
-}
 
 input[type="file"] {
     background: var(--input-bg);
@@ -165,7 +160,8 @@ input[type="text"]:disabled {
     border-left: 2px solid #606060;
 }
 
-.wsop_edt_img_thumb {
+.wsop_edt_img_thumb,
+.wsop_edt_produto_img_thumb {
     max-width: 250px;
     max-height: 170px;
 }

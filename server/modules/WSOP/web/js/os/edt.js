@@ -47,7 +47,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         if (document.getElementById("wsop_edt_produto") != undefined) {
             document.getElementById("wsop_searchbot").value = "Buscando...";
             document.getElementById("wsop_searchbot").disabled = true;
-            ClientEvents.emit("SendSocket", "wsop/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
+            ClientEvents.emit("SendSocket", "WSOP/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
         }
     })
     ClientEvents.on("wsop_changeBoxSize", () => {

@@ -74,7 +74,7 @@ class Socket {
         /**
          * List all Produtos para Edição de OS
          */
-        socket.on("wsop/os/produtos/lst", (req) => {
+        socket.on("WSOP/os/produtos/lst", (req) => {
             if (req[0] == undefined) {
                 req = [""];
             }
