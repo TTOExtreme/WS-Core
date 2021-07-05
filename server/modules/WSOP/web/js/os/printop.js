@@ -81,7 +81,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
                 "<td>Gola: " + produto.description.gola + "</td>" +
                 "<td colspan='2'>Modelo: " + produto.description.modelo + "</td>" +
                 "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
-                "<td colspan=3 style='width:75%'>OBS:" + (produto.obs).replace(new RegExp("&quot;", "g"), "\"").replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&gt;", "g"), ">") + "</td>";
+                "<td colspan=3 style='width:75%'>OBS:" + unclearDesc(produto.obs) + "</td>";
         });
         htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
         produtosTable.innerHTML += htm;

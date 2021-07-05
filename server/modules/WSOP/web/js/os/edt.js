@@ -117,7 +117,6 @@ ClientEvents.on("wsop/os/edt", (data) => {
             }
         }
 
-        console.log(total, data);
         let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(data.precoEnvio)).toFixed(2);
         document.getElementById("wsop_edt_price").innerText = price;
         document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
@@ -125,7 +124,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         //salva o novo preço em caso de alteração
         if (price != data.price) {
             data.price = price;
-            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 50);
+            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 500);
         }
     })
 
