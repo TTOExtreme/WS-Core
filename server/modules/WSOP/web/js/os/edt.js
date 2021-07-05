@@ -86,6 +86,12 @@ ClientEvents.on("wsop/os/edt", (data) => {
     let totalqnt = 0;
     if (data.produtos != undefined) {
         data.produtos.forEach((produto) => {
+            if (produto.price == null || produto.price == undefined) {
+                produto.price = "0.00";
+            }
+            if (produto.img == null || produto.img == undefined) {
+                produto.img = "./modules/WSOP/img/file.png";
+            }
             total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
             totalqnt += produto.qnt;
 
