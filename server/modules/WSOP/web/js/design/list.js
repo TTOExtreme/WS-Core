@@ -16,6 +16,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/utils/desconto.js",
     "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/utils/consulta.js",
+    "./module/WSOP/js/utils/Termos.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
     "./module/WSOP/js/design/edtproduto.js",
     "./module/WSOP/js/clientes/add.js",
@@ -82,7 +83,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewos", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/view", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/opview")) {

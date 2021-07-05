@@ -53,9 +53,3 @@ ClientEvents.on("wsop/os/view", (data) => {
 
     ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
 });
-
-ClientEvents.on("WSOP/os/view/close", () => {
-    if (document.getElementById("wsop_os_view_div")) {
-        document.body.removeChild(document.getElementById("wsop_os_view_div"));
-    }
-});
