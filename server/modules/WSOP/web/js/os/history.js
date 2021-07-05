@@ -10,7 +10,17 @@ ClientEvents.on("wsop/os/history", (data) => {
     div.setAttribute("id", "wsop_history_div");
 
     let htm = "";
-    let sc = JSON.parse(data.statusChange);
+    let sc = []
+    try {
+        sc = JSON.parse(data.statusChange);
+    } catch (err) {
+        try {
+            sc = JSON.parse(unclearDesc(data.statusChange));
+        } catch (err) {
+            console.log(data.statusChange);
+            console.log(err);
+        }
+    }
     if (sc != undefined) {
         if (sc.length >= 0) {
             sc.forEach((status, index) => {

@@ -78,6 +78,7 @@ function formatTimeSpend(data) {
 function unclearDesc(desc) {
     if (typeof (desc) == "string") {
         return desc.replace(new RegExp("&qt;", "g"), "\"").replace(new RegExp("&quot;", "g"), "=")
+            .replace(new RegExp("&lj;", "g"), "\n")
             .replace(new RegExp("&eq;", "g"), "=").replace(new RegExp("&eql;", "g"), "=")
             .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
             .replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&let;", "g"), "<")
@@ -90,6 +91,7 @@ function unclearDesc(desc) {
 function clearDesc(desc) {
     if (typeof (desc) == "string") {
         return desc.replace(new RegExp("\"", "g"), "&qt;").replace(new RegExp("&quot;", "g"), "&qt;")
+            .replace(new RegExp("\r\n", "g"), "&lj;").replace(new RegExp("\n", "g"), "&lj;")
             .replace(new RegExp("=", "g"), "&eql;").replace(new RegExp("&eq;", "g"), "&eql;")
             .replace(new RegExp(">", "g"), "&get;").replace(new RegExp("&gt;", "g"), "&get;")
             .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
