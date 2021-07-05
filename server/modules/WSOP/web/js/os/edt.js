@@ -103,7 +103,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
                 "<td>" + produto.barcode + "</td>" +
                 "<td>" + produto.name + "</td>" +
                 "<td>" + produto.qnt + "</td>" +
-                "<td>" + produto.price + " R$</td>" +
+                "<td>R$ " + produto.price + "</td>" +
                 "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
         });
     }
@@ -123,7 +123,6 @@ ClientEvents.on("wsop/os/edt", (data) => {
             }
         }
 
-        console.log(total, data);
         let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(data.precoEnvio)).toFixed(2);
         document.getElementById("wsop_edt_price").innerText = price;
         document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
@@ -131,7 +130,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         //salva o novo preço em caso de alteração
         if (price != data.price) {
             data.price = price;
-            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 50);
+            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 500);
         }
     })
 

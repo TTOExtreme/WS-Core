@@ -69,7 +69,15 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "prepress")) {
+        if (Myself.checkPermission("WSOP/os/edt") && new window.Modules.WSOP.StatusID().blockEdit(cell.getRow().getData().status, "design")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-edit");
+            bot.setAttribute("title", "Editar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/edt", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "design")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
@@ -124,6 +132,16 @@ window.UserList = class UserList {
                 }
             },
             { title: 'Vendedor', field: 'createdBy', headerFilter: "input", visible: true },
+            {
+                title: 'Data Entrada', field: 'modifiedIn',
+                formatter: function (cell) {
+
+                    cell._cell.element.style.background = new window.Modules.WSOP.TimeCalc().getPrazosBgColor(cell.getRow().getData().endingIn);
+                    cell._cell.element.style.color = new window.Modules.WSOP.TimeCalc().getPrazosColor(cell.getRow().getData().endingIn);
+
+                    return formatTime(cell.getRow().getData().modifiedIn);
+                }
+            },
             {
                 title: 'Expira Em', field: 'endingIn',
                 formatter: function (cell) {

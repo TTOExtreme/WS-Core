@@ -109,8 +109,30 @@ ClientEvents.on("wsop/os/print", (data) => {
         let npacotes = new window.Modules.WSOP.formaEnvio().getNCaixas(document.getElementById("wsop_edt_formaEnvio_caixa").value, parseInt(document.getElementById("qnttotal").innerText));
         document.getElementById("wsop_edt_formaEnvio_precoenvio_show").innerText = "R$ " + newprEnvio +
             " (" + npacotes + ((npacotes > 1) ? " Pacotes)" : " Pacote)");
-
+        ClientEvents.emit("wsop_print_reload_price");
     });
+
+
+    ClientEvents.on("wsop_print_reload_price", () => {
+        //Redefine o preco de envio caso ainda esteja aberto a OS
+        if (data.status != "finalizado") {
+            let newprecoEnvio = new window.Modules.WSOP.formaEnvio().getPrice(
+                document.getElementById("wsop_edt_formaEnvio_country").value,
+                document.getElementById("wsop_edt_formaEnvio_uf").value,
+                document.getElementById("wsop_edt_formaEnvio").value,
+                document.getElementById("wsop_edt_formaEnvio_caixa").value,
+                parseInt(document.getElementById("qnttotal").innerText));
+            if (newprecoEnvio != data.precoEnvio) {
+                data.precoEnvio = newprecoEnvio;
+                //ClientEvents.on("WSOP/os/edt");
+            }
+        }
+
+        let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(data.precoEnvio)).toFixed(2);
+        document.getElementById("wsop_edt_price").innerText = price;
+        document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
+    })
+
 
     produtosTable.innerHTML += htm;
     ClientEvents.emit("wsop_changeBoxSize");
