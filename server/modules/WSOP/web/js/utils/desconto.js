@@ -39,6 +39,16 @@ window.Modules.WSOP.desconto = class desconto {
             max: 80000
         },
     ]
+    pagamento = [
+        {
+            name: "A Vista",
+            code: "avista"
+        },
+        {
+            name: "50% Entrada, 50% Saida",
+            code: "50_50"
+        }
+    ]
 
 
     descontoToOPTList(selected = 100.00, total = 100) {
@@ -48,6 +58,13 @@ window.Modules.WSOP.desconto = class desconto {
             if (parseFloat(total) >= item.min && parseFloat(total) <= item.max) {
                 ret += "<option value='" + item.preco + "' " + ((item.preco == selected) ? "selected" : "") + ">" + item.name + "</option>";
             }
+        });
+        return ret;
+    }
+    pagamentoToOPTList(selected = "avista") {
+        let ret = ""
+        this.pagamento.forEach((item, index) => {
+            ret += "<option value='" + item.code + "' " + ((item.code == selected) ? "selected" : "") + ">" + item.name + "</option>";
         });
         return ret;
     }

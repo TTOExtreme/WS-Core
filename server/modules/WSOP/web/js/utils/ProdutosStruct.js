@@ -148,6 +148,15 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             custo: 27.44
         },
         {
+            name: "Calça Techstripe",
+            tecidos: ["Helanca"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 98.00,
+            precoRevenda: 98.00,
+            custo: 50.00
+        },
+        {
             name: "Manga Curta Futebol",
             tecidos: ["Elastano", "Dry"],
             vies: ["-"],
@@ -491,6 +500,13 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             custo: 25.00
         },
         {
+            name: "Calça TechStripe",
+            tecidos: ["Heavy Elastano", "Helanca"],
+            gola: ["-"],
+            preco: 98.00,
+            custo: 50.00
+        },
+        {
             name: "Conjunto Sunga e Manga Longa",
             tecidos: ["-"],
             gola: ["-"],
@@ -622,7 +638,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
     getModelos(Modelo = "") {
         let ret = "<option disabled " + (Modelo == "" ? "selected" : "") + ">Selecione:</option>"
         this._Modelos.forEach((item, index) => {
-            ret += "<option value='" + item.name + "' " + ((item == Modelo) ? "selected" : "") + ">" + item.name + "</option>";
+            ret += "<option value='" + item.name + "' " + ((item.name == Modelo) ? "selected" : "") + ">" + item.name + "</option>";
         })
         return ret;
     }

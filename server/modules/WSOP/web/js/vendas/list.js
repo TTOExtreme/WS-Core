@@ -10,6 +10,7 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 
 
 ClientEvents.emit("LoadExternal", [
+    "./module/WSOP/js/api/linkShow.js",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/timeCalc.js",
     "./module/WSOP/js/utils/formaEnvio.js",
@@ -104,6 +105,25 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
             htm.appendChild(bot);
         }
+
+        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-credit-card");
+            bot.setAttribute("title", "Gerar Link");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/api/pagarme/gerarlink", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-money");
+            bot.setAttribute("title", "Visualizar Pagamentos");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/api/pagarme/list", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        //
         return htm;
     };
     actionfield = "0";

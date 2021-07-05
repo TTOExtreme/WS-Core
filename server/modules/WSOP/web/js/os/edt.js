@@ -18,6 +18,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_edt_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Data Entrega:</td><td><input type='date' id='wsop_edt_endingIn' value='" + formatTimeAMD(data.endingIn) + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Forma Envio:</td><td><Select id='wsop_edt_formaEnvio' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>FormaPagamento:</td><td><Select id='wsop_edt_formaPagamento'>" + new window.Modules.WSOP.desconto().pagamentoToOPTList(data.formaPagamento) + "</select></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Pais:</td><td><Select id='wsop_edt_formaEnvio_country' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCountry(data.C_country) + "</select></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Estado:</td><td><Select id='wsop_edt_formaEnvio_uf' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListEstado(data.C_uf) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Caixa:</td><td><Select id='wsop_edt_formaEnvio_caixa' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCaixa(data.caixa) + "</select><sizecaixa id='wsop_edt_formaEnvio_size'>" + new window.Modules.WSOP.formaEnvio().getSizeCaixa(data.caixa) + "</td></tr>" +
@@ -47,7 +48,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         if (document.getElementById("wsop_edt_produto") != undefined) {
             document.getElementById("wsop_searchbot").value = "Buscando...";
             document.getElementById("wsop_searchbot").disabled = true;
-            ClientEvents.emit("SendSocket", "wsop/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
+            ClientEvents.emit("SendSocket", "WSOP/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
         }
     })
     ClientEvents.on("wsop_changeBoxSize", () => {
@@ -65,6 +66,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         document.getElementById("wsop_edt_formaEnvio_precoenvio_show").innerText = "R$ " + newprEnvio +
             " (" + npacotes + ((npacotes > 1) ? " Pacotes)" : " Pacote)");
 
+        ClientEvents.emit("wsop_reload_price");
     });
 
     let anexosTable = document.getElementById("wsop_edt_anexos");
@@ -95,33 +97,48 @@ ClientEvents.on("wsop/os/edt", (data) => {
                 "<td>" + produto.barcode + "</td>" +
                 "<td>" + produto.name + "</td>" +
                 "<td>" + produto.qnt + "</td>" +
-                "<td>" + produto.price + " R$</td>" +
+                "<td>R$ " + produto.price + "</td>" +
                 "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
         });
     }
 
-    //Redefine o preco de envio caso ainda esteja aberto a OS
-    if (data.status != "finalizado") {
-        let newprecoEnvio = new window.Modules.WSOP.formaEnvio().getPrice(data.C_country, data.C_uf, data.formaEnvio, data.caixa, totalqnt);
-        if (newprecoEnvio != data.precoEnvio) {
-            data.precoEnvio = newprecoEnvio;
-            //ClientEvents.on("WSOP/os/edt");
+    ClientEvents.on("wsop_reload_price", () => {
+        //Redefine o preco de envio caso ainda esteja aberto a OS
+        if (data.status != "finalizado") {
+            let newprecoEnvio = new window.Modules.WSOP.formaEnvio().getPrice(
+                document.getElementById("wsop_edt_formaEnvio_country").value,
+                document.getElementById("wsop_edt_formaEnvio_uf").value,
+                document.getElementById("wsop_edt_formaEnvio").value,
+                document.getElementById("wsop_edt_formaEnvio_caixa").value,
+                parseInt(document.getElementById("qnttotal").innerText));
+            if (newprecoEnvio != data.precoEnvio) {
+                data.precoEnvio = newprecoEnvio;
+                //ClientEvents.on("WSOP/os/edt");
+            }
         }
-    }
+
+        console.log(total, data);
+        let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(data.precoEnvio)).toFixed(2);
+        document.getElementById("wsop_edt_price").innerText = price;
+        document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
+
+        //salva o novo preço em caso de alteração
+        if (price != data.price) {
+            data.price = price;
+            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 50);
+        }
+    })
 
     htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
-    htm += "<tr style='display:none'><td id='wsop_edt_formaEnvio_precoenvio'>" + data.precoEnvio + "</td>";
-    htm += "<tr style='display:none'><td id='wsop_edt_price'>" + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
+    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto' onchange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
+    htm += "<tr style='display:none'><td id='wsop_edt_formaEnvio_precoenvio'> R$ Calculando</td>";
+    htm += "<tr style='display:none'><td id='wsop_edt_price'>0</td>";
     htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
-    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) + "</td>";
+    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td id='wsop_edt_total_show'>R$ Calculando</td>";
 
     htm += "<tr><td style='border:none; padding-top:20px' colspan='4'></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>";
     produtosTable.innerHTML += htm;
 
-    if (parseFloat(parseFloat(total - data.desconto) + parseFloat(data.precoEnvio)).toFixed(2) != data.price) {
-        setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 50);
-    }
 
     ClientEvents.clear("wsop/os/fileuploaded");
     ClientEvents.on("wsop/os/fileuploaded", () => {
@@ -201,6 +218,7 @@ ClientEvents.on("WSOP/os/edt", () => {
         caixa: document.getElementById("wsop_edt_formaEnvio_caixa").value,
         endingIn: new Date(document.getElementById("wsop_edt_endingIn").value).getTime() + 24 * 3600000, //Adiciona um dia para sanar um bug de salvar um dia para traz
         formaEnvio: document.getElementById("wsop_edt_formaEnvio").value,
+        formaPagamento: document.getElementById("wsop_edt_formaPagamento").value,
         precoEnvio: document.getElementById("wsop_edt_formaEnvio_precoenvio").value,
         desconto: document.getElementById("wsop_edt_desconto").value,
         active: document.getElementById("wsop_edt_active").checked,

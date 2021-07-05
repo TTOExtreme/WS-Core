@@ -31,7 +31,7 @@ class ProdutosManipulator {
 
     ListByBarcode(barcode) {
         return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory, C.img FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
-            " WHERE C.name<>'null' AND C.barcode like '%" + (barcode || "") + "%' ORDER BY C.id DESC LIMIT 100;");
+            " WHERE  C.name<>'null' AND C.barcode like '%" + (barcode || "") + "%' ORDER BY C.id DESC LIMIT 100;");
     }
 
     /**

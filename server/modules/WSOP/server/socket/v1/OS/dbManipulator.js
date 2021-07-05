@@ -28,7 +28,7 @@ class osManipulator {
                 st = " AND OS.status LIKE '%" + status + "%'";
             }
         }
-        return this.db.query("SELECT OS.id, OS.createdIn, OS.endingIn,OS.price, OS.statusChange, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+        return this.db.query("SELECT OS.id, OS.createdIn, OS.endingIn,OS.price, OS.statusChange,OS.payment, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
             " WHERE OS.active=1 " +
@@ -83,11 +83,11 @@ class osManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createOS(id_Cliente, description, status, statusChange, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
+    createOS(id_Cliente, description, status, statusChange, formaEnvio, formaPagamento, caixa, country, uf, prazo, endingIn, active, UserID) {
         let sql = "INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
-            " (id_Cliente, description, status,statusChange, formaEnvio, prazo, endingIn, active, createdBy, createdIn)" +
+            " (id_Cliente, description, status,statusChange, formaEnvio, formaPagamento, prazo, endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
+            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + formaPagamento + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
         return this.db.query(sql);
     }
 
@@ -100,10 +100,11 @@ class osManipulator {
      * @param {*} active 
      * @param {*} UserID 
      */
-    editOS(ID, description, formaEnvio, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
+    editOS(ID, description, formaEnvio, formaPagamento, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
             " formaEnvio='" + formaEnvio + "'," +
+            " formaPagamento='" + formaPagamento + "'," +
             " caixa='" + caixa + "'," +
             " country='" + country + "'," +
             " uf='" + uf + "'," +
@@ -129,6 +130,19 @@ class osManipulator {
             " status='" + status + "'," +
             " statusChange='" + statusChange + "'," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
+            " WHERE id='" + ID + "';");
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} status 
+     * @param {*} UserID 
+     */
+    editPaymentOS(ID, payment) {
+
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
+            " payment='" + payment + "'" +
             " WHERE id='" + ID + "';");
     }
 

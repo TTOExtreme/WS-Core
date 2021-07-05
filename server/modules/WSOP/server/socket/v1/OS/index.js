@@ -291,7 +291,7 @@ class Socket {
                 statusChange.push({ status: req[0].status, in: new Date().getTime(), obs: "", inUser: this._myself.myself.name });
 
 
-                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
+                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
 
                     this.saveLog(results.insertId, "Adding OS's", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
@@ -408,6 +408,7 @@ class Socket {
                 }
             }).catch((err) => {
                 this._log.warning("User Access Denied to Add Attachment to OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -578,13 +579,11 @@ class Socket {
             })
         })
 
-        //
-
         /**
          * Delete Anexo da OS
          */
         socket.on("wsop/os/anexo/del", (req) => {
-            this._myself.checkPermission("WSOP/menu/os").then(() => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
                 this._OsClass.delAnexo(req[0].id, this._myself.myself.id).then(() => {
                     this.saveLog(req[0].id_os, "Removing Attachment from OS", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
@@ -625,8 +624,8 @@ class Socket {
          * Editar OS
          */
         socket.on("wsop/os/edt", (req) => {
-            this._myself.checkPermission("WSOP/os/add").then(() => {
-                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
                     this.saveLog(req[0].id, "Editing OS", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "system/edited/os",
@@ -775,6 +774,7 @@ class Socket {
          */
         socket.on("wsop/lst/os/ctx", (req) => {
             let itemList = [];
+            /*
             itemList.push({
                 name: "Visualizar",
                 active: true,
@@ -799,7 +799,6 @@ class Socket {
                     data: req[0].row
                 }
             });
-            //*/
             if (this._myself.checkPermissionSync("WSOP/os/edt")) {
                 itemList.push({
                     name: "Editar",
@@ -829,7 +828,7 @@ class Socket {
                     name: "Excluir",
                     active: false
                 });
-            }
+            }//*/
 
 
             socket.emit("ClientEvents", {
