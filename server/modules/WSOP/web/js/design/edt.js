@@ -36,34 +36,37 @@ ClientEvents.on("wsop/os/edt", (data) => {
 
     let anexosTable = document.getElementById("wsop_edt_anexos");
     let htm = "";
-    data.anexos.forEach((anexo, index) => {
-        anexo.id_os = data.id;
-        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
-    });
-    anexosTable.innerHTML += htm;
+
+    if (data.anexos != undefined) {
+        data.anexos.forEach((anexo, index) => {
+            anexo.id_os = data.id;
+            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+        });
+        anexosTable.innerHTML += htm;
+    }
 
     let produtosTable = document.getElementById("wsop_edt_produtos");
     htm = "<tr class='wsop_produto_item1'><td style='width:30px'>Ações:</td><td>Código:</td><td>Item:</td><td>Quantidade:</td></tr>";
 
     let total = 0;
     let totalqnt = 0;
-    data.produtos.forEach((produto) => {
-        total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
-        totalqnt += produto.qnt;
+    if (data.produtos != undefined) {
+        data.produtos.forEach((produto) => {
+            total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
+            totalqnt += produto.qnt;
 
-        ClientEvents.clear("wsop/os/produto/edt/" + produto.id);
-        ClientEvents.on("wsop/os/produto/edt/" + produto.id, () => {
-            ClientEvents.emit("wsop/os/produto/edt", produto);
+            ClientEvents.clear("wsop/os/produto/edt/" + produto.id);
+            ClientEvents.on("wsop/os/produto/edt/" + produto.id, () => {
+                ClientEvents.emit("wsop/os/produto/edt", produto);
+            });
+            htm += "<tr class='wsop_produto_item1'><td style='width:30px'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsop/os/produto/edt/" + produto.id + "\")'></td>" +
+                "<td>" + produto.barcode + "</td>" +
+                "<td>" + produto.name + "</td>" +
+                "<td>" + produto.qnt + "</td>" +
+                "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
         });
-        htm += "<tr class='wsop_produto_item1'><td style='width:30px'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsop/os/produto/edt/" + produto.id + "\")'></td>" +
-            "<td>" + produto.barcode + "</td>" +
-            "<td>" + produto.name + "</td>" +
-            "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
-    });
-
-    produtosTable.innerHTML += htm;
-
+        produtosTable.innerHTML += htm;
+    }
 
     ClientEvents.clear("wsop/os/fileuploaded");
     ClientEvents.on("wsop/os/fileuploaded", () => {
