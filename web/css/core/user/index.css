@@ -45,6 +45,11 @@
     height: 20px;
 }
 
+.usr_edt_div div.tabulator,
+.usr_add_div div.tabulator {
+    max-width: calc(100vw - 66px);
+    overflow: scroll;
+}
 
 input[type="text"]:disabled {
     background: var(--input-disabled-bg);
