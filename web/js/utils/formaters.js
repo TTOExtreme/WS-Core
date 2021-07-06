@@ -108,7 +108,7 @@ function clearDesc(desc) {
             .replace(new RegExp(">", "g"), "&get;").replace(new RegExp("&gt;", "g"), "&get;")
             .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
             .replace(new RegExp(" ", "g"), "&space;").replace(new RegExp("\n", "g"), "&jp;")
-            .replace(new RegExp("\\", "g"), "&bcslsh;")
+            .replace(new RegExp(/([[\]\\])/g, "g"), "&bcslsh;")
     } else {
         return desc;
     }

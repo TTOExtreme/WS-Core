@@ -1,11 +1,33 @@
-.wsop_edt_div {
+.wsop_edt_div,
+.wsop_add_div {
+    color: white;
+    font-family: sans-serif;
     position: absolute;
     background: var(--menu-bg);
     top: 50vh;
     left: 50vw;
-    transform: translate(-50%, -50%);
+    transform: translate(calc(-50% + 15px), -50%);
     padding: 10px;
+    padding-right: 20px;
     border-radius: 10px;
+    max-height: calc(100vh - 90px);
+    min-width: calc(30vw);
+    max-width: calc(100vw - 66px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #606060;
+}
+
+.wsop_edt_div table,
+.wsop_add_div table {
+    width: 100%;
+}
+
+.div_wsop_hist_table {
+    max-height: calc(100vh - 90px);
+    min-width: calc(30vw);
+    max-width: calc(100vw - 66px);
+    overflow: auto;
 }
 
 .edt_usr_closeButton,
@@ -30,23 +52,6 @@
 .wsop_edt_label_info {
     color: red;
     animation: opacity 1s linear;
-}
-
-.wsop_add_div {
-    color: white;
-    font-family: sans-serif;
-    position: absolute;
-    background: var(--menu-bg);
-    top: 50vh;
-    left: 50vw;
-    transform: translate(-50%, -50%);
-    padding: 10px;
-    padding-right: 20px;
-    border-radius: 10px;
-    max-height: calc(100vh - 90px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: 1px solid #606060;
 }
 
 .wsop_add_div input[type="text"] {
@@ -211,7 +216,6 @@ input[type="text"]:disabled {
 
 .termos {
     font-size: 9pt;
-    width: 80vw;
     overflow-wrap: break-word;
     white-space: pre-wrap;
 }
