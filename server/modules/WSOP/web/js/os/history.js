@@ -15,7 +15,7 @@ ClientEvents.on("wsop/os/history", (data) => {
         sc = JSON.parse(data.statusChange);
     } catch (err) {
         try {
-            sc = JSON.parse(unclearDesc(data.statusChange));
+            sc = JSON.parse(unclearJSON(data.statusChange));
         } catch (err) {
             console.log(data.statusChange);
             console.log(err);
