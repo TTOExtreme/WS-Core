@@ -24,7 +24,7 @@
 
 .div_wsop_hist_table {
     max-height: calc(100vh - 115px);
-    min-width: calc(30vw);
+    min-width: calc(90vw);
     max-width: calc(100vw - 66px);
     overflow: auto;
 }
@@ -71,8 +71,7 @@
     max-height: calc(100vh - 90px);
     min-width: calc(50vw);
     max-width: calc(100vw - 66px);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     border: 1px solid #606060;
     height: calc(100vh - 90px);
 }
