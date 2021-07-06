@@ -70,7 +70,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/edt") && new window.Modules.WSOP.StatusID().blockEdit(cell.getRow().getData().status, "design")) {
+        if (Myself.checkPermission("WSOP/os/edt") && !new window.Modules.WSOP.StatusID().blockEdit(cell.getRow().getData().status, "design")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-edit");
             bot.setAttribute("title", "Editar");
