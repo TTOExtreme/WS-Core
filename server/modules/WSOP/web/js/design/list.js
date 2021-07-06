@@ -78,7 +78,7 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edt", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "design")) {
+        if (Myself.checkPermission("WSOP/os/osview") && !new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "design")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
