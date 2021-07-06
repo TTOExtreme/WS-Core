@@ -100,7 +100,7 @@ class osManipulator {
      * @param {*} active 
      * @param {*} UserID 
      */
-    editOS(ID, description, formaEnvio, formaPagamento, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
+    editOS(ID, description, formaEnvio, formaPagamento, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, rastreio, active, UserID) {
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
             " formaEnvio='" + formaEnvio + "'," +
@@ -113,6 +113,7 @@ class osManipulator {
             " precoEnvio='" + precoEnvio + "'," +
             " desconto='" + desconto + "'," +
             " endingIn=" + endingIn + "," +
+            " rastreio='" + rastreio + "'," +
             " active=" + (active ? 1 : 0) + "," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
             " WHERE id='" + ID + "';");

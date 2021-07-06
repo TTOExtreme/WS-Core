@@ -29,6 +29,12 @@
     overflow: auto;
 }
 
+.div_wsop_add_table {
+    max-height: calc(100vh - 115px);
+    max-width: calc(100vw - 66px);
+    overflow: auto;
+}
+
 .edt_usr_closeButton,
 .wsop_add_closeButton,
 .wsop_edt_closeButton {

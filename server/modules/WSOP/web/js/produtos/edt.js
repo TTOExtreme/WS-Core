@@ -12,7 +12,7 @@ ClientEvents.on("wsop/produtos/edt", (data) => {
     div.innerHTML = "" +
         "<table>" +
         "<tr><td id='move_menu_wsop_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_div')>X</p></td></tr>" +
-        "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr><td colspan=2><div class='div_wsop_add_table'><table><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_edt_name' type='text' value='" + data.name + "'></td></tr>" +
 
         "<tr><td class='wsop_edt_label'>Modelo:</td><td><select onchange='ClientEvents.emit(\"wsop/produtos/setVies/edt\", \"\")' id='wsop_edt_produto_modelo'>" +
