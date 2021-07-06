@@ -18,8 +18,7 @@
     max-height: calc(100vh - 90px);
     min-width: calc(30vw);
     max-width: calc(100vw - 66px);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     border: 1px solid #606060;
 }
 

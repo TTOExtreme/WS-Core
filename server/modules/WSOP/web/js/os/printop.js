@@ -1,5 +1,6 @@
 
 ClientEvents.on("wsop/os/printop", (data) => {
+    ClientEvents.emit("close_menu", 'wsop_print_div')
     ClientEvents.emit("close_menu", "wsop_printop_div");
     /**
      * create Show Page for user info
@@ -12,7 +13,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<table style='width:100%;'>" +
         "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_printop_div')>X</p></td></tr></table>" +
         "<div id='wsop_print' class='wsop_print'>" +
-        "<table style='width:100%;'>" +
+        "<div class='div_wsop_hist_table'><table><tr><td><table style='width:100%;'>" +
         //OS ID
         "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
@@ -44,7 +45,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<table style='width: 100%;; border-collapse:collapse'><tbody id='wsop_print_produtos' class='wsop_print_produtos'>" +
         "<tr><td class='wsop_print_label' style='float:left'>Produtos:</td><td></td></tr>" +
         "<tr><td colspan=4 style='height:20px'></td></tr>" +
-        "</table>" +
+        "</table></tr></td></table></div>" +
         "</div>";
 
     document.body.appendChild(div);
