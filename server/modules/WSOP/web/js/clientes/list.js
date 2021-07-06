@@ -24,12 +24,25 @@ window.UserList = class UserList {
     /**Defines of Table */
     actionFunction = "null";
     actionName = "";
-    actionIcon = "handle"; //"buttonTick" "buttonCross" "tickCross"
     actionfield = "0";
     actionCallback = null;
     confirmExecution = false;
     actionOptions = [];
     actionRowFormatter = (data) => { };
+    actionIcon = function (cell, formatterParams, onRendered) { //plain text value
+        let rowdata = cell._cell.row.data;
+        let htm = document.createElement("div");
+
+        if (Myself.checkPermission("WSOP/cliente/edt")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-edit");
+            bot.setAttribute("title", "Editar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/clientes/edt", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        return htm;
+    };
     UserListData = [];
     rowContext = (ev, row) => {
         ClientEvents.emit("SendSocket", "wsop/lst/clientes/ctx", { x: ev.clientX, y: ev.clientY + 10, row: row._row.data });
@@ -44,24 +57,7 @@ window.UserList = class UserList {
         headerMenu: [],
         columns: [
             {
-                title: this.actionName, field: this.actionfield, formatter: this.actionIcon, cellClick: function (e, cell) {
-                    let data = cell.getData();
-                    if (this.confirmExecution) {
-                        if (confirm("Voce esta prestes a " + ((this.actionOptions.length > 0) ? this.actionOptions[data[this.actionfield]] : this.actionName) + " o Cliente: " + data.user + "\nVoce tem certeza disso?")) {
-                            if (this.actionCallback != null) {
-                                this.actionCallback(data);
-                            } else {
-                                send(this.actionFunction, data);
-                            }
-                        }
-                    } else {
-                        if (this.actionCallback != null) {
-                            this.actionCallback(data);
-                        } else {
-                            send(this.actionFunction, data);
-                        }
-                    }
-                }, visible: !(this.actionName == "")
+                title: this.actionName, field: this.actionfield, formatter: this.actionIcon
             },
             { title: 'Nome', field: 'name', headerFilter: "input" },
             { title: 'CEP', field: 'cep', headerFilter: "input" },
