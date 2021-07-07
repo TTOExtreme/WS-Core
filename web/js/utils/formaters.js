@@ -84,6 +84,7 @@ function unclearDesc(desc) {
             .replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&let;", "g"), "<")
             .replace(new RegExp("&space;", "g"), " ").replace(new RegExp("&jp;", "g"), "\n")
             .replace(new RegExp("&bcslsh;", "g"), "\\")
+            .replace(new RegExp("&sqt;", "g"), "'")
     } else {
         return desc;
     }
@@ -95,6 +96,7 @@ function unclearJSON(desc) {
             .replace(new RegExp("&gt;", "g"), ">").replace(new RegExp("&get;", "g"), ">")
             .replace(new RegExp("&lt;", "g"), "<").replace(new RegExp("&let;", "g"), "<")
             .replace(new RegExp("&space;", "g"), " ")
+            .replace(new RegExp("&sqt;", "g"), "'")
     } else {
         return desc;
     }
@@ -109,6 +111,7 @@ function clearDesc(desc) {
             .replace(new RegExp("<", "g"), "&let;").replace(new RegExp("&lt;", "g"), "&let;")
             .replace(new RegExp(" ", "g"), "&space;").replace(new RegExp("\n", "g"), "&jp;")
             .replace(new RegExp(/([[\]\\])/g, "g"), "&bcslsh;")
+            .replace(new RegExp("'", "g"), "&sqt;")
     } else {
         return desc;
     }

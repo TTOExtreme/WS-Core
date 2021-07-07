@@ -122,7 +122,7 @@ window.UserList = class UserList {
                     return parseInt(cell.getRow().getData().id);
                 }, sorter: "number"
             },
-            //{ title: 'Cliente', field: 'cliente', headerFilter: "input" },
+            { title: 'Cliente', field: 'cliente', headerFilter: "input" },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
                 formatter: function (cell) {
