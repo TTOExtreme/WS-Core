@@ -254,6 +254,14 @@ class apiManipulator {
                         resolve();
                         //Loop de Caregamento
                     })
+                        .catch(err => {
+                            if (socket != null) {
+                                socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                            }
+                            this.log.error("On Updating Vendas pagas Loja Integrada")
+                            this.log.error(json)
+                            this.log.error(err)
+                        })
                 } else {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
@@ -333,7 +341,18 @@ class apiManipulator {
                         resolve();
                         //Loop de Caregamento
                         setTimeout(() => {
-                            apiOPLIManipulator.updatePaidSells(socket);
+                            apiOPLIManipulator.updatePaidSells(socket)
+                                .then(() => {
+
+                                })
+                                .catch(err => {
+                                    if (socket != null) {
+                                        socket.emit("ClientEvents", { event: "opli/appendlog", data: "ERRO: " + err })
+                                    }
+                                    this.log.error("On Updating Vendas pagas Loja Integrada")
+                                    this.log.error(json)
+                                    this.log.error(err)
+                                })
 
                         }, 60 * 1000);
                     })
