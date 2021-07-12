@@ -27,6 +27,7 @@ class Socket {
         this._osModule = new os(WSMainServer);
         this._emitenteModule = new emitente(WSMainServer);
         this._posvendasModule = new posvendas(WSMainServer);
+        this._log.task("api-mod-WSOP", "Loaded API WSOP", 1);
     }
 
     /**
@@ -47,7 +48,6 @@ class Socket {
         this._emitenteModule.socket(this._socket, this._myself);
         this._posvendasModule.socket(this._socket, this._myself);
 
-        this._log.task("api-mod-WSOP", "Loaded API WSOP", 1);
     }
 }
 module.exports = { Socket }

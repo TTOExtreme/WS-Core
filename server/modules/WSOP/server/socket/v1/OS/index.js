@@ -24,6 +24,7 @@ class Socket {
         this._OsClass = new osManipulator(WSMainServer);
         this._imageClass = new imageManipulator();
         this.db = WSMainServer.db;
+        this._log.task("api-mod-wsop-os", "Api wsop-os Loaded", 1);
     }
 
     /**
@@ -50,7 +51,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-os", "Api wsop-os Loaded", 1);
         this._myself = Myself;
 
         /**
@@ -341,7 +341,7 @@ class Socket {
                     fs.writeFileSync(filepath + name, req[0].stream);
 
                     let thumb = "os/" + name;
-                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".jpg") {
+                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".jpg" && req[0].ext != ".jfif") {
                         thumb = "file_thumb.png";
                         this._OsClass.appendAnexo(req[0].id, req[0].name, "os/" + name, thumb, this._myself.myself.id).then((res) => {
                             this.saveLog(req[0].id, "Adding file", JSON.stringify(req[0]), this._myself.myself.id);

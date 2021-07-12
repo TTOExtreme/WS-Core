@@ -20,6 +20,7 @@
 .wsop_edt_div table,
 .wsop_add_div table {
     width: 100%;
+    overflow: hidden;
 }
 
 .div_wsop_hist_table {

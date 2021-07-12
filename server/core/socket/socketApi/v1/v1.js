@@ -9,6 +9,7 @@ class v1 {
     _log;
     _config;
     _WSMainServer;
+    _PreloadedModules = {};
 
     /**
      * Constructor for User Class
@@ -80,10 +81,12 @@ class v1 {
         //load core modules
         fs.readdirSync(path(__dirname + '/core/')).forEach((mod) => {
             try {
-                this._log.task("api-mod-" + mod.replace(".js", ""), "Loading API " + mod.replace(".js", ""), 0);
-                let modSocket = require(__dirname + '/core/' + mod)
-                let modClass = new modSocket.Socket(this._WSMainServer);
-                modClass.socket(socket, Myself);
+                if (this._PreloadedModules[mod] == undefined) {
+                    this._log.task("api-mod-" + mod.replace(".js", ""), "Loading API " + mod.replace(".js", ""), 0);
+                    let modSocket = require(__dirname + '/core/' + mod)
+                    this._PreloadedModules[mod] = new modSocket.Socket(this._WSMainServer);
+                }
+                this._PreloadedModules[mod].socket(socket, Myself);
             } catch (err) {
                 this._log.task("api-mod-" + mod.replace(".js", ""), "Api " + mod.replace(".js", "") + " Failed to Load", 3);
                 this._log.error(err);
@@ -94,9 +97,11 @@ class v1 {
         fs.readdirSync(path(__dirname + '/../../../../modules/')).forEach((mod) => {
             if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))) {
                 try {
-                    this._log.task("api-mod-" + mod, "Loading API " + mod, 0);
-                    let modSocket = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
-                    modSocket.socket(socket, Myself);
+                    if (this._PreloadedModules[mod + "_Socket"] == undefined) {
+                        this._log.task("api-mod-" + mod, "Loading API " + mod, 0);
+                        this._PreloadedModules[mod + "_Socket"] = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
+                    }
+                    this._PreloadedModules[mod + "_Socket"].socket(socket, Myself);
                 } catch (err) {
                     this._log.task("api-mod-" + mod, "Api " + mod + " Failed to Load", 3);
                     this._log.error(err);

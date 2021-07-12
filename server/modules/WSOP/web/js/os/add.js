@@ -24,7 +24,7 @@ ClientEvents.on("WSOP/os/add", () => {
     div.innerHTML = "" +
         "<table>" +
         "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_os_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_add_os_div')>X</p></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' value='" + data.cliente + "'><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSOP/clientes/add\")'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_searchclientbot' type='button' onclick='ClientEvents.emit(\"searchclient\")' value='Buscar'></input><input id='wsop_add_cliente' placeholder='Cliente' type='text' list='clientsearchlist'></input><datalist id='clientsearchlist'></datalist><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSOP/clientes/add\")'></td></tr>" +
         "<tr style='display:none;'><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select disabled id='wsop_add_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_add_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
@@ -65,7 +65,7 @@ ClientEvents.on("WSOP/os/add", () => {
         ],
     });
     editor.onChange = function (contents, core) { document.getElementById("wsop_add_description").innerHTML = contents; }
-    ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
+    //ClientEvents.emit("SendSocket", "wsop/os/clientes/lst",{name:""});
 });
 
 ClientEvents.on("WSOP/os/close", () => {
@@ -77,7 +77,7 @@ ClientEvents.on("WSOP/os/close", () => {
 
 ClientEvents.on("WSOP/os/save", () => {
     ClientEvents.emit("SendSocket", "wsop/os/add", {
-        id_cliente: document.getElementById("wsop_add_id_cliente").value,
+        id_cliente: document.getElementById("wsop_add_cliente").value,
         description: clearDesc(document.getElementById("wsop_add_description").value),
         active: document.getElementById("wsop_add_active").checked,
         status: document.getElementById("wsop_add_status").value,
@@ -86,14 +86,52 @@ ClientEvents.on("WSOP/os/save", () => {
         formaPagamento: document.getElementById("wsop_add_formaPagamento").value,
         endingIn: new window.Modules.WSOP.TimeCalc().getPrazo(new Date().getTime(), document.getElementById("wsop_add_prazo").value),
     });
-    /**
-     * save data and closes the page if success
-     * closing part from server command
-     */
+})
+
+
+ClientEvents.on("searchclient", () => {
+    if (document.getElementById("wsop_add_cliente") != undefined) {
+        document.getElementById("wsop_searchclientbot").value = "Buscando...";
+        document.getElementById("wsop_searchclientbot").disabled = true;
+        ClientEvents.emit("SendSocket", "WSOP/os/clientes/lst", { name: document.getElementById("wsop_add_cliente").value });
+    }
 })
 
 
 
+
+//Lista de produtos Autocomplete
+ClientEvents.on("wsop/os/clientes/lst", (arr) => {
+
+    if (arr.length > 0) {
+        document.getElementById("wsop_searchclientbot").value = "Buscar";
+        document.getElementById("wsop_searchclientbot").disabled = false;
+    } else {
+        setTimeout(() => {
+            document.getElementById("wsop_searchclientbot").value = "Buscar";
+            document.getElementById("wsop_searchclientbot").disabled = false;
+        }, 5000);
+    }
+
+    let inp = document.getElementById("clientsearchlist");
+    let val = document.getElementById("wsop_add_cliente");
+
+    if (inp == undefined) return;
+    inp.innerHTML = "";
+    let htm = ""
+
+    arr.forEach(item => {
+        let name = item.name + " | " + item.responsavel;
+        let namehtml = ((name).replace(new RegExp((val.value).toLowerCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
+        namehtml = ((namehtml).replace(new RegExp((val.value).toUpperCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
+        namehtml = ((namehtml).replace(new RegExp(("<strong></strong>"), "g"), ""));
+        htm += "<option value='" + item.id + "'>" + namehtml + "</option>";
+    })
+    inp.innerHTML = htm;
+});
+
+
+/*
 ClientEvents.on("wsop/os/clientes/lst", (arr) => {
     let inp = document.getElementById("wsop_add_cliente");
     var currentFocus;
@@ -122,7 +160,7 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
     }
 
 
-    /*execute a function when someone writes in the text field:*/
+    /*execute a function when someone writes in the text field:
     inp.addEventListener("input", function (e) {
         var a, b, i, val = this.value;
         closeAllLists();
@@ -178,4 +216,4 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
         closeAllLists(e.target);
     });
 });
-
+//*/

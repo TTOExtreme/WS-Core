@@ -19,6 +19,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._ApiClass = new apiManipulator(WSMainServer);
         this._db = WSMainServer.db;
+        this._log.task("api-mod-wsfinan-compras", "Api WSFinan Compras Loaded", 1);
     }
 
     /**
@@ -44,7 +45,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsfinan-compras", "Api WSFinan Compras Loaded", 1);
         this._myself = Myself;
 
 
