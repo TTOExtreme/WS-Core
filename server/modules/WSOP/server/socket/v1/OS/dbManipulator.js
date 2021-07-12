@@ -15,7 +15,7 @@ class osManipulator {
     /**
      * Lista todos As OS cadastrados sem filtro
      */
-    ListAll(id = "", createdBy = "", cliente = "", status = "") {
+    ListAll(id = "", createdBy = "", vendedor = "", cliente = "", status = "") {
         let st = "";
         if (typeof (status) == typeof ([])) {
             st = " AND";
@@ -28,17 +28,18 @@ class osManipulator {
                 st = " AND OS.status LIKE '%" + status + "%'";
             }
         }
-        return this.db.query("SELECT OS.id, OS.createdIn,OS.modifiedIn, OS.endingIn,OS.price, OS.statusChange,OS.payment, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+        let sql = "SELECT OS.id, OS.createdIn,OS.modifiedIn, OS.endingIn,OS.price, OS.statusChange,OS.payment, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
             " WHERE OS.active=1 " +
 
             (id != "" ? " AND OS.id =" + id + "" : "") +
             (createdBy != "" ? " AND U.name LIKE'%" + createdBy + "%'" : "") +
+            (vendedor != "" ? " AND OS.createdBy =" + vendedor + "" : "") +
             (cliente != "" ? " AND C.name LIKE'%" + cliente + "%'" : "") +
             st +
-
-            " ORDER BY OS.id DESC LIMIT 50;");
+            " ORDER BY OS.id DESC LIMIT 50;";
+        return this.db.query(sql);
     }
 
     /**
