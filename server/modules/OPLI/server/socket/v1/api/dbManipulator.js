@@ -1462,6 +1462,7 @@ class apiUtils {
 
                     } catch (err) {
                         console.log("Erro ao processar JSON OPLI > _LoadListPaidSells:", err)
+                        console.log("JSON:", json)
                         rej("Erro ao processar JSON OPLI > _LoadListPaidSells:");
                     }
                 });
