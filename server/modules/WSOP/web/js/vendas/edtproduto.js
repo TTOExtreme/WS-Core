@@ -16,7 +16,7 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_edt_div menu_dragger");
+    div.setAttribute("class", "wsop_add_div menu_dragger");
     div.setAttribute("id", "wsop_edt_product_div");
 
     div.innerHTML = "" +

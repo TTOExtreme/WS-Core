@@ -17,6 +17,7 @@ class Socket {
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
         this._db = WSMainServer.db;
+        this._log.task("api-mod-log", "Api Log Loaded", 1);
     }
 
     /**
@@ -25,7 +26,6 @@ class Socket {
      * @param {class_user} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-log", "Api Log Loaded", 1);
         this._myself = Myself;
         /**
          * List logs from name

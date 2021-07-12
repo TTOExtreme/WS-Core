@@ -22,6 +22,7 @@ class Socket {
         this._groupServer = new groupManipulator(WSMainServer);
         this._myself = new class_user(WSMainServer);
         this._grupself = new class_user(WSMainServer);
+        this._log.task("api-mod-group", "Api Groups Loaded", 1);
     }
 
     /**
@@ -30,7 +31,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-group", "Api Groups Loaded", 1);
         this._myself = Myself;
         /**
          * List all groups

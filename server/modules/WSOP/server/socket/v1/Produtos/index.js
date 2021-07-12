@@ -23,6 +23,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._ProdutosClass = new ProdutosManipulator(WSMainServer);
         this._imageClass = new imageManipulator();
+        this._log.task("api-mod-wsop-produto", "Api wsop-produtos Loaded", 1);
     }
 
     /**
@@ -31,7 +32,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-produto", "Api wsop-produtos Loaded", 1);
         this._myself = Myself;
 
         /**

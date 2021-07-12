@@ -18,6 +18,7 @@ class Socket {
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
         this._ClienteClass = new ClienteManipulator(WSMainServer);
+        this._log.task("api-mod-wsop-cliente", "Api wsop-clientes Loaded", 1);
     }
 
     /**
@@ -26,7 +27,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-cliente", "Api wsop-clientes Loaded", 1);
         this._myself = Myself;
 
         /**
@@ -58,26 +58,28 @@ class Socket {
         /**
          * List all clientes para Criação de OS
          */
-        socket.on("wsop/os/clientes/lst", (req) => {
+        socket.on("WSOP/os/clientes/lst", (req) => {
             this._myself.checkPermission("WSOP/menu/cliente").then(() => {
-                this._ClienteClass.ListAllOs().then((res) => {
-                    socket.emit("ClientEvents", {
-                        event: "wsop/os/clientes/lst",
-                        data: res
-                    })
-                }).catch((err) => {
-                    if (!this._myself.isLogged()) {
-                        socket.emit("logout", "");
-                    }
-                    socket.emit("ClientEvents", {
-                        event: "system_mess",
-                        data: {
-                            status: "ERROR",
-                            mess: err,
-                            time: 1000
+                if (req[0]) {
+                    this._ClienteClass.ListClientFiltered(req[0].name).then((res) => {
+                        socket.emit("ClientEvents", {
+                            event: "wsop/os/clientes/lst",
+                            data: res
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
                         }
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
                     })
-                })
+                }
             })
         })
 

@@ -18,6 +18,7 @@ class Socket {
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
         this._PosvendasClass = new PosvendasManipulator(WSMainServer);
+        this._log.task("api-mod-wsop-cliente", "Api wsop-posvendas Loaded", 1);
     }
 
     /**
@@ -26,7 +27,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-cliente", "Api wsop-posvendas Loaded", 1);
         this._myself = Myself;
 
         /**

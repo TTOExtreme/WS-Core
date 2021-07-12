@@ -24,9 +24,17 @@ class ClienteManipulator {
     /**
      * Lista todos os Clientes cadastrados sem filtro
      */
-    ListAllOs() {
+    ListAllClient() {
         return this.db.query("SELECT C.id, C.name, C.responsavel FROM " + this.db.DatabaseName + "._WSOP_Cliente AS C " +
             " WHERE C.active=1;");
+    }
+
+    /**
+     * Lista todos os Clientes cadastrados com filtro
+     */
+    ListClientFiltered(name) {
+        return this.db.query("SELECT C.id, C.name, C.responsavel FROM " + this.db.DatabaseName + "._WSOP_Cliente AS C " +
+            " WHERE C.active=1 AND (C.name LIKE '%" + name + "%' OR C.responsavel LIKE '%" + name + "%');");
     }
 
 

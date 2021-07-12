@@ -19,6 +19,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._ApiClass = new apiManipulator(WSMainServer);
         this._db = WSMainServer.db;
+        this._log.task("api-mod-opli-api", "Api opli-api Loaded", 1);
     }
 
     /**
@@ -27,7 +28,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-opli-api", "Api opli-api Loaded", 1);
         this._myself = Myself;
 
         /**

@@ -105,7 +105,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
             ClientEvents.on("wsop/os/produto/edt/" + produto.id, () => {
                 ClientEvents.emit("wsop/os/produto/edt", produto);
             });
-            htm += "<tr class='wsop_produto_item1'><td style='width:30px'><input value='Excluir' type='button' onclick='ClientEvents.emit(\"SendSocket\",\"wsop/os/produto/del\", {id:" + produto.id + ", id_os:" + data.id + "})'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsop/os/produto/edt/" + produto.id + "\")'></td>" +
+            htm += "<tr class='wsop_produto_item1'><td style='width:30px'><input value='Excluir' type='button' onclick='ClientEvents.emit(\"wsop/os/produto/del\", {id:" + produto.id + ", id_os:" + data.id + "})'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsop/os/produto/edt/" + produto.id + "\")'></td>" +
                 "<td>" + produto.barcode + "</td>" +
                 "<td>" + produto.name + "</td>" +
                 "<td>" + produto.qnt + "</td>" +
@@ -114,6 +114,14 @@ ClientEvents.on("wsop/os/edt", (data) => {
         });
     }
 
+    ClientEvents.clear("wsop/os/produto/del");
+    ClientEvents.on("wsop/os/produto/del", (proddata) => {
+        if (confirm("Desaja realmente excluir o Produto?")) {
+            ClientEvents.emit("SendSocket", "wsop/os/produto/del", { id: proddata.id, id_os: proddata.id_os });
+        }
+    })
+
+    ClientEvents.clear("wsop_reload_price");
     ClientEvents.on("wsop_reload_price", () => {
         //Redefine o preco de envio caso ainda esteja aberto a OS
         if (data.status != "finalizado") {
@@ -304,89 +312,8 @@ ClientEvents.on("wsop/os/produtos/lst", (arr) => {
         let name = item.barcode + " | " + item.name + " | Estoque(" + item.inventory + ")";
         let namehtml = ((name).replace(new RegExp((val.value).toLowerCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
         namehtml = ((namehtml).replace(new RegExp((val.value).toUpperCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
+        namehtml = ((namehtml).replace(new RegExp(("<strong></strong>"), "g"), ""));
         htm += "<option value='" + item.id + "'>" + namehtml + "</option>";
     })
     inp.innerHTML = htm;
-
-    /*
-    var currentFocus;
-
-
-    let addActive = (x) => {
-        if (!x) return false;
-        removeActive(x);
-        if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = (x.length - 1);
-        x[currentFocus].classList.add("autocomplete-active");
-    }
-
-    let removeActive = (x) => {
-        for (var i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active");
-        }
-    }
-    let closeAllLists = (elmnt) => {
-        var x = document.getElementsByClassName("autocomplete-items");
-        for (var i = 0; i < x.length; i++) {
-            if (elmnt != x[i] && elmnt != inp) {
-                x[i].parentNode.removeChild(x[i]);
-            }
-        }
-    }
-
-    //execute a function when someone writes in the text field
-    inp.addEventListener("input", function (e) {
-        var a, b, i, val = this.value;
-        closeAllLists();
-        if (!val) { return false; }
-        currentFocus = -1;
-        a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
-        this.parentNode.appendChild(a);
-        let lim = 8;
-        for (i = 0; i < arr.length; i++) {
-            let name = arr[i].barcode + " | " + arr[i].name + " | Estoque(" + arr[i].inventory + ")";
-            ;
-            if ((name + "").toLowerCase().indexOf((val + "").toLowerCase()) > -1 && lim > 0) {
-                lim--;
-                b = document.createElement("DIV");
-                b.setAttribute("id", arr[i].id)
-
-                let namehtml = ((name).replace(new RegExp((val).toLowerCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
-                namehtml = ((namehtml).replace(new RegExp((val).toUpperCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
-
-                b.innerHTML = namehtml;
-                b.innerHTML += "<input type='hidden' value='" + (name + " | Estoque(" + arr[i].inventory + ")") + "'>";
-                b.addEventListener("click", function (e) {
-                    inp.value = this.getElementsByTagName("input")[0].value;
-                    document.getElementById("wsop_edt_id_produto").value = this.getAttribute("id");
-                    closeAllLists();
-                });
-                a.appendChild(b);
-            }
-        }
-    });
-
-    inp.addEventListener("keydown", function (e) {
-        var x = document.getElementById(this.id + "autocomplete-list");
-        if (x) x = x.getElementsByTagName("div");
-        if (e.keyCode == 40) { //down
-            currentFocus++;
-            addActive(x);
-        } else if (e.keyCode == 38) { //up
-            currentFocus--;
-            addActive(x);
-        } else if (e.keyCode == 13) { //enter
-            e.preventDefault();
-            if (currentFocus > -1) {
-                if (x) x[currentFocus].click();
-            }
-        }
-    });
-
-    document.addEventListener("click", function (e) {
-        closeAllLists(e.target);
-    });
-    //*/
 });
