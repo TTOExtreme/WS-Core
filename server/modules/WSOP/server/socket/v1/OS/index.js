@@ -62,10 +62,11 @@ class Socket {
                     id: "",
                     cliente: "",
                     createdBy: "",
+                    vendedor: "",
                     status: ""
                 }]
             }
-            this._OsClass.ListAll(req[0].id, req[0].cliente, req[0].createdBy, req[0].status).then((res) => {
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, req[0].vendedor, req[0].cliente, req[0].status).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lst",
@@ -91,16 +92,17 @@ class Socket {
         /**
          * List all os
          */
-        socket.on("wsop/os/lstappend", (req) => {
+        socket.on("WSOP/os/lstappend", (req) => {
             if (req[0] == undefined) {
                 req = [{
                     id: "",
                     cliente: "",
                     createdBy: "",
+                    vendedor: "",
                     status: ""
                 }]
             }
-            this._OsClass.ListAll(req[0].id, req[0].cliente, req[0].createdBy, req[0].status).then((res) => {
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, req[0].vendedor, req[0].cliente, req[0].status).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lstappend",
