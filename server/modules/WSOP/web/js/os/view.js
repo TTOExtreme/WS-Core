@@ -19,6 +19,7 @@ ClientEvents.on("wsop/os/view", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
+        "<tr><td>Cliente: " + data.cliente + "</td></tr>" +
         "<tr><td>Descrição:</td></tr>" +
         "<tr><td class='wsop_produto_item2' style='border:none'>" + unclearDesc(data.description) + "</p></td></tr>" +
         "</table><hr>" +
@@ -52,10 +53,4 @@ ClientEvents.on("wsop/os/view", (data) => {
     produtosTable.innerHTML += htm;
 
     ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
-});
-
-ClientEvents.on("WSOP/os/view/close", () => {
-    if (document.getElementById("wsop_os_view_div")) {
-        document.body.removeChild(document.getElementById("wsop_os_view_div"));
-    }
 });

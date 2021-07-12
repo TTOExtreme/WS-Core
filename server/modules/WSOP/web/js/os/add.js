@@ -26,12 +26,12 @@ ClientEvents.on("WSOP/os/add", () => {
         "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_os_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_add_os_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' value='" + data.cliente + "'><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSOP/clientes/add\")'></td></tr>" +
         "<tr style='display:none;'><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Status:</td><td><Select disabled id='wsop_add_status'>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_add_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>FormaEnvio:</td><td><Select id='wsop_add_formaEnvio'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>FormaPagamento:</td><td><Select id='wsop_add_formaPagamento'>" + new window.Modules.WSOP.desconto().pagamentoToOPTList(data.formaPagamento) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_add_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Ativo:</td><td><input disabled id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"WSOP/os/save\")' ></td></tr>" +
         "</table>";

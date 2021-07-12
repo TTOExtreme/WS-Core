@@ -11,9 +11,8 @@ ClientEvents.on("wsop/os/edt", (data) => {
     div.innerHTML = "" +
         "<table>" +
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_div')>&#9776;</td><td class='wsop_edt_label' colspan=3><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_div')>X</p></td></tr>" +
-        "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr><td colspan=2><div class='div_wsop_hist_table' style='overflow-x:hidden'><table style='width:100%'><tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status' disabled>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_edt_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Data Entrega:</td><td><input type='date' id='wsop_edt_endingIn' value='" + formatTimeAMD(data.endingIn) + "'></td></tr>" +
@@ -25,12 +24,17 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cod. Rastreio:</td><td><input id='wsop_edt_rastreio' type='text' value='" + (data.rastreio || "") + "'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>" +
+
+        "</table><hr><table>" +
+        "<tr><td>Descrição:</td></tr>" +
+        "<tr><td colspan =2><textarea id='wsop_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "</table><hr>" +
+
         "<table style=''><tbody id='wsop_edt_anexos' class='wsop_edt_anexos'>" +
         "<tr><td colspan=5><p class='wsop_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p><input id='wsop_edt_img' style='float:right' type='button' value='Adicionar' onclick='ClientEvents.emit(\"wsop/os/uploadIMG\",\"" + data.id + "\")'></td></tr>" +
         "</table><hr>" +
-        "<table style='; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
-        "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
+        "<table style='; border-collapse:collapse'>" +
+        "<tr><td class='wsop_edt_label' style='float:left'>Add Produto:</td><td></td></tr>" +
         "<tr><td colspan=5>" +
         "<input id='wsop_searchbot' type='button' onclick='ClientEvents.emit(\"searchprod\")' value='Buscar'></input>" +
         "<input id='wsop_edt_produto' placeholder='Produto' type='text' list='prodsearchlist'></input><datalist id='prodsearchlist'></datalist>" +
@@ -40,6 +44,8 @@ ClientEvents.on("wsop/os/edt", (data) => {
         "<input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></input></td></tr>" +
         "<tr><td colspan=5><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
         "<tr><td colspan=5 style='height:20px'>  </td></tr>" +
+        "</table><hr><table style='; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
+        "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
@@ -86,6 +92,12 @@ ClientEvents.on("wsop/os/edt", (data) => {
     let totalqnt = 0;
     if (data.produtos != undefined) {
         data.produtos.forEach((produto) => {
+            if (produto.price == null || produto.price == undefined) {
+                produto.price = "0.00";
+            }
+            if (produto.img == null || produto.img == undefined) {
+                produto.img = "./modules/WSOP/img/file.png";
+            }
             total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
             totalqnt += produto.qnt;
 
@@ -117,7 +129,6 @@ ClientEvents.on("wsop/os/edt", (data) => {
             }
         }
 
-        console.log(total, data);
         let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(data.precoEnvio)).toFixed(2);
         document.getElementById("wsop_edt_price").innerText = price;
         document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
@@ -125,7 +136,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
         //salva o novo preço em caso de alteração
         if (price != data.price) {
             data.price = price;
-            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 50);
+            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 500);
         }
     })
 

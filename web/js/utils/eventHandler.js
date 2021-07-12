@@ -16,6 +16,16 @@ class ClientEvent {
     }
 
     /**
+    * 
+    * @param {String} name
+    * @param {Function|Promise} call
+    * @description Set to unique event
+    */
+    set(name, call) {
+        this._events[name] = [call];
+    }
+
+    /**
      * 
      * @param {string} name
      * @param {args} args

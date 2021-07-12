@@ -4,17 +4,34 @@
     height: 20px;
 }
 
-.grp_edt_div {
+.grp_edt_div,
+.grp_add_div {
+    color: white;
+    font-family: sans-serif;
     position: absolute;
     background: var(--menu-bg);
     top: 50vh;
     left: 50vw;
-    transform: translate(-50%, -50%);
+    transform: translate(calc(-50% + 15px), -50%);
     padding: 10px;
+    padding-right: 20px;
     border-radius: 10px;
+    max-height: calc(100vh - 90px);
+    min-width: calc(30vw);
+    max-width: calc(100vw - 66px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #606060;
 }
 
-.edt_grp_closeButton {
+.grp_edt_div table,
+.grp_add_div table {
+    width: 100%;
+}
+
+
+.edt_grp_closeButton,
+.add_grp_closeButton {
     padding: 0;
     margin: 0;
     cursor: pointer;
@@ -29,24 +46,7 @@
     height: 20px;
 }
 
-.grp_add_div {
-    position: absolute;
-    background: var(--menu-bg);
-    top: 50vh;
-    left: 50vw;
-    transform: translate(-50%, -50%);
-    padding: 10px;
-    border-radius: 10px;
-}
 
-.add_grp_closeButton {
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    background: var(--menu-item-bg);
-    width: 20px;
-    text-align: center;
-}
 
 input[type="text"]:disabled {
     background: var(--input-disabled-bg);

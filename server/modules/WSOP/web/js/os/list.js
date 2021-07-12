@@ -60,7 +60,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-print");
             bot.setAttribute("title", "Imprimir OS");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/os/print", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewos", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/opview")) {
@@ -68,7 +68,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-print");
             bot.setAttribute("title", "Imprimir OP");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/os/printop", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewop", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/edt")) {
@@ -76,7 +76,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-edit");
             bot.setAttribute("title", "Editar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/os/edt", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/edt")) {
@@ -92,7 +92,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/os/view", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/view", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/opview")) {

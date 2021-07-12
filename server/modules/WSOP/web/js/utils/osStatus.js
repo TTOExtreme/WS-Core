@@ -16,25 +16,25 @@ window.Modules.WSOP.StatusID = class StatusID {
         //vendas e Design
         {
             name: "Orçamento", color: "#ffffff", bgColor: "#0000a0",
-            code: "orcamento", changeto: ["criacao_arte", "aprovacao_mockups", "aguardando_pagamento", "liberado_producao"],
+            code: "orcamento", changeto: ["criacao_arte", "aprovacao_mockups", "aguardando_pagamento", "liberado_producao", "alteracao_arte"],
             edit: ["vendas"],
             view: ["vendas"]
         },
         {
             name: "Aprovação Mockups", color: "#ffffff", bgColor: "#ff6000",
-            code: "aprovacao_mockups", changeto: ["orcamento", "criacao_arte", "aguardando_pagamento", "liberado_producao"],
+            code: "aprovacao_mockups", changeto: ["orcamento", "criacao_arte", "aguardando_pagamento", "liberado_producao", "alteracao_arte"],
             edit: ["vendas"],
             view: ["vendas"]
         },
         {
             name: "Falta de Informação", color: "#ffffff", bgColor: "#ff0000",
-            code: "falta_informacao", changeto: ["orcamento", "criacao_arte", "aguardando_pagamento", "liberado_producao"],
+            code: "falta_informacao", changeto: ["orcamento", "criacao_arte", "aguardando_pagamento", "liberado_producao", "alteracao_arte"],
             edit: ["vendas"],
             view: ["vendas"]
         },
         {
             name: "Aguardando Pagamento", color: "#ffffff", bgColor: "#00d200",
-            code: "aguardando_pagamento", changeto: ["orcamento", "criacao_arte", "aprovacao_mockups", "liberado_producao"],
+            code: "aguardando_pagamento", changeto: ["orcamento", "criacao_arte", "aprovacao_mockups", "liberado_producao", "alteracao_arte"],
             edit: ["vendas"],
             view: ["vendas"]
         },
@@ -46,11 +46,18 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         //Design
         {
-            name: "Criação de Arte Fila", color: "#ffffff", bgColor: "#ff6000",
+            name: "Criação de Arte", color: "#ffffff", bgColor: "#ff6000",
             code: "criacao_arte", changeto: ["falta_informacao", "desenvolvendo_mockups"],
-            edit: ["nulo"],
+            edit: ["vendas"],
             view: ["vendas", "design"],
-            blockView: ["design"],
+            blockedit: ["design"],
+        },
+        {
+            name: "Alteração de Arte", color: "#ffffff", bgColor: "#044800",
+            code: "alteracao_arte", changeto: ["falta_informacao", "desenvolvendo_mockups"],
+            edit: ["vendas"],
+            view: ["vendas", "design"],
+            blockedit: ["design"],
         },
         {
             name: "Desenvolvendo Mockups", color: "#ffffff", bgColor: "#000041",
@@ -60,7 +67,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Mockups Prontos", color: "#ffffff", bgColor: "#0000ff",
-            code: "mockups_prontos", changeto: ["aprovacao_mockups"],
+            code: "mockups_prontos", changeto: ["aprovacao_mockups", "alteracao_arte"],
             edit: ["design", "vendas"],
             view: ["vendas"]
         },
@@ -272,7 +279,9 @@ window.Modules.WSOP.StatusID = class StatusID {
     enableEdit(status = "orcamento", setor = "vendas") {
         let ret = false;
         this.statusIDs.forEach((item, index) => {
-            if (item.code == status) ret = (item.edit.indexOf(setor) > -1);
+            if (item.code == status) {
+                ret = (item.edit.indexOf(setor) != -1);
+            }
         });
         return ret;
     }
@@ -281,8 +290,20 @@ window.Modules.WSOP.StatusID = class StatusID {
         let ret = false;
         this.statusIDs.forEach((item, index) => {
             if (item.code == status) {
-                if (item.blockView != undefined) {
-                    ret = (item.blockView.indexOf(setor) == -1);
+                if (item.view != undefined) {
+                    ret = (item.view.indexOf(setor) != -1);
+                }
+            }
+        });
+        return ret;
+    }
+
+    blockEdit(status = "orcamento", setor = "vendas") {
+        let ret = false;
+        this.statusIDs.forEach((item, index) => {
+            if (item.code == status) {
+                if (item.blockedit != undefined) {
+                    ret = (item.blockedit.indexOf(setor) != -1);
                 }
             }
         });

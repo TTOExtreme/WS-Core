@@ -29,7 +29,7 @@ ClientEvents.on("usr/perm", (data) => {
         "<table>" +
         "<tr><td id='move_menu_usr_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'usr_edt_div')>&#9776;</td><td class='usr_edt_label'><p class='edt_usr_closeButton' onclick='ClientEvents.emit(\"usr/lst/perm/close\")'>X</p></td></tr>" +
         "<tr><td></td><td colspan='2' style='float:none' class='usr_edt_label'><center>Usuário: " + data.username + "<center></td></tr>" +
-        "<tr><td colspan=2><div id='perm_table' class='tabulator' style='max-width: 1080px;width: 1080px;height: 450px;'></div></td></tr>" +
+        "<tr><td colspan=2><div id='perm_table' class='tabulator' style='height: 450px;'></div></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);

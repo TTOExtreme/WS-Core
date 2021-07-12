@@ -10,7 +10,20 @@ ClientEvents.on("wsop/os/history", (data) => {
     div.setAttribute("id", "wsop_history_div");
 
     let htm = "";
-    let sc = JSON.parse(data.statusChange);
+    let sc = []
+    try {
+        sc = JSON.parse(data.statusChange);
+    } catch (err) {
+        try {
+            sc = unclearJSON(data.statusChange);
+            if (typeof (sc) != "object") {
+                sc = JSON.parse(sc);
+            }
+        } catch (err) {
+            console.log(data.statusChange);
+            console.log(err);
+        }
+    }
     if (sc != undefined) {
         if (sc.length >= 0) {
             sc.forEach((status, index) => {
@@ -29,14 +42,14 @@ ClientEvents.on("wsop/os/history", (data) => {
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_history_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_history_div')>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID OS:</td><td><input type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td colspan=3></br></td></tr>" +
-        "<tr><td colspan =2><table  class='wsop_hist_table'>" +
+        "<tr><td colspan =2><div class='div_wsop_hist_table'><table  class='wsop_hist_table'>" +
         "<tr class='wsop_hist_label'><td>Status</td>" +
         "<td>Resposável</td>" +
         "<td>Tempo no Status</td>" +
         "<td>Entrada</td>" +
         "<td>Saida</td></tr>" +
         htm +
-        "</table></table>";
+        "</table></div></table>";
     document.body.appendChild(div);
 });
 

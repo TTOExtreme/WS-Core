@@ -625,7 +625,7 @@ class Socket {
          */
         socket.on("wsop/os/edt", (req) => {
             this._myself.checkPermission("WSOP/os/edt").then(() => {
-                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
+                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].rastreio, req[0].active, this._myself.myself.id).then(() => {
                     this.saveLog(req[0].id, "Editing OS", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "system/edited/os",

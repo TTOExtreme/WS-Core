@@ -89,6 +89,15 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             custo: 25.00
         },
         {
+            name: "Agasalho Techstripe",
+            tecidos: ["Dinamic"],
+            gola: ["-"],
+            vies: ["-"],
+            preco: 60.00,
+            precoRevenda: 60.00,
+            custo: 25.00
+        },
+        {
             name: "Bag",
             tecidos: ["Dry"],
             gola: ["-"],
@@ -165,6 +174,14 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             custo: 31.12
         },
         {
+            name: "Manga Curta Futebol Raglan",
+            tecidos: ["Elastano", "Dry"],
+            vies: ["-"],
+            preco: 53.70,
+            precoRevenda: 53.70,
+            custo: 31.12
+        },
+        {
             name: "Manga Curta Futevôlei",
             tecidos: ["Elastano", "Dry"],
             vies: ["-"],
@@ -183,6 +200,14 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Longa",
+            tecidos: ["Dry", "Elastano"],
+            vies: ["-"],
+            preco: 60.70,
+            precoRevenda: 60.70,
+            custo: 27.02
+        },
+        {
+            name: "Manga Longa Raglan",
             tecidos: ["Dry", "Elastano"],
             vies: ["-"],
             preco: 60.70,
