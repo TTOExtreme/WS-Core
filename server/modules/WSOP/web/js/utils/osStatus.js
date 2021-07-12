@@ -67,7 +67,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Mockups Prontos", color: "#ffffff", bgColor: "#0000ff",
-            code: "mockups_prontos", changeto: ["aprovacao_mockups"],
+            code: "mockups_prontos", changeto: ["aprovacao_mockups", "alteracao_arte"],
             edit: ["design", "vendas"],
             view: ["vendas"]
         },

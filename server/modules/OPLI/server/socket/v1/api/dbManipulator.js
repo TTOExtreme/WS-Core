@@ -46,7 +46,7 @@ class apiManipulator {
      */
     ListSite(ID = 0) {
         return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " Order By C.id Desc LIMIT 100;");
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " Order By C.id LIMIT 100;");
     }
 
     /**
