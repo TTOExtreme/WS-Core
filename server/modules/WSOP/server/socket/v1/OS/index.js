@@ -66,7 +66,8 @@ class Socket {
                     status: ""
                 }]
             }
-            this._OsClass.ListAll(req[0].id, req[0].createdBy, req[0].vendedor, req[0].cliente, req[0].status).then((res) => {
+            let vendedor = (this._myself.checkPermission("WSOP/menu/vendas/all") ? "" : this._myself.myself.id);
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, vendedor, req[0].cliente, req[0].status).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lst",
@@ -101,8 +102,10 @@ class Socket {
                     vendedor: "",
                     status: ""
                 }]
+
             }
-            this._OsClass.ListAll(req[0].id, req[0].createdBy, req[0].vendedor, req[0].cliente, req[0].status).then((res) => {
+            let vendedor = (this._myself.checkPermission("WSOP/menu/vendas/all") ? "" : this._myself.myself.id);
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, vendedor, req[0].cliente, req[0].status).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lstappend",
