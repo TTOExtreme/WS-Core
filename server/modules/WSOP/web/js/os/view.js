@@ -8,6 +8,31 @@ ClientEvents.on("wsop/os/view", (data) => {
     div.setAttribute("class", "wsop_edt_div menu_dragger");
     div.setAttribute("id", "wsop_os_view_div");
 
+
+
+
+    let sc = []
+    try {
+        sc = JSON.parse(data.statusChange);
+    } catch (err) {
+        try {
+            sc = unclearJSON(data.statusChange);
+            if (typeof (sc) != "object") {
+                sc = JSON.parse(sc);
+            }
+        } catch (err) {
+            console.log(data.statusChange);
+            console.log(err);
+        }
+    }
+    let histdata = "";
+    if (sc != undefined) {
+        if (sc.length >= 0) {
+            histdata = "OBS:<pre style='border:1px solid #303030'>" + unclearDesc(sc[sc.length - 1].obs) + "</pre>";
+        }
+    }
+
+
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_os_view_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_os_view_div')>X</p></td></tr></table>" +
@@ -20,6 +45,12 @@ ClientEvents.on("wsop/os/view", (data) => {
         "<table style='width:100%;'>" +
         //os
         "<tr><td>Cliente: " + data.cliente + "</td></tr>" +
+        "<tr><td>Vendedor: " + data.createdBy + "</td></tr>" +
+        "</table><hr>" +
+        "<table style='width: 100%;'>" +
+        "<tr><td>" + histdata + "</td></tr>" +
+        "</table><hr>" +
+        "<table style='width: 100%;'>" +
         "<tr><td>Descrição:</td></tr>" +
         "<tr><td class='wsop_produto_item2' style='border:none'>" + unclearDesc(data.description) + "</p></td></tr>" +
         "</table><hr>" +
