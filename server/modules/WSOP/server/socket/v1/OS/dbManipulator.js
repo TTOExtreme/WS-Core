@@ -35,10 +35,10 @@ class osManipulator {
 
             (id != "" ? " AND OS.id =" + id + "" : "") +
             (createdBy != "" ? " AND U.name LIKE'%" + createdBy + "%'" : "") +
-            (vendedor != "" ? " AND U.name ='" + vendedor + "'" : "") +
+            (vendedor != "" ? " AND U.id =" + vendedor + "" : "") +
             (cliente != "" ? " AND C.name LIKE'%" + cliente + "%'" : "") +
             st +
-            " LIMIT 50;";
+            " LIMIT 100;";
         return this.db.query(sql);
     }
 
