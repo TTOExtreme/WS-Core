@@ -851,6 +851,15 @@ window.Modules.WSOP.formaEnvio = class formaEnvio {
         });
         return ret;
     }
+    envioToName(selected = "30_dias_uteis") {
+        let ret = ""
+        this.prazos.forEach((item, index) => {
+            if (item.code == selected) {
+                ret = item.name
+            }
+        });
+        return ret;
+    }
 
     envioToOptListCountry(selected = "Brasil") {
         let ret = ""

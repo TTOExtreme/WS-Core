@@ -37,6 +37,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
+        "<tr><td>Forma Envio: " + new window.Modules.WSOP.formaEnvio().envioToName(data.formaEnvio) + "</td></tr>" +
         "<tr><td>Descrição:</td>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_print_anexos' class='wsop_print_anexos'>" +
