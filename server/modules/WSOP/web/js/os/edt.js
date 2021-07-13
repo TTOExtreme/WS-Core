@@ -80,7 +80,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
     if (data.anexos != undefined) {
         data.anexos.forEach((anexo, index) => {
             anexo.id_os = data.id;
-            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center><pre>Nome: " + anexo.name + "\nData: " + formatTime(anexo.createdIn) + "</pre></center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
         });
         anexosTable.innerHTML += htm;
     }
@@ -259,20 +259,23 @@ ClientEvents.on("WSOP/os/edtproduct", () => {
 ClientEvents.on("wsop/os/uploadIMG", (id) => {
     let input = document.createElement("input");
     input.setAttribute("type", "file");
+    input.setAttribute("multiple", "multiple");
     input.onchange = (ev) => {
         if (input.files && input.files[0]) {
-            var sender = new FileReader();
-            let ext = input.files[0].name.substring(input.files[0].name.lastIndexOf("."));
-            let name = input.files[0].name.substring(0, input.files[0].name.lastIndexOf("."));
+            for (let i = 0; i < input.files.length; i++) {
+                var sender = new FileReader();
+                let ext = input.files[i].name.substring(input.files[i].name.lastIndexOf("."));
+                let name = input.files[i].name.substring(0, input.files[i].name.lastIndexOf("."));
 
-            let tr = document.createElement("tr");
-            tr.innerHTML = "<td><div class='wsop_anexo_item'><input value='Excluir' type='button' ><img class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/loading.gif'><div></td>";
-            document.getElementById("wsop_edt_anexos").appendChild(tr);
+                let tr = document.createElement("tr");
+                tr.innerHTML = "<td><div class='wsop_anexo_item'><input value='Excluir' type='button' ><img class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/loading.gif'><div></td>";
+                document.getElementById("wsop_edt_anexos").appendChild(tr);
 
-            sender.onload = function (e) {
-                ClientEvents.emit("SendSocket", "wsop/os/file", { name: name, ext: ext, stream: e.target.result, id: id })
-            };
-            sender.readAsArrayBuffer(input.files[0]);
+                sender.onload = function (e) {
+                    ClientEvents.emit("SendSocket", "wsop/os/file", { name: name, ext: ext, stream: e.target.result, id: id })
+                };
+                sender.readAsArrayBuffer(input.files[i]);
+            }
         }
     }
     input.click();
