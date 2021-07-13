@@ -293,6 +293,45 @@ class Socket {
         })
 
         /**
+        * Change Site Data
+        */
+        socket.on("WSOP/site/edt", (req) => {
+            this._myself.checkPermission("OPLI/menu/site").then(() => {
+                if (req[0].id
+                ) {
+                    this._ApiClass.editSite(req[0].id, req[0].obs, req[0].peso, this._myself.myself.id).then((results) => {
+                        socket.emit("ClientEvents", {
+                            event: "system/edited/sitedata"
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        this._log.error("On Editing Api for Loja Integrada")
+                        this._log.error(err);
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                } else {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: "Favor Preencher todos os campos",
+                            time: 1000
+                        }
+                    })
+                }
+            })
+        })
+
+        /**
          * Update Database Products
          */
         socket.on("opli/api/loadproducts", (req) => {

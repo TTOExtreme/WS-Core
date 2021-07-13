@@ -1,16 +1,16 @@
 ClientEvents.on("wsop/site/view", (data) => {
-    ClientEvents.emit("WSOP/site/view/close");
+    ClientEvents.emit("close_menu", 'wsop_os_view_div');
     data = data[0];
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "opli_edt_div");
+    div.setAttribute("class", "opli_edt_div menu_dragger");
     div.setAttribute("id", "wsop_os_view_div");
 
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
-        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_os_view_div')>&#9776;</td><td class='opli_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/site/view/close\")'>X</p></td></tr></table>" +
+        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_os_view_div')>&#9776;</td><td class='opli_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", \"wsop_os_view_div\")'>X</p></td></tr></table>" +
         "<div id='wsop_edt' class='opli_edt'>" +
         "<table style='width:100%;'>" +
         //OS ID
@@ -19,11 +19,13 @@ ClientEvents.on("wsop/site/view", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
-        "<tr><td>Descrição:</td></tr>" +
-        "<tr><td class='opli_produto_item2' style='border:none'>" + unclearDesc(data.description + "") + "</p></td></tr>" +
-        "</table><hr>" +
-        "<table style='width: 100%;'><tbody id='wsop_edt_anexos' class='opli_edt_anexos'>" +
-        "<tr><td colspan=4><p class='opli_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p></td></tr>" +
+        "<tr ><td><input disabled id='opli_edt_id' value='" + data.id + "'></input></td></tr>" +
+        "<tr><td>OBS Cliente:</td></tr>" +
+        "<tr><td class='opli_produto_item2' style=''>" + unclearDesc(data.description + "") + "</p></td></tr>" +
+        "<tr><td>OBS Interna:</td></tr>" +
+        "<tr><td class='opli_produto_item2' style=''><textarea style='width: calc(100% - 10px); height: 150px;' id='opli_edt_obs'>" + unclearDesc(data.obs + "") + "</textarea></td></tr>" +
+        "<tr><td class='opli_produto_item2' style='border:none'>Peso: <input type='number' id='opli_edt_peso' value='" + parseFloat(data.peso) + "'></input></td></tr>" +
+        "<tr><td class='opli_produto_item2' style='border:none'><input type='button' value='salvar' onclick='ClientEvents.emit(\"opli/save/site\")'></input></td></tr>" +
         "</table><hr>" +
         "<table style='width: 100%;; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='opli_edt_produtos'>" +
         "<tr><td class='opli_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
@@ -114,12 +116,6 @@ ClientEvents.on("wsop/site/view", (data) => {
     ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");
 });
 
-ClientEvents.on("WSOP/site/view/close", () => {
-    if (document.getElementById("wsop_os_view_div")) {
-        document.body.removeChild(document.getElementById("wsop_os_view_div"));
-    }
-});
-
 
 ClientEvents.on('WSOP/site/checkstatus', (data) => {
     if (data[0]) {
@@ -132,4 +128,13 @@ ClientEvents.on('WSOP/site/checkstatus', (data) => {
 })
 
 ClientEvents.on('WSOP/site/changestatus', (data) => {
+})
+
+ClientEvents.on("opli/save/site", () => {
+    let data = {
+        id: document.getElementById("opli_edt_id").value,
+        obs: document.getElementById("opli_edt_obs").value,
+        peso: document.getElementById("opli_edt_peso").value
+    }
+    ClientEvents.emit("SendSocket", "WSOP/site/edt", data);
 })

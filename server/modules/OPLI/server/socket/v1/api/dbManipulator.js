@@ -37,7 +37,7 @@ class apiManipulator {
      * Lista todos as Vendas de Site
      */
     ListAllSite(ID = 0, Limit = 100) {
-        return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+        return this.db.query("SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id desc LIMIT " + ID + "," + Limit + ";");
     }
 
@@ -45,7 +45,7 @@ class apiManipulator {
      * Lista todos as Vendas de Site 50 por vez
      */
     ListSite(ID = 0) {
-        return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+        return this.db.query("SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " Order By C.id LIMIT 100;");
     }
 
@@ -53,7 +53,7 @@ class apiManipulator {
      * Lista todos as Vendas de Site 50 por vez
      */
     ListSingleSite(ID = 0) {
-        return this.db.query("SELECT C.id,C.id_li,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+        return this.db.query("SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " LIMIT 1;");
     }
 
@@ -87,8 +87,29 @@ class apiManipulator {
                 }
             })
         })
+    }
 
-
+    /**
+     * 
+     * @param {Number} idSite 
+     * @param {String} obs 
+     * @param {String} peso 
+     * @param {Number} UserID 
+     * @returns 
+     */
+    editSite(idSite, obs = "", peso = "", UserID) {
+        return new Promise((resolve, reject) => {
+            this.ListAll().then((APIS) => {
+                return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_Site SET" +
+                    " peso='" + peso + "'," +
+                    " obs='" + obs + "'," +
+                    " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
+                    " WHERE id='" + idSite + "';")
+                    .then(() => {
+                        resolve();
+                    })
+            })
+        })
     }
 
 

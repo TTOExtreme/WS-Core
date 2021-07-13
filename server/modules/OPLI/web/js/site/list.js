@@ -214,9 +214,8 @@ window.UserList = class UserList {
             ClientEvents.emit("SendSocket", "wsop/site/clientes/lst");
             ClientEvents.emit("WSOP/clientes/close");
         });
-        ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
+
+        ClientEvents.on("system/edited/sitedata", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Site Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
 
         ClientEvents.on("wsop/site/download", (data) => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
