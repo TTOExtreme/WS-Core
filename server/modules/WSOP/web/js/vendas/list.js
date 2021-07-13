@@ -218,7 +218,7 @@ window.UserList = class UserList {
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext,
             dataFiltering: function (filters) {
-                ClientEvents.emit("wsop_OS_filtertableForce");
+                ClientEvents.emit("wsop_OS_filtertable");
             },
         });
         this.main_table.setSort([
@@ -271,11 +271,6 @@ window.UserList = class UserList {
             headerFilters.forEach(element => {
                 sendfilters[element.field] = element.value;
             });
-            if (!Myself.checkPermission("WSOP/menu/vendas/all")) {
-                sendfilters["vendedor"] = Myself.id;
-            }
-            lsearch = JSON.stringify(sendfilters);
-            timeouttimer = new Date().getTime() + (1 * 100);
             ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
         });
         ClientEvents.on("system/added/produtos", () => {
