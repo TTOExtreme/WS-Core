@@ -19,6 +19,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._ApiClass = new apiManipulator(WSMainServer);
         this._db = WSMainServer.db;
+        this._log.task("api-mod-opli-api", "Api opli-api Loaded", 1);
     }
 
     /**
@@ -27,7 +28,6 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-opli-api", "Api opli-api Loaded", 1);
         this._myself = Myself;
 
         /**
@@ -263,6 +263,45 @@ class Socket {
                     this._ApiClass.editStatusOS(req[0].id, req[0].status, this._myself.myself.id).then((results) => {
                         socket.emit("ClientEvents", {
                             event: "system/edited/site"
+                        })
+                    }).catch((err) => {
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        this._log.error("On Editing Api for Loja Integrada")
+                        this._log.error(err);
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                } else {
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "INFO",
+                            mess: "Favor Preencher todos os campos",
+                            time: 1000
+                        }
+                    })
+                }
+            })
+        })
+
+        /**
+        * Change Site Data
+        */
+        socket.on("WSOP/site/edt", (req) => {
+            this._myself.checkPermission("OPLI/menu/site").then(() => {
+                if (req[0].id
+                ) {
+                    this._ApiClass.editSite(req[0].id, req[0].obs, req[0].peso, this._myself.myself.id).then((results) => {
+                        socket.emit("ClientEvents", {
+                            event: "system/edited/sitedata"
                         })
                     }).catch((err) => {
                         if (!this._myself.isLogged()) {

@@ -12,13 +12,14 @@ ClientEvents.on("wsop/os/view", (data) => {
         "<table style='width:100%;'>" +
         "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_os_view_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_os_view_div')>X</p></td></tr></table>" +
         "<div id='wsop_edt' class='wsop_edt'>" +
-        "<table style='width:100%;'>" +
+        "<table style='width:100%;'><tr><td colspan=2><div class='div_wsop_hist_table' style='overflow-x:hidden'><table style='width:100%'>" +
         //OS ID
         "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
+        "<tr><td>Cliente: " + data.cliente + "</td></tr>" +
         "<tr><td>Descrição:</td></tr>" +
         "<tr><td class='wsop_produto_item2' style='border:none'>" + unclearDesc(data.description) + "</p></td></tr>" +
         "</table><hr>" +
@@ -52,10 +53,4 @@ ClientEvents.on("wsop/os/view", (data) => {
     produtosTable.innerHTML += htm;
 
     ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
-});
-
-ClientEvents.on("WSOP/os/view/close", () => {
-    if (document.getElementById("wsop_os_view_div")) {
-        document.body.removeChild(document.getElementById("wsop_os_view_div"));
-    }
 });

@@ -9,6 +9,15 @@ class Core {
         Event: () => { },
         SubItems: [
             {
+                Name: "Api",
+                Id: "WSOP/menu/api",
+                Permission: "WSOP/menu/api",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./module/WSOP/js/api/edt.js",
+                TopItems: [],
+            },
+            {
                 Name: "Pós Vendas",
                 Id: "WSOP/menu/PosVendas",
                 Permission: "WSOP/menu/posvendas",

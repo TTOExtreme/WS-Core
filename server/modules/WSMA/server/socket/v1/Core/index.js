@@ -14,7 +14,7 @@ class Core {
                 Permission: "WSMA/menu/list",
                 Icon: "",
                 EventCall: "Load",
-                EventData: "./module/WSMA/js/listmateriais.js",
+                EventData: "./module/WSMA/js/listMateriais.js",
                 TopItems: [],
             },
             {
@@ -23,7 +23,7 @@ class Core {
                 Permission: "WSMA/menu/list",
                 Icon: "",
                 EventCall: "Load",
-                EventData: "./module/WSMA/js/listservicos.js",
+                EventData: "./module/WSMA/js/listServicos.js",
                 TopItems: [],
             },
             {

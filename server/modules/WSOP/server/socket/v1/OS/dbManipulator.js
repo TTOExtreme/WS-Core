@@ -15,11 +15,31 @@ class osManipulator {
     /**
      * Lista todos As OS cadastrados sem filtro
      */
-    ListAll(id = 0) {
-        return this.db.query("SELECT OS.*, OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, U.email as U_email, U.telefone as U_telefone, C.name as cliente, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.country as C_country, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
+    ListAll(id = "", createdBy = "", vendedor = "", cliente = "", status = "") {
+        let st = "";
+        if (typeof (status) == typeof ([])) {
+            st = " AND";
+            status.forEach((sts, index) => {
+                st += (index > 0 ? " OR" : " ") + " OS.status = '" + sts + "' ";
+            })
+            status = st;
+        } else {
+            if (status != "") {
+                st = " AND OS.status LIKE '%" + status + "%'";
+            }
+        }
+        let sql = "SELECT OS.id, OS.createdIn,OS.modifiedIn, OS.endingIn,OS.price, OS.statusChange,OS.payment, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
-            " WHERE OS.active=1 ORDER BY id DESC LIMIT " + id + ",50;");
+            " WHERE OS.active=1 " +
+
+            (id != "" ? " AND OS.id =" + id + "" : "") +
+            (createdBy != "" ? " AND U.name LIKE'%" + createdBy + "%'" : "") +
+            (vendedor != "" ? " AND U.name ='" + vendedor + "'" : "") +
+            (cliente != "" ? " AND C.name LIKE'%" + cliente + "%'" : "") +
+            st +
+            " LIMIT 50;";
+        return this.db.query(sql);
     }
 
     /**
@@ -64,11 +84,11 @@ class osManipulator {
      * @param {String} inventory 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createOS(id_Cliente, description, status, statusChange, formaEnvio, caixa, country, uf, prazo, endingIn, active, UserID) {
+    createOS(id_Cliente, description, status, statusChange, formaEnvio, formaPagamento, caixa, country, uf, prazo, endingIn, active, UserID) {
         let sql = "INSERT INTO " + this.db.DatabaseName + "._WSOP_OS" +
-            " (id_Cliente, description, status,statusChange, formaEnvio, prazo, endingIn, active, createdBy, createdIn)" +
+            " (id_Cliente, description, status,statusChange, formaEnvio, formaPagamento, prazo, endingIn, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
+            " ('" + id_Cliente + "','" + description + "','" + status + "','" + (JSON.stringify(statusChange)) + "','" + formaEnvio + "','" + formaPagamento + "','" + prazo + "'," + endingIn + "," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");";
         return this.db.query(sql);
     }
 
@@ -81,10 +101,11 @@ class osManipulator {
      * @param {*} active 
      * @param {*} UserID 
      */
-    editOS(ID, description, formaEnvio, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, active, UserID) {
+    editOS(ID, description, formaEnvio, formaPagamento, caixa, country, uf, precoEnvio, desconto, prazo, price, endingIn, rastreio, active, UserID) {
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
             " description='" + description + "'," +
             " formaEnvio='" + formaEnvio + "'," +
+            " formaPagamento='" + formaPagamento + "'," +
             " caixa='" + caixa + "'," +
             " country='" + country + "'," +
             " uf='" + uf + "'," +
@@ -93,6 +114,7 @@ class osManipulator {
             " precoEnvio='" + precoEnvio + "'," +
             " desconto='" + desconto + "'," +
             " endingIn=" + endingIn + "," +
+            " rastreio='" + rastreio + "'," +
             " active=" + (active ? 1 : 0) + "," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
             " WHERE id='" + ID + "';");
@@ -110,6 +132,19 @@ class osManipulator {
             " status='" + status + "'," +
             " statusChange='" + statusChange + "'," +
             " modifiedBy='" + UserID + "', modifiedIn='" + Date.now() + "' " +
+            " WHERE id='" + ID + "';");
+    }
+
+    /**
+     * 
+     * @param {*} ID 
+     * @param {*} status 
+     * @param {*} UserID 
+     */
+    editPaymentOS(ID, payment) {
+
+        return this.db.query("UPDATE " + this.db.DatabaseName + "._WSOP_OS SET" +
+            " payment='" + payment + "'" +
             " WHERE id='" + ID + "';");
     }
 

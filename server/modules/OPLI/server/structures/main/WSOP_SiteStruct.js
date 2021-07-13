@@ -74,6 +74,8 @@ const _DB = {
     products: "MEDIUMTEXT", //Id da loja integrada
     status: "INT",
     name: "VARCHAR(200)",
+    obs: "MEDIUMTEXT",
+    peso: "VARCHAR(200)",
     endingIn: "BIGINT",
     createdIn: "BIGINT",
     createdBy: "INT",

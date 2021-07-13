@@ -21,6 +21,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._userServer = new userManipulator(WSMainServer);
         this._myself = new class_user(WSMainServer);
+        this._log.task("api-mod-user", "Api User Loaded", 1);
     }
 
     /**
@@ -29,7 +30,6 @@ class Socket {
      * @param {class_user} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-user", "Api User Loaded", 1);
         this._myself = Myself;
         /**
          * List all Users

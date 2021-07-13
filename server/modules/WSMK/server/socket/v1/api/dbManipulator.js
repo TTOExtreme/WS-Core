@@ -21,7 +21,7 @@ class apiManipulator {
      */
     ListAll() {
         return this.db.query("SELECT C.* FROM " + this.db.DatabaseName + "._WSMK_Calendario AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy;");
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.active=1;");
     }
 
     /**
@@ -39,7 +39,7 @@ class apiManipulator {
         let end = start + (12 * 3600 * 1000);
         return new Promise((res, rej) => {
             this.db.query("SELECT C.* FROM " + this.db.DatabaseName + "._WSMK_Calendario AS C " +
-                " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy ;").then(results => {
+                " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.active=1 ;").then(results => {
                     let ret = results.filter((val) => {
                         try {
                             val.description = JSON.parse(val.description);

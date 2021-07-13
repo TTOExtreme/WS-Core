@@ -1,12 +1,13 @@
 
 ClientEvents.on("wsop/clientes/edt", (data) => {
     ClientEvents.emit("close_menu", 'wsop_edt_clientes_div');
+    console.log(data)
 
     /**
      * create Show Page for user info
      */
     let div = document.createElement("div");
-    div.setAttribute("class", "wsop_edt_clientes_div menu_dragger");
+    div.setAttribute("class", "wsop_add_div menu_dragger");
     div.setAttribute("id", "wsop_edt_clientes_div");
 
     div.innerHTML = "" +
@@ -47,11 +48,11 @@ ClientEvents.on("WSOP/clientes/edt", () => {
         bairro: document.getElementById("wsop_add_bairro").value,
         municipio: document.getElementById("wsop_add_municipio").value,
         uf: document.getElementById("wsop_add_uf").value,
-        country: document.getElementById("wsop_add_country").value,
         telefone: document.getElementById("wsop_add_telefone").value,
         email: document.getElementById("wsop_add_email").value,
         iscnpj: document.getElementById("wsop_add_iscnpj").checked,
         active: document.getElementById("wsop_add_active").checked,
+        country: document.getElementById("wsop_add_country").value
     });
     /**
      * save data and closes the page if success

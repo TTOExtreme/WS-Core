@@ -1,6 +1,7 @@
 
 ClientEvents.on("wsop/os/print", (data) => {
     ClientEvents.emit("close_menu", 'wsop_print_div')
+    ClientEvents.emit("close_menu", "wsop_printop_div");
     /**
      * create Show Page for user info
      */
@@ -12,7 +13,7 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<table style='width:100%;'>" +
         "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_print_div')>X</p></td></tr></table>" +
         "<div id='wsop_print' class='wsop_print'>" +
-        "<table style='width:100%;'>" +
+        "<div class='div_wsop_hist_table'><table ><tr><td><table style='width:768px;'>" +
         //OS ID
         "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
@@ -40,10 +41,10 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //Hide Data
-        "<tr style='display:none'><td class='wsop_edt_label'>Forma Envio:</td><td><Select id='wsop_edt_formaEnvio' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Pais:</td><td><Select id='wsop_edt_formaEnvio_country' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCountry(data.C_country) + "</select></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Estado:</td><td><Select id='wsop_edt_formaEnvio_uf' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListEstado(data.C_uf) + "</select></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Caixa:</td><td><Select id='wsop_edt_formaEnvio_caixa' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCaixa(data.caixa) + "</select><sizecaixa id='wsop_edt_formaEnvio_size'>" + new window.Modules.WSOP.formaEnvio().getSizeCaixa(data.caixa) + "</td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Forma Envio:</td><td><Select id='wsop_edt_formaEnvio' onChange='ClientEvents.emit(\"wsop_changeBoxSize_print\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Pais:</td><td><Select id='wsop_edt_formaEnvio_country' onChange='ClientEvents.emit(\"wsop_changeBoxSize_print\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCountry(data.C_country) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Estado:</td><td><Select id='wsop_edt_formaEnvio_uf' onChange='ClientEvents.emit(\"wsop_changeBoxSize_print\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListEstado(data.C_uf) + "</select></td></tr>" +
+        "<tr style='display:none'><td class='wsop_edt_label'>Caixa:</td><td><Select id='wsop_edt_formaEnvio_caixa' onChange='ClientEvents.emit(\"wsop_changeBoxSize_print\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCaixa(data.caixa) + "</select><sizecaixa id='wsop_edt_formaEnvio_size'>" + new window.Modules.WSOP.formaEnvio().getSizeCaixa(data.caixa) + "</td></tr>" +
         //OS
         "<tr><td>Descrição:</td></tr>" +
         "<tr><td class='wsop_produto_item2' style='border:none'>" + unclearDesc(data.description) + "</p></td></tr>" +
@@ -58,7 +59,7 @@ ClientEvents.on("wsop/os/print", (data) => {
         "<table style='width:100%;'>" +
         "<tr style='font-size:12pt'><td colspan=3>" + window.Modules.WSOP.termos.termoCompraPrivateLabel + "</td></tr><tr>" +
         "<tr style='font-size:12pt'><b><td><center><pre>Data\n\n_______________________________</td><td><center><pre>Assinatura Cliente\n\n_______________________________</td><td><center><pre>Assinatura Responsável\n\n_______________________________</td></tr><tr>" +
-        "</table>" +
+        "</table></tr></td></table></div>" +
         "</div>";
 
     document.body.appendChild(div);
@@ -88,17 +89,23 @@ ClientEvents.on("wsop/os/print", (data) => {
     //htm += "<tr class='wsop_produto_item1'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
 
     htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
+    htm += "<tr class='wsop_produto_item3' style='"
     if (data.desconto != undefined) {
         if (data.desconto > 0) {
-            htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
         } else {
+            htm += " display:none; ";
             data.desconto = 0;
         }
+    } else {
+        htm += " display:none; ";
     }
-    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
-    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td>R$ " + data.price + "</td>";
+    htm += "'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td>R$ " + parseFloat(data.desconto).toFixed(2) + "</td>";
+    htm += "<tr style='display:none;'><td><select id='wsop_edt_desconto'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td></tr>"
+    htm += "<tr style='display:none;'><td><div id='wsop_edt_precoEnvio'>" + data.precoEnvio + "</div></td></tr>"
+    htm += "<tr id='tr_precoenvio' class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
+    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td id='wsop_edt_total_show'>R$ Calculando</td>";
 
-    ClientEvents.on("wsop_changeBoxSize", () => {
+    ClientEvents.on("wsop_changeBoxSize_print", () => {
         let newprEnvio = new window.Modules.WSOP.formaEnvio().getPrice(
             document.getElementById("wsop_edt_formaEnvio_country").value,
             document.getElementById("wsop_edt_formaEnvio_uf").value,
@@ -107,13 +114,27 @@ ClientEvents.on("wsop/os/print", (data) => {
             parseInt(document.getElementById("qnttotal").innerText));
 
         let npacotes = new window.Modules.WSOP.formaEnvio().getNCaixas(document.getElementById("wsop_edt_formaEnvio_caixa").value, parseInt(document.getElementById("qnttotal").innerText));
+        document.getElementById("wsop_edt_precoEnvio").value = newprEnvio;
         document.getElementById("wsop_edt_formaEnvio_precoenvio_show").innerText = "R$ " + newprEnvio +
             " (" + npacotes + ((npacotes > 1) ? " Pacotes)" : " Pacote)");
-
+        ClientEvents.emit("wsop_print_reload_price");
     });
 
+
+    ClientEvents.on("wsop_print_reload_price", () => {
+
+        let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(document.getElementById("wsop_edt_precoEnvio").value)).toFixed(2);
+        if (parseFloat(document.getElementById("wsop_edt_precoEnvio").value) > 0) {
+            document.getElementById("tr_precoenvio").style.display = "display";
+        } else {
+            document.getElementById("tr_precoenvio").style.display = "none";
+        }
+        document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
+    })
+
+
     produtosTable.innerHTML += htm;
-    ClientEvents.emit("wsop_changeBoxSize");
+    ClientEvents.emit("wsop_changeBoxSize_print");
 });
 
 function PrintElem(elem) {

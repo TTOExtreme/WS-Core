@@ -214,9 +214,8 @@ window.UserList = class UserList {
             ClientEvents.emit("SendSocket", "wsop/site/clientes/lst");
             ClientEvents.emit("WSOP/clientes/close");
         });
-        ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
+
+        ClientEvents.on("system/edited/sitedata", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Site Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
 
         ClientEvents.on("wsop/site/download", (data) => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
@@ -229,40 +228,82 @@ window.UserList = class UserList {
             }
         })
         ClientEvents.on("wsop/site/download/emproducao", (data) => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
-            data.forEach(dataitem => {
-                this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
-            })
-            this.DownloadedData = this.DownloadedData.concat(data);
-            if (this.RetrievingData.length < 1) {
-                ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
+            if (data.length > 0) {
+                ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
+                data.forEach(dataitem => {
+                    this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
+                })
+                this.DownloadedData = this.DownloadedData.concat(data);
+                if (this.RetrievingData.length < 1) {
+                    ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
+                }
             }
         })
 
-        ClientEvents.on("WSOP/site/dnl", () => {
-            if (this.UserListData != undefined) {
-                let id = 0;
-                this.UserListData.forEach(os => {
-                    id++;
-                    this.RetrievingData.push(os.id);
-                    if (id % 100 == 0) {
-                        ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: os.id });
+        function downloadrecprod(index = 0, lasteq = 0, length = 100, RetrievingData) {
+            setTimeout(() => {
+                if (RetrievingData.length == length) {
+                    downloadrecprod(index + 1, lasteq, length, RetrievingData);
+                } else {
+                    if (lasteq - index > 10) {
+                        ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
+                    } else {
+                        downloadrecprod(index + 1, lasteq + 1, RetrievingData.length, RetrievingData)
                     }
-                })
-                ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: 0 });
+                }
+            }, 1000)
+        }
+
+        function downloadrec(index = 0, lasteq = 0, length = 100, RetrievingData) {
+            setTimeout(() => {
+                if (RetrievingData.length == length) {
+                    downloadrec(index + 1, lasteq, length, RetrievingData);
+                } else {
+                    if (lasteq - index > 10) {
+                        ClientEvents.emit("WSOP/site/dnlsave", {});
+                    } else {
+                        downloadrec(index + 1, lasteq + 1, RetrievingData.length, RetrievingData)
+                    }
+                }
+            }, 1000)
+        }
+
+        ClientEvents.on("WSOP/site/dnl", () => {
+            let max = 5000, min = 0;
+            try {
+                max = parseInt(prompt("Numero do ultimo pedido:", "5000"));
+                min = parseInt(prompt("Numero do primeiro pedido:", "0"));
+                for (let id = max; id >= 0; id--) {
+                    this.RetrievingData.push(id);
+                    if (id % 100 == 0) {
+                        setTimeout(() => {
+                            ClientEvents.emit("SendSocket", "WSOP/site/lstdownload", { id: id });
+                        }, 1000 + id / 10);
+                    }
+                }
+                downloadrec(0, 0, 0, this.RetrievingData);
+            } catch (err) {
+                ClientEvents.emit("system_mess", { status: "ERROR", mess: "Número invalido", time: 1000 });
+                console.log(err)
             }
         });
         ClientEvents.on("WSOP/site/dnl/emproducao", () => {
-            if (this.UserListData != undefined) {
-                let id = 0;
-                this.UserListData.forEach(os => {
-                    id++;
-                    this.RetrievingData.push(os.id);
+            let max = 5000, min = 0;
+            try {
+                max = parseInt(prompt("Numero do ultimo pedido:", "5000"));
+                min = parseInt(prompt("Numero do primeiro pedido:", "0"));
+                for (let id = max; id >= min; id--) {
+                    this.RetrievingData.push(id);
                     if (id % 100 == 0) {
-                        ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: os.id });
+                        setTimeout(() => {
+                            ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: id });
+                        }, 1000 + id / 10);
                     }
-                })
-                ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: 0 });
+                }
+                downloadrecprod(0, 0, 0, this.RetrievingData);
+            } catch (err) {
+                ClientEvents.emit("system_mess", { status: "ERROR", mess: "Número invalido", time: 1000 });
+                console.log(err)
             }
         });
 

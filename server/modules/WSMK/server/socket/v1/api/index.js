@@ -78,7 +78,11 @@ class Socket {
          */
         socket.on("WSMK/calendario/lstid", (req) => {
             this._myself.checkPermission("WSMK/menu/calendario").then(() => {
-                try { req[0] = JSON.parse(req[0]) } catch (err) { }
+                if (req[0] == null) {
+                    req[0] = { id: 0 }
+                } else {
+                    try { req[0] = JSON.parse(req[0]) } catch (err) { }
+                }
                 if (req[0].id == 0 || req[0].id == "0") {
                     socket.emit("ClientEvents", {
                         event: "WSMK/calendario/edt",

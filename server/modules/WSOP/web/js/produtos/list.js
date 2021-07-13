@@ -11,7 +11,9 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/produtos/view.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
     "./module/WSOP/css/index.css"
-], () => { }, false)
+], () => {
+    new window.UserList();
+}, false)
 
 if (window.UserList || window.UpdateMainTable) { // usa a mesma interface global para todas as listas
     window.UserList = null;
@@ -125,7 +127,7 @@ window.UserList = class UserList {
 
     constructor() {
 
-        if (Myself.checkPermission("WSOP/cliente/add")) {
+        if (Myself.checkPermission("WSOP/produtos/add")) {
             this.newCollums[0].headerMenu.push(
                 {
                     label: "Cadastrar novo Produto",
@@ -157,10 +159,13 @@ window.UserList = class UserList {
             movableColumns: true,
             layout: "fitColumns",
             rowFormatter: this.actionRowFormatter,
-            rowContext: this.rowContext
+            rowContext: this.rowContext,
+            dataFiltering: function (filters) {
+                ClientEvents.emit("wsop_Products_filtertable");
+            },
         });
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/produtos/lst");
+        ClientEvents.emit("SendSocket", "WSOP/produtos/lst", { name: "", barcode: "" });
     }
 
     _init() {
@@ -173,9 +178,25 @@ window.UserList = class UserList {
             }
         });
 
-        ClientEvents.on("system/added/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
-        ClientEvents.on("system/removed/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
-        ClientEvents.on("system/edited/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/produtos/lst"); });
+        ClientEvents.on("system/added/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/produtos/lst", { name: "", barcode: "" }); });
+        ClientEvents.on("system/removed/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/produtos/lst", { name: "", barcode: "" }); });
+        ClientEvents.on("system/edited/produtos", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/produtos/lst", { name: "", barcode: "" }); });
+
+        let timeouttimer = new Date().getTime();
+        let lsearch = "";
+        /**Receive user list and append to Table */
+        ClientEvents.on("wsop_Products_filtertable", () => {
+            let headerFilters = this.main_table.getHeaderFilters();
+            let sendfilters = {};
+            headerFilters.forEach(element => {
+                sendfilters[element.field] = element.value;
+            });
+            if (headerFilters.length > 0 && timeouttimer - new Date().getTime() < 0 && lsearch != JSON.stringify(sendfilters)) {
+                lsearch = JSON.stringify(sendfilters);
+                timeouttimer = new Date().getTime() + (1 * 100);
+                ClientEvents.emit("SendSocket", "WSOP/produtos/lst", sendfilters);
+            }
+        });
 
         ClientEvents.on("WSOP/produtos/dnl", () => {
             if (this.UserListData != undefined) {
@@ -230,8 +251,4 @@ window.UserList = class UserList {
 
         });
     }
-
-
 }
-
-new window.UserList();

@@ -15,20 +15,23 @@ class ProdutosManipulator {
     /**
      * Lista todos os Clientes cadastrados sem filtro
      */
-    ListAll() {
+    ListAll(name = "", barcode = "") {
         return this.db.query("SELECT C.*, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy " +
-            " WHERE C.active=1;");
+            " WHERE C.name<>'null' " +
+            (name != "" ? " AND C.name LIKE'%" + name + "%'" : "") +
+            (barcode != "" ? " AND C.barcode LIKE'%" + barcode + "%'" : "") +
+            " ORDER BY C.id DESC LIMIT 100;");
     }
 
-    ListAllOs() {
-        return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory, C.img FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
-            " WHERE C.active=1;");
+    ListAllOs(search = "") {
+        return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
+            " WHERE C.active=1 AND C.name<>'null' AND (barcode LIKE'%" + search + "%' OR name LIKE '%" + search + "%') ORDER BY C.id DESC LIMIT 10;");
     }
 
     ListByBarcode(barcode) {
         return this.db.query("SELECT C.id, C.name, C.barcode, C.inventory, C.img FROM " + this.db.DatabaseName + "._WSOP_Produtos AS C " +
-            " WHERE C.active=1 AND C.name<>'null' AND C.barcode like '%" + (barcode || "") + "%';");
+            " WHERE  C.name<>'null' AND C.barcode like '%" + (barcode || "") + "%' ORDER BY C.id DESC LIMIT 100;");
     }
 
     /**

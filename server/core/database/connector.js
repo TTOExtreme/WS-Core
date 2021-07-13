@@ -34,15 +34,16 @@ class DBConnector {
                         "ERR SQL Mess: " + err.sqlMessage + "\n\t" +
                         "");
                     reject(err.sqlMessage)
+                } else {
+                    let data = [];
+                    if (rows.length > 0)
+                        rows.forEach(element => {
+                            data.push(JSON.parse(JSON.stringify(element)));
+                        });
+                    if (rows.insertId)
+                        data = rows;
+                    resolve(data);
                 }
-                let data = [];
-                if (rows.length > 0)
-                    rows.forEach(element => {
-                        data.push(JSON.parse(JSON.stringify(element)));
-                    });
-                if (rows.insertId)
-                    data = rows;
-                resolve(data);
             })
         })
     }

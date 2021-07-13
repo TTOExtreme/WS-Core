@@ -23,6 +23,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._ProdutosClass = new ProdutosManipulator(WSMainServer);
         this._imageClass = new imageManipulator();
+        this._log.task("api-mod-wsop-produto", "Api wsop-produtos Loaded", 1);
     }
 
     /**
@@ -31,15 +32,15 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-produto", "Api wsop-produtos Loaded", 1);
         this._myself = Myself;
 
         /**
          * List all produtos
          */
-        socket.on("wsop/produtos/lst", (req) => {
+        socket.on("WSOP/produtos/lst", (req) => {
             this._myself.checkPermission("WSOP/menu/produtos").then(() => {
-                this._ProdutosClass.ListAll().then((res) => {
+                if (req[0] == undefined) { req = [{ name: "", barcode: "" }] }
+                this._ProdutosClass.ListAll(req[0].name, req[0].barcode).then((res) => {
                     socket.emit("ClientEvents", {
                         event: "wsop/produtos/lst",
                         data: res
@@ -73,8 +74,11 @@ class Socket {
         /**
          * List all Produtos para Edição de OS
          */
-        socket.on("wsop/os/produtos/lst", (req) => {
-            this._ProdutosClass.ListAllOs().then((res) => {
+        socket.on("WSOP/os/produtos/lst", (req) => {
+            if (req[0] == undefined) {
+                req = [""];
+            }
+            this._ProdutosClass.ListAllOs(req[0].barcode).then((res) => {
                 socket.emit("ClientEvents", {
                     event: "wsop/os/produtos/lst",
                     data: res

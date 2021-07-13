@@ -24,6 +24,7 @@ class Socket {
         this._OsClass = new osManipulator(WSMainServer);
         this._imageClass = new imageManipulator();
         this.db = WSMainServer.db;
+        this._log.task("api-mod-wsop-os", "Api wsop-os Loaded", 1);
     }
 
     /**
@@ -50,48 +51,28 @@ class Socket {
      * @param {class_group} Myself
      */
     socket(socket, Myself) {
-        this._log.task("api-mod-wsop-os", "Api wsop-os Loaded", 1);
         this._myself = Myself;
 
         /**
          * List all os
          */
         socket.on("wsop/os/lst", (req) => {
-            this._OsClass.ListAll(0).then((res) => {
+            if (req[0] == undefined) {
+                req = [{
+                    id: "",
+                    cliente: "",
+                    createdBy: "",
+                    vendedor: "",
+                    status: ""
+                }]
+            }
+            let vendedor = (this._myself.checkPermissionSync("WSOP/menu/vendas/all") ? "" : this._myself.myself.name);
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, vendedor, req[0].cliente, req[0].status).then((res) => {
                 this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lst",
                     data: res
                 })
-                function rec(_OsClass, next, count) {
-                    if (count < 500) {
-                        _OsClass.ListAll(next).then((res) => {
-                            if (res.length >= 50) {
-                                socket.emit("ClientEvents", {
-                                    event: "system_mess",
-                                    data: { status: "INFO", mess: "Carregando OSs " + next + "-" + next + res.length, time: 100 }
-                                })
-                                socket.emit("ClientEvents", {
-                                    event: "wsop/os/lst",
-                                    data: res
-                                })
-                                rec(next + 50, count + 1);
-                            } else {
-                                socket.emit("ClientEvents", {
-                                    event: "wsop/os/lst",
-                                    data: res
-                                })
-                            }
-                        })
-                    } else {
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: { status: "OK", mess: "Todas as OS Carregadas ", time: 1000 }
-                        })
-                    }
-                }
-                rec(this._OsClass, 50, 0);
-
             }).catch((err) => {
                 this._log.error("On Listing OS")
                 this._log.error(err);
@@ -109,6 +90,43 @@ class Socket {
             })
         })
 
+        /**
+         * List all os
+         */
+        socket.on("WSOP/os/lstappend", (req) => {
+            if (req[0] == undefined) {
+                req = [{
+                    id: "",
+                    cliente: "",
+                    createdBy: "",
+                    vendedor: "",
+                    status: ""
+                }]
+
+            }
+            let vendedor = (this._myself.checkPermissionSync("WSOP/menu/vendas/all") ? "" : this._myself.myself.name);
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, vendedor, req[0].cliente, req[0].status).then((res) => {
+                this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
+                socket.emit("ClientEvents", {
+                    event: "wsop/os/lstappend",
+                    data: res
+                })
+            }).catch((err) => {
+                this._log.error("On Listing OS")
+                this._log.error(err);
+                if (!this._myself.isLogged()) {
+                    socket.emit("logout", "");
+                }
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: err,
+                        time: 1000
+                    }
+                })
+            })
+        })
 
         /**
          * Reload Edt os
@@ -278,7 +296,7 @@ class Socket {
                 statusChange.push({ status: req[0].status, in: new Date().getTime(), obs: "", inUser: this._myself.myself.name });
 
 
-                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
+                this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
 
                     this.saveLog(results.insertId, "Adding OS's", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
@@ -328,7 +346,7 @@ class Socket {
                     fs.writeFileSync(filepath + name, req[0].stream);
 
                     let thumb = "os/" + name;
-                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".jpg") {
+                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".jpg" && req[0].ext != ".jfif") {
                         thumb = "file_thumb.png";
                         this._OsClass.appendAnexo(req[0].id, req[0].name, "os/" + name, thumb, this._myself.myself.id).then((res) => {
                             this.saveLog(req[0].id, "Adding file", JSON.stringify(req[0]), this._myself.myself.id);
@@ -395,6 +413,7 @@ class Socket {
                 }
             }).catch((err) => {
                 this._log.warning("User Access Denied to Add Attachment to OS: " + this._myself.myself.id)
+                this._log.error(err)
                 socket.emit("ClientEvents", {
                     event: "system_mess",
                     data: {
@@ -436,8 +455,7 @@ class Socket {
                         })
                     })
                 } else {
-                    this._log.error("On Adding OS")
-                    this._log.error(err);
+                    this._log.error("On Adding prod to OS", req)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -566,13 +584,11 @@ class Socket {
             })
         })
 
-        //
-
         /**
          * Delete Anexo da OS
          */
         socket.on("wsop/os/anexo/del", (req) => {
-            this._myself.checkPermission("WSOP/menu/os").then(() => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
                 this._OsClass.delAnexo(req[0].id, this._myself.myself.id).then(() => {
                     this.saveLog(req[0].id_os, "Removing Attachment from OS", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
@@ -613,8 +629,8 @@ class Socket {
          * Editar OS
          */
         socket.on("wsop/os/edt", (req) => {
-            this._myself.checkPermission("WSOP/os/add").then(() => {
-                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].active, this._myself.myself.id).then(() => {
+            this._myself.checkPermission("WSOP/os/edt").then(() => {
+                this._OsClass.editOS(req[0].id, req[0].description, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].precoEnvio, req[0].desconto, req[0].prazo, req[0].price, req[0].endingIn, req[0].rastreio, req[0].active, this._myself.myself.id).then(() => {
                     this.saveLog(req[0].id, "Editing OS", JSON.stringify(req[0]), this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "system/edited/os",
@@ -763,6 +779,7 @@ class Socket {
          */
         socket.on("wsop/lst/os/ctx", (req) => {
             let itemList = [];
+            /*
             itemList.push({
                 name: "Visualizar",
                 active: true,
@@ -787,7 +804,6 @@ class Socket {
                     data: req[0].row
                 }
             });
-            //*/
             if (this._myself.checkPermissionSync("WSOP/os/edt")) {
                 itemList.push({
                     name: "Editar",
@@ -817,7 +833,7 @@ class Socket {
                     name: "Excluir",
                     active: false
                 });
-            }
+            }//*/
 
 
             socket.emit("ClientEvents", {

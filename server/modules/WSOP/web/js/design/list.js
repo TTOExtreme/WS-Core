@@ -16,6 +16,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/utils/desconto.js",
     "./module/WSOP/js/utils/anexo.js",
     "./module/WSOP/js/utils/consulta.js",
+    "./module/WSOP/js/utils/Termos.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
     "./module/WSOP/js/design/edtproduto.js",
     "./module/WSOP/js/clientes/add.js",
@@ -53,12 +54,12 @@ window.UserList = class UserList {
         let rowdata = cell._cell.row.data;
         let htm = document.createElement("div");
 
-        if (Myself.checkPermission("WSOP/os/edt") && new window.Modules.WSOP.StatusID().enableEdit(cell.getRow().getData().status, "design")) {
+        if (Myself.checkPermission("WSOP/os/opview")) {
             let bot = document.createElement("i");
-            bot.setAttribute("class", "fa fa-edit");
-            bot.setAttribute("title", "Editar");
+            bot.setAttribute("class", "fa fa-print");
+            bot.setAttribute("title", "Imprimir OP");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewop", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/edt")) {
@@ -67,6 +68,14 @@ window.UserList = class UserList {
             bot.setAttribute("title", "Mudar Status");
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/os/edt") && !new window.Modules.WSOP.StatusID().blockEdit(cell.getRow().getData().status, "design")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-edit");
+            bot.setAttribute("title", "Editar");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/os/edt", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "design")) {
@@ -113,7 +122,7 @@ window.UserList = class UserList {
                     return parseInt(cell.getRow().getData().id);
                 }, sorter: "number"
             },
-            //{ title: 'Cliente', field: 'cliente', headerFilter: "input" },
+            { title: 'Cliente', field: 'cliente', headerFilter: "input" },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
                 formatter: function (cell) {
@@ -124,7 +133,26 @@ window.UserList = class UserList {
                 }
             },
             { title: 'Vendedor', field: 'createdBy', headerFilter: "input", visible: true },
-            { title: 'Expira Em', field: 'endingIn', formatter: ((data) => formatTime(data.getRow().getData().endingIn)), headerFilter: "input" },
+            {
+                title: 'Data Entrada', field: 'modifiedIn',
+                formatter: function (cell) {
+
+                    cell._cell.element.style.background = new window.Modules.WSOP.TimeCalc().getPrazosBgColor(cell.getRow().getData().endingIn);
+                    cell._cell.element.style.color = new window.Modules.WSOP.TimeCalc().getPrazosColor(cell.getRow().getData().endingIn);
+
+                    return formatTime(cell.getRow().getData().modifiedIn);
+                }
+            },
+            {
+                title: 'Expira Em', field: 'endingIn',
+                formatter: function (cell) {
+
+                    cell._cell.element.style.background = new window.Modules.WSOP.TimeCalc().getPrazosBgColor(cell.getRow().getData().endingIn);
+                    cell._cell.element.style.color = new window.Modules.WSOP.TimeCalc().getPrazosColor(cell.getRow().getData().endingIn);
+
+                    return formatTimeDMA(cell.getRow().getData().endingIn);
+                }
+            },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
         ]
     }];
@@ -158,7 +186,7 @@ window.UserList = class UserList {
         });
         this.main_table.setFilter([{ field: "status2", type: "in", value: new window.Modules.WSOP.StatusID().getStatusSector("design") }]);
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/os/lst");
+        ClientEvents.emit("SendSocket", "wsop/os/lst", { status: new window.Modules.WSOP.StatusID().getStatusSector("design") });
     }
 
     _init() {
@@ -167,7 +195,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.updateOrAddData(this.UserListData);
+                this.main_table.setData(this.UserListData);
             }
         });
 
@@ -182,8 +210,14 @@ window.UserList = class UserList {
             ClientEvents.emit("WSOP/clientes/close");
         });
         ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/removed/os", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 });
+            ClientEvents.emit("SendSocket", "wsop/os/lst", { status: new window.Modules.WSOP.StatusID().getStatusSector("design") });
+        });
+        ClientEvents.on("system/edited/os", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 });
+            ClientEvents.emit("SendSocket", "wsop/os/lst", { status: new window.Modules.WSOP.StatusID().getStatusSector("design") });
+        });
     }
 
     _getStatusFilterParams() {

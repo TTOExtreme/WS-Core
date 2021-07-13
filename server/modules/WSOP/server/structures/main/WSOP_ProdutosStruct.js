@@ -19,6 +19,7 @@
 
 class ProdutosStruct {
     id;
+    id_li;
     name;
     description;
     barcode;

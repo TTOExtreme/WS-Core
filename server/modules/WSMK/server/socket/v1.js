@@ -15,6 +15,7 @@ class Socket {
         this._config = WSMainServer.config;
 
         this._apiModule = new api(WSMainServer);
+        this._log.task("api-mod-WSOP", "Loaded API WSOP", 1);
     }
 
     /**
@@ -29,7 +30,7 @@ class Socket {
         this._coreModule = new core(this._socket, this._myself);
         this._apiModule.socket(this._socket, this._myself);
 
-        this._log.task("api-mod-WSOP", "Loaded API WSOP", 1);
+
     }
 }
 module.exports = { Socket }

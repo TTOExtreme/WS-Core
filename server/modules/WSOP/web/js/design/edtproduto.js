@@ -22,7 +22,7 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
     div.innerHTML = "" +
         "<table>" +
         "<tr><td id='move_menu_wsop_edt' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edt_product_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_edt_product_div')>X</p></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>ID RLT:</td><td><input id='wsop_edt_products_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr><td colspan=2><div class='div_wsop_hist_table'><table><tr style='display:none'><td class='wsop_edt_label'>ID RLT:</td><td><input id='wsop_edt_products_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_products_id_produtos' type='text' disabled value='" + data.id_produtos + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>OS:</td><td><input id='wsop_edt_products_id_os' type='text' disabled value='" + data.id_os + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Nome:</td><td><input id='wsop_edt_products_name' type='text' disabled value='" + data.name + "'></td></tr>" +

@@ -10,6 +10,7 @@ ClientEvents.emit("SendSocket", "wsop/emitente/lst");
 
 
 ClientEvents.emit("LoadExternal", [
+    "./module/WSOP/js/api/linkShow.js",
     "./module/WSOP/js/utils/osStatus.js",
     "./module/WSOP/js/utils/timeCalc.js",
     "./module/WSOP/js/utils/formaEnvio.js",
@@ -42,7 +43,7 @@ if (window.UserList || window.UpdateMainTable) { // usa a mesma interface global
 }
 
 window.UpdateMainTable = setInterval(() => {
-    ClientEvents.emit("SendSocket", "wsop/os/lst");
+    ClientEvents.emit("wsop_OS_filtertable");
 }, 10 * 1000);
 
 window.UserList = class UserList {
@@ -104,6 +105,25 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
             htm.appendChild(bot);
         }
+
+        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-credit-card");
+            bot.setAttribute("title", "Gerar Link");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/api/pagarme/gerarlink", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-money");
+            bot.setAttribute("title", "Visualizar Pagamentos");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/api/pagarme/list", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        //
         return htm;
     };
     actionfield = "0";
@@ -147,7 +167,7 @@ window.UserList = class UserList {
                     return "R$ " + cell.getRow().getData().price;
                 }
             },
-            { title: 'Vendedor', field: 'createdBy', headerFilter: "input", visible: true },
+            { title: 'Vendedor', field: 'createdBy', headerFilter: "input", visible: Myself.checkPermission("WSOP/menu/vendas/all") },
             {
                 title: 'Expira Em', field: 'endingIn',
                 formatter: function (cell) {
@@ -177,7 +197,7 @@ window.UserList = class UserList {
             {
                 label: "Atualizar",
                 action: function (e, column) {
-                    ClientEvents.emit("SendSocket", "wsop/os/lst");
+                    ClientEvents.emit("wsop_OS_filtertable");
                 }
             })
         /**Initialize  Table */
@@ -196,25 +216,56 @@ window.UserList = class UserList {
             movableColumns: true,
             layout: "fitColumns",
             rowFormatter: this.actionRowFormatter,
-            rowContext: this.rowContext
+            rowContext: this.rowContext,
+            dataFiltering: function (filters) {
+                ClientEvents.emit("wsop_OS_filtertable");
+            },
         });
-        if (!Myself.checkPermission("WSOP/menu/vendas/all")) {
-            this.main_table.setFilter([{ field: "creatorId", type: "in", value: [Myself.id] }]);
-        }
+        this.main_table.setSort([
+            { column: "id", dir: "desc" }, //sort by this first
+        ]);
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/os/lst");
+
+        ClientEvents.emit("wsop_OS_filtertable");
     }
 
     _init() {
 
-        /**Receive user list and append to Table */
+
+        /**Receive user list and reset Table  uses only for update without filtering*/
         ClientEvents.on("wsop/os/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.updateOrAddData(this.UserListData);
+                this.main_table.setData(data);
             }
         });
 
+        /**Receive user list and append to Table */
+        ClientEvents.on("wsop/os/lstappend", (data) => {
+            if (data) {
+                this.UserListData = data;
+                this.main_table.updateOrAddData(data);
+            }
+        });
+        let timeouttimer = new Date().getTime();
+        let lsearch = "";
+        /**Receive user list and append to Table */
+        ClientEvents.on("wsop_OS_filtertable", () => {
+            let headerFilters = this.main_table.getHeaderFilters();
+            let sendfilters = {};
+            headerFilters.forEach(element => {
+                sendfilters[element.field] = element.value;
+            });
+            if (!Myself.checkPermission("WSOP/menu/vendas/all")) {
+                sendfilters["vendedor"] = Myself.id;
+            }
+            if (timeouttimer - new Date().getTime() < 0 && lsearch != JSON.stringify(sendfilters)) {
+                console.log(sendfilters);
+                lsearch = JSON.stringify(sendfilters);
+                timeouttimer = new Date().getTime() + (1 * 100);
+                ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
+            }
+        });
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
@@ -226,8 +277,8 @@ window.UserList = class UserList {
             ClientEvents.emit("WSOP/clientes/close");
         });
         ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "wsop/os/lst"); });
+        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("wsop_OS_filtertable"); });
+        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("wsop_OS_filtertable"); });
     }
 
     _getStatusFilterParams() {
