@@ -197,7 +197,7 @@ window.UserList = class UserList {
             {
                 label: "Atualizar",
                 action: function (e, column) {
-                    ClientEvents.emit("wsop_OS_filtertable");
+                    ClientEvents.emit("wsop_OS_filtertableForce");
                 }
             })
         /**Initialize  Table */
@@ -218,7 +218,7 @@ window.UserList = class UserList {
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext,
             dataFiltering: function (filters) {
-                ClientEvents.emit("wsop_OS_filtertable");
+                ClientEvents.emit("wsop_OS_filtertableForce");
             },
         });
         this.main_table.setSort([
@@ -226,7 +226,7 @@ window.UserList = class UserList {
         ]);
         this._init();
 
-        ClientEvents.emit("wsop_OS_filtertable");
+        ClientEvents.emit("wsop_OS_filtertableForce");
     }
 
     _init() {
@@ -244,7 +244,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/os/lstappend", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.updateOrAddData(data);
+                this.main_table.replaceData(data);
             }
         });
         let timeouttimer = new Date().getTime();
@@ -260,11 +260,23 @@ window.UserList = class UserList {
                 sendfilters["vendedor"] = Myself.id;
             }
             if (timeouttimer - new Date().getTime() < 0 && lsearch != JSON.stringify(sendfilters)) {
-                console.log(sendfilters);
                 lsearch = JSON.stringify(sendfilters);
                 timeouttimer = new Date().getTime() + (1 * 100);
                 ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
             }
+        });
+        ClientEvents.on("wsop_OS_filtertableForce", () => {
+            let headerFilters = this.main_table.getHeaderFilters();
+            let sendfilters = {};
+            headerFilters.forEach(element => {
+                sendfilters[element.field] = element.value;
+            });
+            if (!Myself.checkPermission("WSOP/menu/vendas/all")) {
+                sendfilters["vendedor"] = Myself.id;
+            }
+            lsearch = JSON.stringify(sendfilters);
+            timeouttimer = new Date().getTime() + (1 * 100);
+            ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
         });
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
