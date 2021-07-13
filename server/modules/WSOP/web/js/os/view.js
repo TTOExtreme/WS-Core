@@ -37,7 +37,7 @@ ClientEvents.on("wsop/os/view", (data) => {
     let anexosTable = document.getElementById("wsop_edt_anexos");
     let htm = "";
     data.anexos.forEach((anexo, index) => {
-        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center><pre>Nome: " + anexo.name + "\nData: " + formatTime(anexo.createdIn) + "</pre></center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
     });
     anexosTable.innerHTML += htm;
 

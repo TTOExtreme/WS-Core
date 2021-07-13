@@ -68,7 +68,7 @@ ClientEvents.on("wsop/os/print", (data) => {
     let anexosTable = document.getElementById("wsop_print_anexos");
     let htm = "";
     data.anexos.forEach((anexo, index) => {
-        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+        htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center><pre>Nome: " + anexo.name + "\nData: " + formatTime(anexo.createdIn) + "</pre></center><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
     });
     anexosTable.innerHTML += htm;
 
