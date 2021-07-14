@@ -256,9 +256,7 @@ window.UserList = class UserList {
             headerFilters.forEach(element => {
                 sendfilters[element.field] = element.value;
             });
-            if (!Myself.checkPermission("WSOP/menu/vendas/all")) {
-                sendfilters["vendedor"] = Myself.id;
-            }
+            sendfilters.vendedor = Myself.id;
             if (timeouttimer - new Date().getTime() < 0 && lsearch != JSON.stringify(sendfilters)) {
                 lsearch = JSON.stringify(sendfilters);
                 timeouttimer = new Date().getTime() + (1 * 100);
@@ -271,6 +269,7 @@ window.UserList = class UserList {
             headerFilters.forEach(element => {
                 sendfilters[element.field] = element.value;
             });
+            sendfilters.vendedor = Myself.id;
             ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
         });
         ClientEvents.on("system/added/produtos", () => {
