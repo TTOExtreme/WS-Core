@@ -27,8 +27,6 @@ class v1 {
      */
     socket(io) {
         io.on("connect", (socket) => {
-            let Myself = new UserClass(this._WSMainServer);
-            let _socket;
             socket.on("auth", () => {
                 //try to authenticate user else redirect to login page
                 try {
@@ -36,18 +34,21 @@ class v1 {
                     var cookies = CookieIO.parse(socket.handshake.headers.cookie);
                     //this._log.info(JSON.stringify(cookies));
                     if (cookies.wscore) {
+                        if (socket.data == undefined) { socket.data = {}; }
+                        socket.data.Myself = new UserClass(this._WSMainServer);
                         //check in database for userID
-                        Myself.findmeuuid(cookies.wscore).then(() => {
-                            return Myself.checkPermission("def/usr/login").then(() => {
-                                _socket = socket;
-                                this._loadModules(_socket, Myself);
+                        socket.data.Myself.findmeuuid(cookies.wscore).then(() => {
+                            return socket.data.Myself.checkPermission("def/usr/login").then(() => {
+
+
+                                this._loadModules(socket, socket.data.Myself);
 
                                 var address = socket.handshake.address;
-                                Myself.LogIn({
+                                socket.data.Myself.LogIn({
                                     ip: clearIpv6(address)
                                 });
 
-                                socket.emit("auth-ok", Myself.getUserClientData());
+                                socket.emit("auth-ok", socket.data.Myself.getUserClientData());
                                 return Promise.resolve();
                             })
                         }).catch(() => {
@@ -67,7 +68,9 @@ class v1 {
 
             socket.on('disconnect', () => {
                 this._log.info('Client disconnected');
-                Myself.LogOut();
+                if (socket.data != undefined) {
+                    socket.data.Myself.LogOut();
+                }
             });
         })
     }

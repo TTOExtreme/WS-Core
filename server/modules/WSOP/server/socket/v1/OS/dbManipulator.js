@@ -39,7 +39,7 @@ class osManipulator {
             (cliente != "" ? " AND C.name LIKE'%" + cliente + "%'" : "") +
             st +
             " LIMIT 100;";
-        console.log(sql);
+        //console.log(sql);
         return this.db.query(sql);
     }
 

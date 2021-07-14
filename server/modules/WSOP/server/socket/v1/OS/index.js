@@ -103,8 +103,8 @@ class Socket {
                 }]
 
             }
-            this._OsClass.ListAll(req[0].id, req[0].createdBy, this._myself.myself.id, req[0].cliente, req[0].status).then((res) => {
-                this.saveLog(0, "Listing All OS's", "", this._myself.myself.id);
+            this._OsClass.ListAll(req[0].id, req[0].createdBy, req[0].vendedor, req[0].cliente, req[0].status).then((res) => {
+                this.saveLog(0, "Listing All OS's", "", req[0].vendedor);
                 socket.emit("ClientEvents", {
                     event: "wsop/os/lstappend",
                     data: res
