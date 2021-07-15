@@ -310,12 +310,12 @@ class Socket {
 
                     let statusChange = [];
                     //writes a new input
-                    statusChange.push({ status: req[0].status, in: new Date().getTime(), obs: "", inUser: this._myself.myself.name });
+                    statusChange.push({ status: req[0].status, in: new Date().getTime(), obs: "", inUser: req[0].id_myself });
 
 
-                    this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, this._myself.myself.id).then((results) => {
+                    this._OsClass.createOS(req[0].id_cliente, req[0].description, req[0].status, statusChange, req[0].formaEnvio, req[0].formaPagamento, req[0].caixa, req[0].country, req[0].uf, req[0].prazo, req[0].endingIn, req[0].active, req[0].id_myself).then((results) => {
 
-                        this.saveLog(results.insertId, "Adding OS's", JSON.stringify(req[0]), this._myself.myself.id);
+                        this.saveLog(results.insertId, "Adding OS's", JSON.stringify(req[0]), req[0].id_myself);
                         socket.emit("ClientEvents", {
                             event: "system/added/os",
                             data: { id: results.insertId }
@@ -336,7 +336,7 @@ class Socket {
                         })
                     })
                 }).catch((err) => {
-                    this._log.warning("User Access Denied to Add OS: " + this._myself.myself.id)
+                    this._log.warning("User Access Denied to Add OS: " + req[0].id_myself)
                     socket.emit("ClientEvents", {
                         event: "system_mess",
                         data: {
@@ -354,6 +354,7 @@ class Socket {
             socket.on("wsop/os/file", (req) => {
                 this._myself.checkPermission("WSOP/os/add").then(() => {
                     try {
+                        req[0].ext = (req[0].ext).toLowerCase()
                         let name = new BCypher().generate_salt(48) + req[0].ext;
                         let filepath = path(__dirname + "/../../../../web/img/os/")
                         if (!fs.existsSync(filepath)) { fs.mkdirSync(filepath); }
