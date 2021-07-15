@@ -26,6 +26,7 @@ class v1 {
      * @param {SocketIO} io 
      */
     socket(io) {
+        this._PreloadModules();
         io.on("connect", (socket) => {
             socket.on("auth", () => {
                 //try to authenticate user else redirect to login page
@@ -34,23 +35,34 @@ class v1 {
                     var cookies = CookieIO.parse(socket.handshake.headers.cookie);
                     //this._log.info(JSON.stringify(cookies));
                     if (cookies.wscore) {
-                        if (socket.data == undefined) { socket.data = {}; }
-                        socket.data.Myself = new UserClass(this._WSMainServer);
+                        //if (socket.data == undefined) { socket.data = { Myself: { id: "" } }; }
+
+                        let Myself = new UserClass(this._WSMainServer);
                         //check in database for userID
-                        socket.data.Myself.findmeuuid(cookies.wscore).then(() => {
-                            return socket.data.Myself.checkPermission("def/usr/login").then(() => {
+                        Myself.findmeuuid(cookies.wscore).then(() => {
+                            return Myself.checkPermission("def/usr/login").then(() => {
+                                console.log("new Connection: ", Myself.myself.id);
 
 
-                                this._loadModules(socket, socket.data.Myself);
+                                this._loadModules(socket, Myself);
 
                                 var address = socket.handshake.address;
-                                socket.data.Myself.LogIn({
+                                Myself.LogIn({
                                     ip: clearIpv6(address)
                                 });
 
-                                socket.emit("auth-ok", socket.data.Myself.getUserClientData());
+                                socket.emit("auth-ok", Myself.getUserClientData());
+
+                                socket.on('disconnect', () => {
+                                    this._log.info('Client disconnected');
+                                    if (Myself.LogOut != undefined) {
+                                        Myself.LogOut();
+                                    }
+                                });
+
                                 return Promise.resolve();
                             })
+
                         }).catch(() => {
                             socket.emit("auth-err", "UUID Invalido");
                         })
@@ -65,13 +77,6 @@ class v1 {
                     //this._log.info(socket.handshake)
                 }
             })
-
-            socket.on('disconnect', () => {
-                this._log.info('Client disconnected');
-                if (socket.data != undefined) {
-                    socket.data.Myself.LogOut();
-                }
-            });
         })
     }
 
@@ -111,7 +116,21 @@ class v1 {
                 }
             }
         })
+    }
 
+    _PreloadModules() {
+        fs.readdirSync(path(__dirname + '/core/')).forEach((mod) => {
+            try {
+                if (this._PreloadedModules[mod] == undefined) {
+                    this._log.task("api-mod-" + mod.replace(".js", ""), "Loading API " + mod.replace(".js", ""), 0);
+                    let modSocket = require(__dirname + '/core/' + mod)
+                    this._PreloadedModules[mod] = new modSocket.Socket(this._WSMainServer);
+                }
+            } catch (err) {
+                this._log.task("api-mod-" + mod.replace(".js", ""), "Api " + mod.replace(".js", "") + " Failed to Load", 3);
+                this._log.error(err);
+            }
+        })
     }
 }
 
