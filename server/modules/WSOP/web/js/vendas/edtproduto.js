@@ -18,6 +18,9 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
     let div = document.createElement("div");
     div.setAttribute("class", "wsop_add_div menu_dragger");
     div.setAttribute("id", "wsop_edt_product_div");
+    if (data.img.split(",").length < 3) {
+        data.img = data.img + ",,";
+    }
 
     div.innerHTML = "" +
         "<table>" +
