@@ -44,8 +44,14 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
         "<tr style='display:none'><td class='wsop_edt_label'>Custo:</td><td><input id='wsop_edt_products_cost' type='text' value='" + data.cost + "'></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_edt_products_desc' type='text' value='" + unclearDesc(data.description) + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_edt_product_description'class='sun-editor-editable'>" + unclearDesc(data.obs) + "</textarea></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Imagem:</td><td><img id='wsop_edt_produto_img_thumb' class='wsop_edt_produto_img_thumb' alt='' src='./module/WSOP/img/" + data.img.replace(".", "_thumb.") + "' loc='" + data.img + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_edt_produto_img' type='file' onchange='ClientEvents.emit(\"uploadIMG\")'></td></tr>" +
+
+        "<tr><td class='wsop_edt_label'>Imagem 1:</td><td><img id='wsop_edt_produto_img_thumb_1' class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/" + data.img.split(",")[0].replace(".", "_thumb.") + "' loc='" + data.img.split(",")[0] + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_edt_produto_img_1' type='file' onchange='ClientEvents.emit(\"edtuploadIMG_1\")' value='" + data.img.split(",")[0] + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Imagem 2:</td><td><img id='wsop_edt_produto_img_thumb_2' class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/" + data.img.split(",")[1].replace(".", "_thumb.") + "' loc='" + data.img.split(",")[1] + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_edt_produto_img_2' type='file' onchange='ClientEvents.emit(\"edtuploadIMG_2\")' value='" + data.img.split(",")[1] + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Imagem 3:</td><td><img id='wsop_edt_produto_img_thumb_3' class='wsop_add_img_thumb' alt='' src='./module/WSOP/img/" + data.img.split(",")[2].replace(".", "_thumb.") + "' loc='" + data.img.split(",")[2] + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'></td><td><input id='wsop_edt_produto_img_3' type='file' onchange='ClientEvents.emit(\"edtuploadIMG_3\")' value='" + data.img.split(",")[2] + "'></td></tr>" +
+
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_products_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_edt_products_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/produtos/edt\")'></td></tr>" +
@@ -104,6 +110,9 @@ ClientEvents.on("wsop/produtos/setVies", () => {
 
 ClientEvents.clear("WSOP/os/produtos/edt")
 ClientEvents.on("WSOP/os/produtos/edt", () => {
+    let img = document.getElementById("wsop_edt_produto_img_thumb_1").getAttribute("loc") + "," +
+        document.getElementById("wsop_edt_produto_img_thumb_2").getAttribute("loc") + "," +
+        document.getElementById("wsop_edt_produto_img_thumb_3").getAttribute("loc");
     ClientEvents.emit("SendSocket", "wsop/os/produto/edt", {
         id: document.getElementById("wsop_edt_products_id").value,
         id_os: document.getElementById("wsop_edt_products_id_os").value,
@@ -111,13 +120,16 @@ ClientEvents.on("WSOP/os/produtos/edt", () => {
         price: document.getElementById("wsop_edt_products_price").value,
         cost: document.getElementById("wsop_edt_products_cost").value,
         qnt: document.getElementById("wsop_edt_products_qnt").value,
-        img: document.getElementById("wsop_edt_produto_img_thumb").getAttribute("loc"),
+        img: img,
         active: document.getElementById("wsop_edt_products_active").checked,
     });
 })
 
 ClientEvents.clear("wsop/os/produto/edited")
 ClientEvents.on("wsop/os/produto/edited", () => {
+    let img = document.getElementById("wsop_edt_produto_img_thumb_1").getAttribute("loc") + "," +
+        document.getElementById("wsop_edt_produto_img_thumb_2").getAttribute("loc") + "," +
+        document.getElementById("wsop_edt_produto_img_thumb_3").getAttribute("loc");
     ClientEvents.emit("SendSocket", "wsop/produtos/edt", {
         id: document.getElementById("wsop_edt_products_id_produtos").value,
         id_os: document.getElementById("wsop_edt_products_id_os").value,
@@ -130,7 +142,7 @@ ClientEvents.on("wsop/os/produto/edited", () => {
         }),
         price: document.getElementById("wsop_edt_products_price").value,
         cost: document.getElementById("wsop_edt_products_cost").value,
-        img: document.getElementById("wsop_edt_produto_img_thumb").getAttribute("loc"),
+        img: img,
         active: document.getElementById("wsop_edt_products_active").checked,
     });
 })
@@ -138,15 +150,16 @@ ClientEvents.on("wsop/os/produto/edited", () => {
 ClientEvents.on("system/edited/produtos", (data) => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado", time: 1000 }); ClientEvents.emit("WSOP/os/produto/edt/close"); ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data[0].id_os }) });
 
 
-ClientEvents.on("uploadIMG", () => {
-    if (document.getElementById("wsop_edt_produto_img")) {
-        let input = document.getElementById("wsop_edt_produto_img");
+ClientEvents.on("edtuploadIMG_1", () => {
+    edtlastfile = 1;
+    if (document.getElementById("wsop_edt_produto_img_1")) {
+        let input = document.getElementById("wsop_edt_produto_img_1");
         if (input.files && input.files[0]) {
             var sender = new FileReader();
             let ext = input.files[0].name.substring(input.files[0].name.lastIndexOf("."));
             let name = input.files[0].name.substring(0, input.files[0].name.lastIndexOf("."));
 
-            let img = document.getElementById("wsop_edt_produto_img_thumb")
+            let img = document.getElementById("wsop_edt_produto_img_thumb_1")
             img.setAttribute('src', "./module/WSOP/img/loading.gif")
             sender.onload = function (e) {
                 ClientEvents.emit("SendSocket", "wsop/produtos/file", { name: name, ext: ext, stream: e.target.result })
@@ -157,9 +170,51 @@ ClientEvents.on("uploadIMG", () => {
     }
 })
 
+ClientEvents.on("edtuploadIMG_2", () => {
+    edtlastfile = 2;
+    if (document.getElementById("wsop_edt_produto_img_2")) {
+        let input = document.getElementById("wsop_edt_produto_img_2");
+        if (input.files && input.files[0]) {
+            var sender = new FileReader();
+            let ext = input.files[0].name.substring(input.files[0].name.lastIndexOf("."));
+            let name = input.files[0].name.substring(0, input.files[0].name.lastIndexOf("."));
+
+            let img = document.getElementById("wsop_edt_produto_img_thumb_2")
+            img.setAttribute('src', "./module/WSOP/img/loading.gif")
+            sender.onload = function (e) {
+                ClientEvents.emit("SendSocket", "wsop/produtos/file", { name: name, ext: ext, stream: e.target.result })
+            };
+
+            sender.readAsArrayBuffer(input.files[0]);
+        }
+    }
+})
+
+ClientEvents.on("edtuploadIMG_3", () => {
+    edtlastfile = 3;
+    if (document.getElementById("wsop_edt_produto_img_3")) {
+        let input = document.getElementById("wsop_edt_produto_img_3");
+        if (input.files && input.files[0]) {
+            var sender = new FileReader();
+            let ext = input.files[0].name.substring(input.files[0].name.lastIndexOf("."));
+            let name = input.files[0].name.substring(0, input.files[0].name.lastIndexOf("."));
+
+            let img = document.getElementById("wsop_edt_produto_img_thumb_3")
+            img.setAttribute('src', "./module/WSOP/img/loading.gif")
+            sender.onload = function (e) {
+                ClientEvents.emit("SendSocket", "wsop/produtos/file", { name: name, ext: ext, stream: e.target.result })
+            };
+
+            sender.readAsArrayBuffer(input.files[0]);
+        }
+    }
+})
+
+let edtlastfile = 0;
 ClientEvents.on("wsop/produtos/fileuploaded", (data) => {
-    if (document.getElementById("wsop_edt_produto_img")) {
-        let img = document.getElementById("wsop_edt_produto_img_thumb")
+    console.log(edtlastfile)
+    if (document.getElementById("wsop_edt_produto_img_1")) {
+        let img = document.getElementById("wsop_edt_produto_img_thumb_" + edtlastfile)
         img.setAttribute('src', "./module/WSOP/img/" + data.file)
         img.setAttribute('loc', data.file)
         img.setAttribute('onclick', "ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: "", thumb: data.file }) + ")")
