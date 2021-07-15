@@ -86,7 +86,14 @@ ClientEvents.on("wsop/os/print", (data) => {
             "<td>" + produto.qnt + "</td>" +
             "<td>R$ " + parseFloat(produto.price.replace(",", ".").replace(" ", "")) + "</td>" +
             "<td>R$ " + (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", ""))).toFixed(2) + "</td>" +
-            "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td><td colspan=2 style='width:50%'>OBS:" + unclearDesc(produto.obs) + "</td>";
+            "<tr class='wsop_produto_item2'><td style='width:250px'><center>";
+        produto.img.split(",").forEach(img => {
+            htm +=
+                "<img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: img, createdIn: produto.createdIn }) + ")'>";
+        })
+        htm += "</td></td><td colspan=2 style='width:50%'>OBS:" + unclearDesc(produto.obs) + "</td>";
+
+
     });
     //htm += "<tr class='wsop_produto_item1'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td><td><b>TOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
 
