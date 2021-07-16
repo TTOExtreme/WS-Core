@@ -26,7 +26,7 @@ class v1 {
      * @param {SocketIO} io 
      */
     socket(io) {
-        this._PreloadModules();
+        //this._PreloadModules();
         io.on("connect", (socket) => {
             socket.on("auth", () => {
                 //try to authenticate user else redirect to login page
@@ -105,11 +105,17 @@ class v1 {
         fs.readdirSync(path(__dirname + '/../../../../modules/')).forEach((mod) => {
             if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))) {
                 try {
+                    /*
                     if (this._PreloadedModules[mod + "_Socket"] == undefined) {
                         this._log.task("api-mod-" + mod, "Loading API " + mod, 0);
                         this._PreloadedModules[mod + "_Socket"] = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
                     }
                     this._PreloadedModules[mod + "_Socket"].socket(socket, Myself);
+                    //*/
+
+                    let modClass = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
+                    modClass.socket(socket, Myself);
+
                 } catch (err) {
                     this._log.task("api-mod-" + mod, "Api " + mod + " Failed to Load", 3);
                     this._log.error(err);
