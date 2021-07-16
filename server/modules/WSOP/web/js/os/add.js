@@ -68,11 +68,6 @@ ClientEvents.on("WSOP/os/add", () => {
     //ClientEvents.emit("SendSocket", "wsop/os/clientes/lst",{name:""});
 });
 
-ClientEvents.on("WSOP/os/close", () => {
-    if (document.getElementById("wsop_add_os_div")) {
-        document.body.removeChild(document.getElementById("wsop_add_os_div"));
-    }
-});
 
 
 ClientEvents.on("WSOP/os/save", () => {

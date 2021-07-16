@@ -154,7 +154,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
     })
 
     htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto' onchange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
+    htm += "<tr style='display:none;' class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto' onchange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
     htm += "<tr style='display:none'><td id='wsop_edt_formaEnvio_precoenvio'> R$ Calculando</td>";
     htm += "<tr style='display:none'><td id='wsop_edt_price'>0</td>";
     htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";

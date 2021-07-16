@@ -244,7 +244,7 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/os/lstappend", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.replaceData(data);
+                this.main_table.setData(data);
             }
         });
         let timeouttimer = new Date().getTime();
@@ -275,16 +275,26 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
-            ClientEvents.emit("WSOP/produtos/close");
+            ClientEvents.emit("wsop_OS_filtertableForce");
         });
         ClientEvents.on("system/added/clientes", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
-            ClientEvents.emit("WSOP/clientes/close");
+            ClientEvents.emit("wsop_OS_filtertableForce");
         });
-        ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
-        ClientEvents.on("system/removed/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 }); ClientEvents.emit("wsop_OS_filtertable"); });
-        ClientEvents.on("system/edited/os", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 }); ClientEvents.emit("wsop_OS_filtertable"); });
+        ClientEvents.on("system/added/os", (data) => {
+            ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data);
+            ClientEvents.emit("close_menu", "wsop_add_os_div");
+            ClientEvents.emit("wsop_OS_filtertableForce");
+        });
+        ClientEvents.on("system/removed/os", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 });
+            ClientEvents.emit("wsop_OS_filtertableForce");
+        });
+        ClientEvents.on("system/edited/os", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 });
+            ClientEvents.emit("wsop_OS_filtertableForce");
+        });
     }
 
     _getStatusFilterParams() {

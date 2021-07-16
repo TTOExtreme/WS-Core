@@ -59,6 +59,7 @@ window.UserList = class UserList {
             {
                 title: this.actionName, field: this.actionfield, formatter: this.actionIcon
             },
+            { title: 'ID', field: 'id', headerFilter: "input" },
             { title: 'Nome', field: 'name', headerFilter: "input" },
             { title: 'CEP', field: 'cep', headerFilter: "input" },
             { title: 'CPF/CNPJ', field: 'cpf_cnpj', headerFilter: "input" },

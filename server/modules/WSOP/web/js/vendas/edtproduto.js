@@ -150,7 +150,11 @@ ClientEvents.on("wsop/os/produto/edited", () => {
     });
 })
 
-ClientEvents.on("system/edited/produtos", (data) => { ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado", time: 1000 }); ClientEvents.emit("WSOP/os/produto/edt/close"); ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data[0].id_os }) });
+ClientEvents.on("system/edited/produtos", (data) => {
+    ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado", time: 1000 });
+    ClientEvents.emit("wsop_OS_filtertableForce");
+    ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data[0].id_os })
+});
 
 
 ClientEvents.on("edtuploadIMG_1", () => {
