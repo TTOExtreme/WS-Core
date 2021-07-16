@@ -84,8 +84,12 @@ ClientEvents.on("wsop/os/printop", (data) => {
                 "<td>Vies: " + produto.description.vies + "</td>" +
                 "<td>Gola: " + produto.description.gola + "</td>" +
                 "<td colspan='2'>Modelo: " + produto.description.modelo + "</td>" +
-                "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
-                "<td colspan=3 style='width:75%'>OBS:" + unclearDesc(produto.obs) + "</td>";
+                "<tr class='wsop_produto_item2'><td style='width:250px'><center>";
+            produto.img.split(",").forEach(img => {
+                htm +=
+                    "<img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: img, createdIn: produto.createdIn }) + ")'>";
+            })
+            htm += "</td><td colspan=3 style='width:75%'>OBS:" + unclearDesc(produto.obs) + "</td>";
         });
         htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
         produtosTable.innerHTML += htm;

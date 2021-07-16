@@ -77,6 +77,7 @@ ClientEvents.on("WSOP/os/close", () => {
 
 ClientEvents.on("WSOP/os/save", () => {
     ClientEvents.emit("SendSocket", "wsop/os/add", {
+        id_myself: Myself.id,
         id_cliente: document.getElementById("wsop_add_cliente").value,
         description: clearDesc(document.getElementById("wsop_add_description").value),
         active: document.getElementById("wsop_add_active").checked,
@@ -93,7 +94,9 @@ ClientEvents.on("searchclient", () => {
     if (document.getElementById("wsop_add_cliente") != undefined) {
         document.getElementById("wsop_searchclientbot").value = "Buscando...";
         document.getElementById("wsop_searchclientbot").disabled = true;
-        ClientEvents.emit("SendSocket", "WSOP/os/clientes/lst", { name: document.getElementById("wsop_add_cliente").value });
+        ClientEvents.emit("SendSocket", "WSOP/os/clientes/lst", {
+            id_myself: Myself.id, name: document.getElementById("wsop_add_cliente").value
+        });
     }
 })
 
