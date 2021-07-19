@@ -6,9 +6,9 @@ ClientEvents.emit("close_menu");
 
 
 ClientEvents.emit("LoadExternal", [
-    "./module/WSFinan/js/addficha.js",
-    "./module/WSFinan/js/movevalue.js",
-    "./module/WSFinan/js/history.js",
+    "./module/WSFinan/js/ficha/addficha.js",
+    "./module/WSFinan/js/ficha/movevalue.js",
+    "./module/WSFinan/js/ficha/history.js",
     "./module/WSFinan/css/index.css",
 ], () => {
     new window.UserList();

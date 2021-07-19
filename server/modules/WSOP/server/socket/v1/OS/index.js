@@ -59,7 +59,8 @@ class Socket {
         if (cookies.wscore) {
             //if (socket.data == undefined) { socket.data = { Myself: { id: "" } }; }
 
-            this._myself = new UserClass(this._WSMainServer);
+            this._myself = Myself;
+            /*
             //check in database for userID
             this._myself.findmeuuid(cookies.wscore).then(() => {
                 console.log("Find User", this._myself.myself.id);
@@ -68,6 +69,7 @@ class Socket {
                 this._log.error("On Finding User on WSOP OS Socket");
                 this._log.error(err);
             });
+            //*/
 
 
 

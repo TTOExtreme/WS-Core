@@ -8,6 +8,7 @@ class Core {
         Icon: "",
         Event: () => { },
         SubItems: [
+            /*
             {
                 Name: "Faturamento",
                 Id: "menu/WSFinan/faturamento",
@@ -16,14 +17,41 @@ class Core {
                 EventCall: "Load",
                 EventData: "./module/WSFinan/js/faturamento.js",
                 TopItems: [],
-            },
+            },//*/
             {
                 Name: "Fichas",
                 Id: "menu/WSFinan/fichas",
                 Permission: "WSFinan/financeiro/ficha",
                 Icon: "",
                 EventCall: "Load",
-                EventData: "./module/WSFinan/js/ficha.js",
+                EventData: "./module/WSFinan/js/ficha/list.js",
+                TopItems: [],
+            },
+            {
+                Name: "Requisição",
+                Id: "menu/WSFinan/requisicao",
+                Permission: "WSFinan/financeiro/requisicao",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./module/WSFinan/js/requisicao/list.js",
+                TopItems: [],
+            },
+            {
+                Name: "Fornecedores",
+                Id: "menu/WSFinan/fornecedor",
+                Permission: "WWSFinan/financeiro/fornecedor",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./module/WSFinan/js/fornecedor/list.js",
+                TopItems: [],
+            },
+            {
+                Name: "Produtos",
+                Id: "menu/WSFinan/produtos",
+                Permission: "WSFinan/financeiro/produtos",
+                Icon: "",
+                EventCall: "Load",
+                EventData: "./module/WSFinan/js/produtos/list.js",
                 TopItems: [],
             }
         ],
