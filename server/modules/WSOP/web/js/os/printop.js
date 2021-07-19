@@ -12,8 +12,10 @@ ClientEvents.on("wsop/os/printop", (data) => {
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
         "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsop_printop_div')>X</p></td></tr></table>" +
-        "<div id='wsop_print' class='wsop_print'>" +
-        "<div class='div_wsop_hist_table'><table><tr><td><table style='min-width:768px;'>" +
+
+
+        "<div class='div_wsop_hist_table'>" +
+        "<div id='wsop_print' class='wsop_print'><table style='width:100%;'><tr><td><table style='min-width:768px;'>" +
         //OS ID
         "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
@@ -37,6 +39,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
         "<hr>" +
         "<table style='width:100%;'>" +
         //os
+        "<tr><td>Forma Envio: " + new window.Modules.WSOP.formaEnvio().envioToName(data.formaEnvio) + "</td></tr>" +
         "<tr><td>Descrição:</td>" +
         "</table><hr>" +
         "<table style='width: 100%;'><tbody id='wsop_print_anexos' class='wsop_print_anexos'>" +
@@ -54,7 +57,7 @@ ClientEvents.on("wsop/os/printop", (data) => {
     let htm = "";
     if (data.anexos != undefined) {
         data.anexos.forEach((anexo, index) => {
-            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center>" + anexo.name + "</center><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center><pre>Nome: " + anexo.name + "\nData: " + formatTime(anexo.createdIn) + "</pre></center><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
         });
         anexosTable.innerHTML += htm;
     }
@@ -81,8 +84,12 @@ ClientEvents.on("wsop/os/printop", (data) => {
                 "<td>Vies: " + produto.description.vies + "</td>" +
                 "<td>Gola: " + produto.description.gola + "</td>" +
                 "<td colspan='2'>Modelo: " + produto.description.modelo + "</td>" +
-                "<tr class='wsop_produto_item2'><td><center><img class='wsop_print_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "'></td>" +
-                "<td colspan=3 style='width:75%'>OBS:" + unclearDesc(produto.obs) + "</td>";
+                "<tr class='wsop_produto_item2'><td style='width:250px'><center>";
+            produto.img.split(",").forEach(img => {
+                htm +=
+                    "<img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: img, createdIn: produto.createdIn }) + ")'>";
+            })
+            htm += "</td><td colspan=3 style='width:75%'>OBS:" + unclearDesc(produto.obs) + "</td>";
         });
         htm += ("<tr class='wsop_produto_item2'><td></td><td><b>Quantidade Total:</td><td><b>" + totalqnt + "</td>")
         produtosTable.innerHTML += htm;

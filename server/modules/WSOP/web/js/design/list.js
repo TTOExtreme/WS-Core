@@ -202,14 +202,15 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
-            ClientEvents.emit("WSOP/produtos/close");
         });
         ClientEvents.on("system/added/clientes", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
-            ClientEvents.emit("WSOP/clientes/close");
         });
-        ClientEvents.on("system/added/os", (data) => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data); ClientEvents.emit("WSOP/os/close"); });
+        ClientEvents.on("system/added/os", (data) => {
+            ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data);
+            ClientEvents.emit("close_menu", "wsop_add_os_div");
+        });
         ClientEvents.on("system/removed/os", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/lst", { status: new window.Modules.WSOP.StatusID().getStatusSector("design") });

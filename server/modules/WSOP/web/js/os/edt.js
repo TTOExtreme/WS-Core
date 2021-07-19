@@ -110,7 +110,12 @@ ClientEvents.on("wsop/os/edt", (data) => {
                 "<td>" + produto.name + "</td>" +
                 "<td>" + produto.qnt + "</td>" +
                 "<td>R$ " + produto.price + "</td>" +
-                "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
+                "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + unclearDesc(produto.obs) + "</td><td style='width:250px'><center>";
+            produto.img.split(",").forEach(img => {
+                htm +=
+                    "<img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: img, createdIn: produto.createdIn }) + ")'>";
+            })
+            htm += "</td>";
         });
     }
 
@@ -149,7 +154,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
     })
 
     htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto' onchange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
+    htm += "<tr style='display:none;' class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto' onchange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
     htm += "<tr style='display:none'><td id='wsop_edt_formaEnvio_precoenvio'> R$ Calculando</td>";
     htm += "<tr style='display:none'><td id='wsop_edt_price'>0</td>";
     htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
@@ -229,6 +234,7 @@ ClientEvents.on("wsop/os/edt", (data) => {
 
 ClientEvents.on("WSOP/os/edt", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edt", {
+        id_myself: Myself.id,
         id: document.getElementById("wsop_edt_id").value,
         description: clearDesc(document.getElementById("wsop_edt_description").innerHTML),
         prazo: document.getElementById("wsop_edt_prazo").value,
@@ -248,6 +254,7 @@ ClientEvents.on("WSOP/os/edt", () => {
 
 ClientEvents.on("WSOP/os/edtproduct", () => {
     ClientEvents.emit("SendSocket", "wsop/os/edtproduct", {
+        id_myself: Myself.id,
         id: document.getElementById("wsop_edt_id_produto").value | "",
         id_os: document.getElementById("wsop_edt_id").value | "",
         description: clearDesc(document.getElementById("wsop_edt_description").innerHTML),
@@ -272,7 +279,9 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
                 document.getElementById("wsop_edt_anexos").appendChild(tr);
 
                 sender.onload = function (e) {
-                    ClientEvents.emit("SendSocket", "wsop/os/file", { name: name, ext: ext, stream: e.target.result, id: id })
+                    ClientEvents.emit("SendSocket", "wsop/os/file", {
+                        id_myself: Myself.id, name: name, ext: ext, stream: e.target.result, id: id
+                    })
                 };
                 sender.readAsArrayBuffer(input.files[i]);
             }
@@ -283,6 +292,7 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
 
 ClientEvents.on("wsop/os/produto/add", () => {
     let data = {
+        id_myself: Myself.id,
         id: document.getElementById("wsop_edt_produto").value | "",
         id_os: document.getElementById("wsop_edt_id").value | "",
         qnt: document.getElementById("wsop_edt_qnt_produto").value | "",

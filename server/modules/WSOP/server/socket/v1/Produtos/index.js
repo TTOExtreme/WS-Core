@@ -158,6 +158,7 @@ class Socket {
         socket.on("wsop/produtos/file", (req) => {
             this._myself.checkPermission("WSOP/produtos/add").then(() => {
                 try {
+                    req[0].ext = (req[0].ext).toLowerCase()
                     let name = new BCypher().generate_salt(48) + req[0].ext;
                     let filepath = path(__dirname + "/../../../../web/img/produtos/")
                     if (!fs.existsSync(filepath)) { fs.mkdirSync(filepath); }

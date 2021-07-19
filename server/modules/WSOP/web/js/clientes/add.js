@@ -8,12 +8,12 @@ ClientEvents.on("WSOP/clientes/add", () => {
         cpf_cnpj: "",
         cep: "",
         logradouro: "",
+        complemento: "",
         numero: "",
         bairro: "",
         municipio: "",
         uf: "",
         country: "",
-        logradouro: "",
         telefone: "",
         email: "",
         active: 1,
@@ -36,6 +36,7 @@ ClientEvents.on("WSOP/clientes/add", () => {
         "<tr id='tr_wsop_add_cpf' style='display:none'><td class='wsop_edt_label'>CPF:</td><td><input id='wsop_add_cpf' type='text' value='" + data.cpf_cnpj + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>CEP:</td><td><input id='wsop_add_cep' type='text' onchange='ClientEvents.emit(\"cepchange\")' value='" + data.cep + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Logradouro:</td><td><input id='wsop_add_logradouro' type='text' value='" + data.logradouro + "'></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Complemento:</td><td><input id='wsop_add_complemento' type='text' value='" + data.complemento + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Numero:</td><td><input id='wsop_add_numero' type='text' value='" + data.numero + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Bairro:</td><td><input id='wsop_add_bairro' type='text' value='" + data.bairro + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Município:</td><td><input id='wsop_add_municipio' type='text' value='" + data.municipio + "'></td></tr>" +
@@ -52,11 +53,6 @@ ClientEvents.on("WSOP/clientes/add", () => {
 });
 //ClientEvents.emit("WSOP/clientes/add")
 
-ClientEvents.on("WSOP/clientes/close", () => {
-    if (document.getElementById("wsop_add_clientes_div")) {
-        document.body.removeChild(document.getElementById("wsop_add_clientes_div"));
-    }
-});
 
 ClientEvents.on("cnpjchange", () => {
     if (document.getElementById("wsop_add_clientes_div")) {
@@ -139,6 +135,7 @@ ClientEvents.on("WSOP/clientes/save", () => {
         cpf_cnpj: document.getElementById("wsop_add_cnpj").value || document.getElementById("wsop_add_cpf").value,
         cep: document.getElementById("wsop_add_cep").value,
         logradouro: document.getElementById("wsop_add_logradouro").value,
+        complemento: document.getElementById("wsop_add_complemento").value,
         numero: document.getElementById("wsop_add_numero").value,
         bairro: document.getElementById("wsop_add_bairro").value,
         municipio: document.getElementById("wsop_add_municipio").value,

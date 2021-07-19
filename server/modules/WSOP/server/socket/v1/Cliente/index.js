@@ -93,6 +93,7 @@ class Socket {
                     req[0].cpf_cnpj &&
                     req[0].cep &&
                     req[0].logradouro &&
+                    req[0].complemento &&
                     req[0].numero &&
                     req[0].bairro &&
                     req[0].municipio &&
@@ -102,24 +103,39 @@ class Socket {
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._ClienteClass.createCliente(req[0].name, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].country, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
-                        socket.emit("ClientEvents", {
-                            event: "system/added/clientes",
-                            data: req
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
-                        }
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
+                    this._ClienteClass.createCliente(req[0].name,
+                        req[0].responsavel,
+                        req[0].cpf_cnpj,
+                        req[0].iscnpj,
+                        req[0].cep,
+                        req[0].logradouro,
+                        req[0].complemento,
+                        req[0].numero,
+                        req[0].bairro,
+                        req[0].municipio,
+                        req[0].uf,
+                        req[0].country,
+                        req[0].telefone,
+                        req[0].email,
+                        req[0].active,
+                        this._myself.myself.id).then(() => {
+                            socket.emit("ClientEvents", {
+                                event: "system/added/clientes",
+                                data: req
+                            })
+                        }).catch((err) => {
+                            if (!this._myself.isLogged()) {
+                                socket.emit("logout", "");
                             }
+                            socket.emit("ClientEvents", {
+                                event: "system_mess",
+                                data: {
+                                    status: "ERROR",
+                                    mess: err,
+                                    time: 1000
+                                }
+                            })
                         })
-                    })
                 } else {
                     socket.emit("ClientEvents", {
                         event: "system_mess",
@@ -143,6 +159,7 @@ class Socket {
                     req[0].cpf_cnpj &&
                     req[0].cep &&
                     req[0].logradouro &&
+                    req[0].complemento &&
                     req[0].numero &&
                     req[0].bairro &&
                     req[0].municipio &&
@@ -152,24 +169,41 @@ class Socket {
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._ClienteClass.editCliente(req[0].id, req[0].name, req[0].responsavel, req[0].cpf_cnpj, req[0].iscnpj, req[0].cep, req[0].logradouro, req[0].numero, req[0].bairro, req[0].municipio, req[0].uf, req[0].country, req[0].telefone, req[0].email, req[0].active, this._myself.myself.id).then(() => {
-                        socket.emit("ClientEvents", {
-                            event: "system/edited/clientes",
-                            data: req
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
-                        }
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
+                    this._ClienteClass.editCliente(
+                        req[0].id,
+                        req[0].name,
+                        req[0].responsavel,
+                        req[0].cpf_cnpj,
+                        req[0].iscnpj,
+                        req[0].cep,
+                        req[0].logradouro,
+                        req[0].complemento,
+                        req[0].numero,
+                        req[0].bairro,
+                        req[0].municipio,
+                        req[0].uf,
+                        req[0].country,
+                        req[0].telefone,
+                        req[0].email,
+                        req[0].active,
+                        this._myself.myself.id).then(() => {
+                            socket.emit("ClientEvents", {
+                                event: "system/edited/clientes",
+                                data: req
+                            })
+                        }).catch((err) => {
+                            if (!this._myself.isLogged()) {
+                                socket.emit("logout", "");
                             }
+                            socket.emit("ClientEvents", {
+                                event: "system_mess",
+                                data: {
+                                    status: "ERROR",
+                                    mess: err,
+                                    time: 1000
+                                }
+                            })
                         })
-                    })
                 } else {
                     socket.emit("ClientEvents", {
                         event: "system_mess",

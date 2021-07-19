@@ -26,9 +26,8 @@ class v1 {
      * @param {SocketIO} io 
      */
     socket(io) {
+        //this._PreloadModules();
         io.on("connect", (socket) => {
-            let Myself = new UserClass(this._WSMainServer);
-            let _socket;
             socket.on("auth", () => {
                 //try to authenticate user else redirect to login page
                 try {
@@ -36,11 +35,16 @@ class v1 {
                     var cookies = CookieIO.parse(socket.handshake.headers.cookie);
                     //this._log.info(JSON.stringify(cookies));
                     if (cookies.wscore) {
+                        //if (socket.data == undefined) { socket.data = { Myself: { id: "" } }; }
+
+                        let Myself = new UserClass(this._WSMainServer);
                         //check in database for userID
                         Myself.findmeuuid(cookies.wscore).then(() => {
                             return Myself.checkPermission("def/usr/login").then(() => {
-                                _socket = socket;
-                                this._loadModules(_socket, Myself);
+                                console.log("new Connection: ", Myself.myself.id);
+
+
+                                this._loadModules(socket, Myself);
 
                                 var address = socket.handshake.address;
                                 Myself.LogIn({
@@ -48,8 +52,17 @@ class v1 {
                                 });
 
                                 socket.emit("auth-ok", Myself.getUserClientData());
+
+                                socket.on('disconnect', () => {
+                                    this._log.info('Client disconnected');
+                                    if (Myself.LogOut != undefined) {
+                                        Myself.LogOut();
+                                    }
+                                });
+
                                 return Promise.resolve();
                             })
+
                         }).catch(() => {
                             socket.emit("auth-err", "UUID Invalido");
                         })
@@ -64,11 +77,6 @@ class v1 {
                     //this._log.info(socket.handshake)
                 }
             })
-
-            socket.on('disconnect', () => {
-                this._log.info('Client disconnected');
-                Myself.LogOut();
-            });
         })
     }
 
@@ -97,18 +105,38 @@ class v1 {
         fs.readdirSync(path(__dirname + '/../../../../modules/')).forEach((mod) => {
             if (fs.existsSync(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))) {
                 try {
+                    /*
                     if (this._PreloadedModules[mod + "_Socket"] == undefined) {
                         this._log.task("api-mod-" + mod, "Loading API " + mod, 0);
                         this._PreloadedModules[mod + "_Socket"] = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
                     }
                     this._PreloadedModules[mod + "_Socket"].socket(socket, Myself);
+                    //*/
+
+                    let modClass = new (require(path(__dirname + '/../../../../modules/' + mod + '/server/socket/v1.js'))).Socket(this._WSMainServer);
+                    modClass.socket(socket, Myself);
+
                 } catch (err) {
                     this._log.task("api-mod-" + mod, "Api " + mod + " Failed to Load", 3);
                     this._log.error(err);
                 }
             }
         })
+    }
 
+    _PreloadModules() {
+        fs.readdirSync(path(__dirname + '/core/')).forEach((mod) => {
+            try {
+                if (this._PreloadedModules[mod] == undefined) {
+                    this._log.task("api-mod-" + mod.replace(".js", ""), "Loading API " + mod.replace(".js", ""), 0);
+                    let modSocket = require(__dirname + '/core/' + mod)
+                    this._PreloadedModules[mod] = new modSocket.Socket(this._WSMainServer);
+                }
+            } catch (err) {
+                this._log.task("api-mod-" + mod.replace(".js", ""), "Api " + mod.replace(".js", "") + " Failed to Load", 3);
+                this._log.error(err);
+            }
+        })
     }
 }
 

@@ -63,12 +63,12 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/osview") && new window.Modules.WSOP.StatusID().blockView(cell.getRow().getData().status, "prepress")) {
+        if (Myself.checkPermission("WSOP/os/osview")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewos", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/view", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSOP/os/opview")) {

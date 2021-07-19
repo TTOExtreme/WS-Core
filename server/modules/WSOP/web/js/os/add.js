@@ -68,15 +68,11 @@ ClientEvents.on("WSOP/os/add", () => {
     //ClientEvents.emit("SendSocket", "wsop/os/clientes/lst",{name:""});
 });
 
-ClientEvents.on("WSOP/os/close", () => {
-    if (document.getElementById("wsop_add_os_div")) {
-        document.body.removeChild(document.getElementById("wsop_add_os_div"));
-    }
-});
 
 
 ClientEvents.on("WSOP/os/save", () => {
     ClientEvents.emit("SendSocket", "wsop/os/add", {
+        id_myself: Myself.id,
         id_cliente: document.getElementById("wsop_add_cliente").value,
         description: clearDesc(document.getElementById("wsop_add_description").value),
         active: document.getElementById("wsop_add_active").checked,
@@ -93,7 +89,9 @@ ClientEvents.on("searchclient", () => {
     if (document.getElementById("wsop_add_cliente") != undefined) {
         document.getElementById("wsop_searchclientbot").value = "Buscando...";
         document.getElementById("wsop_searchclientbot").disabled = true;
-        ClientEvents.emit("SendSocket", "WSOP/os/clientes/lst", { name: document.getElementById("wsop_add_cliente").value });
+        ClientEvents.emit("SendSocket", "WSOP/os/clientes/lst", {
+            id_myself: Myself.id, name: document.getElementById("wsop_add_cliente").value
+        });
     }
 })
 
@@ -128,92 +126,5 @@ ClientEvents.on("wsop/os/clientes/lst", (arr) => {
         htm += "<option value='" + item.id + "'>" + namehtml + "</option>";
     })
     inp.innerHTML = htm;
+    inp.focus();
 });
-
-
-/*
-ClientEvents.on("wsop/os/clientes/lst", (arr) => {
-    let inp = document.getElementById("wsop_add_cliente");
-    var currentFocus;
-
-
-    let addActive = (x) => {
-        if (!x) return false;
-        removeActive(x);
-        if (currentFocus >= x.length) currentFocus = 0;
-        if (currentFocus < 0) currentFocus = (x.length - 1);
-        x[currentFocus].classList.add("autocomplete-active");
-    }
-
-    let removeActive = (x) => {
-        for (var i = 0; i < x.length; i++) {
-            x[i].classList.remove("autocomplete-active");
-        }
-    }
-    let closeAllLists = (elmnt) => {
-        var x = document.getElementsByClassName("autocomplete-items");
-        for (var i = 0; i < x.length; i++) {
-            if (elmnt != x[i] && elmnt != inp) {
-                x[i].parentNode.removeChild(x[i]);
-            }
-        }
-    }
-
-
-    /*execute a function when someone writes in the text field:
-    inp.addEventListener("input", function (e) {
-        var a, b, i, val = this.value;
-        closeAllLists();
-        if (!val) { return false; }
-        currentFocus = -1;
-        a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
-        this.parentNode.appendChild(a);
-        let lim = 8;
-        let set = false;
-        for (i = 0; i < arr.length; i++) {
-            let name = arr[i].name + " | " + arr[i].responsavel;
-            if ((name + "").toLowerCase().indexOf((val + "").toLowerCase()) > -1 && lim >= 0) {
-                lim--;
-                b = document.createElement("DIV");
-                b.setAttribute("id", arr[i].id)
-                let namehtml = ((name).replace(new RegExp((val).toLowerCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
-                namehtml = ((namehtml).replace(new RegExp((val).toUpperCase(), "g"), "<strong>" + val.toUpperCase() + "</strong>"));
-                b.innerHTML = namehtml;
-                b.innerHTML += "<input type='hidden' value='" + (arr[i].name + "") + "'>";
-                b.addEventListener("click", function (e) {
-                    inp.value = this.getElementsByTagName("input")[0].value;
-                    document.getElementById("wsop_add_id_cliente").value = this.getAttribute("id");
-                    closeAllLists();
-                });
-                if (!set) {
-                    set = true;
-                    document.getElementById("wsop_add_id_cliente").value = arr[i].id;// set do primeiro item como selecionado
-                }
-                a.appendChild(b);
-            }
-        }
-    });
-    inp.addEventListener("keydown", function (e) {
-        var x = document.getElementById(this.id + "autocomplete-list");
-        if (x) x = x.getElementsByTagName("div");
-        if (e.keyCode == 40) { //down
-            currentFocus++;
-            addActive(x);
-        } else if (e.keyCode == 38) { //up
-            currentFocus--;
-            addActive(x);
-        } else if (e.keyCode == 13) { //enter
-            e.preventDefault();
-            if (currentFocus > -1) {
-                if (x) x[currentFocus].click();
-            }
-        }
-    });
-
-    document.addEventListener("click", function (e) {
-        closeAllLists(e.target);
-    });
-});
-//*/

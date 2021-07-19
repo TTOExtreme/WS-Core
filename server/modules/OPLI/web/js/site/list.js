@@ -207,12 +207,10 @@ window.UserList = class UserList {
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");
-            ClientEvents.emit("WSOP/produtos/close");
         });
         ClientEvents.on("system/added/clientes", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/site/clientes/lst");
-            ClientEvents.emit("WSOP/clientes/close");
         });
 
         ClientEvents.on("system/edited/sitedata", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Site Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
