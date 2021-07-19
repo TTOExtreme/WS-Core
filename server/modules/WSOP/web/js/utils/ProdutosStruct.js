@@ -315,8 +315,8 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
             tecidos: ["-"],
             gola: ["-"],
             vies: ["-"],
-            preco: 139.90,
-            precoRevenda: 139.90,
+            preco: 139.70,
+            precoRevenda: 139.70,
             custo: 66.32
         },
 
