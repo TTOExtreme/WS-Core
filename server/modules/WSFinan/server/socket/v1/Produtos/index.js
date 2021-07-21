@@ -1,4 +1,4 @@
-const ClienteManipulator = require('./dbManipulator').ClienteManipulator;
+const ProdutosManipulator = require('./dbManipulator').ProdutosManipulator;
 
 class Socket {
 
@@ -17,7 +17,7 @@ class Socket {
         this._config = WSMainServer.config;
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
-        this._FornecedorClass = new ClienteManipulator(WSMainServer);
+        this._ProdutosClass = new ProdutosManipulator(WSMainServer);
         this._log.task("api-mod-WSFinan-produtos", "Api WSFinan-produtos Loaded", 1);
     }
 
@@ -30,13 +30,13 @@ class Socket {
         this._myself = Myself;
 
         /**
-         * List all produtos
+         * List all clientes
          */
-        socket.on("WSFinan/fornecedor/lst", (req) => {
-            this._myself.checkPermission("WSFinan/financeiro/fornecedor").then(() => {
-                this._FornecedorClass.ListAll().then((res) => {
+        socket.on("WSFinan/produtos/lst", (req) => {
+            this._myself.checkPermission("WSFinan/financeiro/produtos").then(() => {
+                this._ProdutosClass.ListAll().then((res) => {
                     socket.emit("ClientEvents", {
-                        event: "WSFinan/fornecedor/lst",
+                        event: "WSFinan/produtos/lst",
                         data: res
                     })
                 }).catch((err) => {
@@ -58,12 +58,12 @@ class Socket {
         /**
          * List all clientes para Criação de OS
          */
-        socket.on("WSFinan/fornecedor/lst", (req) => {
-            this._myself.checkPermission("WSFinan/financeiro/fornecedor").then(() => {
+        socket.on("WSFinan/produtos/lst", (req) => {
+            this._myself.checkPermission("WSFinan/financeiro/produtos").then(() => {
                 if (req[0]) {
-                    this._FornecedorClass.ListFornecedorFiltered(req[0].name).then((res) => {
+                    this._ProdutosClass.ListProdutosFiltered(req[0].name).then((res) => {
                         socket.emit("ClientEvents", {
-                            event: "wsfinan/fornecedor/lst",
+                            event: "wsfinan/produtos/lst",
                             data: res
                         })
                     }).catch((err) => {
@@ -86,41 +86,20 @@ class Socket {
         /**
          * add cliente
          */
-        socket.on("WSFinan/fornecedor/add", (req) => {
-            this._myself.checkPermission("WSFinan/fornecedor/add").then(() => {
+        socket.on("WSFinan/produtos/add", (req) => {
+            this._myself.checkPermission("WSFinan/produtos/add").then(() => {
                 if (req[0].name &&
-                    req[0].responsavel &&
-                    req[0].cpf_cnpj &&
-                    req[0].cep &&
-                    req[0].logradouro &&
-                    req[0].complemento &&
-                    req[0].numero &&
-                    req[0].bairro &&
-                    req[0].municipio &&
-                    req[0].uf &&
-                    req[0].country &&
-                    req[0].telefone &&
-                    req[0].email &&
-                    req[0].responsavel
+                    req[0].description &&
+                    req[0].barcode
                 ) {
-                    this._FornecedorClass.createCliente(req[0].name,
-                        req[0].responsavel,
-                        req[0].cpf_cnpj,
-                        req[0].iscnpj,
-                        req[0].cep,
-                        req[0].logradouro,
-                        req[0].complemento,
-                        req[0].numero,
-                        req[0].bairro,
-                        req[0].municipio,
-                        req[0].uf,
-                        req[0].country,
-                        req[0].telefone,
-                        req[0].email,
+                    this._ProdutosClass.createProdutos(
+                        req[0].name,
+                        req[0].description,
+                        req[0].barcode,
                         req[0].active,
                         this._myself.myself.id).then(() => {
                             socket.emit("ClientEvents", {
-                                event: "system/added/fornecedor",
+                                event: "system/added/produtos",
                                 data: req
                             })
                         }).catch((err) => {
@@ -152,43 +131,21 @@ class Socket {
         /**
          * add cliente
          */
-        socket.on("WSFinan/fornecedor/edt", (req) => {
-            this._myself.checkPermission("WSFinan/fornecedor/add").then(() => {
+        socket.on("WSFinan/produtos/edt", (req) => {
+            this._myself.checkPermission("WSFinan/produtos/edt").then(() => {
                 if (req[0].name &&
-                    req[0].responsavel &&
-                    req[0].cpf_cnpj &&
-                    req[0].cep &&
-                    req[0].logradouro &&
-                    req[0].complemento &&
-                    req[0].numero &&
-                    req[0].bairro &&
-                    req[0].municipio &&
-                    req[0].uf &&
-                    req[0].country &&
-                    req[0].telefone &&
-                    req[0].email &&
-                    req[0].responsavel
+                    req[0].description &&
+                    req[0].barcode
                 ) {
-                    this._FornecedorClass.editCliente(
+                    this._ProdutosClass.editProdutos(
                         req[0].id,
                         req[0].name,
-                        req[0].responsavel,
-                        req[0].cpf_cnpj,
-                        req[0].iscnpj,
-                        req[0].cep,
-                        req[0].logradouro,
-                        req[0].complemento,
-                        req[0].numero,
-                        req[0].bairro,
-                        req[0].municipio,
-                        req[0].uf,
-                        req[0].country,
-                        req[0].telefone,
-                        req[0].email,
+                        req[0].description,
+                        req[0].barcode,
                         req[0].active,
                         this._myself.myself.id).then(() => {
                             socket.emit("ClientEvents", {
-                                event: "system/edited/fornecedor",
+                                event: "system/edited/produtos",
                                 data: req
                             })
                         }).catch((err) => {
@@ -232,7 +189,7 @@ class Socket {
                     name: "Editar",
                     active: true,
                     event: {
-                        call: "WSFinan/fornecedor/edt",
+                        call: "WSFinan/produtos/edt",
                         data: req[0].row
                     }
                 });
@@ -247,7 +204,7 @@ class Socket {
                     name: "Excluir",
                     active: true,
                     event: {
-                        call: "WSFinan/fornecedor/del",
+                        call: "WSFinan/produtos/del",
                         data: req[0].row
                     }
                 });
