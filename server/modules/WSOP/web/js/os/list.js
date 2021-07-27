@@ -40,10 +40,11 @@ if (window.UserList || window.UpdateMainTable) { // usa a mesma interface global
     clearInterval(window.UpdateMainTable);
     window.UpdateMainTable = null;
 }
-
+/*
 window.UpdateMainTable = setInterval(() => {
     ClientEvents.emit("SendSocket", "wsop/os/lst");
 }, 10 * 1000);
+//*/
 
 window.UserList = class UserList {
 
@@ -101,6 +102,24 @@ window.UserList = class UserList {
             bot.setAttribute("title", "Historico");
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-credit-card");
+            bot.setAttribute("title", "Gerar Link");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/api/pagarme/gerarlink", (rowdata)) };
+            htm.appendChild(bot);
+        }
+
+        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-money");
+            bot.setAttribute("title", "Visualizar Pagamentos");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("wsop/api/pagarme/list", (rowdata)) };
             htm.appendChild(bot);
         }
 

@@ -39,7 +39,7 @@ ClientEvents.on("wsop/os/view", (data) => {
         "<div id='wsop_edt' class='wsop_edt'>" +
         "<table style='width:100%;'><tr><td colspan=2><div class='div_wsop_hist_table' style='overflow-x:hidden'><table style='width:100%'>" +
         //OS ID
-        "<tr style='font-size:14pt'><td>" + ("00" + new Date().getDate()).slice(-2) + "/" + ("00" + (new Date().getMonth() + 1)).slice(-2) + "/" + new Date().getFullYear() + " " + ("00" + new Date().getHours()).slice(-2) + ":" + ("00" + new Date().getMinutes()).slice(-2) + ":" + ("00" + new Date().getSeconds()).slice(-2) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
+        "<tr style='font-size:14pt'><td>" + formatTime(data.createdIn) + "</td><td style='float:right'><b>Status: " + new window.Modules.WSOP.StatusID().StatusIdToName(data.status) + " | OS: " + data.id + "</b></td></tr>" +
         "</table>" +
         "<hr>" +
         "<table style='width:100%;'>" +
@@ -73,13 +73,29 @@ ClientEvents.on("wsop/os/view", (data) => {
     anexosTable.innerHTML += htm;
 
     let produtosTable = document.getElementById("wsop_edt_produtos");
-    htm = "<tr class='wsop_produto_item1'><td style='width:30px'>Ações:</td><td>Código:</td><td>Item:</td><td>Quantidade:</td></tr>";
+    htm = "<tr class='wsop_produto_item1'><td>Código:</td><td>Item:</td><td>Quantidade:</td><td></td></tr>";
     data.produtos.forEach((produto) => {
-        htm += "<tr class='wsop_produto_item1'><td style='width:30px'></td>" +
+        try {
+            produto.description = JSON.parse(produto.description)
+        } catch (err) {
+            produto.description = { gola: "-", vies: "-", genero: "-", modelo: "-" }
+        }
+        htm += "<tr class='wsop_produto_item1'>" +
             "<td>" + produto.barcode + "</td>" +
             "<td>" + produto.name + "</td>" +
             "<td>" + produto.qnt + "</td>" +
-            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + unclearDesc(produto.obs) + "</td><td><center><img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + produto.img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: produto.img }) + ")'></td>";
+            "<td></td>" +
+            "</tr><tr class='wsop_produto_item3'>" +
+            "<td>Modelo: " + produto.description.modelo + "</td>" +
+            "<td>Tecido: " + (produto.description.tecido != undefined ? produto.description.tecido : "-") + "</td>" +
+            "<td>Vies: " + produto.description.vies + "</td>" +
+            "<td>Gola: " + produto.description.gola + "</td>" +
+            "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=2>" + unclearDesc(produto.obs) + "</td><td><center>";
+        produto.img.split(",").forEach(img => {
+            htm +=
+                "<img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: img, createdIn: produto.createdIn }) + ")'>";
+        })
+        htm += "</td>";
     });
     produtosTable.innerHTML += htm;
 

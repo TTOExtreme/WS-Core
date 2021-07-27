@@ -144,7 +144,7 @@ window.UserList = class UserList {
             {
                 label: "Atualizar",
                 action: function (e, column) {
-                    ClientEvents.emit("SendSocket", "WSOP/site/lst");
+                    ClientEvents.emit("SendSocket", "WSOP/site/lst", { id: "", name: "", nome_cliente: "", status: "", createdIn: "", endingIn: "" });
                 }
             })
         this.newCollums[0].headerMenu.push(
@@ -158,7 +158,8 @@ window.UserList = class UserList {
             {
                 label: "Download Em Produção para CSV",
                 action: function (e, column) {
-                    ClientEvents.emit("WSOP/site/dnl/emproducao", {});
+                    ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { status: "(17,15)" });
+                    //ClientEvents.emit("WSOP/site/dnl/emproducao", {});
                 }
             })
         /**Initialize  Table */
@@ -177,10 +178,13 @@ window.UserList = class UserList {
             movableColumns: true,
             layout: ((screen.width > 600) ? "fitColumns" : "fitData"),
             rowFormatter: this.actionRowFormatter,
-            rowContext: this.rowContext
+            rowContext: this.rowContext,
+            dataFiltering: function (filters) {
+                ClientEvents.emit("opli_site_filtertable");
+            },
         });
         this._init();
-        ClientEvents.emit("SendSocket", "WSOP/site/lst");
+        ClientEvents.emit("SendSocket", "WSOP/site/lst", { id: "", name: "", nome_cliente: "", status: "", createdIn: "", endingIn: "" });
     }
 
     _init() {
@@ -189,11 +193,31 @@ window.UserList = class UserList {
         ClientEvents.on("wsop/site/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.updateOrAddData(this.UserListData);
+                this.main_table.setData(this.UserListData);
                 /*
                 setTimeout(() => { //moved to here for broadcasting problems
                     ClientEvents.emit("SendSocket", "WSOP/site/lst");
                 }, 60 * 1000);//*/
+            }
+        });
+
+
+
+        // Filter table ========================================
+        let timeouttimer = new Date().getTime();
+        let lsearch = "";
+        /**Receive user list and append to Table */
+        ClientEvents.on("opli_site_filtertable", () => {
+            let headerFilters = this.main_table.getHeaderFilters();
+            let sendfilters = {};
+            headerFilters.forEach(element => {
+                sendfilters[element.field] = element.value;
+            });
+            if (headerFilters.length > 0 && timeouttimer - new Date().getTime() < 0 && lsearch != JSON.stringify(sendfilters)) {
+                lsearch = JSON.stringify(sendfilters);
+                //console.log(sendfilters);
+                timeouttimer = new Date().getTime() + (1 * 100);
+                ClientEvents.emit("SendSocket", "WSOP/site/lst", sendfilters);
             }
         });
 
@@ -203,14 +227,6 @@ window.UserList = class UserList {
             if (data) {
                 this.main_table.updateOrAddData(data);
             }
-        });
-        ClientEvents.on("system/added/produtos", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/site/produtos/lst");
-        });
-        ClientEvents.on("system/added/clientes", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/site/clientes/lst");
         });
 
         ClientEvents.on("system/edited/sitedata", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Site Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSOP/site/lst"); });
@@ -226,15 +242,17 @@ window.UserList = class UserList {
             }
         })
         ClientEvents.on("wsop/site/download/emproducao", (data) => {
-            if (data.length > 0) {
-                ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data[0].id_li, time: 1000 });
-                data.forEach(dataitem => {
+            if (data.results.length > 0) {
+                ClientEvents.emit("system_mess", { status: "OK", mess: "Download Pedido: " + data.results[0].id_li, time: 1000 });
+                /*
+                data.results.forEach(dataitem => {
                     this.RetrievingData.splice(this.RetrievingData.indexOf(dataitem.id), 1)
                 })
-                this.DownloadedData = this.DownloadedData.concat(data);
-                if (this.RetrievingData.length < 1) {
-                    ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
-                }
+                //*/
+                this.DownloadedData = this.DownloadedData.concat(data.results);
+                //if (data.last) {
+                ClientEvents.emit("WSOP/site/dnlsave/emproducao", {});
+                //}
             }
         })
 
@@ -285,20 +303,25 @@ window.UserList = class UserList {
                 console.log(err)
             }
         });
+
         ClientEvents.on("WSOP/site/dnl/emproducao", () => {
             let max = 5000, min = 0;
             try {
+                /*
                 max = parseInt(prompt("Numero do ultimo pedido:", "5000"));
                 min = parseInt(prompt("Numero do primeiro pedido:", "0"));
                 for (let id = max; id >= min; id--) {
-                    this.RetrievingData.push(id);
+                    //this.RetrievingData.push(id);
                     if (id % 100 == 0) {
                         setTimeout(() => {
-                            ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: id });
+                            ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { id: id, last: (id == min) });
                         }, 1000 + id / 10);
                     }
                 }
-                downloadrecprod(0, 0, 0, this.RetrievingData);
+                //*/
+                ClientEvents.emit("SendSocket", "WSOP/site/lstdownload/emproducao", { status: "17" });
+
+                //downloadrecprod(0, 0, 0, this.RetrievingData);
             } catch (err) {
                 ClientEvents.emit("system_mess", { status: "ERROR", mess: "Número invalido", time: 1000 });
                 console.log(err)
@@ -369,7 +392,7 @@ window.UserList = class UserList {
 
         ClientEvents.on("WSOP/site/dnlsave/emproducao", () => {
             if (this.UserListData != undefined) {
-                let csv = "OS;status;data;mensagem;codigo;produtos;tamanho;qnt";
+                let csv = "OS;status;data;mensagem;obsInterna;codigo;produtos;tamanho;qnt";
 
 
                 let getTamanho = (barcode) => {
@@ -396,12 +419,12 @@ window.UserList = class UserList {
 
                 this.DownloadedData.forEach(os => {
                     try {
-                        if (os.status == "17") {
-                            csv += "\n#" + os.id_li + ";" + window.utils.OPLIStatusIdToName(os.status) + ";" + formatTime(os.endingIn) + ";" + os.description.replace(new RegExp("\n", "g"), " ") + ";;";
+                        if (os.status == "17" || os.status == "15") {
+                            csv += "\n#" + os.id_li + ";" + window.utils.OPLIStatusIdToName(os.status) + ";" + formatTime(os.endingIn) + ";" + unclearDesc(os.description) + ";" + unclearDesc(os.obs) + ";";
                             let prods = JSON.parse(os.products);
                             prods.forEach(prod => {
                                 let tam = getTamanho(prod.sku);
-                                csv += "\n;;;;\"" + prod.sku + "\";\"" + prod.nome + "\"";
+                                csv += "\n;;;;;\"" + prod.sku + "\";\"" + prod.nome + "\"";
                                 csv += ";\"" + tam + "\"";
                                 csv += ";\"" + parseInt(prod.quantidade) + "\"";
 

@@ -1,4 +1,8 @@
 
+if (window.Modules.WSOP.edtlastfile == undefined) {
+    window.Modules.WSOP.edtlastfile = 0;
+}
+
 ClientEvents.clear("wsop/os/produto/edt")
 ClientEvents.on("wsop/os/produto/edt", (data) => {
     ClientEvents.emit("close_menu", 'wsop_edt_product_div')
@@ -38,6 +42,8 @@ ClientEvents.on("wsop/os/produto/edt", (data) => {
         window.Modules.WSOP.Produtos.getGola(data.description.modelo, data.description.gola) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Genero:</td><td><select id='wsop_edt_produto_genero'>" +
         window.Modules.WSOP.Produtos.getGenero(data.description.modelo, data.description.genero) + "</select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Tecido:</td><td><select id='wsop_edt_produto_tecido'>" +
+        window.Modules.WSOP.Produtos.getTecido(data.description.modelo, data.description.tecido) + "</select></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Tamanho:</td><td><select id='wsop_edt_produto_tamanho'>" +
         window.Modules.WSOP.Produtos.getTamanhos(data.description.modelo, data.description.tamanho) + "</select></td></tr>" +
 
@@ -141,6 +147,7 @@ ClientEvents.on("wsop/os/produto/edited", () => {
             gola: document.getElementById("wsop_edt_produto_gola").value,
             vies: document.getElementById("wsop_edt_produto_vies").value,
             genero: document.getElementById("wsop_edt_produto_genero").value,
+            tecido: document.getElementById("wsop_edt_produto_tecido").value,
             tamanho: document.getElementById("wsop_edt_produto_tamanho").value
         }),
         price: document.getElementById("wsop_edt_products_price").value,
@@ -158,7 +165,7 @@ ClientEvents.on("system/edited/produtos", (data) => {
 
 
 ClientEvents.on("edtuploadIMG_1", () => {
-    edtlastfile = 1;
+    window.Modules.WSOP.edtlastfile = 1;
     if (document.getElementById("wsop_edt_produto_img_1")) {
         let input = document.getElementById("wsop_edt_produto_img_1");
         if (input.files && input.files[0]) {
@@ -178,7 +185,7 @@ ClientEvents.on("edtuploadIMG_1", () => {
 })
 
 ClientEvents.on("edtuploadIMG_2", () => {
-    edtlastfile = 2;
+    window.Modules.WSOP.edtlastfile = 2;
     if (document.getElementById("wsop_edt_produto_img_2")) {
         let input = document.getElementById("wsop_edt_produto_img_2");
         if (input.files && input.files[0]) {
@@ -198,7 +205,7 @@ ClientEvents.on("edtuploadIMG_2", () => {
 })
 
 ClientEvents.on("edtuploadIMG_3", () => {
-    edtlastfile = 3;
+    window.Modules.WSOP.edtlastfile = 3;
     if (document.getElementById("wsop_edt_produto_img_3")) {
         let input = document.getElementById("wsop_edt_produto_img_3");
         if (input.files && input.files[0]) {
@@ -217,11 +224,11 @@ ClientEvents.on("edtuploadIMG_3", () => {
     }
 })
 
-let edtlastfile = 0;
+window.Modules.WSOP.edtlastfile = 0;
 ClientEvents.on("wsop/produtos/fileuploaded", (data) => {
-    console.log(edtlastfile)
+    console.log(window.Modules.WSOP.edtlastfile)
     if (document.getElementById("wsop_edt_produto_img_1")) {
-        let img = document.getElementById("wsop_edt_produto_img_thumb_" + edtlastfile)
+        let img = document.getElementById("wsop_edt_produto_img_thumb_" + window.Modules.WSOP.edtlastfile)
         img.setAttribute('src', "./module/WSOP/img/" + data.file)
         img.setAttribute('loc', data.file)
         img.setAttribute('onclick', "ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: "", thumb: data.file }) + ")")

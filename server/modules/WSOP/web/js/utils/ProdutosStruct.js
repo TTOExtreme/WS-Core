@@ -35,7 +35,11 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
     _Tecidos = [
         "Dry",
         "Elastano",
-        "Dynamic"
+        "Dynamic",
+        "Favo",
+        "Heavy Dry",
+        "Heavy Elastano",
+        "Helanca"
     ]
 
     _Vies = [
@@ -51,6 +55,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         "Decote V Com Vivo",
         "Decote V Duas Cores",
         "Decote V",
+        "Gola Semi V",
         "Gola Polo",
         "Soccer",
         "Soccer Com Vivo",
@@ -63,7 +68,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         //Modelos Corretos
         {
             name: "Agasalho Ziper",
-            tecidos: ["Dinamic"],
             gola: ["-"],
             vies: ["-"],
             preco: 85.70,
@@ -72,7 +76,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Agasalho Canguru",
-            tecidos: ["Dinamic"],
             gola: ["-"],
             vies: ["-"],
             preco: 85.70,
@@ -81,7 +84,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Agasalho Treino",
-            tecidos: ["Dinamic"],
             gola: ["-"],
             vies: ["-"],
             preco: 60.00,
@@ -90,7 +92,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Agasalho Techstripe",
-            tecidos: ["Dinamic"],
             gola: ["-"],
             vies: ["-"],
             preco: 60.00,
@@ -99,7 +100,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Bag",
-            tecidos: ["Dry"],
             gola: ["-"],
             vies: ["-"],
             genero: ["-"],
@@ -120,7 +120,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         //*/
         {
             name: "Boné",
-            tecidos: ["Dry"],
+            tecidos: ["-"],
             gola: ["-"],
             vies: ["-"],
             genero: ["-"],
@@ -140,7 +140,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Calça Termica (Legging)",
-            tecidos: ["Heavy Elastano"],
             gola: ["-"],
             vies: ["-"],
             preco: 74.70,
@@ -149,7 +148,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Calça Treino",
-            tecidos: ["Helanca"],
             gola: ["-"],
             vies: ["-"],
             preco: 74.70,
@@ -158,7 +156,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Calça Techstripe",
-            tecidos: ["Helanca"],
             gola: ["-"],
             vies: ["-"],
             preco: 98.00,
@@ -167,7 +164,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Curta Futebol",
-            tecidos: ["Elastano", "Dry"],
             vies: ["-"],
             preco: 54.70,
             precoRevenda: 54.70,
@@ -175,7 +171,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Curta Futebol Raglan",
-            tecidos: ["Elastano", "Dry"],
             vies: ["-"],
             preco: 53.70,
             precoRevenda: 53.70,
@@ -183,7 +178,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Curta Futevôlei",
-            tecidos: ["Elastano", "Dry"],
             vies: ["-"],
             preco: 54.70,
             precoRevenda: 54.70,
@@ -191,8 +185,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Curta POLO",
-            tecidos: ["Dry"],
-            gola: ["POLO"],
             vies: ["-"],
             preco: 60.70,
             precoRevenda: 60.70,
@@ -200,7 +192,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Longa",
-            tecidos: ["Dry", "Elastano"],
             vies: ["-"],
             preco: 60.70,
             precoRevenda: 60.70,
@@ -208,7 +199,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Manga Longa Raglan",
-            tecidos: ["Dry", "Elastano"],
             vies: ["-"],
             preco: 60.70,
             precoRevenda: 60.70,
@@ -216,7 +206,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Regata",
-            tecidos: ["Elastano", "Dry"],
             gola: ["-"],
             preco: 44.70,
             precoRevenda: 44.70,
@@ -224,7 +213,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Shorts com Bolso (Bermuda)",
-            tecidos: ["Dinamic"],
             gola: ["-"],
             vies: ["-"],
             preco: 44.70,
@@ -233,7 +221,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Shorts Feminino Futevôlei",
-            tecidos: ["Elastano"],
             gola: ["-"],
             vies: ["-"],
             genero: ["Feminino"],
@@ -243,7 +230,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Shorts Masculino Futevôlei",
-            tecidos: ["DRY"],
             gola: ["-"],
             vies: ["-"],
             genero: ["Masculino"],
@@ -253,7 +239,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Shorts Saia",
-            tecidos: ["Elastano"],
             gola: ["-"],
             vies: ["-"],
             genero: ["Feminino"],
@@ -263,7 +248,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "Sunga",
-            tecidos: ["Heavy Elastano"],
+            tecidos: ["Heavy Dry"],
             gola: ["-"],
             vies: ["-"],
             genero: ["Masculino"],
@@ -273,7 +258,7 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         },
         {
             name: "TOP",
-            tecidos: ["Heavy Elastano"],
+            tecidos: ["Heavy Dry"],
             gola: ["-"],
             vies: ["-"],
             genero: ["Feminino"],
@@ -685,6 +670,14 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
     getGenero(Modelo = "", selected = "") {
         let ret = "<option disabled selected>Selecione:</option>";
         ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].genero : undefined) || ["Masculino", "Feminino"]).forEach((item, index) => {
+            if (selected == "") { selected = item };
+            ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
+        })
+        return ret;
+    }
+    getTecido(Modelo = "", selected = "") {
+        let ret = "<option disabled selected>Selecione:</option>";
+        ((this._Modelos.filter((val) => val.name == Modelo)[0] != undefined ? this._Modelos.filter((val) => val.name == Modelo)[0].tecidos : undefined) || this._Tecidos).forEach((item, index) => {
             if (selected == "") { selected = item };
             ret += "<option value='" + item + "' " + ((item == selected) ? "selected" : "") + ">" + item + "</option>";
         })
