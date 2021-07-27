@@ -21,6 +21,27 @@ const _DB = [
         defaltAdd: 0
     },
     {
+        name: "Financeiro aba Fornecedor",
+        description: "Acesso a aba Fornecedor",
+        code: "WSFinan/financeiro/fornecedor",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
+        name: "Financeiro aba Requisição",
+        description: "Acesso a aba Requisição",
+        code: "WSFinan/financeiro/requisicao",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
+        name: "Financeiro aba Produtos",
+        description: "Acesso a aba Produtos",
+        code: "WSFinan/financeiro/produtos",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
         name: "Add Valor Ficha",
         description: "Adicionar Valores a Ficha",
         code: "WSFinan/ficha/addvalor",
@@ -66,6 +87,34 @@ const _DB = [
         name: "Move Valores Fichas",
         description: "Mover Valores entre Fichas",
         code: "WSFinan/ficha/movevalor",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
+        name: "Add Fornecedor",
+        description: "Adicionar Fornecedor",
+        code: "WSFinan/fornecedor/add",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
+        name: "Edt Fornecedor",
+        description: "Adicionar Fornecedor",
+        code: "WSFinan/fornecedor/edt",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
+        name: "Add Produtos",
+        description: "Adicionar Produtos",
+        code: "WSFinan/produtos/add",
+        type: "WSFinan",
+        defaltAdd: 0
+    },
+    {
+        name: "Edt Produtos",
+        description: "Adicionar Produtos",
+        code: "WSFinan/produtos/edt",
         type: "WSFinan",
         defaltAdd: 0
     },

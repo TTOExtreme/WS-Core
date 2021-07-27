@@ -8,15 +8,6 @@
     border-radius: 10px;
 }
 
-.edt_usr_closeButton {
-    padding: 0;
-    margin: 0;
-    cursor: pointer;
-    background: var(--menu-item-bg);
-    width: 20px;
-    text-align: center;
-}
-
 .wsfinan_edt_label {
     float: right;
     color: var(--div-text);
@@ -73,13 +64,15 @@
     margin: 0;
 }
 
-.wsfinan_ficha_closeButton {
+.wsfinan_ficha_closeButton,
+.closeButton {
     padding: 0;
     margin: 0;
     cursor: pointer;
     background: var(--menu-item-bg);
     width: 20px;
     text-align: center;
+    float: right;
 }
 
 input[type="file"] {
