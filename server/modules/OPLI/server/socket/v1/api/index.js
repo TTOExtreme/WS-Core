@@ -98,16 +98,18 @@ class Socket {
          */
         socket.on("WSOP/site/lst", (req) => {
             this._myself.checkPermission("OPLI/menu/site").then(() => {
-                this._ApiClass.ListAllSite(0, 10).then((results) => {
+                this._ApiClass.ListAllSite(0, 100, req[0].id_li, req[0].name, req[0].nome_cliente, req[0].status).then((results) => {
 
                     socket.emit("ClientEvents", {
                         event: "wsop/site/lst",
                         data: results
                     })
+
+                    /*
                     let res = results, counter = 0, last = results.length;
                     function nextPackage(_ApiClass, id, limit) {
                         if (res.length > 0 && counter < 10) {
-                            _ApiClass.ListAllSite(id, 10).then((results2) => {
+                            _ApiClass.ListAllSite(id, 100).then((results2) => {
 
                                 socket.emit("ClientEvents", {
                                     event: "wsop/site/lst/append",
@@ -120,7 +122,9 @@ class Socket {
                             })
                         }
                     }
-                    nextPackage(this._ApiClass, last, 10); //SET LIMIT FOR EACH SEND
+                    nextPackage(this._ApiClass, last, 100); //SET LIMIT FOR EACH SEND
+                    //*/
+
                 }).catch((err) => {
                     if (!this._myself.isLogged()) {
                         socket.emit("logout", "");
@@ -183,7 +187,7 @@ class Socket {
                     this._ApiClass.ListSite(req[0].id).then((results) => {
                         socket.emit("ClientEvents", {
                             event: "wsop/site/download",
-                            data: results
+                            data: { results: results, last: req[0].last }
                         })
                     }).catch((err) => {
                         if (!this._myself.isLogged()) {
@@ -217,39 +221,40 @@ class Socket {
          * List Site by id DOWNLOAD
          */
         socket.on("WSOP/site/lstdownload/emproducao", (req) => {
-            if (req[0].id != undefined) {
-                this._myself.checkPermission("OPLI/menu/site").then(() => {
-                    this._ApiClass.ListSite(req[0].id).then((results) => {
-                        socket.emit("ClientEvents", {
-                            event: "wsop/site/download/emproducao",
-                            data: results
-                        })
-                    }).catch((err) => {
-                        if (!this._myself.isLogged()) {
-                            socket.emit("logout", "");
+            //if (req[0].status != undefined) {
+            this._myself.checkPermission("OPLI/menu/site").then(() => {
+                this._ApiClass.DownloadSite(req[0].status).then((results) => {
+                    socket.emit("ClientEvents", {
+                        event: "wsop/site/download/emproducao",
+                        data: { results: results, last: req[0].last }
+                    })
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    this._log.error("On Editing Api for Loja Integrada")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
                         }
-                        this._log.error("On Editing Api for Loja Integrada")
-                        this._log.error(err);
-                        socket.emit("ClientEvents", {
-                            event: "system_mess",
-                            data: {
-                                status: "ERROR",
-                                mess: err,
-                                time: 1000
-                            }
-                        })
                     })
                 })
-            } else {
-                socket.emit("ClientEvents", {
-                    event: "system_mess",
-                    data: {
-                        status: "ERROR",
-                        mess: "Request Incomplete",
-                        time: 1000
-                    }
-                })
-            }
+            })
+            /*
+        } else {
+            socket.emit("ClientEvents", {
+                event: "system_mess",
+                data: {
+                    status: "ERROR",
+                    mess: "Request Incomplete",
+                    time: 1000
+                }
+            })
+        }//*/
         })
 
         /**

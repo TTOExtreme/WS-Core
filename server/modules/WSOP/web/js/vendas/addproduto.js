@@ -29,6 +29,7 @@ ClientEvents.on("WSOP/produtos/add", () => {
         "<tr><td class='wsop_edt_label'>Vies:</td><td><select id='wsop_add_produto_vies'><option disabled selected>Selecione:</option></select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Gola:</td><td><select id='wsop_add_produto_gola'><option disabled selected>Selecione:</option></select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Genero:</td><td><select id='wsop_add_produto_genero'><option disabled selected>Selecione:</option></select></td></tr>" +
+        "<tr><td class='wsop_edt_label'>Tecido:</td><td><select id='wsop_add_produto_tecido'><option disabled selected>Selecione:</option></select></td></tr>" +
         "<tr style='display:none'><td class='wsop_edt_label'>Tamanho:</td><td><select id='wsop_add_produto_tamanho'><option disabled selected>Selecione:</option></select></td></tr>" +
 
         "<tr style='display:none'><td class='wsop_edt_label'>Descrição:</td><td><input id='wsop_add_produto_description' type='text' value='" + data.description + "'></td></tr>" +
@@ -60,6 +61,7 @@ ClientEvents.on("wsop/produtos/setVies", () => {
     document.getElementById("wsop_add_produto_vies").innerHTML = window.Modules.WSOP.Produtos.getVies(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_gola").innerHTML = window.Modules.WSOP.Produtos.getGola(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_genero").innerHTML = window.Modules.WSOP.Produtos.getGenero(document.getElementById("wsop_add_produto_modelo").value);
+    document.getElementById("wsop_add_produto_tecido").innerHTML = window.Modules.WSOP.Produtos.getTecido(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_tamanho").innerHTML = window.Modules.WSOP.Produtos.getTamanhos(document.getElementById("wsop_add_produto_modelo").value);
     document.getElementById("wsop_add_produto_price").value = window.Modules.WSOP.Produtos.getPreco(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);
     document.getElementById("wsop_add_produto_priceRevenda").value = window.Modules.WSOP.Produtos.getPrecoRevenda(document.getElementById("wsop_add_produto_modelo").value).toFixed(2);

@@ -57,7 +57,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     border: 1px solid #606060;
-    height: calc(100vh - 90px);
+    /* height: calc(100vh - 90px); */
 }
 
 .wsfinan_edt_div p {

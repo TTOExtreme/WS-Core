@@ -18,16 +18,17 @@ class osManipulator {
     ListAll(id = "", createdBy = "", vendedor = "", cliente = "", status = "") {
         let st = "";
         if (typeof (status) == typeof ([])) {
-            st = " AND";
+            st = "";
             status.forEach((sts, index) => {
                 st += (index > 0 ? " OR" : " ") + " OS.status = '" + sts + "' ";
             })
-            status = st;
+            //status = st;
         } else {
-            if (status != "") {
+            if (st != "") {
                 st = " AND OS.status LIKE '%" + status + "%'";
             }
         }
+        if (st != "") { st = " AND " + st }
         let sql = "SELECT OS.id, OS.createdIn,OS.modifiedIn, OS.endingIn,OS.price, OS.statusChange,OS.payment, OS.status ,OS.status as status2, U.name as createdBy, OS.createdBy as creatorId, C.name as cliente FROM " + this.db.DatabaseName + "._WSOP_OS AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSOP_Cliente as C on C.id = OS.id_cliente " +
@@ -38,7 +39,7 @@ class osManipulator {
             (vendedor != "" ? " AND OS.createdBy =" + vendedor + "" : "") +
             (cliente != "" ? " AND C.name LIKE'%" + cliente + "%'" : "") +
             st +
-            " LIMIT 100;";
+            " LIMIT 500;";
         //console.log(sql);
         return this.db.query(sql);
     }

@@ -231,8 +231,8 @@ class Socket {
                 this._myself.checkPermission("WSFinan/ficha/movevalor").then(() => {
 
                     //Log da operação
-                    this.saveLog(req[0].id_out, "Saida de Valor para ficha ID: " + req[0].id_in, req[0], this._myself.myself.id);
-                    this.saveLog(req[0].id_in, "Recebimento de Valor da ficha ID: " + req[0].id_out, req[0], this._myself.myself.id);
+                    this.saveLog(req[0].id_out, "Saida de Valor <" + req[0].value + "> para ficha ID: " + req[0].id_in, req[0], this._myself.myself.id);
+                    this.saveLog(req[0].id_in, "Recebimento de Valor <" + req[0].value + "> da ficha ID: " + req[0].id_out, req[0], this._myself.myself.id);
 
                     try {
                         //coleta os valores das fichas atuais

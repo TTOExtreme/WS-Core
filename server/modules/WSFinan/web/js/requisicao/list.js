@@ -4,33 +4,16 @@ ClientEvents.emit("LeftMenuClose");
 ClientEvents.emit("LMI-CloseAll");
 ClientEvents.emit("close_menu");
 
-//load emitente Data
-ClientEvents.on("wsop/emitente/add", (data) => { window.Emitente = data; });
-ClientEvents.emit("SendSocket", "wsop/emitente/lst");
-
-
 ClientEvents.emit("LoadExternal", [
-    "./module/WSOP/js/utils/desconto.js",
-    "./module/WSOP/js/utils/Termos.js",
-    "./module/WSOP/js/utils/osStatus.js",
-    "./module/WSOP/js/utils/timeCalc.js",
-    "./module/WSOP/js/utils/formaEnvio.js",
-    "./module/WSOP/js/utils/anexo.js",
-    "./module/WSOP/js/utils/consulta.js",
-    "./module/WSOP/js/utils/ProdutosStruct.js",
-    "./module/WSOP/js/produtos/add.js",
-    "./module/WSOP/js/vendas/edtproduto.js",
-    "./module/WSOP/js/clientes/add.js",
-    "./module/WSOP/js/os/add.js",
-    "./module/WSOP/js/os/view.js",
-    "./module/WSOP/js/os/print.js",
-    "./module/WSOP/js/os/printop.js",
-    "./module/WSOP/js/os/del.js",
-    "./module/WSOP/js/os/edt.js",
-    "./module/WSOP/js/os/edtstatus.js",
-    "./module/WSOP/js/os/history.js",
-    "./module/WSOP/css/index.css",
-    "./module/WSOP/css/print.css"
+    "./module/WSFinan/js/utils/requisicaoStatus.js",
+    "./module/WSFinan/js/produtos/add.js",
+    "./module/WSFinan/js/fornecedor/add.js",
+    "./module/WSFinan/js/requisicao/add.js",
+    "./module/WSFinan/js/requisicao/view.js",
+    "./module/WSFinan/js/requisicao/edt.js",
+    "./module/WSFinan/js/requisicao/edtstatus.js",
+    "./module/WSFinan/js/requisicao/history.js",
+    "./module/WSFinan/css/index.css"
 ], () => {
     new window.UserList();
 }, false);
@@ -56,23 +39,7 @@ window.UserList = class UserList {
         let rowdata = cell._cell.row.data;
         let htm = document.createElement("div");
 
-        if (Myself.checkPermission("WSOP/os/osview")) {
-            let bot = document.createElement("i");
-            bot.setAttribute("class", "fa fa-print");
-            bot.setAttribute("title", "Imprimir OS");
-            bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewos", (rowdata)) };
-            htm.appendChild(bot);
-        }
-        if (Myself.checkPermission("WSOP/os/opview")) {
-            let bot = document.createElement("i");
-            bot.setAttribute("class", "fa fa-print");
-            bot.setAttribute("title", "Imprimir OP");
-            bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/viewop", (rowdata)) };
-            htm.appendChild(bot);
-        }
-        if (Myself.checkPermission("WSOP/os/edt")) {
+        if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-edit");
             bot.setAttribute("title", "Editar");
@@ -80,46 +47,28 @@ window.UserList = class UserList {
             bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/edt")) {
+        if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-mail-forward");
             bot.setAttribute("title", "Mudar Status");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/os/edtstatus", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("wsfinan/requisicao/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/osview")) {
+        if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-eye");
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/view", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSFinan/requisicao/view", (rowdata)) };
             htm.appendChild(bot);
         }
-        if (Myself.checkPermission("WSOP/os/opview")) {
+        if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
             let bot = document.createElement("i");
             bot.setAttribute("class", "fa fa-history");
             bot.setAttribute("title", "Historico");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
-            htm.appendChild(bot);
-        }
-
-        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
-            let bot = document.createElement("i");
-            bot.setAttribute("class", "fa fa-credit-card");
-            bot.setAttribute("title", "Gerar Link");
-            bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/api/pagarme/gerarlink", (rowdata)) };
-            htm.appendChild(bot);
-        }
-
-        if (Myself.checkPermission("WSOP/menu/api/pagarme/gerarlink")) {
-            let bot = document.createElement("i");
-            bot.setAttribute("class", "fa fa-money");
-            bot.setAttribute("title", "Visualizar Pagamentos");
-            bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsop/api/pagarme/list", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSFinan/requisicao/history", (rowdata)) };
             htm.appendChild(bot);
         }
 
@@ -150,24 +99,26 @@ window.UserList = class UserList {
                     return parseInt(cell.getRow().getData().id);
                 }, sorter: "number"
             },
-            { title: 'Cliente', field: 'cliente', headerFilter: "input" },
-            { title: 'Vendedor', field: 'createdBy', headerFilter: "input", visible: true },
+            {
+                title: 'Descrição', field: 'description', headerFilter: "input",
+                formatter: function (cell) {
+                    let h = cell.getRow().getData().description;
+                    try {
+                        h = unclearDesc(JSON.parse(h).description);
+                    } catch (e) {
+                        h = "-"
+                    }
+                    return new window.Modules.WSFinan.StatusID().StatusIdToName(cell.getRow().getData().status);
+                }
+            },
+            { title: 'Fornecedor', field: 'cliente', headerFilter: "input" },
+            { title: 'Responsavel', field: 'createdBy', headerFilter: "input", visible: true },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
                 formatter: function (cell) {
-                    cell._cell.element.style.background = new window.Modules.WSOP.StatusID().StatusIdToBgColor(cell.getRow().getData().status);
-                    cell._cell.element.style.color = new window.Modules.WSOP.StatusID().StatusIdToColor(cell.getRow().getData().status);
-                    return new window.Modules.WSOP.StatusID().StatusIdToName(cell.getRow().getData().status);
-                }
-            },
-            {
-                title: 'Expira Em', field: 'endingIn',
-                formatter: function (cell) {
-
-                    cell._cell.element.style.background = new window.Modules.WSOP.TimeCalc().getPrazosBgColor(cell.getRow().getData().endingIn);
-                    cell._cell.element.style.color = new window.Modules.WSOP.TimeCalc().getPrazosColor(cell.getRow().getData().endingIn);
-
-                    return formatTimeDMA(cell.getRow().getData().endingIn);
+                    cell._cell.element.style.background = new window.Modules.WSFinan.StatusID().StatusIdToBgColor(cell.getRow().getData().status);
+                    cell._cell.element.style.color = new window.Modules.WSFinan.StatusID().StatusIdToColor(cell.getRow().getData().status);
+                    return new window.Modules.WSFinan.StatusID().StatusIdToName(cell.getRow().getData().status);
                 }
             },
             { title: 'Criado Em', field: 'createdIn', formatter: ((data) => formatTime(data.getRow().getData().createdIn)), headerFilter: "input" },
@@ -176,12 +127,12 @@ window.UserList = class UserList {
 
     constructor() {
 
-        if (Myself.checkPermission("WSOP/os/add")) {
+        if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
             this.newCollums[0].headerMenu.push(
                 {
-                    label: "Abrir OS",
+                    label: "Abrir Requisicao",
                     action: function (e, column) {
-                        ClientEvents.emit("WSOP/os/add");
+                        ClientEvents.emit("wsfinan/requisicao/add");
                     }
                 })
         }
@@ -189,7 +140,7 @@ window.UserList = class UserList {
             {
                 label: "Atualizar",
                 action: function (e, column) {
-                    ClientEvents.emit("SendSocket", "wsop/os/lst");
+                    ClientEvents.emit("SendSocket", "WSFinan/requisicao/lst", {});
                 }
             })
         /**Initialize  Table */
@@ -217,7 +168,7 @@ window.UserList = class UserList {
             { column: "id", dir: "desc" }, //sort by this first
         ]);
         this._init();
-        ClientEvents.emit("SendSocket", "wsop/os/lst", {});
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/lst", {});
     }
 
     _init() {
@@ -278,7 +229,7 @@ window.UserList = class UserList {
 
     _getStatusFilterParams() {
         let ret = [{ label: "-", value: "" }]
-        new window.Modules.WSOP.StatusID().statusIDs.forEach((item, index) => {
+        new window.Modules.WSFinan.StatusID().statusIDs.forEach((item, index) => {
             ret.push({ label: item.name, value: item.code })
         })
         return ret;

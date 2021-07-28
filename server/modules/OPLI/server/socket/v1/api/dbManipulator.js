@@ -36,9 +36,19 @@ class apiManipulator {
     /**
      * Lista todos as Vendas de Site
      */
-    ListAllSite(ID = 0, Limit = 100) {
-        return this.db.query("SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
-            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy order by C.id desc LIMIT " + ID + "," + Limit + ";");
+    ListAllSite(ID = 0, Limit = 100, id_li = "", name = "", nome_cliente = "", status = "") {
+        let sql = "SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy " +
+            " WHERE C.active=1" +
+            (id_li != "" ? " AND C.id_li=" + id_li : "") +
+            (name != "" ? " AND C.name=" + name : "") +
+            (nome_cliente != "" ? " AND C.nome_cliente=" + nome_cliente : "") +
+            (status != "" ? " AND C.status=" + status : "") +
+
+            " order by C.id desc LIMIT " + ID + "," + Limit + ";"
+
+
+        return this.db.query(sql);
     }
 
     /**
@@ -47,6 +57,27 @@ class apiManipulator {
     ListSite(ID = 0) {
         return this.db.query("SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " Order By C.id LIMIT 100;");
+    }
+
+    /**
+     * Lista todos as Vendas de Site 50 por vez
+     */
+    ListSite(ID = 0) {
+        return this.db.query("SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy WHERE C.id >= " + ID + " Order By C.id LIMIT 100;");
+    }
+
+
+    /**
+     * Lista todos as Vendas de Site 50 por vez
+     */
+    DownloadSite(status = "") {
+        let sql = "SELECT C.id,C.id_li,C.obs,C.peso,C.nome_cliente,C.products,C.status,C.endingIn,C.createdIn,C.deactivatedIn,C.deactivatedBy,C.modifiedIn,C.modifiedBy,C.tags,C.description,C.active,C.name, U.name as createdBy FROM " + this.db.DatabaseName + "._WSOP_Site AS C " +
+            " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy " +
+            (status != "" ? " WHERE C.status IN " + status : "") +
+            " Order By C.id LIMIT 500;";
+        //console.log(sql)
+        return this.db.query(sql);
     }
 
     /**

@@ -40,7 +40,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Liberado Produção", color: "#ffffff", bgColor: "#ff6000",
-            code: "liberado_producao", changeto: ["falta_informacao", "montagem_arquivos"],
+            code: "liberado_producao", changeto: ["falta_informacao", "montagem_arquivos", "trello", "emimpressao"],
             edit: ["prepress"],
             view: ["vendas", "prepress"]
         },
@@ -73,8 +73,14 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         //Pre Press
         {
+            name: "Trello", color: "#ffffff", bgColor: "#004100",
+            code: "trello", changeto: ["falta_informacao", "montagem_arquivos", "arquivo_pronto"],
+            edit: ["prepress"],
+            view: ["vendas", "prepress"]
+        },
+        {
             name: "Montagem de Arquivos", color: "#ffffff", bgColor: "#000041",
-            code: "montagem_arquivos", changeto: ["falta_informacao", "arquivo_pronto"],
+            code: "montagem_arquivos", changeto: ["falta_informacao", "arquivo_pronto", "trello"],
             edit: ["prepress"],
             view: ["vendas", "prepress"]
         },
@@ -116,9 +122,15 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Liberado Impressão", color: "#ffffff", bgColor: "#044800",
-            code: "liberado_impressao", changeto: ["falta_informacao", "impresso"],
+            code: "liberado_impressao", changeto: ["falta_informacao", "emimpressao"],
             edit: ["prepress"],
             view: ["vendas", "prepress"]
+        },
+        {
+            name: "Em Impressão", color: "#ffffff", bgColor: "#0000ff",
+            code: "emimpressao", changeto: ["impresso"],
+            edit: ["prepress", "calandra"],
+            view: ["vendas", "prepress", "calandra"]
         },
         {
             name: "Impresso", color: "#ffffff", bgColor: "#0000ff",
