@@ -179,6 +179,42 @@ class Socket {
             }
         })
         /**
+         * List Site by id (View)
+         */
+        socket.on("WSOP/site/lstidprint", (req) => {
+            if (req[0].id != undefined) {
+                this._ApiClass.ListSingleSite(req[0].id).then((results) => {
+                    socket.emit("ClientEvents", {
+                        event: "opli/site/print",
+                        data: results
+                    })
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    this._log.error("On opening print for Loja Integrada")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            } else {
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Request Incomplete",
+                        time: 1000
+                    }
+                })
+            }
+        })
+        /**
          * List Site by id DOWNLOAD
          */
         socket.on("WSOP/site/lstdownload", (req) => {

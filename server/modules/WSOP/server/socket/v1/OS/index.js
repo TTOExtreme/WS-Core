@@ -225,6 +225,49 @@ class Socket {
                     })
                 })
             })
+
+            /**
+             * Lista de insumos (Calculado On ClientSide)
+             */
+            socket.on("wsop/os/lst/insumos", (req) => {
+                this._myself.checkPermission("WSOP/os/edt").then(() => {
+                    this._OsClass.ListID(req[0].id).then((res) => {
+                        this.saveLog(0, "Get OS data: " + req[0].id, "", this._myself.myself.id);
+                        socket.emit("ClientEvents", {
+                            event: "wsop/os/insumos",
+                            data: res[0]
+                        })
+                    }).catch((err) => {
+                        this._log.error("On getting OS: " + req[0].id)
+                        this._log.error(err);
+                        if (!this._myself.isLogged()) {
+                            socket.emit("logout", "");
+                        }
+                        socket.emit("ClientEvents", {
+                            event: "system_mess",
+                            data: {
+                                status: "ERROR",
+                                mess: err,
+                                time: 1000
+                            }
+                        })
+                    })
+                }).catch((err) => {
+                    this._log.warning("User Access Denied to see OS from User: " + this._myself.myself.id)
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: "Acesso Negado",
+                            time: 1000
+                        }
+                    })
+                })
+            })
+
+
+
+
             /**
              * Reload View os
              */

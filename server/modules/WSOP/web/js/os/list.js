@@ -19,9 +19,9 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/utils/consulta.js",
     "./module/WSOP/js/utils/ProdutosStruct.js",
     "./module/WSOP/js/produtos/add.js",
-    "./module/WSOP/js/vendas/edtproduto.js",
     "./module/WSOP/js/clientes/add.js",
     "./module/WSOP/js/os/add.js",
+    "./module/WSOP/js/os/insumos.js",
     "./module/WSOP/js/os/view.js",
     "./module/WSOP/js/os/print.js",
     "./module/WSOP/js/os/printop.js",
@@ -29,6 +29,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSOP/js/os/edt.js",
     "./module/WSOP/js/os/edtstatus.js",
     "./module/WSOP/js/os/history.js",
+    "./module/WSOP/js/vendas/edtproduto.js",
     "./module/WSOP/css/index.css",
     "./module/WSOP/css/print.css"
 ], () => {
@@ -102,6 +103,14 @@ window.UserList = class UserList {
             bot.setAttribute("title", "Historico");
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("wsop/os/history", (rowdata)) };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("WSOP/os/osview")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-list");
+            bot.setAttribute("title", "Lista de Insumos");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/insumos", (rowdata)) };
             htm.appendChild(bot);
         }
 

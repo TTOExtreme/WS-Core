@@ -1,5 +1,5 @@
 ClientEvents.on("WSOP/os/add", () => {
-    ClientEvents.emit("close_menu", "wsop_add_os_div");
+    ClientEvents.emit("close_menu");
     let data = {
         cliente: "",
         id_cliente: "",

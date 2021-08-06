@@ -1,6 +1,6 @@
 
 ClientEvents.on("wsop/os/edt", (data) => {
-    ClientEvents.emit("close_menu", 'wsop_edt_div');
+    ClientEvents.emit("close_menu");
     /**
      * create Show Page for user info
      */
@@ -92,6 +92,12 @@ ClientEvents.on("wsop/os/edt", (data) => {
     let totalqnt = 0;
     if (data.produtos != undefined) {
         data.produtos.forEach((produto) => {
+            try {
+                produto.description = JSON.parse(produto.description)
+            } catch (err) {
+                produto.description = { gola: "-", vies: "-", genero: "-", modelo: "-" }
+            }
+
             if (produto.price == null || produto.price == undefined) {
                 produto.price = "0.00";
             }
@@ -99,17 +105,24 @@ ClientEvents.on("wsop/os/edt", (data) => {
                 produto.img = "./modules/WSOP/img/file.png";
             }
             total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
-            totalqnt += produto.qnt;
+            totalqnt += parseInt(produto.qnt) * parseInt(window.Modules.WSOP.Produtos.getMultiply(produto.description.modelo));
 
             ClientEvents.clear("wsop/os/produto/edt/" + produto.id);
             ClientEvents.on("wsop/os/produto/edt/" + produto.id, () => {
                 ClientEvents.emit("wsop/os/produto/edt", produto);
             });
+
+
             htm += "<tr class='wsop_produto_item1'><td style='width:30px'><input value='Excluir' type='button' onclick='ClientEvents.emit(\"wsop/os/produto/del\", {id:" + produto.id + ", id_os:" + data.id + "})'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsop/os/produto/edt/" + produto.id + "\")'></td>" +
                 "<td>" + produto.barcode + "</td>" +
                 "<td>" + produto.name + "</td>" +
-                "<td>" + produto.qnt + "</td>" +
+                "<td>" + (parseInt(window.Modules.WSOP.Produtos.getMultiply(produto.description.modelo)) > 1 ? parseInt(produto.qnt) + " x " + parseInt(window.Modules.WSOP.Produtos.getMultiply(produto.description.modelo)) + " = " + parseInt(produto.qnt) * parseInt(window.Modules.WSOP.Produtos.getMultiply(produto.description.modelo)) : parseInt(produto.qnt)) + "</td>" +
                 "<td>R$ " + produto.price + "</td>" +
+                "</tr><tr class='wsop_produto_item3'>" +
+                "<td>Modelo: " + produto.description.modelo + "</td>" +
+                "<td>Tecido: " + (produto.description.tecido != undefined ? produto.description.tecido : "-") + "</td>" +
+                "<td>Vies: " + produto.description.vies + "</td>" +
+                "<td>Gola: " + produto.description.gola + "</td></tr>" +
                 "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + unclearDesc(produto.obs) + "</td><td style='width:250px'><center>";
             produto.img.split(",").forEach(img => {
                 htm +=

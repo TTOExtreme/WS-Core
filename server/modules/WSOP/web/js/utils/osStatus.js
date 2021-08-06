@@ -128,32 +128,32 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Em Impressão", color: "#ffffff", bgColor: "#0000ff",
-            code: "emimpressao", changeto: ["impresso"],
+            code: "emimpressao", changeto: ["falta_informacao", "impresso"],
             edit: ["prepress", "calandra"],
             view: ["vendas", "prepress", "calandra"]
         },
         {
             name: "Impresso", color: "#ffffff", bgColor: "#0000ff",
-            code: "impresso", changeto: ["liberado_calandra"],
+            code: "impresso", changeto: ["falta_informacao", "liberado_calandra"],
             edit: ["prepress", "calandra"],
             view: ["vendas", "prepress", "calandra"]
         },
         {
             name: "Reimpressão", color: "#ffffff", bgColor: "#ff0000",
-            code: "reimpressao", changeto: ["liberado_calandra"],
+            code: "reimpressao", changeto: ["falta_informacao", "liberado_calandra"],
             edit: ["prepress", "calandra"],
             view: ["vendas", "prepress", "calandra"]
         },
         //Calandra
         {
             name: "Liberado Calandra", color: "#ffffff", bgColor: "#ff6000",
-            code: "liberado_calandra", changeto: ["calandra"],
+            code: "liberado_calandra", changeto: ["falta_informacao", "calandra"],
             edit: ["calandra"],
             view: ["vendas", "calandra"]
         },
         {
             name: "Calandra", color: "#ffffff", bgColor: "#000089",
-            code: "calandra", changeto: ["calandrado", "reimpressao"],
+            code: "calandra", changeto: ["falta_informacao", "calandrado", "reimpressao"],
             edit: ["calandra"],
             view: ["vendas", "calandra"]
         },
