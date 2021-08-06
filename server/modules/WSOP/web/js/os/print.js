@@ -1,7 +1,6 @@
 
 ClientEvents.on("wsop/os/print", (data) => {
-    ClientEvents.emit("close_menu", 'wsop_print_div')
-    ClientEvents.emit("close_menu", "wsop_printop_div");
+    ClientEvents.emit("close_menu");
     /**
      * create Show Page for user info
      */

@@ -22,6 +22,7 @@ ClientEvents.emit("LoadExternal", [
     //"./module/OPLI/js/clientes/add.js",
     //"./module/OPLI/js/site/add.js",
     "./module/OPLI/js/site/view.js",
+    "./module/OPLI/js/site/printop.js",
     //"./module/OPLI/js/site/print.js",
     //"./module/OPLI/js/site/printop.js",
     //"./module/OPLI/js/site/del.js",
@@ -88,6 +89,14 @@ window.UserList = class UserList {
             bot.setAttribute("title", "Visualizar");
             bot.style.marginRight = "5px";
             bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/site/lstid", { id: rowdata.id }); };
+            htm.appendChild(bot);
+        }
+        if (Myself.checkPermission("OPLI/menu/site")) {
+            let bot = document.createElement("i");
+            bot.setAttribute("class", "fa fa-print");
+            bot.setAttribute("title", "Imprimir");
+            bot.style.marginRight = "5px";
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSOP/site/lstidprint", { id: rowdata.id }); };
             htm.appendChild(bot);
         }
         return htm;

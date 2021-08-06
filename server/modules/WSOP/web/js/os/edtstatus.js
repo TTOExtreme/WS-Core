@@ -1,6 +1,6 @@
 
 ClientEvents.on("wsop/os/edtstatus", (data) => {
-    ClientEvents.emit("close_menu", 'wsop_edtstatus_div')
+    ClientEvents.emit("close_menu");
     /**
      * create Show Page for user info
      */

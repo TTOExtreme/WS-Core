@@ -78,6 +78,7 @@ ClientEvents.on("WSOP/produtos/save", () => {
             gola: document.getElementById("wsop_add_produto_gola").value,
             vies: document.getElementById("wsop_add_produto_vies").value,
             genero: document.getElementById("wsop_add_produto_genero").value,
+            tecido: document.getElementById("wsop_edt_produto_tecido").value,
             tamanho: document.getElementById("wsop_add_produto_tamanho").value
         }),
         barcode: document.getElementById("wsop_add_produto_barcode").value,
@@ -155,7 +156,11 @@ ClientEvents.on("uploadIMG_3", () => {
         }
     }
 })
-let lastfile = 1;
+try {
+    let lastfile = 1;
+} catch (err) {
+
+}
 ClientEvents.on("wsop/produtos/fileuploaded", (data) => {
     if (document.getElementById("wsop_add_produto_img")) {
         let img = document.getElementById("wsop_add_produto_img_thumb_" + lastfile)
