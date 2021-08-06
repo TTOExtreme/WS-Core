@@ -19,7 +19,7 @@ class Socket {
         this._events = WSMainServer.events;
         this._ApiClass = new apiManipulator(WSMainServer);
         this._db = WSMainServer.db;
-        this._log.task("api-mod-wsfinan-compras", "Api WSFinan Compras Loaded", 1);
+        this._log.task("api-mod-wsfinan-requisicao", "Api WSFinan Requisicao Loaded", 1);
     }
 
     /**
@@ -147,12 +147,13 @@ class Socket {
          *  Add Requisicao
          */
         socket.on("WSFinan/requisicao/add", (req) => {
+            console.log("Recebido", req[0]);
             this._myself.checkPermission("WSFinan/requisicao/add").then(() => {
-                this._ApiClass.AddRequisicao(req[0].name, req[0].description, req[0].valueAttached, req[0].valueReserved, req[0].valuePending, req[0].active, this._myself.myself.id).then((res) => {
+                this._ApiClass.AddRequisicao(req[0].name, req[0].description, req[0].active, this._myself.myself.id).then((res) => {
                     this.saveLog(0, "WSFinan/requisicao/add", req[0], this._myself.myself.id);
                     socket.emit("ClientEvents", {
-                        event: "system/added/ficha",
-                        data: ""
+                        event: "system/added/requisicao",
+                        data: { id: results.insertId }
                     })
                 }).catch((err) => {
                     this._log.error("On Adding Requisicao on WSFinan")
@@ -187,7 +188,7 @@ class Socket {
          */
         socket.on("WSFinan/requisicao/edt", (req) => {
             this._myself.checkPermission("WSFinan/requisicao/edt").then(() => {
-                this._ApiClass.EdtRequisicao(req[0].id, req[0].name, req[0].description, req[0].active, this._myself.myself.id).then((res) => {
+                this._ApiClass.EdtRequisicao(req[0].id, req[0].name, req[0].description, req[0].valueAttached, req[0].valueReserved, req[0].valuePending, req[0].active, this._myself.myself.id).then((res) => {
                     this.saveLog(req[0].id, "WSFinan/requisicao/edt", req[0], this._myself.myself.id);
                     socket.emit("ClientEvents", {
                         event: "system/edited/ficha",
@@ -220,7 +221,105 @@ class Socket {
                 })
             })
         })
+
+        /**
+         * add file
+         */
+        socket.on("WSFinan/requisicao/file", (req) => {
+            this._myself.checkPermission("WSFinan/requisicao/edt").then(() => {
+                try {
+                    req[0].ext = (req[0].ext).toLowerCase()
+                    let name = new BCypher().generate_salt(48) + req[0].ext;
+                    let filepath = path(__dirname + "/../../../../web/img/requisicao/")
+                    if (!fs.existsSync(filepath)) { fs.mkdirSync(filepath); }
+                    while (fs.existsSync(filepath + name)) { // necessario para criar arquivo com nome unico
+                        name = new BCypher().generate_salt(48) + req[0].ext;
+                    }
+                    fs.writeFileSync(filepath + name, req[0].stream);
+
+                    let thumb = "requisicao/" + name;
+                    if (req[0].ext != ".png" && req[0].ext != ".jpeg" && req[0].ext != ".gif" && req[0].ext != ".bmp" && req[0].ext != ".jpg" && req[0].ext != ".jfif") {
+                        thumb = "file_thumb.png";
+                        this._ApiClass.appendAnexo(req[0].id, req[0].name, "requisicao/" + name, thumb, this._myself.myself.id).then((res) => {
+                            this.saveLog(req[0].id, "Adding file", JSON.stringify(req[0]), this._myself.myself.id);
+                            socket.emit("ClientEvents", {
+                                event: "WSFinan/requisicao/fileuploaded",
+                                data: {
+                                    id: req[0].id,
+                                    file: name,
+                                    thumb: thumb,
+                                }
+                            })
+                        })
+                    } else {
+                        thumb = (filepath + name).replace(".", "_thumb.");
+                        this._imageClass.thumb(filepath + name, thumb, 300, 170).then(() => {
+                            thumb = ("requisicao/" + name).replace(".", "_thumb.");
+                            this._ApiClass.appendAnexo(req[0].id, req[0].name, "requisicao/" + name, thumb, this._myself.myself.id).then((res) => {
+                                this.saveLog(req[0].id, "Adding file", JSON.stringify(req[0]), this._myself.myself.id);
+                                socket.emit("ClientEvents", {
+                                    event: "WSFinan/requisicao/fileuploaded",
+                                    data: {
+                                        id: req[0].id,
+                                        file: name,
+                                        thumb: thumb,
+                                    }
+                                })
+                            })
+
+                        }).catch((err) => {
+                            if (err == "Timeout") {
+                                socket.emit("ClientEvents", {
+                                    event: "WSFinan/requisicao/fileuploaded",
+                                    data: {}
+                                })
+                                socket.emit("ClientEvents", {
+                                    event: "system_mess",
+                                    data: {
+                                        status: "ERROR",
+                                        mess: err,
+                                        time: 1000
+                                    }
+                                })
+                            } else {
+                                this._log.error("On creating thumbnail to Product")
+                                this._log.error("Check instalation of ImageMagick and GraphicsMagick in server\nyum install GraphicsMagick ImageMagick\n");
+                                this._log.error(err);
+                            }
+                        })
+                    }
+                } catch (err) {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    this._log.error("On Uploading file to Product")
+                    this._log.error(err);
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                }
+            }).catch((err) => {
+                this._log.warning("User Access Denied to Add Attachment to OS: " + this._myself.myself.id)
+                this._log.error(err)
+                socket.emit("ClientEvents", {
+                    event: "system_mess",
+                    data: {
+                        status: "ERROR",
+                        mess: "Acesso Negado",
+                        time: 1000
+                    }
+                })
+            })
+
+        })
+
     }
+
 }
 
 module.exports = {

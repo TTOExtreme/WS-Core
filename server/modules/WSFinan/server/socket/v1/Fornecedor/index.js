@@ -1,4 +1,4 @@
-const ClienteManipulator = require('./dbManipulator').ClienteManipulator;
+const Fornecedor = require('./dbManipulator').FornecedorManipulator;
 
 class Socket {
 
@@ -17,7 +17,7 @@ class Socket {
         this._config = WSMainServer.config;
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
-        this._FornecedorClass = new ClienteManipulator(WSMainServer);
+        this._FornecedorClass = new Fornecedor(WSMainServer);
         this._log.task("api-mod-WSFinan-produtos", "Api WSFinan-produtos Loaded", 1);
     }
 
@@ -84,10 +84,39 @@ class Socket {
         })
 
         /**
+         * WSfinan/requisicao/fornecedor/lst
+         */
+        socket.on("WSfinan/requisicao/fornecedor/lst", (req) => {
+            if (req[0]) {
+                this._FornecedorClass.ListFornecedorFiltered(req[0].name).then((res) => {
+                    socket.emit("ClientEvents", {
+                        event: "wsfinan/requisicao/clientes/lst",
+                        data: res
+                    })
+                }).catch((err) => {
+                    if (!this._myself.isLogged()) {
+                        socket.emit("logout", "");
+                    }
+                    socket.emit("ClientEvents", {
+                        event: "system_mess",
+                        data: {
+                            status: "ERROR",
+                            mess: err,
+                            time: 1000
+                        }
+                    })
+                })
+            }
+        })
+
+
+
+        /**
          * add cliente
          */
         socket.on("WSFinan/fornecedor/add", (req) => {
             this._myself.checkPermission("WSFinan/fornecedor/add").then(() => {
+                console.log(req[0])
                 if (req[0].name &&
                     req[0].responsavel &&
                     req[0].cpf_cnpj &&
@@ -103,7 +132,7 @@ class Socket {
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._FornecedorClass.createCliente(req[0].name,
+                    this._FornecedorClass.createFornecedor(req[0].name,
                         req[0].responsavel,
                         req[0].cpf_cnpj,
                         req[0].iscnpj,

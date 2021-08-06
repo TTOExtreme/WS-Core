@@ -222,7 +222,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         {
             name: "Shorts Feminino Futevôlei",
             gola: ["-"],
-            vies: ["-"],
             genero: ["Feminino"],
             preco: 44.70,
             precoRevenda: 44.70,
@@ -240,7 +239,6 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         {
             name: "Shorts Saia",
             gola: ["-"],
-            vies: ["-"],
             genero: ["Feminino"],
             preco: 42.70,
             precoRevenda: 42.70,

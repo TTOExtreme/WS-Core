@@ -1,4 +1,4 @@
-const apiManipulator = require('./socket/v1/api/dbManipulator').apiManipulator;
+
 
 class Running {
 
@@ -10,8 +10,6 @@ class Running {
     constructor(WSMainServer) {
         this._log = WSMainServer.log;
         this._config = WSMainServer.config;
-
-        this._apiManipulator = new apiManipulator(WSMainServer);
     }
 
     Init() {

@@ -13,6 +13,7 @@ ClientEvents.emit("LoadExternal", [
     "./module/WSFinan/js/requisicao/edt.js",
     "./module/WSFinan/js/requisicao/edtstatus.js",
     "./module/WSFinan/js/requisicao/history.js",
+    "./module/WSFinan/js/utils/consulta.js",
     "./module/WSFinan/css/index.css"
 ], () => {
     new window.UserList();
@@ -99,6 +100,7 @@ window.UserList = class UserList {
                     return parseInt(cell.getRow().getData().id);
                 }, sorter: "number"
             },
+            { title: 'Nome', field: 'name', headerFilter: "input" },
             {
                 title: 'Descrição', field: 'description', headerFilter: "input",
                 formatter: function (cell) {
@@ -174,7 +176,7 @@ window.UserList = class UserList {
     _init() {
 
         /**Receive user list and reset Table  uses only for update without filtering*/
-        ClientEvents.on("wsop/os/lst", (data) => {
+        ClientEvents.on("wsfinan/requisicao/lst", (data) => {
             if (data) {
                 this.UserListData = data;
                 this.main_table.setData(data);
@@ -182,7 +184,7 @@ window.UserList = class UserList {
         });
 
         /**Receive user list and append to Table */
-        ClientEvents.on("wsop/os/lstappend", (data) => {
+        ClientEvents.on("wsfinan/requisicao/lstappend", (data) => {
             if (data) {
                 this.UserListData = data;
                 this.main_table.setData(data);
@@ -205,25 +207,27 @@ window.UserList = class UserList {
             }
         });
 
+        ClientEvents.on("system/added/fornecedor", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Fornecedor Adicionado com Exito", time: 1000 });
+            ClientEvents.emit("wsop_OS_filtertable");
+        });
+
         ClientEvents.on("system/added/produtos", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
+            ClientEvents.emit("wsop_OS_filtertable");
         });
-        ClientEvents.on("system/added/clientes", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
-        });
-        ClientEvents.on("system/added/os", (data) => {
+
+        ClientEvents.on("system/added/requisicao", (data) => {
             ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data);
-            ClientEvents.emit("close_menu", "wsop_add_os_div");
+            ClientEvents.emit("wsop_OS_filtertable");
         });
         ClientEvents.on("system/removed/os", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/lst");
+            ClientEvents.emit("wsop_OS_filtertable");
         });
         ClientEvents.on("system/edited/os", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/lst");
+            ClientEvents.emit("wsop_OS_filtertable");
         });
     }
 
