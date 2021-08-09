@@ -6,9 +6,11 @@ ClientEvents.emit("close_menu");
 
 ClientEvents.emit("LoadExternal", [
     "./module/WSFinan/js/utils/requisicaoStatus.js",
+    "./module/WSFinan/js/utils/anexo.js",
     "./module/WSFinan/js/produtos/add.js",
     "./module/WSFinan/js/fornecedor/add.js",
     "./module/WSFinan/js/requisicao/add.js",
+    "./module/WSFinan/js/requisicao/edtproduto.js",
     "./module/WSFinan/js/requisicao/view.js",
     "./module/WSFinan/js/requisicao/edt.js",
     "./module/WSFinan/js/requisicao/edtstatus.js",
@@ -44,7 +46,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-edit");
             bot.setAttribute("title", "Editar");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("SendSocket", "wsop/os/lst/edt", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
@@ -52,7 +54,7 @@ window.UserList = class UserList {
             bot.setAttribute("class", "fa fa-mail-forward");
             bot.setAttribute("title", "Mudar Status");
             bot.style.marginRight = "5px";
-            bot.onclick = () => { ClientEvents.emit("wsfinan/requisicao/edtstatus", (rowdata)) };
+            bot.onclick = () => { ClientEvents.emit("WSFinan/requisicao/edtstatus", (rowdata)) };
             htm.appendChild(bot);
         }
         if (Myself.checkPermission("WSFinan/financeiro/requisicao")) {
@@ -100,18 +102,25 @@ window.UserList = class UserList {
                 }, sorter: "number"
             },
             {
-                title: 'Descrição', field: 'description', headerFilter: "input",
+                title: 'Nome', field: 'name', headerFilter: "input"
+            },/*
+            {
+                title: 'Preço', field: 'description', headerFilter: "input",
                 formatter: function (cell) {
                     let h = cell.getRow().getData().description;
                     try {
-                        h = unclearDesc(JSON.parse(h).description);
+                        if (typeof (h) == "string") {
+                            h = JSON.parse(h).price;
+                        } else {
+                            h = h.price;
+                        }
                     } catch (e) {
                         h = "-"
                     }
-                    return new window.Modules.WSFinan.StatusID().StatusIdToName(cell.getRow().getData().status);
+                    return h;
                 }
-            },
-            { title: 'Fornecedor', field: 'cliente', headerFilter: "input" },
+            },//*/
+            { title: 'Fornecedor', field: 'fornecedor', headerFilter: "input" },
             { title: 'Responsavel', field: 'createdBy', headerFilter: "input", visible: true },
             {
                 title: 'Status', field: 'status', headerFilter: "select", headerFilterParams: this._getStatusFilterParams(),
@@ -161,7 +170,7 @@ window.UserList = class UserList {
             rowFormatter: this.actionRowFormatter,
             rowContext: this.rowContext,
             dataFiltering: function (filters) {
-                ClientEvents.emit("wsop_OS_filtertable");
+                ClientEvents.emit("WSFinan_Requisicao_filtertable");
             },
         });
         this.main_table.setSort([
@@ -174,7 +183,7 @@ window.UserList = class UserList {
     _init() {
 
         /**Receive user list and reset Table  uses only for update without filtering*/
-        ClientEvents.on("wsop/os/lst", (data) => {
+        ClientEvents.on("wsfinan/requisicao/lst", (data) => {
             if (data) {
                 this.UserListData = data;
                 this.main_table.setData(data);
@@ -182,7 +191,7 @@ window.UserList = class UserList {
         });
 
         /**Receive user list and append to Table */
-        ClientEvents.on("wsop/os/lstappend", (data) => {
+        ClientEvents.on("wsfinan/requisicao/lstappend", (data) => {
             if (data) {
                 this.UserListData = data;
                 this.main_table.setData(data);
@@ -192,7 +201,7 @@ window.UserList = class UserList {
         let timeouttimer = new Date().getTime();
         let lsearch = "";
         /**Receive user list and append to Table */
-        ClientEvents.on("wsop_OS_filtertable", () => {
+        ClientEvents.on("WSFinan_Requisicao_filtertable", () => {
             let headerFilters = this.main_table.getHeaderFilters();
             let sendfilters = {};
             headerFilters.forEach(element => {
@@ -205,24 +214,17 @@ window.UserList = class UserList {
             }
         });
 
-        ClientEvents.on("system/added/produtos", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Adicionado com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/produtos/lst");
-        });
-        ClientEvents.on("system/added/clientes", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "Ciente Adicionado com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/clientes/lst");
-        });
-        ClientEvents.on("system/added/os", (data) => {
+        ClientEvents.on("system/added/requisicao", (data) => {
             ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data);
             ClientEvents.emit("close_menu", "wsop_add_os_div");
         });
-        ClientEvents.on("system/removed/os", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "OS Removida com Exito", time: 1000 });
+        ClientEvents.on("system/removed/requisicao", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Requisicão Removida com Exito", time: 1000 });
             ClientEvents.emit("SendSocket", "wsop/os/lst");
         });
-        ClientEvents.on("system/edited/os", () => {
-            ClientEvents.emit("system_mess", { status: "OK", mess: "OS Editada com Exito", time: 1000 });
+        ClientEvents.on("system/edited/requisicao", () => {
+            ClientEvents.emit("system_mess", { status: "OK", mess: "Requisicao Editada com Exito", time: 1000 });
+            ClientEvents.emit("WSFinan_Requisicao_filtertable");
             ClientEvents.emit("SendSocket", "wsop/os/lst");
         });
     }

@@ -113,7 +113,6 @@ window.UserList = class UserList {
             }
         });
 
-        ClientEvents.on("system/added/fornecedor", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Fornecedor Adicionado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSFinan/fornecedor/lst"); });
         ClientEvents.on("system/removed/fornecedor", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Fornecedor Removido com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSFinan/fornecedor/lst"); });
         ClientEvents.on("system/edited/fornecedor", () => { ClientEvents.emit("system_mess", { status: "OK", mess: "Fornecedor Editado com Exito", time: 1000 }); ClientEvents.emit("SendSocket", "WSFinan/fornecedor/lst"); });
     }

@@ -17,13 +17,13 @@ ClientEvents.on("wsfinan/requisicao/add", () => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsfinan_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsfinan_add_requisicao_div')>&#9776;</td><td class='wsfinan_edt_label'><p class='wsfinan_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsfinan_add_requisicao_div')>X</p></td></tr>" +
-        "<tr><td class='wsfinan_edt_label'>Fornecedor:</td><td><input id='wsfinan_searchclientbot' type='button' onclick='ClientEvents.emit(\"searchfornecedorwsfinan\")' value='Buscar'></input><input id='wsfinan_add_fornecedor' placeholder='Cliente' type='text' list='clientsearchlist'></input><datalist id='clientsearchlist'></datalist><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSfinan/clientes/add\")'></td></tr>" +
-        "<tr style='display:none;'><td class='wsfinan_edt_label'>Fornecedor ID:</td><td><input id='wsfinan_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
-        "<tr><td class='wsfinan_edt_label'>Status:</td><td><Select disabled id='wsfinan_add_status'>" + new window.Modules.WSfinan.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
+        "<tr><td id='move_menu_wsfinan_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsfinan_add_requisicao_div')>&#9776;</td><td class='wsfinan_edt_label'><p class='closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsfinan_add_requisicao_div')>X</p></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Fornecedor:</td><td><input id='wsfinan_searchclientbot' type='button' onclick='ClientEvents.emit(\"searchfornecedorwsfinan\")' value='Buscar'></input><input id='wsfinan_add_fornecedor' placeholder='Cliente' type='text' list='clientsearchlist'></input><datalist id='clientsearchlist'></datalist><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSFinan/fornecedor/add\")'></td></tr>" +
+        "<tr style='display:none;'><td class='wsfinan_edt_label'>Fornecedor ID:</td><td><input id='wsfinan_add_id_fornecedor' type='text' value='" + data.id_cliente + "'></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Status:</td><td><Select disabled id='wsfinan_add_status'>" + new window.Modules.WSFinan.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Nome:</td><td><input id='wsfinan_add_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsfinan_edt_label'>Descrição:</td><td><textarea id='wsfinan_add_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsfinan_edt_label'>Ativo:</td><td><input disabled id='wsfinan_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
-        "<tr><td colspan=2 class='wsfinan_edt_label_info' id='wsfinan_add_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"WSfinan/requisicao/save\")' ></td></tr>" +
         "</table>";
 
@@ -60,12 +60,14 @@ ClientEvents.on("wsfinan/requisicao/add", () => {
 });
 
 
-
 ClientEvents.on("WSfinan/requisicao/save", () => {
-    ClientEvents.emit("SendSocket", "wsfinan/requisicao/add", {
+    ClientEvents.emit("SendSocket", "WSFinan/requisicao/add", {
         id_myself: Myself.id,
         id_fornecedor: document.getElementById("wsfinan_add_fornecedor").value,
-        description: clearDesc(document.getElementById("wsfinan_add_description").value),
+        name: document.getElementById("wsfinan_add_name").value,
+        description: {
+            description: clearDesc(document.getElementById("wsfinan_add_description").value)
+        },
         active: document.getElementById("wsfinan_add_active").checked,
         status: document.getElementById("wsfinan_add_status").value
     });
@@ -76,7 +78,7 @@ ClientEvents.on("searchfornecedorwsfinan", () => {
     if (document.getElementById("wsfinan_add_fornecedor") != undefined) {
         document.getElementById("wsfinan_searchclientbot").value = "Buscando...";
         document.getElementById("wsfinan_searchclientbot").disabled = true;
-        ClientEvents.emit("SendSocket", "WSfinan/requisicao/clientes/lst", {
+        ClientEvents.emit("SendSocket", "WSfinan/requisicao/fornecedor/lst", {
             id_myself: Myself.id, name: document.getElementById("wsfinan_add_fornecedor").value
         });
     }
@@ -86,7 +88,7 @@ ClientEvents.on("searchfornecedorwsfinan", () => {
 
 
 //Lista de produtos Autocomplete
-ClientEvents.on("wsfinan/requisicao/clientes/lst", (arr) => {
+ClientEvents.on("wsfinan/requisicao/fornecedor/lst", (arr) => {
 
     if (arr.length > 0) {
         document.getElementById("wsfinan_searchclientbot").value = "Buscar";

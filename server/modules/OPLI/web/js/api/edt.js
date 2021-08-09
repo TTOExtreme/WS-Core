@@ -25,7 +25,7 @@ ClientEvents.on("OPLI/api/edt", (data) => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_opli_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'opli_add_div')>&#9776;</td><td class='opli_edt_closebtn'><p class='opli_add_closeButton' onclick=ClientEvents.emit(\"close_menu\", 'opli_add_div')>X</p></td></tr>" +
+        "<tr><td id='move_menu_opli_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'opli_add_div')>&#9776;</td><td class='opli_edt_closebtn'><p class='closeButton' onclick=ClientEvents.emit(\"close_menu\", 'opli_add_div')>X</p></td></tr>" +
         "<tr><td class='opli_edt_label'>Chave Api:</td><td><input id='opli_add_api' type='text' value='" + data.api + "'></td></tr>" +
         "<tr><td class='opli_edt_label'>Chave Aplicação:</td><td><input id='opli_add_aplication' type='text' value='" + data.aplication + "'></td></tr>" +
         "<tr><td class='opli_edt_label'>Chave Trello:</td><td><input id='opli_add_trelloKey' type='text' value='" + data.trelloKey + "'></td></tr>" +

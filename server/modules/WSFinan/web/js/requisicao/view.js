@@ -1,5 +1,5 @@
 
-ClientEvents.on("wsop/os/view", (data) => {
+ClientEvents.on("WSFinan/requisicao/view", (data) => {
     ClientEvents.emit("close_menu", "wsop_os_view_div");
     /**
      * create Show Page for user info

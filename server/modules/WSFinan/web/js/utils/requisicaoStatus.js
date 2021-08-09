@@ -6,8 +6,13 @@
 if (!window.Modules) {
     window.Modules = {
         WSFinan: {
-            statusID: null
+            StatusID: null
         }
+    }
+}
+if (!window.Modules.WSFinan) {
+    window.Modules.WSFinan = {
+        StatusID: null
     }
 }
 

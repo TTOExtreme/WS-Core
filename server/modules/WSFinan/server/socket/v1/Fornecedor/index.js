@@ -1,4 +1,4 @@
-const ClienteManipulator = require('./dbManipulator').ClienteManipulator;
+const FornecedorManipulator = require('./dbManipulator').FornecedorManipulator;
 
 class Socket {
 
@@ -17,7 +17,7 @@ class Socket {
         this._config = WSMainServer.config;
         this._WSMainServer = WSMainServer;
         this._events = WSMainServer.events;
-        this._FornecedorClass = new ClienteManipulator(WSMainServer);
+        this._FornecedorClass = new FornecedorManipulator(WSMainServer);
         this._log.task("api-mod-WSFinan-produtos", "Api WSFinan-produtos Loaded", 1);
     }
 
@@ -58,12 +58,12 @@ class Socket {
         /**
          * List all clientes para Criação de OS
          */
-        socket.on("WSFinan/fornecedor/lst", (req) => {
+        socket.on("WSfinan/requisicao/fornecedor/lst", (req) => {
             this._myself.checkPermission("WSFinan/financeiro/fornecedor").then(() => {
                 if (req[0]) {
                     this._FornecedorClass.ListFornecedorFiltered(req[0].name).then((res) => {
                         socket.emit("ClientEvents", {
-                            event: "wsfinan/fornecedor/lst",
+                            event: "wsfinan/requisicao/fornecedor/lst",
                             data: res
                         })
                     }).catch((err) => {
@@ -103,7 +103,7 @@ class Socket {
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._FornecedorClass.createCliente(req[0].name,
+                    this._FornecedorClass.createFornecedor(req[0].name,
                         req[0].responsavel,
                         req[0].cpf_cnpj,
                         req[0].iscnpj,
@@ -169,10 +169,11 @@ class Socket {
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._FornecedorClass.editCliente(
+                    this._FornecedorClass.editFornecedor(
                         req[0].id,
                         req[0].name,
                         req[0].responsavel,
+                        req[0].description,
                         req[0].cpf_cnpj,
                         req[0].iscnpj,
                         req[0].cep,

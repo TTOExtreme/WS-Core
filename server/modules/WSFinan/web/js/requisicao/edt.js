@@ -8,85 +8,68 @@ ClientEvents.on("WSFinan/requisicao/edt", (data) => {
     div.setAttribute("class", "wsfinan_edt_div  menu_dragger");
     div.setAttribute("id", "wsfinan_requisicao_edt_div");
 
+    try {
+        data.description = JSON.parse(data.description)
+    } catch (err) {
+        data.description = { description: "" };
+    }
+
     div.innerHTML = "" +
         "<table>" +
-        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsfinan_requisicao_edt_div')>&#9776;</td><td class='wsop_edt_label' colspan=3><p class='wsop_add_closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsfinan_requisicao_edt_div')>X</p></td></tr>" +
-        "<tr><td colspan=2><div class='div_wsop_hist_table' style='overflow-x:hidden'><table style='width:100%'><tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Fornecedor:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.cliente + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status' disabled>" + new window.Modules.WSOP.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Prazo:</td><td><Select id='wsop_edt_prazo'>" + new window.Modules.WSOP.TimeCalc().prazosIdToOptList(data.prazo) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Data Entrega:</td><td><input type='date' id='wsop_edt_endingIn' value='" + formatTimeAMD(data.endingIn) + "'></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Forma Envio:</td><td><Select id='wsop_edt_formaEnvio' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptList(data.formaEnvio) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>FormaPagamento:</td><td><Select id='wsop_edt_formaPagamento'>" + new window.Modules.WSOP.desconto().pagamentoToOPTList(data.formaPagamento) + "</select></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Pais:</td><td><Select id='wsop_edt_formaEnvio_country' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCountry(data.C_country) + "</select></td></tr>" +
-        "<tr style='display:none'><td class='wsop_edt_label'>Estado:</td><td><Select id='wsop_edt_formaEnvio_uf' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListEstado(data.C_uf) + "</select></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Caixa:</td><td><Select id='wsop_edt_formaEnvio_caixa' onChange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.formaEnvio().envioToOptListCaixa(data.caixa) + "</select><sizecaixa id='wsop_edt_formaEnvio_size'>" + new window.Modules.WSOP.formaEnvio().getSizeCaixa(data.caixa) + "</td></tr>" +
-        "<tr><td class='wsop_edt_label'>Ativo:</td><td><input id='wsop_edt_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
-        "<tr><td class='wsop_edt_label'>Cod. Rastreio:</td><td><input id='wsop_edt_rastreio' type='text' value='" + (data.rastreio || "") + "'></td></tr>" +
-        "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>" +
+        "<tr class='menu_header'><td id='move_menu_wsfinan_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsfinan_requisicao_edt_div')>&#9776;</td><td class='wsfinan_edt_label' colspan=3><p class='closeButton' onclick=ClientEvents.emit(\"close_menu\",'wsfinan_requisicao_edt_div')>X</p></td></tr>" +
+        "<tr><td colspan=2><div class='div_wsfinan_hist_table' style='overflow-x:hidden'><table style='width:100%'><tr><td class='wsfinan_edt_label'>ID:</td><td><input id='wsfinan_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Fornecedor:</td><td><input id='wsfinan_edt_cliente' type='text' disabled value='" + data.fornecedor + "'></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Status:</td><td><Select id='wsfinan_edt_status' disabled>" + new window.Modules.WSFinan.StatusID().StatusIdToOptList(data.status) + "</select></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Ativo:</td><td><input id='wsfinan_edt_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
+        "<tr><td class='wsfinan_edt_label'>Nome:</td><td><input id='wsfinan_edt_name' type='text' value='" + data.name + "'></td></tr>" +
+        "<tr><td></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"wsfinan/requisicao/edt\")'></td></tr>" +
 
         "</table><hr><table>" +
         "<tr><td>Descrição:</td></tr>" +
-        "<tr><td colspan =2><textarea id='wsop_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
+        "<tr><td colspan =2><textarea id='wsfinan_edt_description'class='sun-editor-editable'>" + unclearDesc(data.description.description) + "</textarea></td></tr>" +
         "</table><hr>" +
 
-        "<table style=''><tbody id='wsop_edt_anexos' class='wsop_edt_anexos'>" +
-        "<tr><td colspan=5><p class='wsop_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p><input id='wsop_edt_img' style='float:right' type='button' value='Adicionar' onclick='ClientEvents.emit(\"wsop/os/uploadIMG\",\"" + data.id + "\")'></td></tr>" +
+        "<table style=''><tbody id='wsfinan_edt_anexos' class='wsfinan_edt_anexos'>" +
+        "<tr><td colspan=5><p class='wsfinan_edt_label' style='float:left; padding:0;margin:0;'>Anexos:</p><input id='wsfinan_edt_img' style='float:right' type='button' value='Adicionar' onclick='ClientEvents.emit(\"wsfinan/requisicao/uploadIMG\",\"" + data.id + "\")'></td></tr>" +
         "</table><hr>" +
         "<table style='; border-collapse:collapse'>" +
-        "<tr><td class='wsop_edt_label' style='float:left'>Add Produto:</td><td></td></tr>" +
+        "<tr><td class='wsfinan_edt_label' style='float:left'>Add Produto:</td><td></td></tr>" +
         "<tr><td colspan=5>" +
-        "<input id='wsop_searchbot' type='button' onclick='ClientEvents.emit(\"searchprod\")' value='Buscar'></input>" +
-        "<input id='wsop_edt_produto' placeholder='Produto' type='text' list='prodsearchlist'></input><datalist id='prodsearchlist'></datalist>" +
-        "<input id='wsop_edt_id_produto' style='display:none' type='text'></input>" +
-        "<input id='wsop_edt_qnt_produto' placeholder='Quantidade' type='text'></input>" +
-        "<input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsop/os/produto/add\")'></input>" +
-        "<input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSOP/produtos/add\")'></input></td></tr>" +
-        "<tr><td colspan=5><textarea id='wsop_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
+        "<input id='wsfinan_searchbot' type='button' onclick='ClientEvents.emit(\"wsfinan/requisicao/searchprod\")' value='Buscar'></input>" +
+        "<input id='wsfinan_edt_produto' placeholder='Produto' type='text' list='prodsearchlist'></input><datalist id='prodsearchlist'></datalist>" +
+        "<input id='wsfinan_edt_id_produto' style='display:none' type='text'></input>" +
+        "<input id='wsfinan_edt_qnt_produto' placeholder='Quantidade' type='number'></input>" +
+        "<input id='wsfinan_edt_price_produto' placeholder='Preço' type='number'></input>" +
+        "<input type='button' value='Adicionar' onClick='ClientEvents.emit(\"wsfinan/requisicao/produto/add\")'></input>" +
+        "<input type='button' value='Novo Produto' onclick='ClientEvents.emit(\"WSFinan/produtos/add\")'></input></td></tr>" +
+        "<tr><td colspan=5><textarea id='wsfinan_edt_description_produto'class='sun-editor-editable'></textarea></td></tr>" +
         "<tr><td colspan=5 style='height:20px'>  </td></tr>" +
-        "</table><hr><table style='; border-collapse:collapse'><tbody id='wsop_edt_produtos' class='wsop_edt_produtos'>" +
-        "<tr><td class='wsop_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
+        "</table><hr><table style='width: 100%; border-collapse:collapse'><tbody id='wsfinan_edt_produtos' class='wsfinan_edt_produtos'>" +
+        "<tr><td class='wsfinan_edt_label' style='float:left'>Produtos:</td><td></td></tr>" +
         "</table>";
 
     document.body.appendChild(div);
 
-    ClientEvents.on("searchprod", () => {
-        if (document.getElementById("wsop_edt_produto") != undefined) {
-            document.getElementById("wsop_searchbot").value = "Buscando...";
-            document.getElementById("wsop_searchbot").disabled = true;
-            ClientEvents.emit("SendSocket", "WSOP/os/produtos/lst", { barcode: document.getElementById("wsop_edt_produto").value });
+    ClientEvents.on("wsfinan/requisicao/searchprod", () => {
+        if (document.getElementById("wsfinan_edt_produto") != undefined) {
+            document.getElementById("wsfinan_searchbot").value = "Buscando...";
+            document.getElementById("wsfinan_searchbot").disabled = true;
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/produtos/lst", { barcode: document.getElementById("wsfinan_edt_produto").value });
         }
     })
-    ClientEvents.on("wsop_changeBoxSize", () => {
-        document.getElementById("wsop_edt_formaEnvio_size").innerHTML = new window.Modules.WSOP.formaEnvio().getSizeCaixa(document.getElementById("wsop_edt_formaEnvio_caixa").value)
 
-        let newprEnvio = new window.Modules.WSOP.formaEnvio().getPrice(
-            document.getElementById("wsop_edt_formaEnvio_country").value,
-            document.getElementById("wsop_edt_formaEnvio_uf").value,
-            document.getElementById("wsop_edt_formaEnvio").value,
-            document.getElementById("wsop_edt_formaEnvio_caixa").value,
-            parseInt(document.getElementById("qnttotal").innerText));
-
-        document.getElementById("wsop_edt_formaEnvio_precoenvio").innerText = newprEnvio;
-        let npacotes = new window.Modules.WSOP.formaEnvio().getNCaixas(document.getElementById("wsop_edt_formaEnvio_caixa").value, parseInt(document.getElementById("qnttotal").innerText));
-        document.getElementById("wsop_edt_formaEnvio_precoenvio_show").innerText = "R$ " + newprEnvio +
-            " (" + npacotes + ((npacotes > 1) ? " Pacotes)" : " Pacote)");
-
-        ClientEvents.emit("wsop_reload_price");
-    });
-
-    let anexosTable = document.getElementById("wsop_edt_anexos");
+    let anexosTable = document.getElementById("wsfinan_edt_anexos");
     let htm = "";
     if (data.anexos != undefined) {
         data.anexos.forEach((anexo, index) => {
-            anexo.id_os = data.id;
-            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsop_anexo_item'><center><pre>Nome: " + anexo.name + "\nData: " + formatTime(anexo.createdIn) + "</pre></center><center><img class='wsop_edt_img_thumb' onclick='ClientEvents.emit(\"WSOP/os/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSOP/img/" + anexo.thumb + "'></td>";
+            anexo.id_req = data.id;
+            htm += "" + ((index % 4 == 0) ? "<tr>" : "") + "<td><div class='wsfinan_anexo_item'><center><pre>Nome: " + anexo.name + "\nData: " + formatTime(anexo.createdIn) + "</pre></center><center><img class='wsfinan_edt_img_thumb' onclick='ClientEvents.emit(\"WSFinan/requisicao/anexo/edt\"," + JSON.stringify(anexo) + ")' alt='' src='./module/WSFinan/img/" + anexo.thumb + "'></td>";
         });
         anexosTable.innerHTML += htm;
     }
 
-    let produtosTable = document.getElementById("wsop_edt_produtos");
-    htm = "<tr class='wsop_produto_item1'><td style='width:30px'>Ações:</td><td>Código:</td><td>Item:</td><td>Quantidade:</td><td>Valor:</td></tr>";
+    let produtosTable = document.getElementById("wsfinan_edt_produtos");
+    htm = "<tr class='wsfinan_produto_item1'><td style='width:30px'>Ações:</td><td>Código:</td><td>Nome:</td><td>OBS:</td><td>Quantidade:</td><td>Valor:</td></tr>";
 
     let total = 0;
     let totalqnt = 0;
@@ -96,84 +79,108 @@ ClientEvents.on("WSFinan/requisicao/edt", (data) => {
                 produto.price = "0.00";
             }
             if (produto.img == null || produto.img == undefined) {
-                produto.img = "./modules/WSOP/img/file.png";
+                produto.img = "./modules/wsfinan/img/file.png";
             }
             total += (produto.qnt * parseFloat(produto.price.replace(",", ".").replace(" ", "")));
             totalqnt += produto.qnt;
 
-            ClientEvents.clear("wsop/os/produto/edt/" + produto.id);
-            ClientEvents.on("wsop/os/produto/edt/" + produto.id, () => {
-                ClientEvents.emit("wsop/os/produto/edt", produto);
+            ClientEvents.clear("wsfinan/requisicao/produto/edt/" + produto.id);
+            ClientEvents.on("wsfinan/requisicao/produto/edt/" + produto.id, () => {
+                ClientEvents.emit("WSFinan/requisicao/produto/edt", produto);
             });
-            htm += "<tr class='wsop_produto_item1'><td style='width:30px'><input value='Excluir' type='button' onclick='ClientEvents.emit(\"wsop/os/produto/del\", {id:" + produto.id + ", id_os:" + data.id + "})'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsop/os/produto/edt/" + produto.id + "\")'></td>" +
+            htm += "<tr class='wsfinan_produto_item1'><td style='width:30px'><input value='Excluir' type='button' onclick='ClientEvents.emit(\"wsfinan/requisicao/produto/del\", {id:" + produto.id + ", id_req:" + data.id + "})'><input type='button' value='Editar' onclick='ClientEvents.emit(\"wsfinan/requisicao/produto/edt/" + produto.id + "\")'></td>" +
                 "<td>" + produto.barcode + "</td>" +
                 "<td>" + produto.name + "</td>" +
+                "<td>" + unclearDesc(produto.obs) + "</td>" +
                 "<td>" + produto.qnt + "</td>" +
-                "<td>R$ " + produto.price + "</td>" +
-                "<tr class='wsop_produto_item2'><td>OBS:</td><td colspan=3>" + unclearDesc(produto.obs) + "</td><td style='width:250px'><center>";
-            produto.img.split(",").forEach(img => {
-                htm +=
-                    "<img id='wsop_edt_img_thumb' class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/" + img.replace(".", "_thumb.") + "' onclick='ClientEvents.emit(\"WSOP/os/anexo/view\"," + JSON.stringify({ name: produto.name, filename: img, createdIn: produto.createdIn }) + ")'>";
-            })
-            htm += "</td>";
+                "<td>R$ " + produto.price + "</td>";
+            htm += "</td></tr>";
         });
     }
 
-    ClientEvents.clear("wsop/os/produto/del");
-    ClientEvents.on("wsop/os/produto/del", (proddata) => {
+    ClientEvents.clear("wsfinan/requisicao/produto/del");
+    ClientEvents.on("wsfinan/requisicao/produto/del", (proddata) => {
         if (confirm("Desaja realmente excluir o Produto?")) {
-            ClientEvents.emit("SendSocket", "wsop/os/produto/del", { id: proddata.id, id_os: proddata.id_os });
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/produto/del", { id: proddata.id, id_os: proddata.id_req });
+        }
+    })
+    ClientEvents.clear("wsfinan/requisicao/anexo/del");
+    ClientEvents.on("wsfinan/requisicao/anexo/del", (proddata) => {
+        if (confirm("Desaja realmente excluir o Anexo?")) {
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/anexo/del", { id: proddata.id, id_os: proddata.id_req });
         }
     })
 
-    ClientEvents.clear("wsop_reload_price");
-    ClientEvents.on("wsop_reload_price", () => {
-        //Redefine o preco de envio caso ainda esteja aberto a OS
-        if (data.status != "finalizado") {
-            let newprecoEnvio = new window.Modules.WSOP.formaEnvio().getPrice(
-                document.getElementById("wsop_edt_formaEnvio_country").value,
-                document.getElementById("wsop_edt_formaEnvio_uf").value,
-                document.getElementById("wsop_edt_formaEnvio").value,
-                document.getElementById("wsop_edt_formaEnvio_caixa").value,
-                parseInt(document.getElementById("qnttotal").innerText));
-            if (newprecoEnvio != data.precoEnvio) {
-                data.precoEnvio = newprecoEnvio;
-                //ClientEvents.on("WSOP/os/edt");
-            }
-        }
+    ClientEvents.clear("wsfinan_reload_price");
+    ClientEvents.on("wsfinan_reload_price", () => {
 
-        let price = parseFloat(parseFloat(total - document.getElementById("wsop_edt_desconto").value) + parseFloat(data.precoEnvio)).toFixed(2);
-        document.getElementById("wsop_edt_price").innerText = price;
-        document.getElementById("wsop_edt_total_show").innerText = "R$ " + price;
+        let price = parseFloat(parseFloat(total)).toFixed(2);
+        //document.getElementById("wsfinan_edt_price").innerText = price;
+        document.getElementById("wsfinan_edt_total_show").innerText = "R$ " + price;
 
         //salva o novo preço em caso de alteração
-        if (price != data.price) {
-            data.price = price;
-            setTimeout(() => { ClientEvents.emit("WSOP/os/edt") }, 500);
+        if (parseFloat(price) != parseFloat(data.description.price)) {
+            data.description.price = price;
+            console.log(parseFloat(price), parseFloat(data.description.price));
+            console.log(parseFloat(price) != parseFloat(data.description.price));
+            if (parseFloat(price) != parseFloat(data.description.price)) {
+                setTimeout(() => { ClientEvents.emit("wsfinan/requisicao/edt") }, 500);
+            }
         }
     })
 
-    htm += "<tr class='wsop_produto_item1'><td style='border:none'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
-    htm += "<tr style='display:none;' class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Desconto:</td><td> <select id='wsop_edt_desconto' onchange='ClientEvents.emit(\"wsop_changeBoxSize\")'>" + new window.Modules.WSOP.desconto().descontoToOPTList(parseFloat(data.desconto || 0).toFixed(2), total) + "</select></td>";
-    htm += "<tr style='display:none'><td id='wsop_edt_formaEnvio_precoenvio'> R$ Calculando</td>";
-    htm += "<tr style='display:none'><td id='wsop_edt_price'>0</td>";
-    htm += "<tr class='wsop_produto_item3'><td style='border:none' colspan='3'></td><td><b>Frete:</td><td id='wsop_edt_formaEnvio_precoenvio_show'>R$ Calculando</td>";
-    htm += "<tr class='wsop_produto_item2'><td style='border:none' colspan='3'></td><td><b>TOTAL:</td><td id='wsop_edt_total_show'>R$ Calculando</td>";
+    htm += "<tr class='wsfinan_produto_item1'><td style='border:none' colspan='2'></td><td><b>Quantidade Total:</td><td><b id='qnttotal'>" + totalqnt + "</td><td><b>SUBTOTAL:</td><td>R$ " + total.toFixed(2) + "</td>"
+    htm += "<tr class='wsfinan_produto_item2'><td style='border:none' colspan='4'></td><td><b>TOTAL:</td><td id='wsfinan_edt_total_show'>R$ Calculando</td>";
 
-    htm += "<tr><td style='border:none; padding-top:20px' colspan='4'></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"WSOP/os/edt\")'></td></tr>";
+    htm += "<tr><td style='border:none; padding-top:20px' colspan='5'></td><td><input id='wpma_sites_submit' value='Salvar' type='button' onclick='ClientEvents.emit(\"wsfinan/requisicao/edt\")'></td></tr>";
     produtosTable.innerHTML += htm;
 
 
-    ClientEvents.clear("wsop/os/fileuploaded");
-    ClientEvents.on("wsop/os/fileuploaded", () => {
-        ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data.id });
+    ClientEvents.clear("WSFinan/requisicao/fileuploaded");
+    ClientEvents.on("WSFinan/requisicao/fileuploaded", () => {
+        ClientEvents.emit("WSFinan_Requisicao_filtertable");
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
     })
-    ClientEvents.clear("wsop/os/produto/added");
-    ClientEvents.on("wsop/os/produto/added", () => {
-        ClientEvents.emit("SendSocket", "wsop/os/lst/edt", { id: data.id });
+    ClientEvents.clear("WSFinan/requisicao/produto/added");
+    ClientEvents.on("WSFinan/requisicao/produto/added", () => {
+        ClientEvents.emit("WSFinan_Requisicao_filtertable");
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
     })
+
+
+    ClientEvents.clear("WSFinan/requisicao/anexo/deleted");
+    ClientEvents.on("WSFinan/requisicao/anexo/deleted", () => {
+        ClientEvents.emit("close_menu", "wsfinan_anexo_div");
+        ClientEvents.emit("WSFinan_Requisicao_filtertable");
+        ClientEvents.emit("system_mess", { status: "OK", mess: "Anexo Excluido com Exito", time: 1000 });
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
+    })
+
+    ClientEvents.clear("WSFinan/requisicao/edited");
+    ClientEvents.on("WSFinan/requisicao/edited", () => {
+        ClientEvents.emit("close_menu", "wsfinan_anexo_div");
+        ClientEvents.emit("WSFinan_Requisicao_filtertable");
+        ClientEvents.emit("system_mess", { status: "OK", mess: "Requisição editada com Exito", time: 1000 });
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
+    })
+
+    ClientEvents.clear("WSFinan/requisicao/produto/deleted");
+    ClientEvents.on("WSFinan/requisicao/produto/deleted", () => {
+        ClientEvents.emit("close_menu", "wsfinan_anexo_div");
+        ClientEvents.emit("WSFinan_Requisicao_filtertable");
+        ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Excluido com Exito", time: 1000 });
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
+    })
+    ClientEvents.clear("WSFinan/requisicao/produto/edited");
+    ClientEvents.on("WSFinan/requisicao/produto/edited", () => {
+        ClientEvents.emit("close_menu", "wsfinan_anexo_div");
+        ClientEvents.emit("WSFinan_Requisicao_filtertable");
+        ClientEvents.emit("system_mess", { status: "OK", mess: "Produto Editado com Exito", time: 1000 });
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
+    })
+
     if (SUNEDITOR != undefined) {
-        const editor = SUNEDITOR.create((document.getElementById('wsop_edt_description') || 'wsop_edt_description'), {
+        const editor = SUNEDITOR.create((document.getElementById('wsfinan_edt_description') || 'wsfinan_edt_description'), {
             width: "100%",
             buttonList: [
                 ['font', 'fontSize'],
@@ -199,8 +206,8 @@ ClientEvents.on("WSFinan/requisicao/edt", (data) => {
                 { text: '2', value: 2 }
             ],
         });
-        editor.onChange = function (contents, core) { document.getElementById("wsop_edt_description").innerHTML = contents; }
-        const editor1 = SUNEDITOR.create((document.getElementById('wsop_edt_description_produto') || 'wsop_edt_description_produto'), {
+        editor.onChange = function (contents, core) { document.getElementById("wsfinan_edt_description").innerHTML = contents; }
+        const editor1 = SUNEDITOR.create((document.getElementById('wsfinan_edt_description_produto') || 'wsfinan_edt_description_produto'), {
             width: "100%",
             buttonList: [
                 ['font', 'fontSize'],
@@ -226,44 +233,29 @@ ClientEvents.on("WSFinan/requisicao/edt", (data) => {
                 { text: '2', value: 2 }
             ],
         });
-        editor1.onChange = function (contents, core) { document.getElementById("wsop_edt_description_produto").innerHTML = contents; }
+        editor1.onChange = function (contents, core) { document.getElementById("wsfinan_edt_description_produto").innerHTML = contents; }
     }
-    ClientEvents.emit("wsop_changeBoxSize");
+    ClientEvents.emit("wsfinan_reload_price");
 });
 
 
-ClientEvents.on("WSOP/os/edt", () => {
-    ClientEvents.emit("SendSocket", "wsop/os/edt", {
-        id_myself: Myself.id,
-        id: document.getElementById("wsop_edt_id").value,
-        description: clearDesc(document.getElementById("wsop_edt_description").innerHTML),
-        prazo: document.getElementById("wsop_edt_prazo").value,
-        country: document.getElementById("wsop_edt_formaEnvio_country").value,
-        uf: document.getElementById("wsop_edt_formaEnvio_uf").value,
-        caixa: document.getElementById("wsop_edt_formaEnvio_caixa").value,
-        endingIn: new Date(document.getElementById("wsop_edt_endingIn").value).getTime() + 24 * 3600000, //Adiciona um dia para sanar um bug de salvar um dia para traz
-        formaEnvio: document.getElementById("wsop_edt_formaEnvio").value,
-        formaPagamento: document.getElementById("wsop_edt_formaPagamento").value,
-        precoEnvio: document.getElementById("wsop_edt_formaEnvio_precoenvio").value,
-        desconto: document.getElementById("wsop_edt_desconto").value,
-        active: document.getElementById("wsop_edt_active").checked,
-        rastreio: document.getElementById("wsop_edt_rastreio").value,
-        price: document.getElementById("wsop_edt_price").innerText,
-    });
+ClientEvents.on("wsfinan/requisicao/edt", () => {
+    if (document.getElementById("wsfinan_edt_id") != undefined) {
+        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edt", {
+            id_myself: Myself.id,
+            id: document.getElementById("wsfinan_edt_id").value,
+            name: document.getElementById("wsfinan_edt_name").value,
+            description: JSON.stringify({
+                description: clearDesc(document.getElementById("wsfinan_edt_description").innerHTML),
+                price: document.getElementById("wsfinan_edt_total_show").innerText
+            }),
+            active: document.getElementById("wsfinan_edt_active").checked
+        });
+    }
 })
 
-ClientEvents.on("WSOP/os/edtproduct", () => {
-    ClientEvents.emit("SendSocket", "wsop/os/edtproduct", {
-        id_myself: Myself.id,
-        id: document.getElementById("wsop_edt_id_produto").value | "",
-        id_os: document.getElementById("wsop_edt_id").value | "",
-        description: clearDesc(document.getElementById("wsop_edt_description").innerHTML),
-        status: document.getElementById("wsop_edt_status").value,
-        active: document.getElementById("wsop_edt_active").checked,
-    });
-})
 
-ClientEvents.on("wsop/os/uploadIMG", (id) => {
+ClientEvents.on("wsfinan/requisicao/uploadIMG", (id) => {
     let input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("multiple", "multiple");
@@ -275,11 +267,11 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
                 let name = input.files[i].name.substring(0, input.files[i].name.lastIndexOf("."));
 
                 let tr = document.createElement("tr");
-                tr.innerHTML = "<td><div class='wsop_anexo_item'><input value='Excluir' type='button' ><img class='wsop_edt_img_thumb' alt='' src='./module/WSOP/img/loading.gif'><div></td>";
-                document.getElementById("wsop_edt_anexos").appendChild(tr);
+                tr.innerHTML = "<td><div class='wsfinan_anexo_item'><input value='Excluir' type='button' ><img class='wsfinan_edt_img_thumb' alt='' src='./module/WSFinan/img/loading.gif'><div></td>";
+                document.getElementById("wsfinan_edt_anexos").appendChild(tr);
 
                 sender.onload = function (e) {
-                    ClientEvents.emit("SendSocket", "wsop/os/file", {
+                    ClientEvents.emit("SendSocket", "WSFinan/requisicao/file", {
                         id_myself: Myself.id, name: name, ext: ext, stream: e.target.result, id: id
                     })
                 };
@@ -290,39 +282,40 @@ ClientEvents.on("wsop/os/uploadIMG", (id) => {
     input.click();
 })
 
-ClientEvents.on("wsop/os/produto/add", () => {
+ClientEvents.on("wsfinan/requisicao/produto/add", () => {
     let data = {
         id_myself: Myself.id,
-        id: document.getElementById("wsop_edt_produto").value | "",
-        id_os: document.getElementById("wsop_edt_id").value | "",
-        qnt: document.getElementById("wsop_edt_qnt_produto").value | "",
-        obs: clearDesc(document.getElementById("wsop_edt_description_produto").innerHTML)
+        id: document.getElementById("wsfinan_edt_produto").value | "",
+        id_req: document.getElementById("wsfinan_edt_id").value | "",
+        qnt: document.getElementById("wsfinan_edt_qnt_produto").value | "",
+        price: document.getElementById("wsfinan_edt_price_produto").value | "",
+        obs: clearDesc(document.getElementById("wsfinan_edt_description_produto").innerHTML)
     }
-    ClientEvents.emit("SendSocket", "wsop/os/produto/add", data)
+    ClientEvents.emit("SendSocket", "WSFinan/requisicao/produto/add", data)
 })
 
 //Lista de produtos Autocomplete
-ClientEvents.on("wsop/os/produtos/lst", (arr) => {
+ClientEvents.on("wsfinan/requisicao/produtos/lst", (arr) => {
 
     if (arr.length > 0) {
-        document.getElementById("wsop_searchbot").value = "Buscar";
-        document.getElementById("wsop_searchbot").disabled = false;
+        document.getElementById("wsfinan_searchbot").value = "Buscar";
+        document.getElementById("wsfinan_searchbot").disabled = false;
     } else {
         setTimeout(() => {
-            document.getElementById("wsop_searchbot").value = "Buscar";
-            document.getElementById("wsop_searchbot").disabled = false;
-        }, 5000);
+            document.getElementById("wsfinan_searchbot").value = "Buscar";
+            document.getElementById("wsfinan_searchbot").disabled = false;
+        }, 500);
     }
 
     let inp = document.getElementById("prodsearchlist");
-    let val = document.getElementById("wsop_edt_produto");
+    let val = document.getElementById("wsfinan_edt_produto");
 
     if (inp == undefined) return;
     inp.innerHTML = "";
     let htm = ""
 
     arr.forEach(item => {
-        let name = item.barcode + " | " + item.name + " | Estoque(" + item.inventory + ")";
+        let name = item.name + " | " + item.description + "";
         let namehtml = ((name).replace(new RegExp((val.value).toLowerCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
         namehtml = ((namehtml).replace(new RegExp((val.value).toUpperCase(), "g"), "<strong>" + val.value.toUpperCase() + "</strong>"));
         namehtml = ((namehtml).replace(new RegExp(("<strong></strong>"), "g"), ""));

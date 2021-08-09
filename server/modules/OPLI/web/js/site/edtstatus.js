@@ -10,7 +10,7 @@ ClientEvents.on("WSOP/site/changestatus", (data) => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edtstatus_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", \"wsop_edtstatus_site_div\");'>X</p></td></tr>" +
+        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_edtstatus_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='closeButton' onclick='ClientEvents.emit(\"close_menu\", \"wsop_edtstatus_site_div\");'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>ID:</td><td><input id='wsop_edt_id' type='text' disabled value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_edt_cliente' type='text' disabled value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_edt_status'>" + window.utils.OPLIStatusIdToOptList(data.status) + "</select></td></tr>" +

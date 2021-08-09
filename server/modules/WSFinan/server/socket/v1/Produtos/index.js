@@ -58,12 +58,12 @@ class Socket {
         /**
          * List all clientes para Criação de OS
          */
-        socket.on("WSFinan/produtos/lst", (req) => {
+        socket.on("WSFinan/requisicao/produtos/lst", (req) => {
             this._myself.checkPermission("WSFinan/financeiro/produtos").then(() => {
                 if (req[0]) {
                     this._ProdutosClass.ListProdutosFiltered(req[0].name).then((res) => {
                         socket.emit("ClientEvents", {
-                            event: "wsfinan/produtos/lst",
+                            event: "wsfinan/requisicao/produtos/lst",
                             data: res
                         })
                     }).catch((err) => {

@@ -2,6 +2,7 @@ const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
     name: "VARCHAR(600)",
     responsavel: "VARCHAR(600)",
+    description: "MEDIUMTEXT",
     cpf_cnpj: "VARCHAR(200)",
     iscnpj: "INT(1)",
     cep: "VARCHAR(200)",
