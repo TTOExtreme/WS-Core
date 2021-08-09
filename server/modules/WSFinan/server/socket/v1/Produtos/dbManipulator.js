@@ -32,9 +32,9 @@ class ProdutosManipulator {
     /**
      * Lista todos os Clientes cadastrados com filtro
      */
-    ListProdutosFiltered(name) {
+    ListProdutosFiltered(name = "") {
         return this.db.query("SELECT C.id, C.name, C.description FROM " + this.db.DatabaseName + "._WSFinan_Produtos AS C " +
-            " WHERE C.active=1 AND (C.name LIKE '%" + name + "%' OR C.description LIKE '%" + name + "%');");
+            " WHERE C.active=1 AND (C.name LIKE '%" + name + "%' OR C.description LIKE '%" + name + "%') LIMIT 20;");
     }
 
 

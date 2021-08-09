@@ -32,7 +32,6 @@ ClientEvents.on("WSOP/os/add", () => {
         "<tr><td class='wsop_edt_label'>FormaPagamento:</td><td><Select id='wsop_add_formaPagamento'>" + new window.Modules.WSOP.desconto().pagamentoToOPTList(data.formaPagamento) + "</select></td></tr>" +
         "<tr><td class='wsop_edt_label'>Descrição:</td><td><textarea id='wsop_add_description'class='sun-editor-editable'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsop_edt_label'>Ativo:</td><td><input disabled id='wsop_add_active' type='checkbox' " + ((data.active == 1) ? "Checked" : "") + "></td></tr>" +
-        "<tr><td colspan=2 class='wsop_edt_label_info' id='wsop_add_info'></td></tr>" +
         "<tr><td></td><td><input id='wpma_sites_submit' value='Adicionar' type='button' onclick='ClientEvents.emit(\"WSOP/os/save\")' ></td></tr>" +
         "</table>";
 

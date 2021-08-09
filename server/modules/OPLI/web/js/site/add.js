@@ -21,7 +21,7 @@ ClientEvents.on("WSOP/os/add", () => {
 
     div.innerHTML = "" +
         "<table>" +
-        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", 'wsop_add_site_div')'>X</p></td></tr>" +
+        "<tr><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_add_site_div')>&#9776;</td><td class='wsop_edt_label'><p class='closeButton' onclick='ClientEvents.emit(\"close_menu\", 'wsop_add_site_div')'>X</p></td></tr>" +
         "<tr><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_cliente' type='text' value='" + data.cliente + "'><input type='button' value='Novo Cliente' onclick='ClientEvents.emit(\"WSOP/clientes/add\")'></td></tr>" +
         "<tr style='display:none;'><td class='wsop_edt_label'>Cliente:</td><td><input id='wsop_add_id_cliente' type='text' value='" + data.id_cliente + "'></td></tr>" +
         "<tr><td class='wsop_edt_label'>Status:</td><td><Select id='wsop_add_status'>" + StatusIdToOptList(data.status) + "</select></td></tr>" +

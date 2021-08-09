@@ -14,7 +14,8 @@
     border-radius: 10px;
 }
 
-.edt_usr_closeButton {
+.edt_usr_closeButton,
+.closeButton {
     padding: 0;
     margin: 0;
     cursor: pointer;
@@ -83,7 +84,8 @@
     margin: 0;
 }
 
-.opli_add_closeButton {
+.opli_add_closeButton,
+.closeButton {
     padding: 0;
     margin: 0;
     cursor: pointer;

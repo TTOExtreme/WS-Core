@@ -10,7 +10,7 @@ ClientEvents.on("wsop/site/view", (data) => {
 
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
-        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_os_view_div')>&#9776;</td><td class='opli_edt_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"close_menu\", \"wsop_os_view_div\")'>X</p></td></tr></table>" +
+        "<tr class='menu_header'><td id='move_menu_wsop_add' class='move_menu' onmousedown=ClientEvents.emit(\"move_menu_down\",'wsop_os_view_div')>&#9776;</td><td class='opli_edt_label'><p class='closeButton' onclick='ClientEvents.emit(\"close_menu\", \"wsop_os_view_div\")'>X</p></td></tr></table>" +
         "<div id='wsop_edt' class='opli_edt'>" +
         "<table style='width:100%;'>" +
         //OS ID

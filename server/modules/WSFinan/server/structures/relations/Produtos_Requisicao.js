@@ -3,6 +3,7 @@ const _DB = {
     id: "INT PRIMARY KEY AUTO_INCREMENT",
     id_req: "INT",
     id_produtos: "INT",
+    price: "VARCHAR(45)",
     obs: "MEDIUMTEXT",
     qnt: "INT",
     createdIn: "BIGINT",

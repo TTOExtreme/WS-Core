@@ -10,7 +10,7 @@ ClientEvents.on("wsop/os/print", (data) => {
 
     div.innerHTML = "" +
         "<table style='width:100%;'>" +
-        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='wsop_add_closeButton' onclick='ClientEvents.emit(\"WSOP/os/print/close\")'>X</p></td></tr></table>" +
+        "<tr class='menu_header'><td><input id='wpma_sites_submit' value='Imprimir' type='button' onclick='PrintElem(\"wsop_print\")'></td><td class='wsop_print_label'><p class='closeButton' onclick='ClientEvents.emit(\"WSOP/os/print/close\")'>X</p></td></tr></table>" +
         "<div id='wsop_print' class='wsop_print'>" +
         "<table style='width:100%;'>" +
         //OS ID

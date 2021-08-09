@@ -2,7 +2,7 @@ const core = require('./v1/Core').Core;
 const fichas = require('./v1/fichas').Socket;
 const fornecedor = require('./v1/Fornecedor').Socket;
 const produtos = require('./v1/Produtos').Socket;
-const requisicao = require('./v1/requisicao').Socket;
+const requisicao = require('./v1/Requisicao').Socket;
 
 class Socket {
 

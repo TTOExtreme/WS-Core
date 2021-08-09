@@ -53,16 +53,16 @@ class FornecedorManipulator {
      * @param {String} email 
      * @param {Number} UserID ID do usuario cadastrando
      */
-    createFornecedor(name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, complemento, numero, bairro, municipio, uf, country, telefone, email, active, UserID) {
+    createFornecedor(name, responsavel, description, cpf_cnpj, iscnpj, cep, logradouro, complemento, numero, bairro, municipio, uf, country, telefone, email, active, UserID) {
 
         return this.db.query("INSERT INTO " + this.db.DatabaseName + "._WSFinan_Fornecedor" +
-            " (name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, complemento, numero, bairro, municipio, uf,country, telefone, email, active, createdBy, createdIn)" +
+            " (name, responsavel,description, cpf_cnpj, iscnpj, cep, logradouro, complemento, numero, bairro, municipio, uf,country, telefone, email, active, createdBy, createdIn)" +
             " VALUES " +
-            " ('" + name + "','" + responsavel + "','" + cpf_cnpj + "'," + (iscnpj ? 1 : 0) + ",'" + cep + "','" + logradouro + "','" + complemento + "','" + numero + "','" + bairro + "','" + municipio + "','" + uf + "','" + country + "','" + telefone + "','" + email + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
+            " ('" + name + "','" + responsavel + "','" + description + "','" + cpf_cnpj + "'," + (iscnpj ? 1 : 0) + ",'" + cep + "','" + logradouro + "','" + complemento + "','" + numero + "','" + bairro + "','" + municipio + "','" + uf + "','" + country + "','" + telefone + "','" + email + "'," + (active ? 1 : 0) + "," + UserID + "," + Date.now() + ");");
     }
 
     /**
-     * Editar cadastro do cliente
+     * Editar cadastro do Fornecedore
      * @param {Number} ID
      * @param {String} name 
      * @param {String} responsavel 
@@ -77,11 +77,12 @@ class FornecedorManipulator {
      * @param {String} email 
      * @param {Number} UserID 
      */
-    editFornecedor(ID, name, responsavel, cpf_cnpj, iscnpj, cep, logradouro, complemento, numero, bairro, municipio, uf, country, telefone, email, active, UserID) {
+    editFornecedor(ID, name, responsavel, description, cpf_cnpj, iscnpj, cep, logradouro, complemento, numero, bairro, municipio, uf, country, telefone, email, active, UserID) {
 
         return this.db.query("UPDATE " + this.db.DatabaseName + "._WSFinan_Fornecedor SET" +
             ((name != "") ? " name='" + name + "'," : " ") +
             ((responsavel != "") ? " responsavel='" + responsavel + "'," : " ") +
+            ((description != "") ? " description='" + description + "'," : " ") +
             ((cpf_cnpj != "") ? " cpf_cnpj='" + cpf_cnpj + "'," : " ") +
             ((iscnpj != "") ? " iscnpj='" + (iscnpj ? 1 : 0) + "'," : " ") +
             ((cep != "") ? " cep='" + cep + "'," : " ") +
@@ -100,7 +101,7 @@ class FornecedorManipulator {
     }
 
     /**
-     * Desativar cadastro do cliente
+     * Desativar cadastro do Fornecedore
      * @param {Number} ID
      * @param {Boolean} active
      * @param {Number} UserID 

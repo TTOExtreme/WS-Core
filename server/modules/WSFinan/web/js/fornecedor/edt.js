@@ -16,6 +16,7 @@ ClientEvents.on("wsfinan/fornecedor/edt", (data) => {
         "<tr><td class='wsfinan_add_label'>ID:</td><td><input disabled id='wsfinan_edt_id' type='text' value='" + data.id + "'></td></tr>" +
         "<tr><td class='wsfinan_add_label'>Nome:</td><td><input id='wsfinan_edt_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsfinan_add_label'>Responsável:</td><td><input id='wsfinan_edt_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +
+        "<tr><td class='wsfinan_add_label'>Descrição:</td><td><textarea id='wsfinan_edt_description'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsfinan_add_label'>CNPJ?:</td><td><input id='wsfinan_edt_iscnpj' type='checkbox' onchange='ClientEvents.emit(\"iscnpjchange\")' " + ((data.iscnpj == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr id='tr_wsfinan_edt_cnpj' style='display:contents'><td class='wsfinan_add_label'>CNPJ:</td><td><input id='wsfinan_edt_cnpj' type='text' onchange='ClientEvents.emit(\"cnpjchange\")' value='" + data.cpf_cnpj + "'></td></tr>" +
         "<tr id='tr_wsfinan_edt_cpf' style='display:none'><td class='wsfinan_add_label'>CPF:</td><td><input id='wsfinan_edt_cpf' type='text' value='" + data.cpf_cnpj + "'></td></tr>" +
@@ -42,6 +43,7 @@ ClientEvents.on("wsfinan/fornecedor/edtsave", () => {
         id: document.getElementById("wsfinan_edt_id").value,
         name: document.getElementById("wsfinan_edt_name").value,
         responsavel: document.getElementById("wsfinan_edt_responsavel").value,
+        description: clearDesc(document.getElementById("wsfinan_edt_description").value),
         cpf_cnpj: document.getElementById("wsfinan_edt_cnpj").value || document.getElementById("wsfinan_edt_cpf").value,
         cep: document.getElementById("wsfinan_edt_cep").value,
         logradouro: document.getElementById("wsfinan_edt_logradouro").value,
