@@ -103,8 +103,10 @@ class Socket {
                     req[0].email &&
                     req[0].responsavel
                 ) {
-                    this._FornecedorClass.createFornecedor(req[0].name,
+                    this._FornecedorClass.createFornecedor(
+                        req[0].name,
                         req[0].responsavel,
+                        req[0].description,
                         req[0].cpf_cnpj,
                         req[0].iscnpj,
                         req[0].cep,

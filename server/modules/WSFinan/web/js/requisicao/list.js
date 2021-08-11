@@ -213,19 +213,21 @@ window.UserList = class UserList {
                 ClientEvents.emit("SendSocket", "WSOP/os/lstappend", sendfilters);
             }
         });
-
         ClientEvents.on("system/added/requisicao", (data) => {
-            ClientEvents.emit("SendSocket", "wsop/os/lst/edt", data);
-            ClientEvents.emit("close_menu", "wsop_add_os_div");
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/lst", {});
+            ClientEvents.emit("close_menu", "wsfinan_add_requisicao_div");
         });
         ClientEvents.on("system/removed/requisicao", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Requisicão Removida com Exito", time: 1000 });
-            ClientEvents.emit("SendSocket", "wsop/os/lst");
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/lst", {});
+            ClientEvents.emit("close_menu", "wsfinan_add_requisicao_div");
         });
-        ClientEvents.on("system/edited/requisicao", () => {
+        ClientEvents.on("WSFinan/requisicao/edited", () => {
             ClientEvents.emit("system_mess", { status: "OK", mess: "Requisicao Editada com Exito", time: 1000 });
-            ClientEvents.emit("WSFinan_Requisicao_filtertable");
-            ClientEvents.emit("SendSocket", "wsop/os/lst");
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/lst", {});
+            ClientEvents.emit("close_menu", "wsfinan_add_requisicao_div");
+            ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
         });
     }
 

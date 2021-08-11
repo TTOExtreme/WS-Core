@@ -156,14 +156,6 @@ ClientEvents.on("WSFinan/requisicao/edt", (data) => {
         ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
     })
 
-    ClientEvents.clear("WSFinan/requisicao/edited");
-    ClientEvents.on("WSFinan/requisicao/edited", () => {
-        ClientEvents.emit("close_menu", "wsfinan_anexo_div");
-        ClientEvents.emit("WSFinan_Requisicao_filtertable");
-        ClientEvents.emit("system_mess", { status: "OK", mess: "Requisição editada com Exito", time: 1000 });
-        ClientEvents.emit("SendSocket", "WSFinan/requisicao/edtview", { id: data.id });
-    })
-
     ClientEvents.clear("WSFinan/requisicao/produto/deleted");
     ClientEvents.on("WSFinan/requisicao/produto/deleted", () => {
         ClientEvents.emit("close_menu", "wsfinan_anexo_div");

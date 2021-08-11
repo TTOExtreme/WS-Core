@@ -30,9 +30,9 @@ ClientEvents.on("WSFinan/fornecedor/add", () => {
     div.innerHTML = "" +
         "<table>" +
         "<tr><td id='move_menu_wsfinan_add' class='move_menu' onmousedown='ClientEvents.emit(\"move_menu_down\",\"wsfinan_add_clientes_div\")'>&#9776;</td><td class='wsfinan_add_label'><p class='closeButton' onclick=ClientEvents.emit('close_menu','wsfinan_add_clientes_div')>X</p></td></tr>" +
-        "<tr><td class='wsfinan_add_label'>Nome:</td><td><input id='wsfinan_add_name' type='text' value='" + data.name + "'></td></tr>" +
+        "<tr><td class='wsfinan_add_label'>Nome:</td><td><input id='wsfinan_add_fornecedor_name' type='text' value='" + data.name + "'></td></tr>" +
         "<tr><td class='wsfinan_add_label'>Responsável:</td><td><input id='wsfinan_add_responsavel' type='text' value='" + data.responsavel + "'></td></tr>" +
-        "<tr><td class='wsfinan_add_label'>Descrição:</td><td><textarea id='wsfinan_add_description'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
+        "<tr><td class='wsfinan_add_label'>Descrição:</td><td><textarea id='wsfinan_add_fornecedor_description'>" + unclearDesc(data.description) + "</textarea></td></tr>" +
         "<tr><td class='wsfinan_add_label'>CNPJ?:</td><td><input id='wsfinan_add_iscnpj' type='checkbox' onchange='ClientEvents.emit(\"iswsfinancnpjchange\")' " + ((data.iscnpj == 1) ? "Checked" : "") + "></td></tr>" +
         "<tr id='tr_wsfinan_add_cnpj' style='display:contents'><td class='wsfinan_add_label'>CNPJ:</td><td><input id='wsfinan_add_cnpj' type='text' onchange='ClientEvents.emit(\"wsfinancnpjchange\")' value='" + data.cpf_cnpj + "'></td></tr>" +
         "<tr id='tr_wsfinan_add_cpf' style='display:none'><td class='wsfinan_add_label'>CPF:</td><td><input id='wsfinan_add_cpf' type='text' value='" + data.cpf_cnpj + "'></td></tr>" +
@@ -59,8 +59,8 @@ ClientEvents.on("wsfinancnpjchange", () => {
     if (document.getElementById("wsfinan_add_clientes_div")) {
         let cnpj = document.getElementById("wsfinan_add_cnpj").value;
         consultaCNPJ(cnpj).then(data => {
-            if (document.getElementById("wsfinan_add_name").value == "")
-                document.getElementById("wsfinan_add_name").setAttribute("value", data.nome);
+            if (document.getElementById("wsfinan_add_fornecedor_name").value == "")
+                document.getElementById("wsfinan_add_fornecedor_name").setAttribute("value", data.nome);
             if (document.getElementById("wsfinan_add_responsavel").value == "") {
                 if (data.qsa[0] != undefined)
                     document.getElementById("wsfinan_add_responsavel").setAttribute("value", data.qsa[0].nome);
@@ -132,9 +132,9 @@ ClientEvents.on("iswsfinancnpjchange", () => {
 
 ClientEvents.on("WSFinan/fornecedor/save", () => {
     ClientEvents.emit("SendSocket", "WSFinan/fornecedor/add", {
-        name: document.getElementById("wsfinan_add_name").value,
+        name: document.getElementById("wsfinan_add_fornecedor_name").value,
         responsavel: document.getElementById("wsfinan_add_responsavel").value,
-        description: clearDesc(document.getElementById("wsfinan_add_description").value),
+        description: clearDesc(document.getElementById("wsfinan_add_fornecedor_description").value),
         cpf_cnpj: document.getElementById("wsfinan_add_cnpj").value || document.getElementById("wsfinan_add_cpf").value,
         cep: document.getElementById("wsfinan_add_cep").value,
         logradouro: document.getElementById("wsfinan_add_logradouro").value,

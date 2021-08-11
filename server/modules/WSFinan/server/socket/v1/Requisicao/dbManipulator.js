@@ -22,7 +22,7 @@ class requisicaiManipulator {
         return this.db.query("SELECT C.*, U.name as createdBy, F.name as fornecedor FROM " + this.db.DatabaseName + "._WSFinan_Requisicao AS C " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = C.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSFinan_Fornecedor as F on F.id = C.id_fornecedor " +
-            " WHERE C.id >=" + ID +
+            " WHERE C.active=1 AND C.id >=" + ID +
             (Name != "" ? " AND C.name LIKE '%" + Name + "%'" : "") +
             (description != "" ? " AND C.description LIKE '%" + description + "%'" : "") +
             " ORDER BY C.id DESC LIMIT 50;");
@@ -51,7 +51,7 @@ class requisicaiManipulator {
         return this.db.query("SELECT OS.*, U.name as createdBy, OS.createdBy as creatorId, U.email as U_email, U.telefone as U_telefone, C.name as fornecedor, C.cpf_cnpj as C_cpf_cnpj, C.logradouro C_logradouro,C.responsavel as C_responsavel, C.numero as C_numero, C.bairro as C_bairro, C.municipio as C_municipio, C.cep as C_cep, C.uf as C_uf, C.country as C_country, C.email as C_email, C.telefone as C_telefone FROM " + this.db.DatabaseName + "._WSFinan_Requisicao AS OS " +
             " LEFT JOIN " + this.db.DatabaseName + "._User as U on U.id = OS.createdBy " +
             " LEFT JOIN " + this.db.DatabaseName + "._WSFinan_Fornecedor as C on C.id = OS.id_fornecedor " +
-            " WHERE OS.active=1 " + ((id != "") ? " AND OS.id=" + id : ";") + " ;").then((list) => {
+            " WHERE " + ((id != "") ? " OS.id=" + id : ";") + " ;").then((list) => {
                 let allProm = [];
                 let result = [];
                 list.forEach(item => {

@@ -81,6 +81,13 @@ window.UserList = class UserList {
                     }
                 })
         }
+        this.newCollums[0].headerMenu.push(
+            {
+                label: "Atualizar",
+                action: function (e, column) {
+                    ClientEvents.emit("SendSocket", "WSFinan/fornecedor/lst");
+                }
+            })
         /**Initialize  Table */
         this.main_table = new Tabulator("#MainScreen", {
             data: this.UserListData,
@@ -109,7 +116,7 @@ window.UserList = class UserList {
         ClientEvents.on("WSFinan/fornecedor/lst", (data) => {
             if (data) {
                 this.UserListData = data;
-                this.main_table.updateOrAddData(this.UserListData);
+                this.main_table.setData(this.UserListData);
             }
         });
 

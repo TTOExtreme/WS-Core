@@ -2,6 +2,7 @@ ClientEvents.on("wsfinan/requisicao/add", () => {
     ClientEvents.emit("close_menu", "wsfinan_add_requisicao_div");
     let data = {
         fornecedor: "",
+        name: "",
         id_fornecedor: "",
         description: "",
         status: "orcamento",

@@ -134,13 +134,13 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Impresso", color: "#ffffff", bgColor: "#0000ff",
-            code: "impresso", changeto: ["falta_informacao", "liberado_calandra"],
+            code: "impresso", changeto: ["falta_informacao", "calandra"],
             edit: ["prepress", "calandra"],
             view: ["vendas", "prepress", "calandra"]
         },
         {
             name: "Reimpressão", color: "#ffffff", bgColor: "#ff0000",
-            code: "reimpressao", changeto: ["falta_informacao", "liberado_calandra"],
+            code: "reimpressao", changeto: ["falta_informacao", "calandra"],
             edit: ["prepress", "calandra"],
             view: ["vendas", "prepress", "calandra"]
         },
@@ -153,7 +153,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Calandra", color: "#ffffff", bgColor: "#000089",
-            code: "calandra", changeto: ["falta_informacao", "calandrado", "reimpressao"],
+            code: "calandra", changeto: ["falta_informacao", "costura"],
             edit: ["calandra"],
             view: ["vendas", "calandra"]
         },
@@ -172,7 +172,7 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Costura", color: "#ffffff", bgColor: "#000089",
-            code: "costura", changeto: ["costurado", "reimpressao"],
+            code: "costura", changeto: ["expedicao", "reimpressao"],
             edit: ["costura"],
             view: ["vendas", "costura"]
         },
@@ -192,6 +192,12 @@ window.Modules.WSOP.StatusID = class StatusID {
         {
             name: "Conferência", color: "#ffffff", bgColor: "#000050",
             code: "conferencia", changeto: ["empacotamento", "reimpressao"],
+            edit: ["expedicao"],
+            view: ["vendas", "expedicao"]
+        },
+        {
+            name: "Expedição", color: "#ffffff", bgColor: "#000050",
+            code: "expedicao", changeto: ["enviado", "aguardando_liberar_envio", "liberado_retirada"],
             edit: ["expedicao"],
             view: ["vendas", "expedicao"]
         },
