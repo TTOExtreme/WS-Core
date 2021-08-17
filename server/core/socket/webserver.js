@@ -197,6 +197,24 @@ class WServer {
         this._SocketHandler.socket(this._io);
     }
 
+
+    stop() {
+        return new Promise((res, rej) => {
+            if (this._server != undefined) {
+                this._server.close(function () {
+                    res('server stopped');
+                });
+            } else {
+                if (this._serverHTTPS != undefined) {
+                    this._serverHTTPS.close(function () {
+                        res('https server stopped');
+                    });
+                } else {
+                    res();
+                }
+            }
+        })
+    }
 }
 
 module.exports = {

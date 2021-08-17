@@ -40,7 +40,8 @@ window.Modules.WSOP.Produtos = new class WSOP_Products {
         "Heavy Dry",
         "Heavy Elastano",
         "Helanca",
-        "Piquet"
+        "Piquet",
+        "Moletim"
     ]
 
     _Vies = [

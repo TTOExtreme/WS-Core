@@ -161,6 +161,10 @@ class WSMainServer {
 
         return Promise.all(listPromisses);
     }
+
+    stop() {
+        return this.wserver.stop();
+    }
 }
 
 module.exports = { WSMainServer }

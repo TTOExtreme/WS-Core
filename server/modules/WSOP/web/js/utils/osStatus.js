@@ -40,7 +40,13 @@ window.Modules.WSOP.StatusID = class StatusID {
         },
         {
             name: "Liberado Produção", color: "#ffffff", bgColor: "#ff6000",
-            code: "liberado_producao", changeto: ["falta_informacao", "montagem_arquivos", "trello", "emimpressao"],
+            code: "liberado_producao", changeto: ["falta_informacao", "emprogramacao"],
+            edit: [""],
+            view: ["vendas"]
+        },
+        {
+            name: "Em Programação", color: "#ffffff", bgColor: "#ff6000",
+            code: "emprogramacao", changeto: ["falta_informacao", "montagem_arquivos", "trello", "emimpressao"],
             edit: ["prepress"],
             view: ["vendas", "prepress"]
         },
