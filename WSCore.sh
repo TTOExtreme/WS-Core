@@ -2,36 +2,39 @@
 
 case "$1" in 
 start)
-        if [ -e  /opt/Programas/WS-Core/log/log3.log ]; then
-                rm -f  /opt/Programas/WS-Core/log/log3.log
+        if [ ! -d  ./log ]; then
+                mkdir ./log
         fi
-        if [ -e  /opt/Programas/WS-Core/log/log2.log ]; then
-                mv  /opt/Programas/WS-Core/log/log2.log  /opt/Programas/WS-Core/log/log3.log
+        if [ -e  ./log/log3.log ]; then
+                rm -f  ./log/log3.log
         fi
-        if [ -e /opt/Programas/WS-Core/log/log1.log ]; then
-            mv  /opt/Programas/WS-Core/log/log1.log  /opt/Programas/WS-Core/log/log2.log
+        if [ -e  ./log/log2.log ]; then
+                mv  ./log/log2.log  ./log/log3.log
         fi
-        if [ -e /opt/Programas/WS-Core/log/log0.log ]; then
-                mv  /opt/Programas/WS-Core/log/log0.log  /opt/Programas/WS-Core/log/log1.log
+        if [ -e ./log/log1.log ]; then
+            mv  ./log/log1.log  ./log/log2.log
+        fi
+        if [ -e ./log/log0.log ]; then
+                mv  ./log/log0.log  ./log/log1.log
         fi
 
-	node /opt/Programas/WS-Core/_server.js >  /opt/Programas/WS-Core/log/log0.log &
-	echo $!>/var/run/wscore.pid
+	node ./_Server-Run.js >  ./log/log0.log &
+	echo $!>/var/run/wscore_v2.0.pid
    	;;
 stop)
-   	kill `cat /var/run/wscore.pid`
-   	rm /var/run/wscore.pid
+   	kill `cat /var/run/wscore_v2.0.pid`
+   	rm /var/run/wscore_v2.0.pid
    	;;
 restart)
    	$0 stop
    	$0 start
    	;;
 status)
-   	if [ -e /var/run/wscore.pid ]; then
-      		echo wscore is running, pid=`cat /var/run/wscore.pid`, log=
-		cat /opt/Programas/WS-Core/log/log0.log
+   	if [ -e /var/run/wscore_v2.0.pid ]; then
+      		echo wscore is running, pid=`cat /var/run/wscore_v2.0.pid`, log=
+		cat ./log/log0.log
    	else
-      		echo wscore.sh is NOT running
+      		echo WS-Core is NOT running
       		exit 1
    	fi
    	;;

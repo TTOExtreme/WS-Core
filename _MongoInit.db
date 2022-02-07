@@ -1,0 +1,17 @@
+use WS_Core_2_0
+db.createUser({
+    user: "wscore",
+    pwd: "TTODev2022",
+    roles: [{ role: "readWrite", db: "WS_Core_2_0" },
+        { role: "read", db: "reporting" }
+    ]
+})
+
+/*
+
+db.updateUser(
+    "wscore",
+    {pwd:"TTODev2022"}
+)
+
+*/

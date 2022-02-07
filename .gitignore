@@ -1,12 +1,6 @@
 
 node_modules/
-server/modules/WSOP/web/img/os
-server/modules/WSOP/web/img/produtos
-server/modules/WSOP/web/img/emitente
-server/modules/WSMK/web/img/calendario/*
-server/cfg/server.json
 log/*
-info.json
-sslcert/*
-Testes
+_SSL_Cert/*
+__deprecated/
 changes

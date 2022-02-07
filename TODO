@@ -1,69 +1,86 @@
+Reestruturação completa CORE V2.0
+
+- Atualização para versão 16.2.0 nodejs
+- Melhor estrutura de utilização
+- Simplificação de hierarquia (muito tempo dependendo disso)
+    - hierarquia de nivel 1 apenas ( Usuario dentro de grupo apenas, conceito de group stacking não aplicado)
+- Redução de peso de memoria cliente <> servidor
+- Melhoria de menus:
+    - Estruturar para callbacks (similar a veersão anterior)
+    - Estruturar calls para criar e selecionar
+- Facilidade de estruturação de dados (mongodb, criar modificar esquemas) (versão antiga em mysql)
+
+
+/*** Servidor ***
+// Core
+    - [] Auto instalação apos configuração
+    - [] Mudar painel Administrativo para /Administrativo
+    - [] Adicionar Pagina 404
+    - [] Criar estrutura de Execução e inicialização de Modulos
+        .. Estrutura
+            Startup.js <-- Executar ao inicialização do sistema (Carregar permissioes)
+            Running.js <-- Executar ao termino das inicializações
+            Stop.js <-- Executar ao desligar o servidor
+    - [] Criar cache de dados dos modulos
+    - [] Sistema de Favoritos na pagina principal
+        - [] Alterar todos os itens de menu superior para menu interno da tabela
+    - [] Todas as funçoes com context mover para coluna de ações da tabela
+    - [] Adicionado Email e Telefone para o Usuário
+
+
+
+/*** Cliente ***/
 // Menu Lateral
-    - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
-    - [x] Adicionar barra para abrir menu lateral
-    - [x] Mostrar informação completa (Falta IP e data do ultimo login)
-    - [x] Botão de Logout
+    - [] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
+    - [] Adicionar barra para abrir menu lateral
+    - [] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [] Botão de Logout
 
 // Pagina de Configuração do sistema
-    - [x] Aba Usuário
-        - [x] Criar
-        - [x] Atribuir Permissão
-        - [x] Editar
-        - [x] Desativar
-        - [x] Remover
-        - [x] Atribuir Grupo
-        - [x] Alterar senha
+    - [] Aba Usuário
+        - [] Criar
+        - [] Atribuir Permissão
+        - [] Editar
+        - [] Desativar
+        - [] Remover
+        - [] Atribuir Grupo
+        - [] Alterar senha
         - [] Alteração do botão criação de usuário para um item da tabela
-    - [x] Aba Grupos
+    - [] Aba Grupos
         // mudar modo de mostrar os grupos (somente o associado como pai)
         // corrigir hierarchy
-        - [x] Criar
-        - [x] Atribuir Permissão
-            - [x] Mostrar Permissão herdada de quem
-            - [x] Bloquear edição de permissao herdada 
-        - [x] Editar
-        - [x] Desativar
-        - [x] Remover
-        - [x] Atribuir Grupo
-        - [x] Logica de hierarquia
+        - [] Criar
+        - [] Atribuir Permissão
+            - [] Mostrar Permissão herdada de quem
+            - [] Bloquear edição de permissao herdada 
+        - [] Editar
+        - [] Desativar
+        - [] Remover
+        - [] Atribuir Grupo
+        - [] Logica de hierarquia
         - [] Lista de usuários no grupo
         - [] Alteração do botão criação de grupo para um item da tabela
     - [] Interface Cliente
-        - [x] Trocar a propria senha
-        - [x] Ultimo Ip Conectado
-        - [x] Ultimo login
-        - [x] Preferencias
-        - [x] Acesso Rapido / Favoritos
-        - [x] Tela principal com favoritos na barra superior
-        - [x] Abertura de favorito automatico
+        - [] Trocar a propria senha
+        - [] Ultimo Ip Conectado
+        - [] Ultimo login
+        - [] Preferencias
+        - [] Acesso Rapido / Favoritos
+        - [] Tela principal com favoritos na barra superior
+        - [] Abertura de favorito automatico
         - [] reordenação de favoritos
-    - [x] Alterar Creditos
-        - [x] Direito de uso em base GPL 3.0
+    - [] Alterar Creditos
+        - [] Direito de uso em base GPL 3.0
 
 
 
 
 // Terminal
-    - [x] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
-    - [x] Reiniciar / parar instancia apos configurar
+    - [] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
+    - [] Reiniciar / parar instancia apos configurar
 
 // Janelas
-    - [x] posicionamento dinamico parra multiplas Janelas
-
-// Core
-    - [x] Auto instalação apos configuração
-    - [x] Mudar painel Administrativo para /Administrativo
-    - [x] Adicionar Pagina 404
-    - [x] Criar estrutura de Execução e inicialização de Modulos
-        .. Estrutura
-            Startup.js <-- Executar ao inicialização do sistema (Carregar permissioes)
-            Running.js <-- Executar ao termino das inicializações
-            Stop.js <-- Executar ao desligar o servidor
-    - [x] Criar cache de dados dos modulos
-    - [x] Sistema de Favoritos na pagina principal
-        - [x] Alterar todos os itens de menu superior para menu interno da tabela
-    - [x] Todas as funçoes com context mover para coluna de ações da tabela
-    - [x] Adicionado Email e Telefone para o Usuário
+    - [] posicionamento dinamico parra multiplas Janelas
 
 
 //Modulo IPMA
@@ -73,19 +90,19 @@
         - [] Testar Scan ARP
 
 //Modulo WPMA
-    - [x] Criar estrutura de tabelas
-    - [x] Criar carregamento de estrutura dos sites em cache 
+    - [] Criar estrutura de tabelas
+    - [] Criar carregamento de estrutura dos sites em cache 
     - [] Criar log de acesso por pagina/site/post/menu
     - [] Criar Abas de Gerencia na área Administrativa
-        - [x] Listar sites
-            - [x] Mudar context Menu (itens)
-            - [x] Adicionar
-                - [x] Reiniciar Host de sites ao adicionar site ativo
-            - [x] Editar
-            - [x] Deletar
-                - [x] Reiniciar Host de sites
-            - [x] Desativar
-                - [x] Reiniciar Host de sites
+        - [] Listar sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+                - [] Reiniciar Host de sites ao adicionar site ativo
+            - [] Editar
+            - [] Deletar
+                - [] Reiniciar Host de sites
+            - [] Desativar
+                - [] Reiniciar Host de sites
         - [] Gerencia de Menus dos sites
             - [] Mudar context Menu (itens)
             - [] Adicionar
@@ -107,7 +124,7 @@
 
         
     - [] Criar gerencia de sites
-        - [x] Gerenciar redirecionamentos (subdominio/rota)
+        - [] Gerenciar redirecionamentos (subdominio/rota)
         - [] Informações de acesso (numero de acessos)
         - [] Sistema de portal Administrativo do site (estilo wordpress);
         - [] Pagina de criação de sites
@@ -121,51 +138,51 @@
 
 //Modulo WSOP
     WebServer Ordem de Produção
-    - [x] Clientes
-        - [x] Adicionar
-            - [x] Pesquisa de CNPJ (limitado a 3 por minuto)
-            - [x] Pesquisa de CEP
-        - [x] Editar
-        - [x] Excluir (desativar)
-    - [x] Produtos
+    - [] Clientes
+        - [] Adicionar
+            - [] Pesquisa de CNPJ (limitado a 3 por minuto)
+            - [] Pesquisa de CEP
+        - [] Editar
+        - [] Excluir (desativar)
+    - [] Produtos
         // para cada modelo e tamanho cadastrar como item diferente EX. Camisa Manga Longa Tamanho P
         // uso de estilo PBS (Product Based System)
-        - [x] Adicionar
-        - [x] Editar
-        - [x] Excluir (desativar)
-        - [x] Imagem associada
-            - [x] Thumbnails com diferentes resoluções
-            - [x] Fix Endereço salvo no BD para somente nome do arquivo
-        - [x] Itens adicionais no produto
-            - [x] Vies
-            - [x] Gola
+        - [] Adicionar
+        - [] Editar
+        - [] Excluir (desativar)
+        - [] Imagem associada
+            - [] Thumbnails com diferentes resoluções
+            - [] Fix Endereço salvo no BD para somente nome do arquivo
+        - [] Itens adicionais no produto
+            - [] Vies
+            - [] Gola
             - [] Tamanho (no cadastro de produto para cada OS/OP)
-    - [x] Emitente
-        - [x] Cadastro
-            - [x] Pesquisa de CEP
-            - [x] Pesquisa de CNPJ
-    - [x] OS/OP
-        - [x] Campo Descrição com wysiwyg
-        - [x] Adicionar
-            - [x] Abrir editor para adicionar items (anexos/produtos)
-        - [x] Editar
-        - [x] Excluir (desativar)
+    - [] Emitente
+        - [] Cadastro
+            - [] Pesquisa de CEP
+            - [] Pesquisa de CNPJ
+    - [] OS/OP
+        - [] Campo Descrição com wysiwyg
+        - [] Adicionar
+            - [] Abrir editor para adicionar items (anexos/produtos)
+        - [] Editar
+        - [] Excluir (desativar)
         - [] Sistema de Tags
-        - [x] Cores distintas para cada Status
-        - [x] campo Expira/ Termino em
-        - [x] Anexos
-        - [x] Produtos com Pesquisa, quantidade, e Observação
+        - [] Cores distintas para cada Status
+        - [] campo Expira/ Termino em
+        - [] Anexos
+        - [] Produtos com Pesquisa, quantidade, e Observação
             - [] Criar redução do inventario quando associa;
-        - [x] Status
-            - [x] Botao atualizar
-            - [x] Listas com cada Status (terminais de Produçao) uso da lista principal filtrada
-                - [x] Botão para enviar pedido para o proximo Status
-        - [x] Impressão de OS (via do Cliente) e de OP (via da Produção)
-    - [x] Terminais com cada status
-        - [x] Botão para passagem para o proximo processo
+        - [] Status
+            - [] Botao atualizar
+            - [] Listas com cada Status (terminais de Produçao) uso da lista principal filtrada
+                - [] Botão para enviar pedido para o proximo Status
+        - [] Impressão de OS (via do Cliente) e de OP (via da Produção)
+    - [] Terminais com cada status
+        - [] Botão para passagem para o proximo processo
             
     - [] Fix
-        - [x] Editar produto não carrega a imagem de thumbnail
-        - [x] Tamanho da tela de Edt Os incoerente com a tela do computador
+        - [] Editar produto não carrega a imagem de thumbnail
+        - [] Tamanho da tela de Edt Os incoerente com a tela do computador
         - [] Travamento do Socket quando manda imprimir
         
