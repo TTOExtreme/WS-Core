@@ -180,16 +180,15 @@ export default class User {
 
     /**
      * 
-     * @param {UUID} UUID 
+     * @param {UUID} UUID UUID do usuario a ser desabilitado
      * @returns {JSON} Dados do Usuário
      */
     DisableUser(UUID) {
         return new Promise((res, rej) => {
             this.users.findOne({ UUID: UUID, active: true }, { projection: { UUID: 1, password: 0, salt: 0 } }).then(usr => {
                 if (usr != undefined) {
-                    this.users.findOneAndUpdate({ UUID: UUID, active: true }, { $set: { active: false } })
+                    this.users.findOneAndUpdate({ UUID: UUID, active: true, disabledIn: new Date().getTime(), disabledBy: this.myself.UUID }, { $set: { active: false } })
                         .then(result => {
-
                             if (result.acknowledged != undefined) {
                                 this.users.findOne({ UUID: UUID }, { projection: { password: 0, salt: 0 } }).then(usr2 => {
                                     res(usr2);
@@ -217,7 +216,30 @@ export default class User {
         return new Promise((res, rej) => {
             this.users.findOne({ UUID: UUID }, { projection: { groups: 1, UUID: 1 } }).then(usr => {
                 if (usr != undefined) {
-                    this.users.updateOne({ UUID: UUID }, { $addToSet: { groups: GUID } })
+                    this.users.updateOne({ UUID: UUID }, { $addToSet: { groups: { GUID: GUID, addedBy: this.myself.UUID, addedIn: new Date().getTime(), active: true } } })
+                        .then(result => {
+                            res(result);
+                        }).catch(err => {
+                            rej(err);
+                        })
+                } else {
+                    rej(ErrorMessages.user_not_found);
+                }
+            })
+        })
+    }
+
+    /**
+     * Adiciona um grupo ao usuário
+     * @param {UUID} UUID 
+     * @param {GUID} GUID 
+     * @returns {Promise} contendo o retorno da operação
+     */
+    RemoveGroup(UUID, GUID) {
+        return new Promise((res, rej) => {
+            this.users.findOne({ UUID: UUID, "groups.group": GUID }, { projection: { groups: 1, UUID: 1 } }).then(usr => {
+                if (usr != undefined) {
+                    this.users.updateOne({ UUID: UUID, "groups.group": GUID }, { $set: { "groups.$.active": false, "groups.$.disabledBy": this.myself.UUID, "groups.$.disabledIn": new Date().getTime() } })
                         .then(result => {
                             res(result);
                         }).catch(err => {
@@ -246,6 +268,18 @@ export default class User {
     GetUserUUID(username) {
         return new Promise((res, rej) => {
             this.users.findOne({ username: username }, { projection: { UUID: 1 } }).then(usr => {
+                if (usr != undefined) {
+                    return usr.UUID;
+                } else {
+                    rej(ErrorMessages.user_not_found);
+                }
+            })
+        })
+    }
+
+    GetUserGroups(UUID) {
+        return new Promise((res, rej) => {
+            this.users.aggregate({ username: username }, { projection: { UUID: 1 } }).then(usr => {
                 if (usr != undefined) {
                     return usr.UUID;
                 } else {

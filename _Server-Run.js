@@ -18,6 +18,9 @@ class WSCore {
      */
     _db = null;
 
+    /**
+     * Funcão de inicio e router de operação
+     */
     main() {
         try {
             if (this._config == null) {
@@ -25,11 +28,11 @@ class WSCore {
             }
 
             this.DBConnect().then(() => {
-
                 /**
                  * verificação de argumentos 
                  */
                 if (process.argv.length > 2) {
+                    //inicia a instalação
                     if (process.argv[2] == "install") {
                         this.Install().then(() => {
                             this._log.system("Sistema Instalado")
@@ -42,7 +45,14 @@ class WSCore {
                         this._log.info("Argumento não reconhecido: <" + process.argv[2] + ">")
                     }
                 } else {
+                    //inicia o servidor
                     this._log.system("Inicializando Servidor")
+                    this.Start().then(() => {
+                        this._log.system("Encerrando o servidor")
+                    }).catch(err => {
+                        this._log.error("Erro no servidor principal", err);
+                        throw err;
+                    });
                 }
             }).catch(err => {
                 this._log.error("Erro na conexão com o banco", err);
@@ -56,6 +66,10 @@ class WSCore {
 
     }
 
+    /**
+     * Executa o instalador do servidor
+     * @returns {Promisse} 
+     */
     Install() {
         return new Promise((res, rej) => {
             this._log.system("Inicializando Instalador")
@@ -72,6 +86,29 @@ class WSCore {
         });
     }
 
+    /**
+     * Executa o server core
+     * @returns {Promisse}
+     */
+    Start() {
+        return new Promise((res, rej) => {
+            import ('./_Server-Core/Core-Start.mjs').then(servercore => {
+                const servercoreinstance = new servercore.default(this);
+                servercoreinstance.Start()
+                    .then(res)
+                    .catch(rej); // desnecessario, o instalador inicia apos a instancia ser criada
+
+            }).catch(err => {
+                this._log.error("Erro no import do instalador", err);
+                throw err;
+            });
+        });
+    }
+
+    /**
+     * Inicializa a conxão com o banco
+     * @returns {Promisse}
+     */
     DBConnect() {
         return new Promise((res, rej) => {
             import ('./_Server-Core/database/connector.mjs').then(dbinstance => {
@@ -90,6 +127,9 @@ class WSCore {
         })
     }
 
+    /**
+     * Carrega as configurações o arquivo server.cfg
+     */
     LoadConfig() {
         try {
             this._config = JSON.parse(fs.readFileSync("./server.cfg"));
@@ -103,5 +143,6 @@ class WSCore {
             process.exit(1);
         }
     }
+
 }
 new WSCore().main();

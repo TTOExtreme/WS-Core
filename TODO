@@ -1,21 +1,21 @@
 Reestruturação completa CORE V2.0
 
-- Atualização para versão 16.2.0 nodejs
-- Melhor estrutura de utilização
-- Simplificação de hierarquia (muito tempo dependendo disso)
-    - hierarquia de nivel 1 apenas ( Usuario dentro de grupo apenas, conceito de group stacking não aplicado)
-- Redução de peso de memoria cliente <> servidor
-- Melhoria de menus:
-    - Estruturar para callbacks (similar a veersão anterior)
-    - Estruturar calls para criar e selecionar
-- Facilidade de estruturação de dados (mongodb, criar modificar esquemas) (versão antiga em mysql)
+- [X] Atualização para versão 16.2.0 nodejs
+- [] Melhor estrutura de utilização
+- [] Simplificação de hierarquia (muito tempo dependendo disso)
+    - [~] hierarquia de nivel 1 apenas ( Usuario dentro de grupo apenas, conceito de group stacking não aplicado)
+- [] Redução de peso de memoria cliente <> servidor
+- [] Melhoria de menus:
+    - [] Estruturar para callbacks (similar a versão anterior)
+    - [] Estruturar calls para criar e selecionar
+- [] Facilidade de estruturação de dados (mongodb, criar modificar esquemas) (versão antiga em mysql)
 
 
 /*** Servidor ***
 // Core
-    - [] Auto instalação apos configuração
+    - [X] Auto instalação apos configuração
     - [] Mudar painel Administrativo para /Administrativo
-    - [] Adicionar Pagina 404
+    - [X] Adicionar Pagina 404
     - [] Criar estrutura de Execução e inicialização de Modulos
         .. Estrutura
             Startup.js <-- Executar ao inicialização do sistema (Carregar permissioes)

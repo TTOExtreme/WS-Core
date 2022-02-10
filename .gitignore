@@ -1,6 +1,7 @@
 
 node_modules/
 log/*
-_SSL_Cert/*
+_SSL_Cert/
 __deprecated/
 changes
+Test/
