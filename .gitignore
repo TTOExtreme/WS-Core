@@ -5,3 +5,4 @@ _SSL_Cert/
 __deprecated/
 changes
 Test/
+server.cfg

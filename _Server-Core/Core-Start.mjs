@@ -17,6 +17,11 @@ const __dirname = dirname(join(__filename + "/../"));
 
 export default class CoreServer {
 
+    list_tablesModules = [
+        './database/Manipulators/ServerConfig/ServerConfigs.mjs'
+    ]
+
+
     /**
      * Event Handler class
      */
@@ -58,15 +63,12 @@ export default class CoreServer {
      * 
      * @param {WSCore} WSCore classe principal contendo todos os handlers
      */
-    constructor(WSCore) {
-        if (WSCore._db == null) {
-            console.error("Banco de dados não connectado ao WSCore Class\n err on constructor of class Installer")
-            throw "Banco de dados não conectado";
-        }
-        this.db = WSCore._db;
-        this.log = WSCore._log;
-        this.config = WSCore._config;
-        this.userInstance = new User(WSCore);
+    constructor(db, config, events) {
+
+        this._db = db;
+        this._events = events;
+        this._config = config;
+        //this.userInstance = new User(WSCore);
     }
 
     /**
@@ -79,14 +81,14 @@ export default class CoreServer {
             let expressAPP = express();
 
 
-            if (this.config.WEB.http) {
+            if (this._config.WEB.http) {
 
-                this.log.system("Criando servidor HTTP");
+                this._events.emit("Log.system", "Criando servidor HTTP");
                 //inicializa o HTTP
 
 
                 //verifica se é para redirecionar tudo para HTTPS
-                if (this.config.WEB.redirectHTTPS) {
+                if (this._config.WEB.redirectHTTPS) {
                     let expressRedirect = express()
                     this._serverHTTP = http.createServer(expressRedirect);
 
@@ -98,7 +100,7 @@ export default class CoreServer {
                         };
                     };
 
-                    expressRedirect.get("*", setPortHTTPS(this.config.WEB.portHTTPS), function(req, res) {
+                    expressRedirect.get("*", setPortHTTPS(this._config.WEB.portHTTPS), function (req, res) {
                         res.redirect('https://' + req.headers.host.split(":")[0] + ":" + req.PortHTTPS + req.url);
 
                         // Or, if you don't want to automatically detect the domain name from the request header, you can hard code it:
@@ -113,10 +115,10 @@ export default class CoreServer {
             }
 
             //checa para ver se esta configurado o certificado para usar https
-            if (this.config.WEB.https) {
+            if (this._config.WEB.https) {
                 this.CheckSSL().then(() => {
 
-                    this.log.system("Criando servidor HTTPS");
+                    this._events.emit("Log.system", "Criando servidor HTTPS");
                     //let passphrase = fs.readFileSync("./_SSL_Cert/passphrase.pass", 'utf8');
                     let privateKey = fs.readFileSync("./_SSL_Cert/server.key", 'utf8');
                     let certificate = fs.readFileSync('./_SSL_Cert/server.crt', 'utf8');
@@ -164,14 +166,14 @@ export default class CoreServer {
      */
     postInit() {
         if (this._serverHTTPS != null) {
-            this._serverHTTPS.listen(this.config.WEB.portHTTPS, () => {
-                this.log.system("Inicializado servidor HTTPS na porta: " + this.config.WEB.portHTTPS);
+            this._serverHTTPS.listen(this._config.WEB.portHTTPS, () => {
+                this._events.emit("Log.system", "Inicializado servidor HTTPS na porta: " + this._config.WEB.portHTTPS);
             });
 
         }
         if (this._serverHTTP != null) {
-            this._serverHTTP.listen(this.config.WEB.port, () => {
-                this.log.system("Inicializado servidor HTTP na porta: " + this.config.WEB.port);
+            this._serverHTTP.listen(this._config.WEB.port, () => {
+                this._events.emit("Log.system", "Inicializado servidor HTTP na porta: " + this._config.WEB.port);
             });
         }
     }
@@ -187,7 +189,7 @@ export default class CoreServer {
                 fs.mkdirSync("./_SSL_Cert/")
             }
             if (!fs.existsSync("./_SSL_Cert/server.crt")) {
-                this.log.system("Criando certificado HTTPS");
+                this._events.emit("Log.system", "Criando certificado HTTPS");
 
                 fs.writeFileSync("./_SSL_Cert/passphrase.pass", new BCypher().generateString());
 
@@ -202,7 +204,7 @@ export default class CoreServer {
                     out: "./_SSL_Cert/server.crt",
                     //sha256: true,
                     days: 30
-                }, function(err, buffer) {
+                }, function (err, buffer) {
                     if (err) {
                         console.error(err)
                         rej("Criando o certificado");
@@ -215,5 +217,42 @@ export default class CoreServer {
             }
         })
     }
+
+
+    /**
+     * Realiza a validação do Banco de dados
+     */
+    PreStart() {
+        return new Promise((resolv, reject) => {
+            if (this.list_tablesModules.length > 0) {
+                this.runNextTablePreStart().then(resolv).catch(reject)
+            }
+        });
+    }
+
+    runNextTablePreStart(index = 0) {
+        return new Promise((resolv, reject) => {
+            if (index < this.list_tablesModules.length) {
+                import(this.list_tablesModules[index]).then(servercore => {
+                    const servercoreinstance = new servercore.default(this._db, this._events);
+                    servercoreinstance._tableExists()
+                        .then((result) => {
+                            console.log(result)
+                            if (!result) {
+                                this._events.emit("Log.system", "Tabela <" + servercoreinstance._tablename + "> inexistente no Banco de Dados, Necessario realizar a criação e inicialização da mesma");
+                            }
+                            this.runNextTablePreStart(index + 1).then(resolv).catch(reject)
+                        })
+                        .catch(reject); // desnecessario, o instalador inicia apos a instancia ser criada
+
+                }).catch(err => {
+                    this._events.emit("Log.error", "Erro no import do instalador", err);
+                    throw err;
+                });
+            } else { resolv(); }
+        });
+    }
+
+
 
 }

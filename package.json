@@ -5,8 +5,10 @@
     "main": "_Server-Run.js",
     "type": "module",
     "scripts": {
+        "preinstall": "/bin/bash; source ~.bashrc ;nvm install; nvm use",
+        "install": "node _Server-Run.js install",
         "start": "node _Server-Run.js",
-        "install": "node _Server-Run.js install"
+        "dev": "nodemon _Server-Run.js"
     },
     "repository": {
         "type": "git",
@@ -25,7 +27,8 @@
         "http": "0.0.1-security",
         "https": "^1.0.0",
         "koa": "^2.13.4",
-        "mongodb": "^4.3.1",
+        "mysql2": "^3.6.1",
+        "nodemon": "^3.0.1",
         "npm": "^8.4.1",
         "openssl-wrapper": "^0.3.4",
         "socket.io": "^4.4.1"

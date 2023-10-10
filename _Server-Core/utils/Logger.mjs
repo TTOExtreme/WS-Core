@@ -1,42 +1,64 @@
+import EventEmitter from 'events';
 import fs from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(
-    import.meta.url);
-const __dirname = dirname(__filename);
 
 export default class Logger {
 
     logpath = "";
     logfile = "";
+
     logerror = true;
     loginfo = true;
     logsystem = true;
 
+    limitlogfiles = 10;
+
     /**
      * Inicializa o sistema de logger
-     * @param {Class} WSCore instancia do WSCore
+     * @param {JSON} config JSON contendo predefinições do sistema de LOG
+     * @param {EventEmitter} event
      * @description Usado somente para a instancia principal do sistema, não deve ser reinstanciado por outras classes
      */
-    constructor(WSCore) {
-        if (WSCore._config == null) {
-            WSCore.LoadConfig();
-        }
-        //verifica se o caminho é relativo ou absoluto
-        if (WSCore._config.LOG.path[0] == ".") {
-            this.logpath = __dirname + "/../../";
-        }
-        this.logpath += WSCore._config.LOG.path;
-        this.logfile = new Date().getTime() + ".log";
-        this.loginfo = WSCore._config.LOG.loginfo;
-        this.logsystem = WSCore._config.LOG.logsystem;
-        this.logerror = WSCore._config.LOG.logerror;
-        if (!fs.existsSync(join(this.logpath))) {
-            fs.mkdirSync(join(this.logpath))
-        }
-        if (!fs.existsSync(join(this.logpath + this.logfile))) {
-            fs.writeFileSync(join(this.logpath + this.logfile), "Inicio do log: " + new Date().getTime() + "\n")
+    constructor(config, event = null) {
+        try {
+            // Caminhos de gravação de log
+            this.logpath += config.path || "./log/";
+            this.logfile = new Date().getTime() + ".log";
+
+            //configs do nivel de log para gravação + console
+            this.loginfo = config.loginfo || true;
+            this.logsystem = config.logsystem || true;
+            this.logerror = config.logerror || true;
+
+            this.limitlogfiles = config.limitlogfiles || 10;
+
+
+            //definição se adiciona as funções para EventViewer
+
+            if (event != null) {
+                this.info("Iniciando Event Log");
+                event.on("Log.info", (data) => this.info(data));
+                event.on("Log.system", (data) => this.system(data));
+                event.on("Log.error", (data, stacktrace) => this.error(data, stacktrace));
+            }
+
+            //Garante existencia da pasta e inicia o log
+            if (!fs.existsSync(this.logpath)) {
+                fs.mkdirSync(this.logpath)
+            }
+            if (!fs.existsSync(this.logpath + this.logfile)) {
+                fs.writeFileSync(this.logpath + this.logfile, "Inicio do log: " + new Date().getTime() + "\n")
+            }
+            //Limpa logs antigos deixando os ultimos limitlogfiles;
+            let logfiles = fs.readdirSync(this.logpath)
+            logfiles.sort();
+            if (logfiles.length > this.limitlogfiles) {
+                for (let i = 0; i < logfiles.length - this.limitlogfiles; i++) {
+                    this.system("Excluindo log antigo: " + this.logpath + logfiles[i])
+                    fs.unlinkSync(this.logpath + logfiles[i]);
+                }
+            }
+        } catch (err) {
+            throw err;
         }
     }
 
@@ -46,8 +68,8 @@ export default class Logger {
      */
     info(message) {
         if (this.loginfo) {
-            console.log("[INFO] " + message);
-            fs.appendFileSync(join(this.logpath + this.logfile), "[INFO] " + message)
+            console.log(this.dateformat() + "[INFO] " + message);
+            fs.appendFileSync(this.logpath + this.logfile, this.dateformat() + "[INFO] " + message + "\n")
         }
     }
 
@@ -57,8 +79,8 @@ export default class Logger {
      */
     system(message) {
         if (this.logsystem) {
-            console.log("[SYSTEM] " + message);
-            fs.appendFileSync(join(this.logpath + this.logfile), "[SYSTEM] " + message)
+            console.log(this.dateformat() + "[SYSTEM] " + message);
+            fs.appendFileSync(this.logpath + this.logfile, this.dateformat() + "[SYSTEM] " + message + "\n")
         }
     }
 
@@ -69,11 +91,18 @@ export default class Logger {
      */
     error(message, stacktrace) {
         if (this.logerror) {
-            console.error("[ERROR] " + message + "\n");
+            console.error(this.dateformat() + "[ERROR] " + message + "\n");
             console.error(stacktrace);
-            fs.appendFileSync(join(this.logpath + this.logfile), "[ERROR] " + message)
-            if (stacktrace != undefined)
-                fs.appendFileSync(join(this.logpath + this.logfile), stacktrace.message + "\n" + stacktrace.name + "\n" + stacktrace.stack)
+            fs.appendFileSync(this.logpath + this.logfile, this.dateformat() + "[ERROR] " + message + "\n")
+            if (stacktrace != undefined && stacktrace != null)
+                fs.appendFileSync(this.logpath + this.logfile, stacktrace.message + "\n" + stacktrace.name + "\n" + stacktrace.stack + "\n")
         }
+    }
+
+    /**
+     * Retorna o timestamp com formato para adicionar antes da mensagem
+     */
+    dateformat() {
+        return "{" + new Date().getTime() + "}"
     }
 }

@@ -1,10 +1,10 @@
 {
     "DB": {
         "host": "localhost",
-        "port": "27017",
-        "dbname": "WS_Core_2_0",
+        "port": "3306",
+        "database": "WSCore_2_0",
         "password": "TTODev2022",
-        "username": "wscore"
+        "user": "wscore"
     },
     "WEB": {
         "host": "localhost",
