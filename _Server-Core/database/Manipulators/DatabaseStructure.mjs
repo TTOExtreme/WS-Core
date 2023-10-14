@@ -92,7 +92,7 @@ export default class DatabaseStructure {
                     this._events.emit("Log.erros", "Erros encontrados na Verificação de existencia da tabela: " + this._tablename, err);
                     throw "Erros encontrados na Verificação de existencia da tabela: " + this._tablename;
                 }
-                console.log(results)
+                //console.log(results)
                 if (results[0] != undefined)
 
                     resolv(results[0].length > 0);
@@ -108,7 +108,7 @@ export default class DatabaseStructure {
         return new Promise((resolv, reject) => {
             this._tableExists().then(itexistis => {
                 this._db.Query(itexistis ? ("DROP TABLE " + this._tablename + ";") : "").then((results, err) => {
-                    console.log(err)
+                    //console.log(err)
                     if (err) {
                         if (err.indexOf("Unknown table") == -1) {
                             this._events.emit("Log.erros", "Erros encontrados no drop da tabela: " + this._tablename, err);
