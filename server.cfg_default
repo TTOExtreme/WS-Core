@@ -18,6 +18,11 @@
         "path": "./log/",
         "loginfo": true,
         "logerror": true,
-        "logsystem": true
+        "logsystem": true,
+        "limitlogfiles":10,
+        "limitlogsize": 1000000
+    },
+    "SOCKET": {
+        "use_2L_crypto": true
     }
 }
