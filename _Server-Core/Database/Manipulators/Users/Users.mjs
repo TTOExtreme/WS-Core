@@ -1,5 +1,5 @@
-import BCypher from "../../../utils/BCypher_2.0.mjs";
-import ErrorMessages from "../../../utils/ErrorMessages.mjs";
+import BCypher from "../../../Utils/BCypher_2.0.mjs";
+import ErrorMessages from "../../../Utils/ErrorMessages.mjs";
 
 /**
  * Modulo de gerencia do usuario

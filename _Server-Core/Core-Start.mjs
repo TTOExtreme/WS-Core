@@ -1,10 +1,12 @@
 import http from 'http';
 import https from 'https';
 import express from 'express';
-import User from './database/Manipulators/Users/Users.mjs';
+import { Server as Socket } from 'socket.io';
+import User from './Database/Manipulators/Users/Users.mjs';
 import fs from 'fs';
 import { exec as openssl } from 'openssl-wrapper';
-import BCypher from './utils/BCypher_2.0.mjs';
+import BCypher from './Utils/BCypher_2.0.mjs';
+import SocketServe from './Utils/SocketServe.mjs';
 
 //dirname definition
 import { join, dirname } from 'path';
@@ -18,30 +20,19 @@ const __dirname = dirname(join(__filename + "/../"));
 export default class CoreServer {
 
     list_tablesModules = [
-        './database/Manipulators/ServerConfig/ServerConfigs.mjs'
+        './Database/Manipulators/ServerConfig/ServerConfigs.mjs'
     ]
 
 
     /**
-     * Event Handler class
+     * Instancia de eventos Globais do Servidor 
      */
-    ServerEvents = null;
-
-    /**
-     * Instancia da classe Log 
-     */
-    log = null;
+    _events = null;
 
     /**
      * JSON contendo as configurações do server
      */
-    config = null;
-
-    /**
-     * Instancia da classe User 
-     * Usado somente para operações de sistema
-     */
-    userInstance = null;
+    _config = null;
 
     /**
      * Instancia do HTTPS
@@ -54,9 +45,15 @@ export default class CoreServer {
     _serverHTTP = null;
 
     /**
+     * Instancia SocketServe
+     */
+    _serveSocket = null;
+
+    /**
      * Instancia do IO/Socket
      */
     _serverIO = null;
+
 
 
     /**
@@ -110,7 +107,7 @@ export default class CoreServer {
 
                     this._serverHTTP = http.createServer(expressAPP);
                     //inicia o socket em http
-                    //this._io = SocketIO(this._serverHTTP);
+
                 }
             }
 
@@ -131,7 +128,8 @@ export default class CoreServer {
 
                     this._serverHTTPS = https.createServer(credentials, expressAPP);
                     //inicia o socket em https
-                    //this._io = SocketIO(this._serverHTTPS);
+                    this._serverIO = new Socket(this._serverHTTPS);
+                    this._serveSocket = new SocketServe(this._serverIO, this._config, this._events);
 
                     this.postInit();
                 }).catch(err => {
@@ -144,6 +142,13 @@ export default class CoreServer {
             //inicialização de handler Home
             expressAPP.get("/", (req, res) => {
                 res.sendFile('_Client-Web/home.html', {
+                    root: __dirname
+                });
+            })
+
+            //inicialização de handler Home
+            expressAPP.get("/login", (req, res) => {
+                res.sendFile('_Client-Web/login.html', {
                     root: __dirname
                 });
             })
@@ -165,15 +170,16 @@ export default class CoreServer {
      * Inicio final do servidor HTTP HTTPS
      */
     postInit() {
-        if (this._serverHTTPS != null) {
-            this._serverHTTPS.listen(this._config.WEB.portHTTPS, () => {
-                this._events.emit("Log.system", "Inicializado servidor HTTPS na porta: " + this._config.WEB.portHTTPS);
-            });
-
-        }
         if (this._serverHTTP != null) {
             this._serverHTTP.listen(this._config.WEB.port, () => {
                 this._events.emit("Log.system", "Inicializado servidor HTTP na porta: " + this._config.WEB.port);
+            });
+        }
+        if (this._serverHTTPS != null) {
+            this._serverHTTPS.listen(this._config.WEB.portHTTPS, () => {
+                this._events.emit("Log.system", "Inicializado servidor HTTPS na porta: " + this._config.WEB.portHTTPS);
+
+                this._serveSocket.PostInit()
             });
         }
     }
@@ -230,6 +236,11 @@ export default class CoreServer {
         });
     }
 
+    /**
+     * Realiza a validação de bases de dados listadas
+     * @param {Integer} index 
+     * @returns 
+     */
     runNextTablePreStart(index = 0) {
         return new Promise((resolv, reject) => {
             if (index < this.list_tablesModules.length) {
@@ -237,7 +248,7 @@ export default class CoreServer {
                     const servercoreinstance = new servercore.default(this._db, this._events);
                     servercoreinstance._tableExists()
                         .then((result) => {
-                            console.log(result)
+                            //console.log(result)
                             if (!result) {
                                 this._events.emit("Log.system", "Tabela <" + servercoreinstance._tablename + "> inexistente no Banco de Dados, Necessario realizar a criação e inicialização da mesma");
                             }

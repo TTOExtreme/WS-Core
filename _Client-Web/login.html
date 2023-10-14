@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<header>
+
+<head>
     <title>WS-Core Versão 2.0</title>
-    <link href="./css/login.css" type="stylesheet/txt">
-</header>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+    <script src="/js/login.js"></script>
+    <script src="/js/loader.js"></script>
+</head>
 
 <body>
-    <div id="login.screen">
+    <section id="login.screen">
+        <div class="form-box">
+            <div class="form-value">
+                <form action="">
+                    <h2>WS-CORE</h2>
+                    <h0>Sistema de Interfacemento e Modularização</h0>
+                    <div class="inputbox">
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <input type="email" required>
+                        <label for="">Usuário ou E-Mail</label>
+                    </div>
+                    <div class="inputbox">
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                        <input type="password" required>
+                        <label for="">Senha</label>
+                    </div>
+                    <div class="forget">
+                        <label for=""><input type="checkbox">Lembrar <a href="#">Esqueci minha senha</a></label>
 
-    </div>
+                    </div>
+                    <button>Login</button>
+                    <div class="register">
+                        <p>Não tem uma conta? <a href="#">Registre-se</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
 </body>

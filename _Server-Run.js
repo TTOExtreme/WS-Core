@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
-import Logger from './_Server-Core/utils/Logger.mjs';
+import Logger from './_Server-Core/Utils/Logger.mjs';
 import fs from 'fs';
-import DatabaseConnector from './_Server-Core/database/connector_mysql.mjs';
+import DatabaseConnector from './_Server-Core/Database/Connector_Mysql.mjs';
 
 
 
