@@ -4,6 +4,16 @@ import EventEmitter from 'events';
 export default class DatabaseStructure {
 
     /**
+     * instancia de acesso ao Banco de dados
+     */
+    _db = null;
+
+    /**
+     * Instancia de acesso ao EventEmitter
+     */
+    _events = null;
+
+    /**
      * Nome da Tabela
      */
     _tablename = "zzz_default_table";

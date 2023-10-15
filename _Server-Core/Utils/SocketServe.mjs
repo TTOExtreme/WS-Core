@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 import { Server, Socket } from "socket.io";
 import BCypher from "./BCypher_2.0.mjs";
+import fs from "fs";
 
 /**
  * Classe referente ao controlde de todas as conexões instanciadas do Socket
@@ -52,10 +53,11 @@ export default class SocketServe {
                 /**
                  * Listener do inicio da troca de chaves em caso de nova conexão
                  */
-                socket_connection.on("_hs", (client_hs) => {
+                socket_connection.once("_hs", (client_hs) => {
                     let client_hashsalt = client_hs || new BCypher().generateString();
                     this._clients[client_hashsalt] = {
                         socket_connection: socket_connection,
+                        socket_listeners: [],
                         username: "",
                         connected_in: new Date().getTime(),
                         last_heartbeat: new Date().getTime(),
@@ -63,19 +65,12 @@ export default class SocketServe {
                     this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
                     this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
 
-                    socket_connection.emit('_hs', client_hashsalt);
 
-
-                    /**
-                     * TODO
-                     * Instanciamento de modulos dinamico ..assim que realizado a chamada pelo cliente ao Mo
-                     */
-                    socket_connection.on("Module.Load", (Modulename) => {
+                    this.addUniqueListener("Module.Load", client_hashsalt, (Modulename) => {
                         this.LoadModule(Modulename, client_hashsalt);
                     })
 
-
-
+                    socket_connection.emit('_hs', client_hashsalt);
                     /**
                      * Realiza a exclusao da conexãop instanciada
                      */
@@ -109,6 +104,73 @@ export default class SocketServe {
      * @param {String} client_hashsalt
      */
     LoadModule(Modulename, client_hashsalt) {
-
+        this._events.emit("Log.info", "Inicializando Modulo:", Modulename, client_hashsalt);
+        if (fs.existsSync('./_Server-Core/Modules/Module_' + Modulename + "/index.mjs")) {
+            this._events.emit("Log.info", "Modulo importado:", Modulename);
+            import('../Modules/Module_' + Modulename + "/index.mjs").then(moduleclass => {
+                this._events.emit("Log.info", "Modulo importado:", Modulename);
+                const moduleinstance = new moduleclass.default(this._db, this._events);
+                moduleinstance.PostInit(this._clients[client_hashsalt]["socket_connection"], client_hashsalt, this);
+                this._events.emit("Log.info", "Modulo inicializado:", Modulename, client_hashsalt);
+                this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+            }).catch(err => {
+                this._events.emit("Log.erros", "Erro no import do instalador", err);
+                throw err;
+            });
+        } else {
+            this._events.emit("Log.erros", "Modulo Nao Encontrado:", './_Server-Core/Modules/Module_' + Modulename + "/index.mjs", client_hashsalt);
+        }
     }
+
+    /**
+     * Retorna se o socket ja tem o listener adicionado
+     * @param {String} listener_name 
+     * @param {String} client_hashsalt 
+     * @returns {Boolean} 
+     */
+    hasListeners(listener_name, client_hashsalt) {
+        if (this._clients[client_hashsalt]["socket_listeners"] != undefined) {
+            return (this._clients[client_hashsalt]["socket_listeners"].find((v) => { return v == listener_name; }) != undefined);
+        } else {
+            this._events.emit("Log.erros", "Erro ao procurar Listeners da conexão:", this._clients[client_hashsalt])
+            return false;
+        }
+    }
+
+    /**
+     * Adiciona um listener a conexão socket
+     * @param {String} listener_name 
+     * @param {String} client_hashsalt 
+     * @param {Function} callback 
+     */
+    addListener(listener_name, client_hashsalt, callback = (...args) => { }) {
+        this._clients[client_hashsalt]["socket_listeners"].push(listener_name);
+        this._clients[client_hashsalt]["socket_connection"].on(listener_name, callback);
+    }
+
+    /**
+     * Adiciona um listener a conexão socket
+     * @param {String} listener_name 
+     * @param {String} client_hashsalt 
+     * @param {Function} callback 
+     */
+    addUniqueListener(listener_name, client_hashsalt, callback = (...args) => { }) {
+        this.removeListener(listener_name, client_hashsalt);
+        this._clients[client_hashsalt]["socket_listeners"].push(listener_name);
+        this._clients[client_hashsalt]["socket_connection"].on(listener_name, callback);
+    }
+
+    /**
+     * Remove todos os listeners da conexão socket
+     * @param {String} listener_name 
+     * @param {String} client_hashsalt 
+     */
+    removeListener(listener_name, client_hashsalt) {
+        if (this.hasListeners(listener_name, client_hashsalt)) {
+            this._clients[client_hashsalt]["socket_listeners"] = this._clients[client_hashsalt]["socket_listeners"].filter((v) => { return v != listener_name; })
+            this._clients[client_hashsalt]["socket_connection"].off(listener_name);
+        }
+    }
+
 }

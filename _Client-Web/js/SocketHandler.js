@@ -16,9 +16,22 @@ let ServerSocketHandshake = null;
  */
 function SocketEmit(key, ...message) {
     if (ServerSocketConnection != null) {
-        ServerSocketConnection.emit(key, message);
+        ServerSocketConnection.emit(key, ...message);
     } else {
-        console.error("Conexão Socket Invalida")
+        console.error("Conexão Socket invalida no Emit:", key);
+    }
+}
+
+/**
+ * Realiza o cadastro de listener
+ * @param {String} key Chave de listener do servidor
+ * @param  {Function} callback Função a ser chamada pelo Listener
+ */
+function SocketListener(key, callback = (...data) => { }) {
+    if (ServerSocketConnection != null) {
+        ServerSocketConnection.on(key, callback)
+    } else {
+        console.error("Conexão Socket invalida no cadastro de Listener:", key)
     }
 }
 
@@ -27,11 +40,28 @@ function SocketHandler_Initialization() {
         console.log('Iniciando Conexão com o servidor via Socket');
         const socket = io("/");
         socket.on("connect", () => {
-            socket.on('_hs', (handshake) => {
+            socket.once('_hs', (handshake) => {
                 if (handshake != undefined) {
+                    ServerSocketConnection = socket;
                     //Configura o cookie para salvar por 3 dias
-                    console.log("seta cookie", handshake)
                     setCookie('WS-Core_HS', handshake, 3);
+
+
+                    /**Teste de Carregamento e retorno do modulo */
+                    SocketEmit("Module.Load", "Exemple");
+                    SocketListener("Module.Exemple.Pong", () => {
+                        console.log("Modulo Exemple Carregado");
+                    })
+                    console.log("Enviado Ping");
+                    SocketEmit('Module.Exemple.Ping');
+                    //*/
+
+                    /**Teste de Promisse enviado pelo Evento */
+                    console.log("Enviado Promisse");
+                    SocketEmit('Module.Exemple.Promisse', (resolv) => {
+                        console.log(resolv);
+                    });
+
                 }
             })
 
@@ -41,7 +71,7 @@ function SocketHandler_Initialization() {
 
         });
         socket.on("disconnect", () => {
-            console.log(socket.id); // undefined
+            //console.log(socket.id); // undefined
             ServerSocketConnection = null;
             //Tenta reconectar em caso de desconexão
 
