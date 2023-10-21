@@ -42,17 +42,34 @@ export default class DatabaseConnector {
     /**
      * Realiza a Query e retorna em formato ou de stream ou array
      * @param {String} sql 
+     * @param {Array} [escapeArray=[]]
+     * @param {boolean} [disable_autoescape=false] 
      * @returns 
      */
-    Query(sql = "") {
+    Query(sql = "", escapeArray = [], disable_autoescape = false) {
+        if (!disable_autoescape && escapeArray.length > 0) {
+            escapeArray.forEach(eitem => {
+                eitem = this.Escape(eitem);
+            });
+        }
         return new Promise((resolv, reject) => {
             if (sql == "") { resolv(); return; }
             this.Connect().then(() => {
-                resolv(this._db.query(sql))
+                resolv(this._db.query(sql, escapeArray))
             }).catch(err => {
                 console.error(err);
                 reject(err);
             })
         })
+    }
+
+
+    /**
+     * Realiza a Limpeza para evitar SQL Injection
+     * @param {any} value 
+     * @returns {String}
+     */
+    Escape(value) {
+        return mysqlPromise.escape(value);
     }
 }
