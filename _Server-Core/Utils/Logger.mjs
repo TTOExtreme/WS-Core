@@ -113,10 +113,11 @@ export default class Logger {
      * @param {String} message 
      * @param {Exception} stacktrace 
      */
-    error(message, stacktrace) {
+    error(message, stacktrace = null) {
         if (this.logerror) {
             console.error(this.dateformat() + "[ERROR] " + message + "\n");
-            console.error(stacktrace);
+            if (stacktrace != undefined && stacktrace != null)
+                console.error(stacktrace);
             fs.appendFileSync(this.logpath + this.logfile, this.dateformat() + "[ERROR] " + message + "\n")
             if (stacktrace != undefined && stacktrace != null)
                 fs.appendFileSync(this.logpath + this.logfile, stacktrace.message + "\n" + stacktrace.name + "\n" + stacktrace.stack + "\n")
