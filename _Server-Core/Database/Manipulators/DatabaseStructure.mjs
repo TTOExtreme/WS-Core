@@ -118,11 +118,9 @@ export default class DatabaseStructure {
         return new Promise((resolv, reject) => {
             this._tableExists().then(itexistis => {
                 this._db.Query(itexistis ? ("DROP TABLE " + this._tablename + ";") : "").then((results, err) => {
-                    //console.log(err)
                     if (err) {
                         if (err.indexOf("Unknown table") == -1) {
                             this._events.emit("Log.erros", "Erros encontrados no drop da tabela: " + this._tablename, err);
-                            //throw "Erros encontrados no drop da tabela: " + this._tablename;
                         }
                     }
                     let Colums = "";
@@ -136,8 +134,54 @@ export default class DatabaseStructure {
                             throw "Erros encontrados no drop da tabela: " + this._tablename;
                         }
                         if (results != undefined)
-                            resolv(results.length > 0);
+                            this._createData().then(resolv);
                     })
+                })
+            });
+        })
+    }
+
+    /**
+     * Realiza a construção dos dados na Tabela
+     * A MESMA REALIZA UM Truncate ANTES DE CONSTRUIR, sim é redundancia de segurança
+     */
+    _createData() {
+        return new Promise((resolv, reject) => {
+            this._tableExists().then(itexistis => {
+                this._db.Query(itexistis ? ("TRUNCATE TABLE " + this._tablename + ";") : "").then((results, err) => {
+                    if (err) {
+                        if (err.indexOf("Unknown table") == -1) {
+                            this._events.emit("Log.erros", "Erros encontrados no Truncate da tabela: " + this._tablename, err);
+                        }
+                    }
+                    if (this._initialValues.length > 0) {
+                        let Colums = "";
+                        Object.keys(this._initialValues[0]).forEach(colname => {
+                            Colums += (Colums.length > 0 ? "," : "") + " " + colname + " ";
+                        })
+
+
+                        let Values = "";
+                        this._initialValues.forEach(valueItem => {
+                            Values += (Values.length > 0 ? ",(" : "(");
+                            Object.keys(valueItem).forEach(colname => {
+                                Values += (Values.length > 1 ? "," : "") +
+                                    (typeof (valueItem[colname]) == "string" ? "'" : " ") + valueItem[colname] + (typeof (valueItem[colname]) == "string" ? "'" : " ");
+                            })
+                            Values += ")";
+                        });
+
+                        this._db.Query("INSERT INTO " + this._tablename + " (" + Colums + ") VALUES " + Values + ";").then((results, err2) => {
+                            if (err2) {
+                                this._events.emit("Log.erros", "Erros encontrados no Insert: " + this._tablename, err2);
+                                throw "Erros encontrados no Insert: " + this._tablename;
+                            }
+                            if (results != undefined)
+                                resolv(results.length > 0);
+                        })
+                    } else {
+                        resolv(0);
+                    }
                 })
             });
         })
