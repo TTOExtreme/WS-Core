@@ -36,10 +36,11 @@ export default class SocketServe {
      * @param {JSON} config  
      * @param {EventEmitter} events  
      */
-    constructor(SocketIO, config, events) {
+    constructor(SocketIO, config, events, db) {
         this._socketIO = SocketIO;
         this._events = events;
         this._config = config;
+        this._db = db;
     }
 
     /**
@@ -65,10 +66,7 @@ export default class SocketServe {
                     this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
                     this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
 
-
-                    this.addUniqueListener("Module.Load", client_hashsalt, (Modulename) => {
-                        this.LoadModule(Modulename, client_hashsalt);
-                    })
+                    this.LoadBasicCoreMods(client_hashsalt);
 
                     socket_connection.emit('_hs', client_hashsalt);
                     /**
@@ -79,6 +77,8 @@ export default class SocketServe {
                         this._events.emit("Log.info", "Cliente Desconectado: ", client_hashsalt);
                         this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
                     });
+
+
                 })
 
 
@@ -97,6 +97,44 @@ export default class SocketServe {
             throw "Erro Servidor Socket Não Instanciado"
         }
     }
+
+    /**
+     * Carrega o minimo para autenticação e validação de acesso
+     * @param {String} client_hashsalt
+     */
+    LoadBasicCoreMods(client_hashsalt) {
+        this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
+        if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/Users.mjs')) {
+            import('../Database/Manipulators/Users/Users.mjs').then(moduleclass => {
+                this._events.emit("Log.info", "Core Users importado");
+                const moduleinstance = new moduleclass.default(this._db, this._events);
+                moduleinstance.SocketBasic(this._clients[client_hashsalt]["socket_connection"]);
+                this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
+                this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+            }).catch(err => {
+                this._events.emit("Log.erros", "Erro no import do instalador", err);
+                throw err;
+            });
+        } else {
+            this._events.emit("Log.erros", "Core Users Nao Encontrado:", './_Server-Core/Database/Manipulators/Users/Users.mjs', client_hashsalt);
+        }
+    }
+
+    /**
+     * Carrega o minimo para autenticação e validação de acesso
+     * @param {String} client_hashsalt
+     */
+    LoadFullCoreMods(client_hashsalt) {
+
+        /**
+         * Inicializa somente se o login estiver valido
+         */
+        this.addUniqueListener("Module.Load", client_hashsalt, (Modulename) => {
+            this.LoadModule(Modulename, client_hashsalt);
+        })
+    }
+
 
     /**
      * Realiza o carregamento do Modulo na instancia do cliente
