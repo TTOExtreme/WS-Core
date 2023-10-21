@@ -4,8 +4,13 @@ Atualmente em desenvolvimento na versão 2.0, onde seguindo a lista a seguir o e
 
 1° Estagio:
     Nucleo do sistema:
-        [] - Instalação / criação de base de dados
-        [] - Carregamento de modulos
+        [/] - Instalação / criação de base de dados
+            [X] - Carregamento de instancias e criação da base de dados caso nao exista
+            [] - Users
+            [] - Grupos
+            [] - Permissões
+            [] - Preferencias
+        [X] - Carregamento de modulos
         [] - Interface Web
 
 2° Estagio

@@ -8,7 +8,8 @@
 export default class Installer {
 
     list_tablesModules = [
-        './database/Manipulators/ServerConfig/ServerConfigs.mjs'
+        './Database/Manipulators/ServerConfig/ServerConfigs.mjs',
+        './Database/Manipulators/Users/Users.mjs'
     ]
 
 
@@ -45,7 +46,7 @@ export default class Installer {
                         .catch(reject); // desnecessario, o instalador inicia apos a instancia ser criada
 
                 }).catch(err => {
-                    this._log.error("Erro no import do instalador", err);
+                    this._events.emit("Log.erros", "Erro no import do instalador", err);
                     throw err;
                 });
             } else { resolv(); }

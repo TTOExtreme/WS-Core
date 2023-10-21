@@ -46,21 +46,21 @@ function SocketHandler_Initialization() {
                     //Configura o cookie para salvar por 3 dias
                     setCookie('WS-Core_HS', handshake, 3);
 
-
-                    /**Teste de Carregamento e retorno do modulo */
+                    /*
+                    //Teste de Carregamento e retorno do modulo
                     SocketEmit("Module.Load", "Exemple");
                     SocketListener("Module.Exemple.Pong", () => {
                         console.log("Modulo Exemple Carregado");
                     })
                     console.log("Enviado Ping");
                     SocketEmit('Module.Exemple.Ping');
-                    //*/
 
-                    /**Teste de Promisse enviado pelo Evento */
+                    //Teste de Promisse enviado pelo Evento
                     console.log("Enviado Promisse");
                     SocketEmit('Module.Exemple.Promisse', (resolv) => {
                         console.log(resolv);
                     });
+                    //*/
 
                 }
             })

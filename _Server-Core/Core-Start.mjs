@@ -20,7 +20,8 @@ const __dirname = dirname(join(__filename + "/../"));
 export default class CoreServer {
 
     list_tablesModules = [
-        './Database/Manipulators/ServerConfig/ServerConfigs.mjs'
+        './Database/Manipulators/ServerConfig/ServerConfigs.mjs',
+        './Database/Manipulators/Users/Users.mjs'
     ]
 
 
@@ -129,7 +130,7 @@ export default class CoreServer {
                     this._serverHTTPS = https.createServer(credentials, expressAPP);
                     //inicia o socket em https
                     this._serverIO = new Socket(this._serverHTTPS);
-                    this._serveSocket = new SocketServe(this._serverIO, this._config, this._events);
+                    this._serveSocket = new SocketServe(this._serverIO, this._config, this._events, this._db);
 
                     this.postInit();
                 }).catch(err => {

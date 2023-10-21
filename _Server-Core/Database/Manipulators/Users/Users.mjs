@@ -1,19 +1,13 @@
+import { Socket } from "socket.io";
 import BCypher from "../../../Utils/BCypher_2.0.mjs";
 import ErrorMessages from "../../../Utils/ErrorMessages.mjs";
+import DatabaseStructure from "../DatabaseStructure.mjs";
+
 
 /**
  * Modulo de gerencia do usuario
  */
-export default class User {
-
-    // instancia do conector do banco de dados
-    db = null;
-
-    //instancia da collection users
-    users = null;
-
-    //instancia de Log
-    log = null;
+export default class User extends DatabaseStructure {
 
     //instancia do usuario connectado
     myself = {
@@ -27,20 +21,65 @@ export default class User {
         active: false
     }
 
-    /**
-     * Inicializa a instancia do Usuario
-     * @param {Class} WSCore instancia do WSCore
-     * @description Usado para cada conexão com o banco pelo usuario
-     */
-    constructor(WSCore) {
-        if (WSCore._db == null) {
-            throw "Banco de dados não conectado";
-        }
-        this.db = WSCore._db;
-        this.log = WSCore._log;
+    BCypher = new BCypher();
 
-        //inicializa a collection
-        this.users = this.db.collection('_Users');
+    /**
+     * Chamada para alteração de predefiniçoes da classe mae
+     */
+    PreinitClass() {
+        this._tablename = "_Users"
+        this._tablestruct.username = {
+            create: " VARCHAR(128)",
+            descricao: "Nome do usuario ou email",
+            viewInLog: true
+        }
+        this._tablestruct.email = {
+            create: " VARCHAR(512)",
+            descricao: "Email",
+            viewInLog: true
+        }
+        this._tablestruct.nome = {
+            create: " VARCHAR(512)",
+            descricao: "Nome visual do Usuario",
+            viewInLog: true
+        }
+        this._tablestruct.password = {
+            create: " TEXT",
+            descricao: "Hash da senha",
+            viewInLog: false
+        }
+        this._tablestruct.hash_salt = {
+            create: " TEXT",
+            descricao: "Hash de salt para adicionar ao hash da senha",
+            viewInLog: false
+        }
+        this._tablestruct.UUID = {
+            create: " TEXT",
+            descricao: "Chave de autenticação sem login, todo login gerara um novo",
+            viewInLog: true
+        }
+        this._tablestruct.preferences = {
+            create: " MEDIUMTEXT",
+            descricao: "JSON contendo todas as preferencias do usuário",
+            viewInLog: true
+        }
+        this._tablestruct.online = {
+            create: " INT(1) DEFAULT 0",
+            descricao: "Estado do usuário se o mesmo esta online ou não",
+            viewInLog: true
+        }
+
+        const usalt = new BCypher().generateString();
+        this._initialValues = [
+            {
+                username: "Admin",
+                password: new BCypher().SHA2(usalt + new BCypher().SHA2("admin")),
+                hash_salt: usalt,
+                UUID: new BCypher().generateString(),
+                nome: "Adimistrador WS-Core",
+                email: "Admin@wscore"
+            }
+        ];
     }
 
     /**
@@ -50,31 +89,36 @@ export default class User {
      * @returns {JSON} Dados do Usuário
      */
     LogIn(username, password) {
-        return new Promise((res, rej) => {
-            //realiza a pesquisa usando o nome, retornando o salt e UUID para hash da senha
-            this.users.findOne({ username: username }, { salt: 1, UUID: 1 })
-                .then(resultsalt => {
-                    if (resultsalt.UUID != undefined) {
-                        const npass = new BCypher().SHA2(resultsalt.UUID + password + resultsalt.salt);
-                        // realiza a segunda pesquisa com o hash da senha
-                        this.users.findOne({ username: username, password: npass }, { projection: { password: 0, salt: 0 } })
-                            .then(result => {
-                                if (result.UUID != undefined) {
-                                    this.myself = result;
-                                    this._clearUserInstance();
-                                    res(this.myself);
-                                } else {
-                                    rej(ErrorMessages.user_not_found);
-                                }
-                            })
-                    } else {
-                        rej(ErrorMessages.user_not_found);
-                    }
-                }).catch(err => {
-                    //this.log.error("Na busca de UUID", err);
-                    rej(ErrorMessages.error_system);
-                })
+        return new Promise((resolv, reject) => {
 
+            const sql_select_username = "SELECT username, hash_salt FROM " + this._tablename + " WHERE username = ?;"
+            const sql_select_password = "SELECT username,UUID FROM " + this._tablename + " WHERE username = ? AND password = ?;"
+            this._db.Query(sql_select_username, [username]).then((results, err) => {
+                if (err) {
+                    this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
+                    throw "Erros encontrados ao tentar executar Select do usuário: " + username;
+                }
+                if (results[0] != undefined) {
+                    //Valida Senha
+                    const user_salt = results[0][0].hash_salt
+                    const user_password = this.BCypher.SHA2(user_salt + password);
+                    this._db.Query(sql_select_password, [username, user_password]).then((results, err) => {
+                        if (err) {
+                            this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
+                            throw "Erros encontrados ao executar Select com senha do Usuário: " + username;
+                        }
+                        if (results[0] != undefined) {
+                            //Valida Senha
+                            if (results[0].length > 0) {
+                                resolv(results[0].length > 0)
+                            } else {
+                                reject("Usuário ou Senha invalidos")
+                            }
+
+                        }
+                    }).catch(reject)
+                }
+            }).catch(reject)
         })
     }
 
@@ -287,5 +331,34 @@ export default class User {
                 }
             })
         })
+    }
+
+    /**
+     * Inicializa o basico de funções para login
+     * @param {Socket} socket_connection 
+     */
+    SocketBasic(socket_connection) {
+        socket_connection.on('Users.Login', (username = null, password = null, callback = (err, result) => { }) => {
+            if (username != null && password != null) {
+                this.LogIn(username, password).then((UUID) => {
+                    this._events.emit('Log.info', 'Login:' + (username).toString());
+                    callback(null, UUID);
+                }).catch(err => {
+                    this._events.emit('Log.error', 'Tentativa de acesso Invalida:' + (username).toString() + " Pass: " + (password).toString())
+                    callback("Usuário ou senha invalida", null);
+                })
+            } else {
+                this._events.emit('Log.error', 'Tentativa de acesso com username ou password nulo:' + (username).toString() + " Pass: " + (password).toString())
+                callback("Erro Usuário ou senha Invalidos", null);
+            }
+        })
+    }
+
+    /**
+     * Inicializa o todas as funçoes de acordo com as permissoes do servidor
+     * @param {Socket} socket_connection 
+     */
+    SocketFull(socket_connection) {
+
     }
 }
