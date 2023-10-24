@@ -1,9 +1,7 @@
 
 window.onload = () => {
-    //console.log("loaded");
     loadJS('/js/SocketHandler.js', () => {
         loadJS('/js/libs/BCypher_2.0.js', () => {
-            //console.log("Loaded Bcypher");
         }, document.head);
         SocketHandler_Initialization();
     }, document.head);
@@ -14,7 +12,10 @@ function Login(event) {
     event.preventDefault();
     SocketEmit("Users.Login", document.getElementById('username').value, BCypher.SHA2(document.getElementById('password').value), (err, result) => {
         if (err) { console.log(err); return; }
-        console.log(result);
+        if (result != undefined) {
+            setCookie('WS-Core_HS', result.UUID, 3);
+            window.location.replace('/');
+        }
     })
 }
 

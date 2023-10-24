@@ -1,0 +1,15 @@
+:root {
+    /*Barras de Navegação*/
+    --navbar-left: #252525;
+    --navbar-right: #b2b3b4;
+    --navbar-top: #326a29;
+    --navbar-bottom: #474545;
+
+    /*Botoes Barra Esquerda*/
+    --navbar-left-botao: #7baa41;
+    --navbar-left-botao-hover: #77c721;
+    --navbar-left-botao-selecionado: #6c9929;
+    --navbar-left-botao-texto: #fafafa;
+    --navbar-left-botao-texto_hover: #fafafa;
+    --navbar-left-botao-texto_selecionado: #fafafa;
+}

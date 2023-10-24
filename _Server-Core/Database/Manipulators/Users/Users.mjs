@@ -102,15 +102,14 @@ export default class User extends DatabaseStructure {
                     //Valida Senha
                     const user_salt = results[0][0].hash_salt
                     const user_password = this.BCypher.SHA2(user_salt + password);
-                    this._db.Query(sql_select_password, [username, user_password]).then((results, err) => {
+                    this._db.Query(sql_select_password, [username, user_password]).then((results1, err) => {
                         if (err) {
                             this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
                             throw "Erros encontrados ao executar Select com senha do Usuário: " + username;
                         }
-                        if (results[0] != undefined) {
-                            //Valida Senha
+                        if (results1[0] != undefined) {
                             if (results[0].length > 0) {
-                                resolv(results[0].length > 0)
+                                resolv(results1[0][0])
                             } else {
                                 reject("Usuário ou Senha invalidos")
                             }
@@ -128,40 +127,70 @@ export default class User extends DatabaseStructure {
      * @returns {Promise} Dados do Usuário
      */
     LogInUUID(UUID) {
-        return new Promise((res, rej) => {
-            this.users.findOne({ UUID: UUID }, { projection: { password: 0, salt: 0 } })
-                .then(result => {
-                    if (result.UUID != undefined) {
-                        this.myself = result;
-                        res(this.myself);
-                    } else {
-                        rej(ErrorMessages.user_not_found);
-                    }
-                }).catch(err => {
-                    //this.log.error("Na busca de UUID", err);
-                    rej(ErrorMessages.error_system);
-                })
-
+        return new Promise((resolv, reject) => {
+            const sql_select_username = "SELECT username FROM " + this._tablename + " WHERE UUID = ?;"
+            this._db.Query(sql_select_username, [UUID]).then((results, err) => {
+                if (err) {
+                    this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
+                    throw "Erros encontrados ao tentar executar Select do usuário: " + username;
+                }
+                if (results[0] != undefined) {
+                    const username = results[0][0].username;
+                    const name = results[0][0].nome;
+                    resolv(username, name);
+                } else {
+                    reject("UUID invalido")
+                }
+            }).catch(reject)
         })
     }
 
     /**
-     * Login como usuario de sistema, só deve ser chamado para meios de instalação
+     * Realiza o retorno das preferencias do Usuário
+     * @param {UUID} UUID 
      * @returns {Promise} Dados do Usuário
      */
-    LogInSYSTEM() {
-        return new Promise((res, rej) => {
-            this.myself = {
-                name: "SYSTEM",
-                username: "SYSTEM",
-                password: null,
-                salt: null,
-                groups: null,
-                preferences: null,
-                UUID: "Z00000000000000000000000000000000000000000000000000000000system0",
-                active: false
-            }
-            res(this.myself);
+    Preferences_Get(UUID) {
+        return new Promise((resolv, reject) => {
+            const sql_select_username = "SELECT username,preferences FROM " + this._tablename + " WHERE UUID = ?;"
+            this._db.Query(sql_select_username, [UUID]).then((results, err) => {
+                if (err) {
+                    this._events.emit("Log.erros", "Erros encontrados no Preferences_Get: " + UUID, err);
+                    throw "Erros encontrados ao tentar executar Select do Preferences_Get: " + UUID;
+                }
+                if (results[0] != undefined) {
+                    if (results[0][0] != undefined) {
+                        const preferences = results[0][0].preferences;
+                        resolv(preferences);
+                    } else {
+                        reject("UUID invalido")
+                    }
+                } else {
+                    reject("UUID invalido")
+                }
+            }).catch(reject)
+        })
+    }
+    /**
+     * Realiza o salvamento das preferencias do Usuário
+     * @param {UUID} UUID 
+     * @param {JSON} Preferences 
+     * @returns {Promise} Dados do Usuário
+     */
+    Preferences_Set(UUID, Preferences) {
+        return new Promise((resolv, reject) => {
+            const sql_select_username = "UPDATE " + this._tablename + " SET preferences = ? WHERE UUID = ?;"
+            this._db.Query(sql_select_username, [JSON.stringify(Preferences), UUID]).then((results, err) => {
+                if (err) {
+                    this._events.emit("Log.erros", "Erros encontrados no Preferences_Set: " + UUID, err);
+                    throw "Erros encontrados ao tentar executar Select do Preferences_Set: " + UUID;
+                }
+                if (results[0] != undefined) {
+                    resolv();
+                } else {
+                    reject("UUID invalido")
+                }
+            }).catch(reject)
         })
     }
 
@@ -186,39 +215,8 @@ export default class User extends DatabaseStructure {
         UUID = "",
         active = true) {
         return new Promise((res, rej) => {
-            this.users.findOne({ username: username, active: true }, { projection: { password: 0, salt: 0 } }).then(usr1 => {
-                if (usr1 == undefined) {
-                    this.users.insertOne({
-                        name: name,
-                        username: username,
-                        password: password,
-                        salt,
-                        salt,
-                        groups: groups,
-                        preferences: preferences,
-                        UUID: UUID,
-                        active: active,
-                        createdIn: new Date().getTime(),
-                        createdBy: this.myself.UUID
-                    }).then((usr) => {
-                        if (usr.acknowledged != undefined) {
-                            this.users.findOne({ username: username }, { projection: { password: 0, salt: 0 } }).then(usr2 => {
-                                res(usr2);
-                            });
-                        } else {
-                            rej(ErrorMessages.add_to_db)
-                        }
-                    }).catch(err => {
-                        this.log.error("On insert User of class User", err)
-                        rej(err);
-                    });
-                } else {
-                    rej(ErrorMessages.user_exists)
-                }
-            }).catch(err => {
-                this.log.error("On findOne User on AddUser of class User", err)
-                rej(err);
-            });
+
+
         })
     }
 
@@ -229,24 +227,8 @@ export default class User extends DatabaseStructure {
      */
     DisableUser(UUID) {
         return new Promise((res, rej) => {
-            this.users.findOne({ UUID: UUID, active: true }, { projection: { UUID: 1, password: 0, salt: 0 } }).then(usr => {
-                if (usr != undefined) {
-                    this.users.findOneAndUpdate({ UUID: UUID, active: true, disabledIn: new Date().getTime(), disabledBy: this.myself.UUID }, { $set: { active: false } })
-                        .then(result => {
-                            if (result.acknowledged != undefined) {
-                                this.users.findOne({ UUID: UUID }, { projection: { password: 0, salt: 0 } }).then(usr2 => {
-                                    res(usr2);
-                                });
-                            } else {
-                                rej(ErrorMessages.disable_user)
-                            }
-                        }).catch(err => {
-                            rej(err);
-                        })
-                } else {
-                    rej(ErrorMessages.user_not_found);
-                }
-            })
+
+
         })
     }
 
@@ -258,18 +240,8 @@ export default class User extends DatabaseStructure {
      */
     AddGroup(UUID, GUID) {
         return new Promise((res, rej) => {
-            this.users.findOne({ UUID: UUID }, { projection: { groups: 1, UUID: 1 } }).then(usr => {
-                if (usr != undefined) {
-                    this.users.updateOne({ UUID: UUID }, { $addToSet: { groups: { GUID: GUID, addedBy: this.myself.UUID, addedIn: new Date().getTime(), active: true } } })
-                        .then(result => {
-                            res(result);
-                        }).catch(err => {
-                            rej(err);
-                        })
-                } else {
-                    rej(ErrorMessages.user_not_found);
-                }
-            })
+
+
         })
     }
 
@@ -281,27 +253,9 @@ export default class User extends DatabaseStructure {
      */
     RemoveGroup(UUID, GUID) {
         return new Promise((res, rej) => {
-            this.users.findOne({ UUID: UUID, "groups.group": GUID }, { projection: { groups: 1, UUID: 1 } }).then(usr => {
-                if (usr != undefined) {
-                    this.users.updateOne({ UUID: UUID, "groups.group": GUID }, { $set: { "groups.$.active": false, "groups.$.disabledBy": this.myself.UUID, "groups.$.disabledIn": new Date().getTime() } })
-                        .then(result => {
-                            res(result);
-                        }).catch(err => {
-                            rej(err);
-                        })
-                } else {
-                    rej(ErrorMessages.user_not_found);
-                }
-            })
-        })
-    }
 
-    /**
-     * Retorna a UUID do usuário instanciado
-     * @returns {UUID} do usuário instanciado
-     */
-    GetUUID() {
-        return this.myself.UUID;
+
+        })
     }
 
     /**
@@ -311,54 +265,16 @@ export default class User extends DatabaseStructure {
      */
     GetUserUUID(username) {
         return new Promise((res, rej) => {
-            this.users.findOne({ username: username }, { projection: { UUID: 1 } }).then(usr => {
-                if (usr != undefined) {
-                    return usr.UUID;
-                } else {
-                    rej(ErrorMessages.user_not_found);
-                }
-            })
+
+
         })
     }
 
     GetUserGroups(UUID) {
         return new Promise((res, rej) => {
-            this.users.aggregate({ username: username }, { projection: { UUID: 1 } }).then(usr => {
-                if (usr != undefined) {
-                    return usr.UUID;
-                } else {
-                    rej(ErrorMessages.user_not_found);
-                }
-            })
+
+
         })
     }
 
-    /**
-     * Inicializa o basico de funções para login
-     * @param {Socket} socket_connection 
-     */
-    SocketBasic(socket_connection) {
-        socket_connection.on('Users.Login', (username = null, password = null, callback = (err, result) => { }) => {
-            if (username != null && password != null) {
-                this.LogIn(username, password).then((UUID) => {
-                    this._events.emit('Log.info', 'Login:' + (username).toString());
-                    callback(null, UUID);
-                }).catch(err => {
-                    this._events.emit('Log.error', 'Tentativa de acesso Invalida:' + (username).toString() + " Pass: " + (password).toString())
-                    callback("Usuário ou senha invalida", null);
-                })
-            } else {
-                this._events.emit('Log.error', 'Tentativa de acesso com username ou password nulo:' + (username).toString() + " Pass: " + (password).toString())
-                callback("Erro Usuário ou senha Invalidos", null);
-            }
-        })
-    }
-
-    /**
-     * Inicializa o todas as funçoes de acordo com as permissoes do servidor
-     * @param {Socket} socket_connection 
-     */
-    SocketFull(socket_connection) {
-
-    }
 }

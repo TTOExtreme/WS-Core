@@ -54,31 +54,49 @@ export default class SocketServe {
                 /**
                  * Listener do inicio da troca de chaves em caso de nova conexão
                  */
-                socket_connection.once("_hs", (client_hs) => {
-                    let client_hashsalt = client_hs || new BCypher().generateString();
+                socket_connection.once("Load.Home", (client_hashsalt, callback = () => { }) => {
+                    if (client_hashsalt != undefined) {
+                        if (client_hashsalt.length == 64) {
+                            this._clients[client_hashsalt] = {
+                                socket_connection: socket_connection,
+                                socket_listeners: [],
+                                username: "",
+                                UUID: "",
+                                connected_in: new Date().getTime(),
+                                last_heartbeat: new Date().getTime(),
+                            }
+                            this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
+                            this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
+
+
+                            this.LoadFullCoreMods(client_hashsalt);
+                            socket_connection.emit('_hs', client_hashsalt);
+                            if (typeof (callback) == 'function') { callback(); }
+                            /**
+                             * Realiza a exclusao da conexãop instanciada
+                             */
+                            socket_connection.on('disconnect', () => {
+                                delete this._clients[client_hashsalt];
+                                this._events.emit("Log.info", "Cliente Desconectado: ", client_hashsalt);
+                                this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
+                            });
+                        } else {
+                            this._events.emit("Log.info", "Cliente Sem UUID ou UUID Invalido: ", client_hashsalt);
+                        }
+                        return;
+                    }
+                })
+                socket_connection.once("load.login", () => {
+                    let client_hashsalt = new BCypher().generateString();
                     this._clients[client_hashsalt] = {
                         socket_connection: socket_connection,
                         socket_listeners: [],
                         username: "",
+                        UUID: "",
                         connected_in: new Date().getTime(),
                         last_heartbeat: new Date().getTime(),
                     }
-                    this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
-                    this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
-
                     this.LoadBasicCoreMods(client_hashsalt);
-
-                    socket_connection.emit('_hs', client_hashsalt);
-                    /**
-                     * Realiza a exclusao da conexãop instanciada
-                     */
-                    socket_connection.on('disconnect', () => {
-                        delete this._clients[client_hashsalt];
-                        this._events.emit("Log.info", "Cliente Desconectado: ", client_hashsalt);
-                        this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
-                    });
-
-
                 })
 
 
@@ -104,8 +122,8 @@ export default class SocketServe {
      */
     LoadBasicCoreMods(client_hashsalt) {
         this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
-        if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/Users.mjs')) {
-            import('../Database/Manipulators/Users/Users.mjs').then(moduleclass => {
+        if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/_Socket.mjs')) {
+            import('../Database/Manipulators/Users/_Socket.mjs').then(moduleclass => {
                 this._events.emit("Log.info", "Core Users importado");
                 const moduleinstance = new moduleclass.default(this._db, this._events);
                 moduleinstance.SocketBasic(this._clients[client_hashsalt]["socket_connection"]);
@@ -126,7 +144,22 @@ export default class SocketServe {
      * @param {String} client_hashsalt
      */
     LoadFullCoreMods(client_hashsalt) {
-
+        this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
+        if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/_Socket.mjs')) {
+            import('../Database/Manipulators/Users/_Socket.mjs').then(moduleclass => {
+                this._events.emit("Log.info", "Core Users importado");
+                const moduleinstance = new moduleclass.default(this._db, this._events);
+                moduleinstance.SocketFull(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt]);
+                this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
+                this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+            }).catch(err => {
+                this._events.emit("Log.erros", "Erro no import do instalador", err);
+                throw err;
+            });
+        } else {
+            this._events.emit("Log.erros", "Core Users Nao Encontrado:", './_Server-Core/Database/Manipulators/Users/Users.mjs', client_hashsalt);
+        }
         /**
          * Inicializa somente se o login estiver valido
          */
