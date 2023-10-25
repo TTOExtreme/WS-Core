@@ -93,9 +93,7 @@ function add_TopNavbar_Button(icon_name, title, onclick_callback = null, isfav =
     i_elem.setAttribute('class', (isfav ? 'material-icons' : 'material-symbols-outlined'));
     i_elem.innerText = 'star';
     i_elem.addEventListener('click', (ev) => {
-        if (typeof (onclick_callback) == "function") {
-            toggle_Favorite(title);
-        }
+        toggle_Favorite(icon_name, title);
     })
 
     i2_elem.setAttribute('class', 'material-icons' + " topnavbaricon");
@@ -142,7 +140,7 @@ function select_TopNavbar_Button(title) {
  * Realiza a inversão dos favoritos e envia ao servidor
  * @param {String} title 
  */
-function toggle_Favorite(title) {
+function toggle_Favorite(icon, title) {
     SocketEmit('Users.Preferences.Get', (err, Preferences) => {
         /**
          * Preferencias do Usuário 
@@ -151,26 +149,29 @@ function toggle_Favorite(title) {
          * }
          */
         if (Preferences != undefined) {
-            Preferences = JSON.parse(Preferences)
-            console.log(Preferences.Favoritos)
-            if (Preferences.Favoritos != undefined) {
-                if (Preferences.Favoritos.findIndex((value) => { return value == title }) == -1) {
-                    Preferences.Favoritos.push(title);
+            let nPreferences = JSON.parse(Preferences)
+            if (nPreferences.Favoritos != undefined) {
+                if (nPreferences.Favoritos.findIndex((value) => { return value.title == title }) == -1) {
+                    nPreferences.Favoritos.push({ icon: icon, title: title });
                 } else {
-                    Preferences.Favoritos = Preferences.Favoritos.filter((value) => { return value != title });
+                    nPreferences.Favoritos = nPreferences.Favoritos.filter((value) => { return value.title != title });
                 }
             } else {
-                Preferences.Favoritos = [title];
+                nPreferences.Favoritos = [{ icon: icon, title: title }];
             }
+            /**
+             * manda as preferencias do Usuário no servidor
+             */
+            SocketEmit('Users.Preferences.Set', nPreferences, () => { });
         } else {
-            Preferences = {
-                Favoritos: [title]
+            let nPreferences = {
+                Favoritos: [{ icon: icon, title: title }]
             }
+            /**
+             * manda as preferencias do Usuário no servidor
+             */
+            SocketEmit('Users.Preferences.Set', nPreferences, () => { });
         }
-        /**
-         * manda as preferencias do Usuário no servidor
-         */
-        SocketEmit('Users.Preferences.Set', Preferences);
         let favstar = document.getElementById(title.replace(/ /g, '_') + "_fav");
         favstar.classList.toggle('material-symbols-outlined')
         favstar.classList.toggle('material-icons');

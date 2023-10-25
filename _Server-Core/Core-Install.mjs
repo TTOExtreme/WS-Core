@@ -9,7 +9,12 @@ export default class Installer {
 
     list_tablesModules = [
         './Database/Manipulators/ServerConfig/ServerConfigs.mjs',
-        './Database/Manipulators/Users/Users.mjs'
+        './Database/Manipulators/Users/Users.mjs',
+        './Database/Manipulators/Groups/Groups.mjs',
+        './Database/Manipulators/Groups/Group_User.mjs',
+        './Database/Manipulators/Permissions/Permissoes.mjs',
+        './Database/Manipulators/Permissions/Permissao_Group.mjs',
+        './Database/Manipulators/Permissions/Permissao_User.mjs'
     ]
 
 
@@ -29,7 +34,12 @@ export default class Installer {
     Install() {
         return new Promise((resolv, reject) => {
             if (this.list_tablesModules.length > 0) {
-                this.runNextTableInstall().then(resolv).catch(reject)
+                this.runNextTableInstall().then(() => {
+                    this.runNextTablePostInstall().then(() => {
+                        resolv()
+
+                    }).catch(reject)
+                }).catch(reject)
             }
         });
     }
@@ -38,10 +48,30 @@ export default class Installer {
         return new Promise((resolv, reject) => {
             if (index < this.list_tablesModules.length) {
                 import(this.list_tablesModules[index]).then(servercore => {
+                    this._events.emit("Log.system", "Executando instalador", this.list_tablesModules[index]);
                     const servercoreinstance = new servercore.default(this._db, this._events);
                     servercoreinstance._createTable()
                         .then(() => {
                             this.runNextTableInstall(index + 1).then(resolv).catch(reject)
+                        })
+                        .catch(reject); // desnecessario, o instalador inicia apos a instancia ser criada
+
+                }).catch(err => {
+                    this._events.emit("Log.erros", "Erro no import do instalador", err);
+                    throw err;
+                });
+            } else { resolv(); }
+        });
+    }
+    runNextTablePostInstall(index = 0) {
+        return new Promise((resolv, reject) => {
+            if (index < this.list_tablesModules.length) {
+                import(this.list_tablesModules[index]).then(servercore => {
+                    this._events.emit("Log.system", "Executando Pós Instalador", this.list_tablesModules[index]);
+                    const servercoreinstance = new servercore.default(this._db, this._events);
+                    servercoreinstance._Pos_CreateData()
+                        .then(() => {
+                            this.runNextTablePostInstall(index + 1).then(resolv).catch(reject)
                         })
                         .catch(reject); // desnecessario, o instalador inicia apos a instancia ser criada
 

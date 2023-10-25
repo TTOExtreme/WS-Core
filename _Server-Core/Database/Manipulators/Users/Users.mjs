@@ -2,24 +2,13 @@ import { Socket } from "socket.io";
 import BCypher from "../../../Utils/BCypher_2.0.mjs";
 import ErrorMessages from "../../../Utils/ErrorMessages.mjs";
 import DatabaseStructure from "../DatabaseStructure.mjs";
+import Users_SQLs from "./Users_SQLs.mjs";
 
 
 /**
  * Modulo de gerencia do usuario
  */
 export default class User extends DatabaseStructure {
-
-    //instancia do usuario connectado
-    myself = {
-        name: null,
-        username: null,
-        password: null,
-        salt: null,
-        groups: null,
-        preferences: null,
-        UUID: null,
-        active: false
-    }
 
     BCypher = new BCypher();
 
@@ -77,7 +66,8 @@ export default class User extends DatabaseStructure {
                 hash_salt: usalt,
                 UUID: new BCypher().generateString(),
                 nome: "Adimistrador WS-Core",
-                email: "Admin@wscore"
+                email: "Admin@wscore",
+                ativo: 1
             }
         ];
     }
@@ -90,10 +80,7 @@ export default class User extends DatabaseStructure {
      */
     LogIn(username, password) {
         return new Promise((resolv, reject) => {
-
-            const sql_select_username = "SELECT username, hash_salt FROM " + this._tablename + " WHERE username = ?;"
-            const sql_select_password = "SELECT username,UUID FROM " + this._tablename + " WHERE username = ? AND password = ?;"
-            this._db.Query(sql_select_username, [username]).then((results, err) => {
+            this._db.Query(Users_SQLs.sql_select_username, [username]).then((results, err) => {
                 if (err) {
                     this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
                     throw "Erros encontrados ao tentar executar Select do usuário: " + username;
@@ -102,7 +89,7 @@ export default class User extends DatabaseStructure {
                     //Valida Senha
                     const user_salt = results[0][0].hash_salt
                     const user_password = this.BCypher.SHA2(user_salt + password);
-                    this._db.Query(sql_select_password, [username, user_password]).then((results1, err) => {
+                    this._db.Query(Users_SQLs.sql_select_password, [username, user_password]).then((results1, err) => {
                         if (err) {
                             this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
                             throw "Erros encontrados ao executar Select com senha do Usuário: " + username;
@@ -128,8 +115,7 @@ export default class User extends DatabaseStructure {
      */
     LogInUUID(UUID) {
         return new Promise((resolv, reject) => {
-            const sql_select_username = "SELECT username FROM " + this._tablename + " WHERE UUID = ?;"
-            this._db.Query(sql_select_username, [UUID]).then((results, err) => {
+            this._db.Query(Users_SQLs.sql_username_get, [UUID]).then((results, err) => {
                 if (err) {
                     this._events.emit("Log.erros", "Erros encontrados no login: " + username, err);
                     throw "Erros encontrados ao tentar executar Select do usuário: " + username;
@@ -152,8 +138,7 @@ export default class User extends DatabaseStructure {
      */
     Preferences_Get(UUID) {
         return new Promise((resolv, reject) => {
-            const sql_select_username = "SELECT username,preferences FROM " + this._tablename + " WHERE UUID = ?;"
-            this._db.Query(sql_select_username, [UUID]).then((results, err) => {
+            this._db.Query(Users_SQLs.sql_preferences_get, [UUID]).then((results, err) => {
                 if (err) {
                     this._events.emit("Log.erros", "Erros encontrados no Preferences_Get: " + UUID, err);
                     throw "Erros encontrados ao tentar executar Select do Preferences_Get: " + UUID;
@@ -179,8 +164,7 @@ export default class User extends DatabaseStructure {
      */
     Preferences_Set(UUID, Preferences) {
         return new Promise((resolv, reject) => {
-            const sql_select_username = "UPDATE " + this._tablename + " SET preferences = ? WHERE UUID = ?;"
-            this._db.Query(sql_select_username, [JSON.stringify(Preferences), UUID]).then((results, err) => {
+            this._db.Query(Users_SQLs.sql_preferences_set, [JSON.stringify(Preferences), UUID]).then((results, err) => {
                 if (err) {
                     this._events.emit("Log.erros", "Erros encontrados no Preferences_Set: " + UUID, err);
                     throw "Erros encontrados ao tentar executar Select do Preferences_Set: " + UUID;
@@ -196,25 +180,19 @@ export default class User extends DatabaseStructure {
 
     /**
      * Cria um usuario para acesso ao sistema
-     * @param {String} name 
+     * @param {String} nome 
      * @param {String} username 
      * @param {HASH} password 
-     * @param {HASH} salt 
-     * @param {Array} groups 
      * @param {JSON} preferences 
-     * @param {HASH} UUID 
      * @param {Boolean} active 
      * @returns {Promise}
      */
-    AddUser(name = "",
+    AddUser(nome = "",
         username = "",
         password = "",
-        salt = "",
-        groups = "",
         preferences = "",
-        UUID = "",
         active = true) {
-        return new Promise((res, rej) => {
+        return new Promise((resolv, reject) => {
 
 
         })
@@ -222,11 +200,11 @@ export default class User extends DatabaseStructure {
 
     /**
      * 
-     * @param {UUID} UUID UUID do usuario a ser desabilitado
-     * @returns {JSON} Dados do Usuário
+     * @param {Integer} ID ID do usuario a ser desabilitado
+     * @returns {Promise} 
      */
-    DisableUser(UUID) {
-        return new Promise((res, rej) => {
+    DisableUser(ID) {
+        return new Promise((resolv, reject) => {
 
 
         })
@@ -234,12 +212,12 @@ export default class User extends DatabaseStructure {
 
     /**
      * Adiciona um grupo ao usuário
-     * @param {UUID} UUID 
-     * @param {GUID} GUID 
+     * @param {UUID} UUID ID do usuário
+     * @param {GUID} GUID ID do Grupo
      * @returns {Promise} contendo o retorno da operação
      */
     AddGroup(UUID, GUID) {
-        return new Promise((res, rej) => {
+        return new Promise((resolv, reject) => {
 
 
         })
@@ -252,28 +230,30 @@ export default class User extends DatabaseStructure {
      * @returns {Promise} contendo o retorno da operação
      */
     RemoveGroup(UUID, GUID) {
-        return new Promise((res, rej) => {
+        return new Promise((resolv, reject) => {
 
 
         })
     }
 
     /**
-     * Retorna a UUID do usuário pelo username
-     * @param {String} username Nome do Usuário
-     * @returns {UUID} do usuário instanciado
+     * Retorna as permissioes do usuario em Base ao UUID
+     * @param {String} UUID 
+     * @returns {Promise} contendo o array de permissoes
      */
-    GetUserUUID(username) {
-        return new Promise((res, rej) => {
-
-
-        })
-    }
-
-    GetUserGroups(UUID) {
-        return new Promise((res, rej) => {
-
-
+    Permissions_Get(UUID) {
+        return new Promise((resolv, reject) => {
+            this._db.Query(Users_SQLs.sql_select_permissions_from_uuid, [UUID]).then((results, err) => {
+                if (err) {
+                    this._events.emit("Log.erros", "Erros encontrados no Permissions_Get: " + UUID, err);
+                    throw "Erros encontrados ao tentar executar Select do Permissions_Get: " + UUID;
+                }
+                if (results[0] != undefined) {
+                    resolv(results[0]);
+                } else {
+                    reject("UUID invalido")
+                }
+            }).catch(reject)
         })
     }
 

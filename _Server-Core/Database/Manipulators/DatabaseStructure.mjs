@@ -58,12 +58,12 @@ export default class DatabaseStructure {
             viewInLog: true
         },
         excluido: {
-            create: " INT(1)",
+            create: " INT(1) DEFAULT 0",
             descricao: "Couna Referente ao estado do registro, se esta excluido ou nao, quando excluido o mesmo nao estara mais visivel pelo sistema",
             viewInLog: true
         },
         ativo: {
-            create: " INT(1)",
+            create: " INT(1) DEFAULT 0",
             descricao: "Couna Referente ao estado do registro, se esta ativo ou nao",
             viewInLog: true
         },
@@ -117,24 +117,27 @@ export default class DatabaseStructure {
     _createTable() {
         return new Promise((resolv, reject) => {
             this._tableExists().then(itexistis => {
-                this._db.Query(itexistis ? ("DROP TABLE " + this._tablename + ";") : "").then((results, err) => {
-                    if (err) {
-                        if (err.indexOf("Unknown table") == -1) {
-                            this._events.emit("Log.erros", "Erros encontrados no drop da tabela: " + this._tablename, err);
-                        }
-                    }
-                    let Colums = "";
-                    Object.keys(this._tablestruct).forEach(colname => {
-                        Colums += (Colums.length > 0 ? "," : "") + " " + colname + " " + this._tablestruct[colname].create + " COMMENT \"" + this._tablestruct[colname].descricao + "\"";
-                    })
 
-                    this._db.Query("CREATE TABLE " + this._tablename + " (" + Colums + ");").then((results, err2) => {
-                        if (err2) {
-                            this._events.emit("Log.erros", "Erros encontrados na criação da tabela: " + this._tablename, err2);
-                            throw "Erros encontrados no drop da tabela: " + this._tablename;
+                this._db.Query(itexistis ? ("SET FOREIGN_KEY_CHECKS = 0;") : "").then((results, err) => {
+                    this._db.Query(itexistis ? ("DROP TABLE " + this._tablename + ";") : "").then((results, err) => {
+                        if (err) {
+                            if (err.indexOf("Unknown table") == -1) {
+                                this._events.emit("Log.erros", "Erros encontrados no drop da tabela: " + this._tablename, err);
+                            }
                         }
-                        if (results != undefined)
-                            this._createData().then(resolv);
+                        let Colums = "";
+                        Object.keys(this._tablestruct).forEach(colname => {
+                            Colums += (Colums.length > 0 ? "," : "") + " " + colname + " " + this._tablestruct[colname].create + (this._tablestruct[colname].descricao != "" ? " COMMENT \"" + this._tablestruct[colname].descricao + "\"" : "");
+                        })
+
+                        this._db.Query("CREATE TABLE " + this._tablename + " (" + Colums + ");").then((results, err2) => {
+                            if (err2) {
+                                this._events.emit("Log.erros", "Erros encontrados na criação da tabela: " + this._tablename, err2);
+                                throw "Erros encontrados no drop da tabela: " + this._tablename;
+                            }
+                            if (results != undefined)
+                                this._createData().then(resolv);
+                        })
                     })
                 })
             });
@@ -164,11 +167,12 @@ export default class DatabaseStructure {
                         let Values = "";
                         this._initialValues.forEach(valueItem => {
                             Values += (Values.length > 0 ? ",(" : "(");
+                            let vline = ""
                             Object.keys(valueItem).forEach(colname => {
-                                Values += (Values.length > 1 ? "," : "") +
+                                vline += (vline.length > 1 ? "," : "") +
                                     (typeof (valueItem[colname]) == "string" ? "'" : " ") + valueItem[colname] + (typeof (valueItem[colname]) == "string" ? "'" : " ");
                             })
-                            Values += ")";
+                            Values += vline + ")";
                         });
 
                         this._db.Query("INSERT INTO " + this._tablename + " (" + Colums + ") VALUES " + Values + ";").then((results, err2) => {
@@ -176,15 +180,30 @@ export default class DatabaseStructure {
                                 this._events.emit("Log.erros", "Erros encontrados no Insert: " + this._tablename, err2);
                                 throw "Erros encontrados no Insert: " + this._tablename;
                             }
-                            if (results != undefined)
-                                resolv(results.length > 0);
+                            if (results != undefined) {
+                                //this._Pos_CreateData().then(() => {
+                                resolv();
+                                // });
+                            }
                         })
                     } else {
-                        resolv(0);
+                        //this._Pos_CreateData().then(() => {
+                        resolv();
+                        // });
                     }
                 })
             });
         })
+    }
+
+    /**
+     * Chamado após toda a criação de dados na tabela
+     * @returns {Promise}
+     */
+    _Pos_CreateData() {
+        return new Promise((resolv, reject) => {
+            resolv();
+        });
     }
 
 }
