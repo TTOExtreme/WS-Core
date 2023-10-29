@@ -82,22 +82,21 @@ export default class Users_Socket extends User {
                             /**
                              * Carrega as Abas laterais
                              */
-                            this.Permissions_Get(client_instance.UUID).then((Permissions) => {
+                            this.Permissions_Get(client_instance.UUID).then(async (Permissions) => {
                                 if (Permissions != undefined) {
                                     //let Perms = JSON.parse(Permissions)
                                     if (Permissions.length > 1) {
-                                        for (let index = 0; index < Permissions.length; index++) {
-                                            const element = Permissions[index];
-                                            //Verifica se a permissão é Allow
-                                            if (element.tipo == 1) {
-                                                //Valida se não existe nenhuma atribuida que seja Deny
-                                                if (Permissions.findIndex((value) => { return (value.permissao == element.permissao && value.tipo == 2) }) == -1) {
-                                                    const navbarstruct = NavBarStructure[element.permissao];
-                                                    if (navbarstruct != undefined) {
-                                                        socket_connection.emit('Navbar.Left.Add', navbarstruct.icon, navbarstruct.icon_class, navbarstruct.title, (ev) => {
-                                                            console.log("Open ", element.title)
-                                                        }, true)
+                                        for (let index = 0; index < Object.keys(NavBarStructure).length; index++) {
+                                            const navbarstruct = NavBarStructure[Object.keys(NavBarStructure)[index]];
+                                            if (Permissions.findIndex((value) => { return (value.permissao == navbarstruct.permissao && value.tipo == 1) }) != -1) {
+                                                if (Permissions.findIndex((value) => { return (value.permissao == navbarstruct.permissao && value.tipo == 2) }) == -1) {
+                                                    //Verifica se é um sub botão ou o principal da barra de navegação
+                                                    if (navbarstruct.parent == undefined) {
+                                                        socket_connection.emit('Navbar.Left.Add', navbarstruct.icon, navbarstruct.icon_class, navbarstruct.title, navbarstruct.onclick)
+                                                    } else {
+                                                        socket_connection.emit('Navbar.subLeft.Add', navbarstruct.icon, navbarstruct.icon_class, navbarstruct.title, navbarstruct.onclick, navbarstruct.parent)
                                                     }
+
                                                 }
                                             }
                                         }

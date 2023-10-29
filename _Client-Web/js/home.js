@@ -7,6 +7,7 @@ window.onload = () => {
 
                     SocketListener("Navbar.Top.Add", add_TopNavbar_Button);
                     SocketListener("Navbar.Left.Add", add_LeftNavbar_Button);
+                    SocketListener("Navbar.subLeft.Add", add_subLeftNavbar_Button);
                     SocketListener("Loader.JS", loadJS);
                     SocketEmit("Users.Preferences.Load");
 

@@ -12,4 +12,11 @@
     --navbar-left-botao-texto: #fafafa;
     --navbar-left-botao-texto_hover: #fafafa;
     --navbar-left-botao-texto_selecionado: #fafafa;
+
+    --subnavbar-left-botao: #9bd05a;
+    --subnavbar-left-botao-hover: #77c721;
+    --subnavbar-left-botao-selecionado: #6c9929;
+    --subnavbar-left-botao-texto: #fafafa;
+    --subnavbar-left-botao-texto_hover: #fafafa;
+    --subnavbar-left-botao-texto_selecionado: #fafafa;
 }

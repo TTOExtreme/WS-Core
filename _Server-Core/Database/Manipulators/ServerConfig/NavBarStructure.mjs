@@ -1,58 +1,62 @@
 export default {
     "Navbar/home": {
-        title: "Aba Home",
+        title: "Home",
         permissao: "Navbar/home",
         icon: "home",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_top_NavBar' }
     },
     "Navbar/favoritos": {
         title: "Favoritos",
         permissao: "Navbar/favoritos",
         icon: "star",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_top_NavBar' }
     },
     "Navbar/configuracoes": {
         title: "Configurações",
         permissao: "Navbar/configuracoes",
+        haschild: true,
         icon: "settings",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_Left_subNavbar' }
     },
     "Navbar/configuracoes/usuarios": {
         title: "Usuários",
         permissao: "Navbar/configuracoes/usuarios",
+        parent: "Configurações",
         icon: "manage_accounts",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_top_NavBar', load: '/js/core/users/users.js' }
     },
     "Navbar/configuracoes/grupos": {
         title: "Grupos",
         permissao: "Navbar/configuracoes/grupos",
+        parent: "Configurações",
         icon: "group",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_top_NavBar' }
     },
     "Navbar/configuracoes/permissoes": {
         title: "Permissões",
         permissao: "Navbar/configuracoes/permissoes",
+        parent: "Configurações",
         icon: "contact_page",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_top_NavBar' }
     },
     "Navbar/modulos": {
-        title: "Aba Módulos",
+        title: "Módulos",
         permissao: "Navbar/modulos",
         icon: "home",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'open_top_NavBar' }
     },
     "Navbar/terminal": {
         title: "Terminal",
         permissao: "Navbar/terminal",
         icon: "terminal",
         icon_class: "material-icons",
-        onclick: "_events"
+        onclick: { type: 'load_module', load: '/js/core/terminal.js' }
     },
 }

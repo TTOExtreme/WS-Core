@@ -100,6 +100,75 @@ nav#left_navbar:hover {
     background-color: var(--navbar-left-botao-selecionado);
 }
 
+
+/*sub Botoes Barra de navegação Esquerda*/
+.left_subnavbar {
+    cursor: pointer;
+    display: block;
+    background-color: var(--subnavbar-left-botao);
+    /* height: 40px; */
+    width: 140px;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.left_subnavbar>i {
+    cursor: pointer;
+    width: 38px;
+    height: 50px;
+    font-size: 30px;
+    padding: 10px;
+}
+
+.left_subnavbar>span {
+    cursor: pointer;
+    display: flex;
+    width: 170px;
+    height: 20px;
+    font-size: medium;
+    margin-top: 15px;
+    padding: 0;
+    border: 0;
+}
+
+.left_subnavbar_button:hover {
+    background-color: var(--subnavbar-left-botao-hover);
+}
+
+.left_subnavbar_closed {
+    height: 0;
+}
+
+/*subBotoes Barra de navegação Esquerda*/
+.left_subnavbar_button {
+    cursor: pointer;
+    display: inline-flex;
+    background-color: var(--subnavbar-left-botao);
+    height: 40px;
+    width: 150px;
+}
+
+.left_subnavbar_button>i {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    padding: 10px;
+    padding-top: 10px;
+}
+
+.left_subnavbar_button>span {
+    cursor: pointer;
+    display: flex;
+    width: 170px;
+    height: 25px;
+    font-size: medium;
+    margin-top: 11px;
+    padding: 0;
+    border: 0;
+}
+
+
 /*Botoes Barra de navegação Topo*/
 .top_navbar_button {
     cursor: pointer;
@@ -151,6 +220,9 @@ nav#left_navbar:hover {
 
 /*Body*/
 body {
+    background-image: url("/img/bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
     overflow: hidden;
 }
 
