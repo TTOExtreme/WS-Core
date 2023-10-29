@@ -174,6 +174,7 @@ function select_subLeftNavbar_Button(title) {
  */
 function add_TopNavbar_Button(icon_name, title, onclick_callback = null, isfav = false, id = null) {
     if (id == null) { return };
+    if (!isfav) { isfav = isFavorite(title); }
 
 
     let a_elem = document.createElement('a');
@@ -198,6 +199,7 @@ function add_TopNavbar_Button(icon_name, title, onclick_callback = null, isfav =
     })
 
     i_elem.setAttribute('id', title.replace(/ /g, '_') + "_fav");
+    i_elem.setAttribute('name', title.replace(/ /g, '_') + "_fav");
     i_elem.setAttribute('class', (isfav ? 'material-icons' : 'material-symbols-outlined'));
     i_elem.innerText = 'star';
     i_elem.addEventListener('click', (ev) => {
@@ -262,6 +264,7 @@ function select_TopNavbar_Button(id) {
     select_LeftNavbar_Button(id);
 }
 
+
 /**
  * Realiza a inversão dos favoritos e envia ao servidor
  * @param {String} title 
@@ -278,7 +281,7 @@ function toggle_Favorite(title, favelement) {
             Favoritos: [{ title: title }]
         }
         if (Preferences != undefined) {
-            let nPreferences = JSON.parse(Preferences)
+            nPreferences = JSON.parse(Preferences)
             if (nPreferences.Favoritos != undefined) {
                 if (nPreferences.Favoritos.findIndex((value) => { return value.title == title }) == -1) {
                     nPreferences.Favoritos.push({ title: title });
@@ -289,14 +292,40 @@ function toggle_Favorite(title, favelement) {
                 nPreferences.Favoritos = [{ title: title }];
             }
         }
+        User_Favoritos = nPreferences.Favoritos;
         /**
          * manda as preferencias do Usuário no servidor
          */
         SocketEmit('Users.Preferences.Set', nPreferences, () => { });
-        favelement.classList.toggle('material-symbols-outlined')
-        favelement.classList.toggle('material-icons');
 
+        var elements = document.getElementsByName(title + "_fav");
+
+
+        if (isFavorite(title)) {
+            elements.forEach(function (element) {
+                element.classList.remove('material-symbols-outlined')
+                element.classList.add('material-icons');
+            });
+        } else {
+            elements.forEach(function (element) {
+                element.classList.add('material-symbols-outlined')
+                element.classList.remove('material-icons');
+            });
+        }
     })
+}
+
+/**
+ * Realiza a inversão dos favoritos e envia ao servidor
+ * @param {String} title 
+ */
+function isFavorite(title) {
+    if (User_Favoritos != undefined) {
+        if (User_Favoritos.findIndex((value) => { return value.title == title }) > -1) {
+            return true;
+        }
+    }
+    return false;
 }
 /**
  * Carrega a lista de favoritos
@@ -313,3 +342,16 @@ function load_favorito(icon_name, title, onclick_callback) {
         }, document.head);
     }
 }
+
+/**
+ * Coleta e armazena os favoritos do Usuário
+ */
+let User_Favoritos = [];
+SocketEmit('Users.Preferences.Get', (err, Preferences) => {
+    if (Preferences != undefined) {
+        let nPreferences = JSON.parse(Preferences)
+        if (nPreferences.Favoritos != undefined) {
+            User_Favoritos = nPreferences.Favoritos;
+        }
+    }
+});
