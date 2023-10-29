@@ -1,6 +1,6 @@
 
 window.onload = () => {
-    loadJS('/js/SocketHandler.js', () => {
+    loadJS('/js/core/SocketHandler.js', () => {
         loadJS('/js/libs/BCypher_2.0.js', () => {
         }, document.head);
         SocketHandler_Initialization();

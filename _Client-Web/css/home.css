@@ -237,3 +237,27 @@ body {
     border-radius: 9999px;
     background-color: #AAAAAA;
 }
+
+/*Tela central*/
+.middle_screen {
+    width: calc(100vw - 70px);
+    height: calc(100vh - 60px);
+    position: absolute;
+    top: 40px;
+    left: 50px;
+    overflow: hidden;
+}
+
+.middle_screen_tela {
+    width: calc(100vw - 70px);
+    height: calc(100vh - 60px);
+    background-color: #a1aaa061;
+    top: 40px;
+    position: fixed;
+    overflow: auto;
+}
+
+.middle_screen_tela_hidden {
+    opacity: 0;
+    display: none;
+}

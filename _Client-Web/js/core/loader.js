@@ -7,7 +7,7 @@
  */
 function loadJS(url, afterload = () => { }, location) {
     let checksum = StringUnique(url);
-    if (document.getElementById(checksum) != undefined) { return; }
+    if (document.getElementById(checksum) != undefined) { afterload(); return; }
 
     let scriptTag = document.createElement('script');
     scriptTag.src = url;
