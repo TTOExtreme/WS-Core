@@ -254,10 +254,18 @@ body {
     background-color: #a1aaa061;
     top: 40px;
     position: fixed;
+    padding: 5px;
     overflow: auto;
 }
 
 .middle_screen_tela_hidden {
     opacity: 0;
+    display: none;
+}
+
+p.tela_id {
+    font-size: 7px;
+    padding: 0;
+    margin: 0;
     display: none;
 }

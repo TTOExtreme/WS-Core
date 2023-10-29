@@ -19,4 +19,29 @@
     --subnavbar-left-botao-texto: #fafafa;
     --subnavbar-left-botao-texto_hover: #fafafa;
     --subnavbar-left-botao-texto_selecionado: #fafafa;
+
+    /*Table collors*/
+    --table-bg: #454545;
+    --table-header-move-bg: #2a512a;
+    --table-header-move-border: #2d8809;
+    --table-header-bg: #101010;
+    --table-header-text: #f2f2f2;
+    --table-header-bg-selected: #62aa35;
+    --table-header-bg-hover: #2e2e2e;
+    --table-header-text-selected: #fff;
+    --table-header-text-hover: #dddddd;
+    --table-item-row-bg: #111111;
+    --table-item-row-bg-hover: #222222;
+    --table-item-row-text: #fcfcfc;
+    --table-item-row-text-hover: #dddddd;
+    --table-item-row-border: #393838;
+    --table-row-border: #202020;
+    --table-row-even-bg: #111111;
+    --table-row-even-bg-hover: var(--table-item-row-bg-hover);
+    --table-row-even-text: var(--table-item-row-text);
+    --table-row-even-text-hover: var(--table-item-row-text-hover);
+    --table-row-odd-bg: #202020;
+    --table-row-odd-bg-hover: var(--table-item-row-bg-hover);
+    --table-row-odd-text: var(--table-item-row-text);
+    --table-row-odd-text-hover: var(--table-item-row-text-hover);
 }
