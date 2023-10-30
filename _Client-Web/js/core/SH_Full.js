@@ -50,15 +50,18 @@ function SocketHandler_Initialization() {
                     const socket = io("/");
                     socket.on("connect", () => {
                         socket.once('_hs', (handshake) => {
-                            //console.log('Recebido HS', handshake);
+                            console.log('Recebido HS', handshake);
                             if (handshake != undefined) {
                                 ServerSocketConnection = socket;
                             }
-                            ValidSession().then(() => { });
+                            setTimeout(() => {
+                                ValidSession().then(() => {
+                                    resolv();
+                                });
+                            }, 300);
                         })
-                        socket.emit('Load.Home', (ServerSocketHandshake), () => {
-                            resolv();
-                        });
+
+                        socket.emit('Load.Home', (ServerSocketHandshake), () => { });
                     });
 
                     socket.on("disconnect", () => {

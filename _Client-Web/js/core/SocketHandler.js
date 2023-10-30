@@ -29,9 +29,9 @@ function SocketHandler_Initialization() {
             //console.log('Iniciando Conexão com o servidor via Socket', ServerSocketHandshake);
             const socket = io("/");
             socket.on("connect", () => {
-                resolv();
                 socket.emit('load.login');
                 ServerSocketConnection = socket;
+                resolv();
             });
 
             socket.on("disconnect", () => {
