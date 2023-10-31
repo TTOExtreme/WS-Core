@@ -23,9 +23,15 @@ window.onload = () => {
                         //*/
 
                     }, document.head);
+
+                    loadCSS('/css/core/ContextCreator.css', () => {
+                        loadJS('/js/core/ContextCreator.js', () => {
+                            _ContexCreator = new ContextCreator();
+                            //_ContexCreator.CreateDummy();
+                        }, document.head);
+                    }, document.head);
                 }, document.head);
             }, document.head);
         });
     }, document.head);
 }
-
