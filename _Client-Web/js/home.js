@@ -30,6 +30,13 @@ window.onload = () => {
                             //_ContexCreator.CreateDummy();
                         }, document.head);
                     }, document.head);
+
+                    _events.on("Info.Info", (data) => { console.log("INFO", data); })
+                    _events.on("Info.Ok", (data) => { console.log("OK", data); })
+                    _events.on("Info.Warn", (data) => { console.log("WARN", data); })
+                    _events.on("Info.Erro", (data) => { console.log("ERRO", data); })
+
+
                 }, document.head);
             }, document.head);
         });
