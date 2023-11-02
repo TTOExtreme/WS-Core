@@ -39,3 +39,24 @@ function StringUnique(str, seed = 126) {
 
     return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
+
+/**
+ * Carrega JS externo, somente se o mesmo nao esta carregado
+ * @param {URL} url 
+ * @param {Function} afterload 
+ * @param {Element} location 
+ */
+function loadCSS(url, afterload = () => { }, location) {
+    let checksum = StringUnique(url);
+    if (document.getElementById(checksum) != undefined) { afterload(); return; }
+
+    let linkTag = document.createElement('link');
+    linkTag.rel = "stylesheet"
+    linkTag.href = url;
+    linkTag.id = checksum;
+
+    linkTag.onload = afterload;
+    linkTag.onreadystatechange = afterload;
+
+    location.appendChild(linkTag);
+};
