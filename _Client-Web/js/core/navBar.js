@@ -8,8 +8,6 @@
  * 
  */
 function add_LeftNavbar_Button(icon_name, icon_class = 'material-icons', title, onclick_callback = { type: 'open_topbar' }) {
-    //console.log(onclick_callback);
-
     let md_elem = document.createElement('div');
     let sd_elem = document.createElement('div');
     let a_elem = document.createElement('a');
@@ -217,7 +215,6 @@ function add_TopNavbar_Button(icon_name, title, onclick_callback = null, isfav =
             console.error("Id da tela Nulo");
             return;
         } else {
-            console.log(id)
             document.getElementById("middle_screen").removeChild(document.getElementById("Tela_" + id));
         }
     })
@@ -256,7 +253,6 @@ function select_TopNavbar_Button(id) {
         const element = sel_Tela[index];
         element.classList.add("middle_screen_tela_hidden");
     }
-    //console.log(id);
     let sel_idTela = document.getElementById("Tela_" + id);
     if (sel_idTela != undefined) {
         sel_idTela.classList.remove("middle_screen_tela_hidden");
@@ -280,7 +276,7 @@ function toggle_Favorite(title, favelement) {
         let nPreferences = {
             Favoritos: [{ title: title }]
         }
-        if (Preferences != undefined) {
+        if (Preferences != undefined && Preferences != null && Preferences != "") {
             nPreferences = JSON.parse(Preferences)
             if (nPreferences.Favoritos != undefined) {
                 if (nPreferences.Favoritos.findIndex((value) => { return value.title == title }) == -1) {
@@ -348,10 +344,12 @@ function load_favorito(icon_name, title, onclick_callback) {
  */
 let User_Favoritos = [];
 SocketEmit('Users.Preferences.Get', (err, Preferences) => {
-    if (Preferences != undefined) {
+    if (Preferences != undefined && Preferences != null && Preferences != "") {
         let nPreferences = JSON.parse(Preferences)
         if (nPreferences.Favoritos != undefined) {
             User_Favoritos = nPreferences.Favoritos;
         }
+    } else {
+        User_Favoritos = [];
     }
 });
