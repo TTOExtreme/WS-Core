@@ -121,15 +121,15 @@ export default class SocketServe {
      * @param {String} client_hashsalt
      */
     LoadBasicCoreMods(client_hashsalt) {
-        this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
+        //this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
         if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/_Socket.mjs')) {
             import('../Database/Manipulators/Users/_Socket.mjs').then(moduleclass => {
-                this._events.emit("Log.info", "Core Users importado");
+                //this._events.emit("Log.info", "Core Users importado");
                 const moduleinstance = new moduleclass.default(this._db, this._events);
                 moduleinstance.SocketBasic(this._clients[client_hashsalt]["socket_connection"]);
-                this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
-                this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
-                this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+                //this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
+                //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
             }).catch(err => {
                 this._events.emit("Log.erros", "Erro no import do instalador", err);
                 throw err;
@@ -144,15 +144,15 @@ export default class SocketServe {
      * @param {String} client_hashsalt
      */
     LoadFullCoreMods(client_hashsalt) {
-        this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
+        //this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
         if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/_Socket.mjs')) {
             import('../Database/Manipulators/Users/_Socket.mjs').then(moduleclass => {
-                this._events.emit("Log.info", "Core Users importado");
+                //this._events.emit("Log.info", "Core Users importado");
                 const moduleinstance = new moduleclass.default(this._db, this._events);
                 moduleinstance.SocketFull(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt]);
-                this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
-                this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
-                this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+                //this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
+                //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
             }).catch(err => {
                 this._events.emit("Log.erros", "Erro no import do instalador", err);
                 throw err;

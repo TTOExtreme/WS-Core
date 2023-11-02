@@ -14,6 +14,15 @@ export default {
             ativo: 1
         },
         {
+            nome: "Editar propria senha",
+            permissao: "adm/change/pass",
+            descricao: "",
+            ativo: 1
+        },
+        /**
+         * Usuaruio
+         */
+        {
             nome: "Listar usuários do sistema",
             permissao: "user/list",
             descricao: "",
@@ -32,8 +41,29 @@ export default {
             ativo: 1
         },
         {
+            nome: "Excluir usuários do sistema",
+            permissao: "user/delete",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Editar senha dos usuários do sistema",
+            permissao: "user/edit/pass",
+            descricao: "",
+            ativo: 1
+        },
+        {
             nome: "Desabilitar/Habilitar usuários do sistema",
             permissao: "user/active",
+            descricao: "",
+            ativo: 1
+        },
+        /**
+         * Grupo
+         */
+        {
+            nome: "Listar grupos do sistema",
+            permissao: "group/list",
             descricao: "",
             ativo: 1
         },
@@ -45,13 +75,85 @@ export default {
         },
         {
             nome: "Editar grupos do sistema",
-            permissao: "group/edt",
+            permissao: "group/edit",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Excluir grupos do sistema",
+            permissao: "group/delete",
             descricao: "",
             ativo: 1
         },
         {
             nome: "Desabilitar/Habilitar grupos do sistema",
             permissao: "group/active",
+            descricao: "",
+            ativo: 1
+        },
+        /**
+         * Permissoes Usuários
+         */
+        {
+            nome: "Listar permissões dos usuários do sistema",
+            permissao: "permissao/user/list",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Adicionar permissões dos usuários no sistema",
+            permissao: "permissao/user/add",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Editar permissões dos usuários do sistema",
+            permissao: "permissao/user/edit",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Excluir permissões dos usuários do sistema",
+            permissao: "permissao/user/delete",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Desabilitar/Habilitar permissões dos usuários do sistema",
+            permissao: "permissao/user/active",
+            descricao: "",
+            ativo: 1
+        },
+        /**
+         * Permissoes Usuários
+         */
+        {
+            nome: "Listar permissões dos grupos do sistema",
+            permissao: "permissao/group/list",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Adicionar permissões dos grupos no sistema",
+            permissao: "permissao/group/add",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Editar permissões dos grupos do sistema",
+            permissao: "permissao/group/edit",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Excluir permissões dos grupos do sistema",
+            permissao: "permissao/group/delete",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Desabilitar/Habilitar permissões dos grupos do sistema",
+            permissao: "permissao/group/active",
             descricao: "",
             ativo: 1
         },
