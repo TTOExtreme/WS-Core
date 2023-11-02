@@ -14,7 +14,8 @@ export default class Installer {
         './Database/Manipulators/Groups/Group_User.mjs',
         './Database/Manipulators/Permissions/Permissoes.mjs',
         './Database/Manipulators/Permissions/Permissao_Group.mjs',
-        './Database/Manipulators/Permissions/Permissao_User.mjs'
+        './Database/Manipulators/Permissions/Permissao_User.mjs',
+        './Database/Manipulators/LogAudit/LogAudit.mjs'
     ]
 
 
