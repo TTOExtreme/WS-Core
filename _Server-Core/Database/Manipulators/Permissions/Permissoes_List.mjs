@@ -14,6 +14,12 @@ export default {
             ativo: 1
         },
         {
+            nome: "Listar usuários do sistema",
+            permissao: "user/list",
+            descricao: "",
+            ativo: 1
+        },
+        {
             nome: "Adicionar usuários no sistema",
             permissao: "user/add",
             descricao: "",
@@ -21,7 +27,7 @@ export default {
         },
         {
             nome: "Editar usuários do sistema",
-            permissao: "user/edt",
+            permissao: "user/edit",
             descricao: "",
             ativo: 1
         },
