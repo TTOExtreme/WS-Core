@@ -25,22 +25,23 @@ function SocketEmit(key, ...message) {
 function SocketHandler_Initialization() {
     return new Promise((resolv, reject) => {
         loadJS('/js/libs/socketio.min.js', () => {
+            if (ServerSocketConnection == null) {
 
-            //console.log('Iniciando Conexão com o servidor via Socket', ServerSocketHandshake);
-            const socket = io("/");
-            socket.on("connect", () => {
-                socket.emit('load.login');
-                ServerSocketConnection = socket;
+                //console.log('Iniciando Conexão com o servidor via Socket', ServerSocketHandshake);
+                let socket = io("/");
+                socket.on("connect", () => {
+                    socket.emit('load.login');
+                    ServerSocketConnection = socket;
+                    resolv();
+                });
+
+                socket.on("disconnect", () => {
+                    SocketHandler_Initialization().then().catch();
+                });
+            } else {
+                ServerSocketConnection.emit('load.login');
                 resolv();
-            });
-
-            socket.on("disconnect", () => {
-                //console.log(socket.id); // undefined
-                ServerSocketConnection = null;
-                //Tenta reconectar em caso de desconexão
-
-                SocketHandler_Initialization().then().catch();
-            });
+            }
         }, document.head);
     })
 }

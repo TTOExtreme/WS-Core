@@ -47,13 +47,29 @@ function SocketHandler_Initialization() {
                 ServerSocketHandshake = getCookie("WS-Core_HS");
                 if (ServerSocketHandshake != "") {
                     //console.log('Iniciando Conexão com o servidor via Socket', ServerSocketHandshake);
-                    const socket = io("/");
-                    socket.on("connect", () => {
-                        socket.once('_hs', (handshake) => {
-                            console.log('Recebido HS', handshake);
-                            if (handshake != undefined) {
-                                ServerSocketConnection = socket;
-                            }
+                    if (ServerSocketConnection == null) {
+                        let socket = io("/");
+                        socket.on("connect", () => {
+                            socket.once('_hs', (handshake) => {
+                                if (handshake != undefined) {
+                                    ServerSocketConnection = socket;
+                                    _events.emit("Info.Ok", { text: "Conectado ao servidor novamente.", payload: "" })
+                                }
+                                setTimeout(() => {
+                                    ValidSession().then(() => {
+                                        resolv();
+                                    });
+                                }, 300);
+                            })
+
+                            socket.emit('Load.Home', (ServerSocketHandshake), () => { });
+                        });
+
+                        socket.on("disconnect", () => {
+                            _events.emit("Info.Warn", { text: "Realizando reconexão com o servidor.", payload: "" })
+                        });
+                    } else {
+                        ServerSocketConnection.once('_hs', (handshake) => {
                             setTimeout(() => {
                                 ValidSession().then(() => {
                                     resolv();
@@ -61,15 +77,8 @@ function SocketHandler_Initialization() {
                             }, 300);
                         })
 
-                        socket.emit('Load.Home', (ServerSocketHandshake), () => { });
-                    });
-
-                    socket.on("disconnect", () => {
-                        //console.log(socket.id); // undefined
-                        ServerSocketConnection = null;
-                        //Tenta reconectar em caso de desconexão
-
-                    });
+                        ServerSocketConnection.emit('Load.Home', (ServerSocketHandshake), () => { });
+                    }
                 } else {
                     window.location.replace('/Login')
                 }
