@@ -144,22 +144,28 @@ export default class SocketServe {
      * @param {String} client_hashsalt
      */
     LoadFullCoreMods(client_hashsalt) {
-        //this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
-        if (fs.existsSync('./_Server-Core/Database/Manipulators/Users/_Socket.mjs')) {
-            import('../Database/Manipulators/Users/_Socket.mjs').then(moduleclass => {
-                //this._events.emit("Log.info", "Core Users importado");
-                const moduleinstance = new moduleclass.default(this._db, this._events);
-                moduleinstance.SocketFull(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt]);
-                //this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
-                //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
-                //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
-            }).catch(err => {
-                this._events.emit("Log.erros", "Erro no import do instalador", err);
-                throw err;
-            });
-        } else {
-            this._events.emit("Log.erros", "Core Users Nao Encontrado:", './_Server-Core/Database/Manipulators/Users/Users.mjs', client_hashsalt);
-        }
+        //console.log(client_hashsalt);
+        //let listcore = fs.readdirSync('./_Server-Core/Database/Manipulators/');
+        let listcore = ['Users', 'Groups', 'Permissions']
+        listcore.forEach(coremodule => {
+
+            //this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
+            if (fs.existsSync('./_Server-Core/Database/Manipulators/' + coremodule + '/_Socket.mjs')) {
+                import('../Database/Manipulators/' + coremodule + '/_Socket.mjs').then(moduleclass => {
+                    //this._events.emit("Log.info", "Core Users importado");
+                    const moduleinstance = new moduleclass.default(this._db, this._events);
+                    moduleinstance.SocketFull(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt]);
+                    //this._events.emit("Log.info", "Core Users inicializado:", client_hashsalt);
+                    //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                    //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+                }).catch(err => {
+                    this._events.emit("Log.erros", "Erro no import do instalador", err);
+                    throw err;
+                });
+            } else {
+                this._events.emit("Log.erros", "Core Users Nao Encontrado:", './_Server-Core/Database/Manipulators/Users/Users.mjs', client_hashsalt);
+            }
+        })
         /**
          * Inicializa somente se o login estiver valido
          */

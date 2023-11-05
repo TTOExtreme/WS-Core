@@ -294,7 +294,7 @@ export default class User extends DatabaseStructure {
     DeleteUser(ID_Responsavel, ID, Estado = 1) {
         if (this.LogDatabase == null) { this.LogDatabase = new LogAudit(this._db, this._events); }
         return new Promise((resolv, reject) => {
-            this._db.Query(Users_SQLs.sql_delete_user, [ID_Responsavel, ID_Responsavel, Estado, ID], true).then((results, err) => {
+            this._db.Query(Users_SQLs.sql_delete_user, [ID_Responsavel, ID_Responsavel, 1, ID], true).then((results, err) => {
                 if (err) {
                     this.LogDatabase.LogDatabase(ID_Responsavel, "Delete.User", { ID_Responsavel: ID_Responsavel, ID: ID, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
                     this._events.emit("Log.erros", "Erros encontrados no DeleteUser: " + ID_Responsavel, err);

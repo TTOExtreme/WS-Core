@@ -5,6 +5,8 @@ class TableHandler {
     config = {
         layout: "fitColumns",
         height: "calc(100vh - 70px)",
+
+        width: "100%",
         //columns: columns,
         movableColumns: false,
         resizableColumnFit: true,

@@ -97,6 +97,8 @@ export default class Users_Socket extends User {
                         this._events.emit("Log.info", "Listenters: ", socket_connection.eventNames());
                         //*/
 
+                        this._events.emit("Users.Validado", client_instance);
+
                     }).catch((err) => {
                         this._events.emit('Log.error', "Tentativa de alterar estado do usuário: UUID: " + (client_instance.ID), err);
                     });

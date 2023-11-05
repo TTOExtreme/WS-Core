@@ -6,11 +6,15 @@
     background-color: var(--table-bg);
     font-size: 14px;
     text-align: left;
-    overflow: hidden;
-    height: calc(100vh - 70px);
+    /* overflow: auto; */
+    height: calc(100vh - 146px);
     -ms-transform: translatez(0);
     transform: translatez(0);
     font-family: sans-serif, arial, verdana;
+}
+
+.tabulator .tabulator-tableholder {
+    overflow: auto
 }
 
 .tabulator[tabulator-layout="fitDataFill"] .tabulator-tableHolder .tabulator-table {
@@ -832,7 +836,7 @@
     display: inline-block;
     box-sizing: border-box;
     max-height: 200px;
-    background: #fff;
+    background: var(--table-header-bg);
     border: 1px solid #aaa;
     font-size: 14px;
     overflow-y: auto;
@@ -848,7 +852,7 @@
 
 .tabulator-edit-select-list .tabulator-edit-select-list-item.active {
     color: var(--table-header-text);
-    background: #1D68CD;
+    background: var(--table-header-bg);
 }
 
 .tabulator-edit-select-list .tabulator-edit-select-list-item.active.focused {
@@ -856,13 +860,13 @@
 }
 
 .tabulator-edit-select-list .tabulator-edit-select-list-item.focused {
-    outline: 1px solid #1D68CD;
+    background: var(--table-header-bg-hover);
 }
 
 .tabulator-edit-select-list .tabulator-edit-select-list-item:hover {
     cursor: pointer;
-    color: #fff;
-    background: #1D68CD;
+    color: var(--table-header-text);
+    background: var(--table-header-bg-hover);
 }
 
 .tabulator-edit-select-list .tabulator-edit-select-list-notice {

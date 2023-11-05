@@ -1,4 +1,3 @@
-let tabs = null;
 class Tela_Users {
 
     // Id da tela
@@ -14,6 +13,7 @@ class Tela_Users {
             title: "ID",
             field: "id",
             headerFilter: "input",
+            sorter: "number",
             resizable: true
         },
         {
@@ -51,8 +51,9 @@ class Tela_Users {
         {
             title: "Excluido",
             field: "excluido",
-            headerFilter: "select",
-            headerFilterParams: { values: { 1: "Sim", 0: "Não", "": "" }, clearable: true },
+            headerFilter: "list",
+            headerFilterParams: { values: { 1: "Sim", 0: "Não", "": "-" }, clearable: true },
+            headerFilterPlaceholder: "Não",
             formatter: "tickCross",
             resizable: true,
             visible: false
@@ -81,16 +82,16 @@ class Tela_Users {
         {
             title: "Ativo",
             field: "ativo",
-            headerFilter: "select",
-            headerFilterParams: { values: { 1: "Ativo", 0: "Inativo", "": "" }, clearable: true },
+            headerFilter: "list",
+            headerFilterParams: { values: { 1: "Ativo", 0: "Inativo", "": "-" }, clearable: true },
             formatter: 'tickCross',
             resizable: true
         },
         {
             title: "Online",
             field: "online",
-            headerFilter: "select",
-            headerFilterParams: { values: { 1: "Online", 0: "Offline", "": "" }, clearable: true },
+            headerFilter: "list",
+            headerFilterParams: { values: { 1: "Online", 0: "Offline", "": "-" }, clearable: true },
             formatter: 'tickCross',
             resizable: true
         }
@@ -137,6 +138,11 @@ class Tela_Users {
                         })
 
                         /**
+                         * Adiciona o menu de botoes ao final da tabela
+                         */
+                        this.TableHandler.config.footerElement = "<div id='Users_Tabulator_Footer" + id_aba + "'>";
+
+                        /**
                          * Configura as ações do botao direito em cada Linha
                          */
                         this.TableHandler.config.rowContextMenu = this.rowMenu;
@@ -149,10 +155,107 @@ class Tela_Users {
 
                         this.TableHandler.Setup_tabulator('#users_table_' + this.id_tela, (tabulator_instance) => {
                             this.tabulator = tabulator_instance;
-                            tabs = tabulator_instance;
+                            setTimeout(() => {
 
-                            setTimeout(() => { this.reload_Users(); }, 300);
+                                let users_footer = document.getElementById('Users_Tabulator_Footer' + id_aba);
+                                users_footer.style.marginRight = '10px'
+                                let Reload_Button = document.createElement('a');
+                                Reload_Button.innerHTML = "<i class='material-symbols-outlined'>refresh</i>";
+                                Reload_Button.setAttribute('class', 'tabulator-page')
+                                Reload_Button.onclick = () => {
+                                    this.reload_Users();
+                                }
+                                users_footer.appendChild(Reload_Button);
 
+                                let Add_Button = document.createElement('a');
+                                Add_Button.innerHTML = "<i class='material-symbols-outlined'>person_add</i>";
+                                Add_Button.setAttribute('class', 'tabulator-page')
+                                Add_Button.onclick = () => {
+                                    let bot_addUser = document.createElement('button');
+                                    bot_addUser.setAttribute('class', 'contextMenu_submit')
+                                    bot_addUser.innerText = "Adicionar";
+
+                                    _events.emit('ContextCreator.Create',
+                                        {
+                                            items: [
+                                                {
+                                                    active: true,
+                                                    name: "Nome",
+                                                    input: "<input id='users.nome.add' placeholder='Nome'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Usuário",
+                                                    input: "<input id='users.username.add' placeholder='Username'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Email",
+                                                    input: "<input id='users.email.add' placeholder='E-Mail'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Senha",
+                                                    input: "<input type='password' id='users.pass1.add'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Confirmação Senha",
+                                                    input: "<input type='password' id='users.pass2.add'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Ativo",
+                                                    input: "<input type='checkbox' id='users.active.add'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "",
+                                                    input: bot_addUser,
+                                                    inputType: 'element',
+                                                },
+                                            ]
+                                        }
+                                        , (id) => {
+                                            console.log("ID Contexto", id);
+                                            bot_addUser.onclick = (ev) => {
+                                                let unome = document.getElementById('users.nome.add').value;
+                                                let uusername = document.getElementById('users.username.add').value;
+                                                let uemail = document.getElementById('users.email.add').value;
+                                                let upass1 = document.getElementById('users.pass1.add').value;
+                                                let upass2 = document.getElementById('users.pass2.add').value;
+                                                let uativo = document.getElementById('users.active.add').checked;
+                                                if (unome == "" || uusername == "" || uemail == "" || upass1 == "" || upass2 == "") {
+                                                    _events.emit("Info.Info", { text: "Favor preencher todos os campos." });
+                                                    return;
+                                                }
+                                                if (upass1 != upass2) {
+                                                    _events.emit("Info.Info", { text: "Senhas diferentes." });
+                                                    return;
+                                                }
+                                                this.add_user({
+                                                    nome: unome,
+                                                    username: uusername,
+                                                    email: uemail,
+                                                    password: BCypher.SHA2(upass1),
+                                                    ativo: (uativo ? 1 : 0)
+                                                })
+                                                    .then((userdata) => {
+                                                        _events.emit("Info.Ok", { text: "Usuário Criado.", payload: userdata });
+                                                        _events.emit("ContextCreator.Close", id);
+                                                        this.reload_Users();
+                                                    })
+                                                    .catch((err) => {
+                                                        _events.emit("Info.Erro", { text: "Erro ao criar Usuário.", payload: err });
+                                                        this.reload_Users();
+                                                    })
+                                            }
+                                        });
+                                }
+                                users_footer.appendChild(Add_Button);
+
+                                this.reload_Users();
+                            }, 300);
                         });
                     }, document.head)
                 }, document.head)
@@ -250,98 +353,6 @@ class Tela_Users {
      */
     rowMenu = [
         {
-            label: "<i class='material-symbols-outlined'>refresh</i><span>Recarregar</span>",
-            action: (e, row) => {
-                this.reload_Users();
-            }
-        },
-        {
-            label: "<i class='material-symbols-outlined'>person_add</i><span>Adicionar novo Usuário</span>",
-            action: (e, row) => {
-                let bot_addUser = document.createElement('button');
-                bot_addUser.setAttribute('class', 'contextMenu_submit')
-                bot_addUser.innerText = "Adicionar";
-
-                _events.emit('ContextCreator.Create',
-                    {
-                        items: [
-                            {
-                                active: true,
-                                name: "Nome",
-                                input: "<input id='users.nome.add' placeholder='Nome'>",
-                            },
-                            {
-                                active: true,
-                                name: "Usuário",
-                                input: "<input id='users.username.add' placeholder='Username'>",
-                            },
-                            {
-                                active: true,
-                                name: "Email",
-                                input: "<input id='users.email.add' placeholder='E-Mail'>",
-                            },
-                            {
-                                active: true,
-                                name: "Senha",
-                                input: "<input type='password' id='users.pass1.add'>",
-                            },
-                            {
-                                active: true,
-                                name: "Confirmação Senha",
-                                input: "<input type='password' id='users.pass2.add'>",
-                            },
-                            {
-                                active: true,
-                                name: "Ativo",
-                                input: "<input type='checkbox' id='users.active.add'>",
-                            },
-                            {
-                                active: true,
-                                name: "",
-                                input: bot_addUser,
-                                inputType: 'element',
-                            },
-                        ]
-                    }
-                    , (id) => {
-                        console.log("ID Contexto", id);
-                        bot_addUser.onclick = (ev) => {
-                            let unome = document.getElementById('users.nome.add').value;
-                            let uusername = document.getElementById('users.username.add').value;
-                            let uemail = document.getElementById('users.email.add').value;
-                            let upass1 = document.getElementById('users.pass1.add').value;
-                            let upass2 = document.getElementById('users.pass2.add').value;
-                            let uativo = document.getElementById('users.active.add').checked;
-                            if (unome == "" || uusername == "" || uemail == "" || upass1 == "" || upass2 == "") {
-                                _events.emit("Info.Info", { text: "Favor preencher todos os campos." });
-                                return;
-                            }
-                            if (upass1 != upass2) {
-                                _events.emit("Info.Info", { text: "Senhas diferentes." });
-                                return;
-                            }
-                            this.add_user({
-                                nome: unome,
-                                username: uusername,
-                                email: uemail,
-                                password: BCypher.SHA2(upass1),
-                                ativo: (uativo ? 1 : 0)
-                            })
-                                .then((userdata) => {
-                                    _events.emit("Info.Ok", { text: "Usuário Criado.", payload: userdata });
-                                    _events.emit("ContextCreator.Close", id);
-                                    this.reload_Users();
-                                })
-                                .catch((err) => {
-                                    _events.emit("Info.Erro", { text: "Erro ao criar Usuário.", payload: err });
-                                    this.reload_Users();
-                                })
-                        }
-                    });
-
-            }
-        },
-        {
             label: "<i class='material-symbols-outlined'>mail</i><span>Alterar Email</span>",
             action: (e, row) => {
                 let nEmail = prompt("Digite o novo Email:", row._row.data.email);
@@ -385,6 +396,37 @@ class Tela_Users {
             label: "Funçoes Administrativas",
             menu: [
                 {
+                    label: "<i class='material-symbols-outlined'>settings_account_box</i><span>Permissões</span>",
+                    action: (e, row) => {
+                        let nuserdata = row._row.data;
+
+                        let tab_screen = document.createElement('div');
+                        tab_screen.setAttribute('class', 'tab_Screen')
+                        let id_subscreen = BCypher.generateString();
+                        tab_screen.setAttribute('id', 'tabscreen_permission_' + id_subscreen)
+
+                        _events.emit('ContextCreator.Create', {
+                            items: [
+                                {
+                                    active: true,
+                                    name: "",
+                                    input: "Usuário: " + nuserdata.username,
+                                },
+                                {
+                                    active: true,
+                                    name: "",
+                                    input: tab_screen,
+                                    inputType: 'element',
+                                }
+                            ]
+                        }, (id_aba) => {
+                            loadJS('/js/core/permissao/permissao.js', () => {
+                                _events.emit("Load.Permissoes.List", 'tabscreen_permission_' + id_subscreen, nuserdata.id, true);
+                            }, document.head)
+                        });
+                    }
+                },
+                {
                     label: "<i class='material-symbols-outlined'>delete</i><span>Excluir</span>",
                     action: (e, row) => {
                         let nUsername = prompt("Confirme o nome do Usuário para excluir <" + row._row.data.username + ">:");
@@ -417,7 +459,8 @@ class Tela_Users {
                             })
                         }
                     }
-                },/*
+                },
+                /*
                 {
                     label: "<span class='material-symbols-outlined'>delete</span> Excluir",
                     disabled: true,

@@ -4,49 +4,50 @@ class ContextCreator {
 
     constructor() {
         _events.on("ContextCreator.Create", (data, callback = (id) => { }) => {
-            if (data.items.length > 0) {
-                let ctxDiv = document.createElement("div");
-                let id = BCypher.generateString();
-                this.ContextScreens[id] = { element: ctxDiv };
+            let ctxDiv = document.createElement("div");
+            let id = BCypher.generateString();
+            this.ContextScreens[id] = { element: ctxDiv };
 
-                ctxDiv.setAttribute("id", id);
-                ctxDiv.setAttribute("class", "contextMenu");
-                //ctxDiv.setAttribute("style", "top:" + data.data[0].y + "px;left:" + data.data[0].x + "px;");
-                let table = document.createElement("table");
-                ctxDiv.appendChild(table);
-                //include a close button
+            ctxDiv.setAttribute("id", id);
+            ctxDiv.setAttribute("class", "contextMenu");
+            //ctxDiv.setAttribute("style", "top:" + data.data[0].y + "px;left:" + data.data[0].x + "px;");
+            let table = document.createElement("table");
+            ctxDiv.appendChild(table);
+            //include a close button
 
-                let tr = document.createElement("tr");
+            let tr = document.createElement("tr");
 
-                let th1 = document.createElement('th');
-                th1.setAttribute('style', 'text-align: left;')
-                let move = document.createElement('i');
-                move.setAttribute('class', "material-symbols-outlined move_menu");
-                move.innerText = "menu";
-                let move_func = (ev) => { this.move_screen(ev, ctxDiv); }
-                move.onmousedown = () => {
-                    document.body.addEventListener('mousemove', move_func)
-                }
-                move.onmouseup = () => {
-                    document.body.removeEventListener('mousemove', move_func);
-                }
-                th1.appendChild(move);
+            let th1 = document.createElement('th');
+            th1.setAttribute('style', 'text-align: left;')
+            let move = document.createElement('i');
+            move.setAttribute('class', "material-symbols-outlined move_menu");
+            move.innerText = "menu";
+            let move_func = (ev) => { this.move_screen(ev, ctxDiv); }
+            move.onmousedown = () => {
+                document.body.addEventListener('mousemove', move_func)
+            }
+            move.onmouseup = () => {
+                document.body.removeEventListener('mousemove', move_func);
+            }
+            th1.appendChild(move);
 
-                let th2 = document.createElement('th');
-                th2.setAttribute('style', 'text-align: right;')
-                let close = document.createElement('i');
-                close.setAttribute('class', "material-symbols-outlined close_menu");
-                close.innerText = "close";
-                close.onclick = () => {
-                    _events.emit("ContextCreator.Close", id);
-                };
-                th2.appendChild(close);
+            let th2 = document.createElement('th');
+            th2.setAttribute('style', 'text-align: right;')
+            let close = document.createElement('i');
+            close.setAttribute('class', "material-symbols-outlined close_menu");
+            close.innerText = "close";
+            close.onclick = () => {
+                _events.emit("ContextCreator.Close", id);
+            };
+            th2.appendChild(close);
 
-                tr.appendChild(th1);
-                tr.appendChild(th2);
+            tr.appendChild(th1);
+            tr.appendChild(th2);
 
-                table.appendChild(tr);
+            table.appendChild(tr);
 
+
+            if (data != {} && data != null) {
                 data.items.forEach(item => {
                     let tr = document.createElement("tr");
                     tr.innerHTML = "<td><p " + ((item.active) ? "" : "class='ctx-item-disabled'") + ">" + item.name + "</p></td>";
@@ -69,12 +70,9 @@ class ContextCreator {
                     }
                     table.appendChild(tr);
                 });
-                document.body.appendChild(ctxDiv);
-                callback(id);
-            } else {
-                callback(null);
             }
-
+            document.body.appendChild(ctxDiv);
+            callback(id);
         })
 
         _events.on("ContextCreator.Close", (id) => {
