@@ -1,5 +1,6 @@
 
 import DatabaseStructure from "../DatabaseStructure.mjs";
+import LogAudit from "../LogAudit/LogAudit.mjs";
 import Permissoes_List from "./Permissoes_List.mjs";
 import Permissoes_SQLs from "./Permissoes_SQLs.mjs";
 
@@ -82,36 +83,122 @@ export default class Permissao_Group extends DatabaseStructure {
     }
 
     /**
-     * Realiza a adição da permissão ao Grupo
+     * Realiza a adição da permissão ao Usuário
      * @param {Integer} ID_Responsavel 
      * @param {Integer} PermissaoID Permissao a ser adicionada
-     * @param {Integer} GroupID Grupo a ser adicionado a permissão
+     * @param {Integer} GroupId Usuário a ser adicionado a permissão
      * @param {Integer} ativoSe essa permisao do usuario esta ativa no registro 
      * @param {Integer} tipo Se esse tipo de permissao é 1,Allow  ou 2,Deny
      */
-    Add_Perm_Group(ID_Responsavel, PermissaoID, GroupID, ativo = 1, tipo = 1) {
+    Add_Perm_Group(ID_Responsavel, PermissaoID, GroupId, ativo = 1, tipo = 1) {
         if (this.LogDatabase == null) { this.LogDatabase = new LogAudit(this._db, this._events); }
         return new Promise((resolv, reject) => {
-            if (Group_results != undefined) {
-                if (Group_results[0] != undefined) {
-                    this._db.Query(Permissoes_SQLs.sql_permissions_add_Group, [ID_Responsavel, GroupID, PermissaoID, ativo, tipo]).then((add_results, err) => {
-                        if (err) {
-                            this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Add", { ID_Responsavel: ID_Responsavel, group_id: GroupID, permissao_id: PermissaoID, ativo: ativo, tipo: tipo, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
-                            this._events.emit("Log.erros", "Erros encontrados no Add_Perm_Group: " + PermissaoID, err);
-                            throw "Erros encontrados ao tentar executar Select do Add_Perm_Group: " + PermissaoID;
-                        } else {
-                            this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Add", { ID_Responsavel: ID_Responsavel, group_id: GroupID, permissao_id: PermissaoID, ativo: ativo, tipo: tipo }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
-                            resolv();
-                        }
-                    }).catch(reject)
+            this._db.Query(Permissoes_SQLs.sql_permissions_add_group, [ID_Responsavel, GroupId, PermissaoID, ativo, tipo]).then((add_results, err) => {
+                if (err) {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Add", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, ativo: ativo, tipo: tipo, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
+                    this._events.emit("Log.erros", "Erros encontrados no Add_Perm_group: " + PermissaoID, err);
+                    throw "Erros encontrados ao tentar executar Select do Add_Perm_group: " + PermissaoID;
                 } else {
-                    reject("UUID invalido")
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Add", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, ativo: ativo, tipo: tipo }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
+                    resolv();
                 }
-            } else {
-                reject("UUID invalido")
-            }
+            }).catch(reject)
         })
     }
+
+    /**
+     * Realiza a adição da permissão ao Usuário
+     * @param {Integer} ID_Responsavel 
+     * @param {Integer} PermissaoID Permissao a ser adicionada
+     * @param {Integer} GroupId Usuário a ser adicionado a permissão
+     * @param {Integer} ativoSe essa permisao do usuario esta ativa no registro 
+     * @param {Integer} tipo Se esse tipo de permissao é 1,Allow  ou 2,Deny
+     */
+    Edit_Perm_Group(ID_Responsavel, PermissaoID, GroupId, ativo = 1, tipo = 1) {
+        if (this.LogDatabase == null) { this.LogDatabase = new LogAudit(this._db, this._events); }
+        return new Promise((resolv, reject) => {
+            this._db.Query(Permissoes_SQLs.sql_permissions_edit_group, [ID_Responsavel, ativo, tipo, GroupId, PermissaoID]).then((add_results, err) => {
+                if (err) {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Edit", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, ativo: ativo, tipo: tipo, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
+                    this._events.emit("Log.erros", "Erros encontrados no Edit_Perm_group: " + PermissaoID, err);
+                    throw "Erros encontrados ao tentar executar Select do Edit_Perm_group: " + PermissaoID;
+                } else {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Edit", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, ativo: ativo, tipo: tipo }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
+                    resolv();
+                }
+            }).catch(reject)
+        })
+    }
+
+    /**
+     * Realiza a adição da permissão ao Usuário
+     * @param {Integer} ID_Responsavel 
+     * @param {Integer} PermissaoID Permissao a ser adicionada
+     * @param {Integer} GroupId Usuário a ser adicionado a permissão
+     * @param {Integer} ativoSe essa permisao do usuario esta ativa no registro 
+     * @param {Integer} tipo Se esse tipo de permissao é 1,Allow  ou 2,Deny
+     */
+    Delete_Perm_Group(ID_Responsavel, PermissaoID, GroupId, excluido = 1) {
+        if (this.LogDatabase == null) { this.LogDatabase = new LogAudit(this._db, this._events); }
+        return new Promise((resolv, reject) => {
+            this._db.Query(Permissoes_SQLs.sql_permissions_delete_group, [ID_Responsavel, 1, GroupId, PermissaoID]).then((add_results, err) => {
+                if (err) {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Delete", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, excluido: excluido, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
+                    this._events.emit("Log.erros", "Erros encontrados no Delete_Perm_group: " + PermissaoID, err);
+                    throw "Erros encontrados ao tentar executar Select do Delete_Perm_group: " + PermissaoID;
+                } else {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Edit", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, excluido: excluido }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
+                    resolv();
+                }
+            }).catch(reject)
+        })
+    }
+
+    /**
+     * Realiza a Inativação/Ativação da permissão ao Usuário
+     * @param {Integer} ID_Responsavel 
+     * @param {Integer} PermissaoID Permissao a ser adicionada
+     * @param {Integer} GroupId Usuário a ser adicionado a permissão
+     * @param {Integer} ativoSe essa permisao do usuario esta ativa no registro 
+     * @param {Integer} tipo Se esse tipo de permissao é 1,Allow  ou 2,Deny
+     */
+    Active_Perm_Group(ID_Responsavel, PermissaoID, GroupId, ativo = 1) {
+        if (this.LogDatabase == null) { this.LogDatabase = new LogAudit(this._db, this._events); }
+        return new Promise((resolv, reject) => {
+            this._db.Query(Permissoes_SQLs.sql_permissions_active_group, [ID_Responsavel, ativo, GroupId, PermissaoID]).then((add_results, err) => {
+                if (err) {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Active", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, ativo: ativo, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
+                    this._events.emit("Log.erros", "Erros encontrados no Active_Perm_group: " + PermissaoID, err);
+                    throw "Erros encontrados ao tentar executar Select do Active_Perm_group: " + PermissaoID;
+                } else {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.Edit", { ID_Responsavel: ID_Responsavel, group_id: GroupId, permissao_id: PermissaoID, ativo: ativo }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
+                    resolv();
+                }
+            }).catch(reject)
+        })
+    }
+
+    /**
+     * Realiza a adição da permissão ao Usuário
+     * @param {Integer} ID_Responsavel 
+     * @param {Integer} GroupID Usuário a ser adicionado a permissão
+     */
+    List_Perm_Group(ID_Responsavel, GroupID) {
+        if (this.LogDatabase == null) { this.LogDatabase = new LogAudit(this._db, this._events); }
+        return new Promise((resolv, reject) => {
+            this._db.Query(Permissoes_SQLs.sql_permissions_list_group, [GroupID, GroupID]).then((add_results, err) => {
+                if (err) {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.List", { ID_Responsavel: ID_Responsavel, group_id: GroupID, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
+                    this._events.emit("Log.erros", "Erros encontrados no List_Perm_Group: ", err);
+                    throw "Erros encontrados ao tentar executar Select do List_Perm_Group: ";
+                } else {
+                    this.LogDatabase.LogDatabase(ID_Responsavel, "Perm.Group.List", { ID_Responsavel: ID_Responsavel, group_id: GroupID }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
+                    resolv(add_results[0]);
+                }
+            }).catch(reject)
+        })
+    }
+
 
     /**
      * Realiza a adição das permissões ao grupo e ao usuário

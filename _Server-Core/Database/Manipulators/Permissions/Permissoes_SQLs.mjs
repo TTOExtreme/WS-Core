@@ -41,6 +41,20 @@ export default {
         " LEFT JOIN _Users as atualizado_por on atualizado_por.id = userperms.atualizado_por",
 
     /**
+     * Seleciona as permissoes do usuário usando de base o id
+     */
+    sql_permissions_list_group: "SELECT ? as group_id,_Permissions.id,_Permissions.permissao,_Permissions.nome, IFNULL(userperms.tipo,'-') as tipo,IFNULL(userperms.ativo,'-') as ativo,IFNULL(userperms.criado_em,'-') as criado_em,IFNULL(criado_por.username,'-') as criado_por,IFNULL(atualizado_por.username,'-') as atualizado_por ,IFNULL(userperms.atualizado_em,'-') as atualizado_em  FROM _Permissions" +
+        " LEFT JOIN (" +
+        " SELECT DISTINCT _Permissions.permissao,_Permissions.nome,_Permissions.descricao, " +
+        "	Permissao_Group.* FROM _Permissions " +
+        "		LEFT JOIN Permissao_Group on Permissao_Group.permissao_id  = _Permissions.id AND Permissao_Group.excluido=0" +
+        "		LEFT JOIN _Groups on Permissao_Group.group_id  = _Groups.id  AND _Groups.ativo = 1  AND _Groups.excluido=0" +
+        "		WHERE _Groups.id = ?" +
+        ") as userperms on userperms.permissao = _Permissions.permissao" +
+        " LEFT JOIN _Users as criado_por on criado_por.id = userperms.criado_por" +
+        " LEFT JOIN _Users as atualizado_por on atualizado_por.id = userperms.atualizado_por",
+
+    /**
      * Realiza o update de permissoes do Usuario em base o UUID
      */
     sql_permissions_add_user: "INSERT INTO Permissao_User (criado_por,user_id,permissao_id,ativo,tipo) VALUES(?,?,?,?,?);",
@@ -49,7 +63,6 @@ export default {
      * Exclui o registro
      */
     sql_permissions_delete_user: "UPDATE Permissao_User SET excluido_por =?, excluido_em=CURRENT_TIMESTAMP(),excluido = ? WHERE user_id=? AND permissao_id=?",
-
 
     /**
      * Realiza o update de permissoes do Usuario em base o id
@@ -62,9 +75,24 @@ export default {
     sql_permissions_edit_user: "UPDATE Permissao_User SET atualizado_por =?, atualizado_em=CURRENT_TIMESTAMP(),ativo = ?,tipo=? WHERE user_id=? AND permissao_id=?;",
 
     /**
-     * Realiza o update de permissoes do Usuario em base o id
+     * Realiza o update de permissoes do Usuario em base o UUID
      */
     sql_permissions_add_group: "INSERT INTO Permissao_Group (criado_por,group_id,permissao_id,ativo,tipo) VALUES(?,?,?,?,?);",
+
+    /**
+     * Exclui o registro
+     */
+    sql_permissions_delete_group: "UPDATE Permissao_Group SET excluido_por =?, excluido_em=CURRENT_TIMESTAMP(),excluido = ? WHERE group_id=? AND permissao_id=?",
+
+    /**
+     * Realiza o update de permissoes do Usuario em base o id
+     */
+    sql_permissions_active_group: "UPDATE Permissao_Group SET atualizado_por =?, atualizado_em=CURRENT_TIMESTAMP(),ativo = ? WHERE group_id=? AND permissao_id=?;",
+
+    /**
+     * Realiza o update de permissoes do Usuario em base o id
+     */
+    sql_permissions_edit_group: "UPDATE Permissao_Group SET atualizado_por =?, atualizado_em=CURRENT_TIMESTAMP(),ativo = ?,tipo=? WHERE group_id=? AND permissao_id=?;",
 
     /**
      * Retorna o user_id em base o username
@@ -76,12 +104,10 @@ export default {
      */
     sql_get_groupid: "SELECT id FROM _Groups WHERE code = ? AND excluido=0;",
 
-
     /**
      * Retorna o user_id em base o username
      */
     sql_get_permissionid: "SELECT id FROM _Permissions WHERE permissao = ? AND excluido=0;",
-
 
     /**
      * Usado no Login para retorno do salt para validação da sena

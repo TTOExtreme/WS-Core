@@ -71,35 +71,35 @@ export default class Permissao_Socket extends Permissao {
             /**
              * Grupo
              */
-            /*
+
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/group/list").then(() => {
-                socket_connection.on('Permissao.Grupo.List', (...args) => { this.Socket_Permissao_Users_List(socket_connection, client_instance, ...args) });
+                socket_connection.on('Permissao.Grupo.List', (...args) => { this.Socket_Permissao_Group_List(socket_connection, client_instance, ...args) });
             }).catch(err => {
-                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_List UUID: " + (client_instance.UUID), err)
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_List UUID: " + (client_instance.UUID), err)
                 callback("Acesso Negado", null);
             })
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/group/edit").then(() => {
-                socket_connection.on('Permissao.Grupo.Edit', (...args) => { this.Socket_Permissao_Users_Edit(socket_connection, client_instance, ...args) });
+                socket_connection.on('Permissao.Grupo.Edit', (...args) => { this.Socket_Permissao_Group_Edit(socket_connection, client_instance, ...args) });
             }).catch(err => {
-                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Edit UUID: " + (client_instance.UUID), err)
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Edit UUID: " + (client_instance.UUID), err)
                 callback("Acesso Negado", null);
             })
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/group/add").then(() => {
-                socket_connection.on('Permissao.Grupo.Add', (...args) => { this.Socket_Permissao_Users_Add(socket_connection, client_instance, ...args) });
+                socket_connection.on('Permissao.Grupo.Add', (...args) => { this.Socket_Permissao_Group_Add(socket_connection, client_instance, ...args) });
             }).catch(err => {
-                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Add UUID: " + (client_instance.UUID), err)
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Add UUID: " + (client_instance.UUID), err)
                 callback("Acesso Negado", null);
             })
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/group/delete").then(() => {
-                socket_connection.on('Permissao.Grupo.Delete', (...args) => { this.Socket_Permissao_Users_Delete(socket_connection, client_instance, ...args) });
+                socket_connection.on('Permissao.Grupo.Delete', (...args) => { this.Socket_Permissao_Group_Delete(socket_connection, client_instance, ...args) });
             }).catch(err => {
-                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Delete UUID: " + (client_instance.UUID), err)
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Delete UUID: " + (client_instance.UUID), err)
                 callback("Acesso Negado", null);
             })
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/group/active").then(() => {
-                socket_connection.on('Permissao.Grupo.Active', (...args) => { this.Socket_Permissao_Users_Active(socket_connection, client_instance, ...args) });
+                socket_connection.on('Permissao.Grupo.Active', (...args) => { this.Socket_Permissao_Group_Active(socket_connection, client_instance, ...args) });
             }).catch(err => {
-                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Active UUID: " + (client_instance.UUID), err)
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Active UUID: " + (client_instance.UUID), err)
                 callback("Acesso Negado", null);
             })//*/
 
@@ -218,7 +218,7 @@ export default class Permissao_Socket extends Permissao {
         if (client_instance.UUID != undefined) {
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/add").then(() => {
 
-                this.Permissao_User.Add_Perm_User(client_instance.ID, UserData.perm_id, UserData.user_id, UserData.ativo, UserData.tipo).then((Users) => {
+                this.Permissao_User.Add_Perm_Group(client_instance.ID, UserData.perm_id, UserData.user_id, UserData.ativo, UserData.tipo).then((Users) => {
                     callback(null, Users);
                 }).catch(err => {
                     this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Add UUID: " + (client_instance.UUID).toString(), err)
@@ -226,6 +226,132 @@ export default class Permissao_Socket extends Permissao {
                 })
             }).catch(err => {
                 this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Add UUID: " + (client_instance.UUID).toString(), err)
+                callback("Acesso Negado", null);
+            })
+        } else {
+            this._events.emit('Log.error', 'UUID Invalido: UUID: ' + (client_instance.UUID).toString())
+            callback("Erro UUID Invalido", null);
+        }
+    }
+
+
+    /**
+     * Retorna as preferencias do Usuário
+     * @param {Function} callback 
+     */
+    Socket_Permissao_Group_List(socket_connection, client_instance, GroupID, callback = (err, result) => { }) {
+        if (client_instance.UUID != undefined) {
+            this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/list").then(() => {
+                this.Permissao_Group.List_Perm_Group(client_instance.ID, GroupID).then((Group) => {
+                    callback(null, Group);
+                }).catch(err => {
+                    this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_List UUID: " + (client_instance.UUID).toString(), err)
+                    callback("Acesso Negado", null);
+                })
+            }).catch(err => {
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_List UUID: " + (client_instance.UUID).toString(), err)
+                callback("Acesso Negado", null);
+            })
+        } else {
+            this._events.emit('Log.error', 'UUID Invalido: UUID: ' + (client_instance.UUID).toString())
+            callback("Erro UUID Invalido", null);
+        }
+    }
+
+    /**
+     * Retorna as preferencias do Usuário
+     * @param {Function} callback 
+     * @param {JSON} UserData Dados do Usuario a ser realizado a operação
+     */
+    Socket_Permissao_Group_Delete(socket_connection, client_instance, UserData, callback = (err, result) => { }) {
+        if (client_instance.UUID != undefined) {
+            this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/delete").then(() => {
+                this.Permissao_Group.Delete_Perm_Group(client_instance.ID, UserData.id, UserData.group_id, UserData.excluido).then(() => {
+                    callback(null, "Excluido");
+                }).catch(err => {
+                    this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Delete UUID: " + client_instance.UUID, err)
+                    callback("Acesso Negado", null);
+                })
+            }).catch(err => {
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Delete UUID: " + client_instance.UUID, err)
+                callback("Acesso Negado", null);
+            })
+        } else {
+            this._events.emit('Log.error', 'UUID Invalido: UUID: ' + (client_instance.UUID).toString())
+            callback("Erro UUID Invalido", null);
+        }
+    }
+
+    /**
+     * Retorna as preferencias do Usuário
+     * @param {Function} callback 
+     * @param {JSON} UserData Dados do Usuario a ser realizado a operação
+     */
+    Socket_Permissao_Group_Active(socket_connection, client_instance, UserData, callback = (err, result) => { }) {
+        if (client_instance.UUID != undefined) {
+            this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/active").then(() => {
+                this.Permissao_Group.Active_Perm_Group(client_instance.ID, UserData.id, UserData.group_id, UserData.ativo).then((Group) => {
+                    callback(null, "Alterado estado do Usuário");
+                }).catch(err => {
+                    this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Delete UUID: " + client_instance.UUID, err)
+                    callback("Acesso Negado", null);
+                })
+            }).catch(err => {
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Delete UUID: " + client_instance.UUID, err)
+                callback("Acesso Negado", null);
+            })
+        } else {
+            this._events.emit('Log.error', 'UUID Invalido: UUID: ' + (client_instance.UUID).toString())
+            callback("Erro UUID Invalido", null);
+        }
+    }
+
+    /**
+     * 
+     * @param {Socket} socket_connection 
+     * @param {JSON} client_instance 
+     * @param {JSON} UserData Dados do Usuario a ser realizado a operação
+     * @param {Function} callback 
+     */
+    Socket_Permissao_Group_Edit(socket_connection, client_instance, UserData, callback = (err, result) => { }) {
+        if (client_instance.UUID != undefined) {
+            this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/edit").then(() => {
+                this.Permissao_Group.Edit_Perm_Group(client_instance.ID, UserData.perm_id, UserData.group_id, UserData.ativo, UserData.tipo).then(() => {
+                    callback(null, 'OK');
+                }).catch(err => {
+                    this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Edit UUID: " + (client_instance.UUID).toString(), err)
+                    callback("Acesso Negado", null);
+                })
+            }).catch(err => {
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Edit UUID: " + (client_instance.UUID).toString(), err)
+                callback("Acesso Negado", null);
+            })
+        } else {
+            this._events.emit('Log.error', 'UUID Invalido: UUID: ' + (client_instance.UUID).toString())
+            callback("Erro UUID Invalido", null);
+        }
+    }
+
+
+    /**
+     * Realiza a criação de um novo usuário
+     * @param {Socket} socket_connection 
+     * @param {JSON} client_instance 
+     * @param {JSON} UserData Dados do Usuario a ser realizado a operação
+     * @param {Function} callback 
+     */
+    Socket_Permissao_Group_Add(socket_connection, client_instance, UserData, callback = (err, result) => { }) {
+        if (client_instance.UUID != undefined) {
+            this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/add").then(() => {
+
+                this.Permissao_Group.Add_Perm_Group(client_instance.ID, UserData.perm_id, UserData.user_id, UserData.ativo, UserData.tipo).then((Group) => {
+                    callback(null, Group);
+                }).catch(err => {
+                    this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Add UUID: " + (client_instance.UUID).toString(), err)
+                    callback("Acesso Negado", null);
+                })
+            }).catch(err => {
+                this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Group_Add UUID: " + (client_instance.UUID).toString(), err)
                 callback("Acesso Negado", null);
             })
         } else {

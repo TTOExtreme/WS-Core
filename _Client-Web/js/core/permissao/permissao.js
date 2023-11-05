@@ -293,8 +293,8 @@ class Tela_Permissao {
                             },
                             {
                                 active: true,
-                                name: "ID Usuário",
-                                input: "<input disabled id='Permissao." + this.Tipo_Registro + ".userid.add_" + id_subscreen + "' value='" + row._row.data.user_id + "'>",
+                                name: "ID " + (this.Tipo_Registro == 'User' ? "Usuário" : "Grupo"),
+                                input: "<input disabled id='Permissao." + this.Tipo_Registro + ".userid.add_" + id_subscreen + "' value='" + (this.Tipo_Registro == 'User' ? row._row.data.user_id : row._row.data.group_id) + "'>",
                             },
                             {
                                 active: true,
@@ -325,6 +325,7 @@ class Tela_Permissao {
                                 this.add_permissao({
                                     perm_id: idperm,
                                     user_id: iduser,
+                                    group_id: iduser,
                                     ativo: (uativo ? 1 : 0),
                                     tipo: (utipo ? 1 : 2)
                                 })
@@ -341,6 +342,7 @@ class Tela_Permissao {
                                 this.edit_permissao({
                                     perm_id: idperm,
                                     user_id: iduser,
+                                    group_id: iduser,
                                     ativo: (uativo ? 1 : 0),
                                     tipo: (utipo ? 1 : 2)
                                 })

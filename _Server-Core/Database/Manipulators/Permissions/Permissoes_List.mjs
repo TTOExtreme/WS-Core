@@ -125,7 +125,7 @@ export default {
             ativo: 1
         },
         /**
-         * Permissoes Usuários
+         * Permissoes Grupo
          */
         {
             nome: "Listar permissões dos grupos do sistema",

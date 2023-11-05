@@ -35,15 +35,7 @@ export default {
         parent: "Configurações",
         icon: "group",
         icon_class: "material-icons",
-        onclick: { type: 'open_top_NavBar' }
-    },
-    "Navbar/configuracoes/permissoes": {
-        title: "Permissões",
-        permissao: "Navbar/configuracoes/permissoes",
-        parent: "Configurações",
-        icon: "contact_page",
-        icon_class: "material-icons",
-        onclick: { type: 'open_top_NavBar' }
+        onclick: { type: 'open_top_NavBar', load: '/js/core/groups/groups.js' }
     },
     "Navbar/modulos": {
         title: "Módulos",
