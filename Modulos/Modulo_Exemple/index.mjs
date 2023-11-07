@@ -1,4 +1,4 @@
-import Module_Class from "../Module_Class.mjs";
+import Module_Class from "../Modulo_Class.mjs";
 
 
 export default class Module_Exemple extends Module_Class {

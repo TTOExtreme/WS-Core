@@ -69,6 +69,9 @@ export default class DatabaseStructure {
         },
     }
 
+
+    _table_permisao = []
+
     /**
      * Valores iniciais da tabela estruturado em formato JSON {<nomecoluna>:<valor>}
      */
@@ -193,6 +196,48 @@ export default class DatabaseStructure {
                     }
                 })
             });
+        })
+    }
+
+    /**
+     * {
+            nome: "Listar Scripts do sistema",
+            permissao: "modulo/scripter/list",
+            descricao: "",
+            ativo: 1
+        },
+     */
+    /**
+     * Carrega as permissoes salvas do modulo no banco caso exista
+     * @returns 
+     */
+    _createPermissions() {
+        return new Promise((resolv, reject) => {
+            if (this._table_permisao.length > 0) {
+                let perm_delete = ""
+                let perm_include = ""
+                this._table_permisao.forEach(perm => {
+                    perm_delete += (perm_delete.length > 0 ? "," : "") + "'" + perm.permissao + "'";
+                    perm_include += (perm_include.length > 0 ? "," : "") + "('" + perm.nome + "','" + perm.permissao + "','" + perm.descricao + "'," + perm.ativo + ")"
+                })
+                this._db.Query("DELETE FROM _Permissions WHERE permissao IN (" + perm_delete + ");").then((results, err0) => {
+                    if (err0) {
+                        this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
+                        reject("Erro na limpeza das permissoes: " + this._tablename);
+                    }
+                    this._db.Query("INSERT INTO _Permissions (nome,permissao,descricao,ativo) VALUES " + perm_include + ";").then((results, err1) => {
+                        if (err1) {
+                            if (err1.indexOf("Unknown table") == -1) {
+                                this._events.emit("Log.erros", "Erros encontrados na criação das permissoes: " + this._tablename, err1);
+                            }
+                            reject("Erro na criação das permissoes: " + this._tablename);
+                        }
+                        resolv();
+                    })
+                })
+            } else {
+                resolv();
+            }
         })
     }
 

@@ -2,6 +2,7 @@ import { EventEmitter } from "events";
 import { Server, Socket } from "socket.io";
 import BCypher from "./BCypher_2.0.mjs";
 import fs from "fs";
+import NavBarStructure from "../Database/Manipulators/ServerConfig/NavBarStructure.mjs";
 
 /**
  * Classe referente ao controlde de todas as conexões instanciadas do Socket
@@ -58,6 +59,7 @@ export default class SocketServe {
                     if (client_hashsalt != undefined) {
                         if (client_hashsalt.length == 64) {
                             this._clients[client_hashsalt] = {
+                                NavBarStructure: NavBarStructure,
                                 socket_connection: socket_connection,
                                 socket_listeners: [],
                                 username: "",
@@ -65,6 +67,7 @@ export default class SocketServe {
                                 connected_in: new Date().getTime(),
                                 last_heartbeat: new Date().getTime(),
                             }
+
                             this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
                             this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
 
@@ -89,6 +92,7 @@ export default class SocketServe {
                 socket_connection.once("load.login", () => {
                     let client_hashsalt = new BCypher().generateString();
                     this._clients[client_hashsalt] = {
+                        NavBarStructure: NavBarStructure,
                         socket_connection: socket_connection,
                         socket_listeners: [],
                         username: "",
@@ -147,6 +151,12 @@ export default class SocketServe {
         //console.log(client_hashsalt);
         //let listcore = fs.readdirSync('./_Server-Core/Database/Manipulators/');
         let listcore = ['Users', 'Groups', 'Permissions']
+
+        /**
+         * pre inicializa os modulos
+         */
+        this.PreloadModulos(client_hashsalt);
+
         listcore.forEach(coremodule => {
 
             //this._events.emit("Log.info", "Inicializando Core Users:", client_hashsalt);
@@ -181,23 +191,51 @@ export default class SocketServe {
      * @param {String} client_hashsalt
      */
     LoadModule(Modulename, client_hashsalt) {
-        this._events.emit("Log.info", "Inicializando Modulo:", Modulename, client_hashsalt);
-        if (fs.existsSync('./_Server-Core/Modules/Module_' + Modulename + "/index.mjs")) {
-            this._events.emit("Log.info", "Modulo importado:", Modulename);
-            import('../Modules/Module_' + Modulename + "/index.mjs").then(moduleclass => {
-                this._events.emit("Log.info", "Modulo importado:", Modulename);
+        //this._events.emit("Log.info", "Inicializando Modulo:", Modulename, client_hashsalt);
+        if (fs.existsSync('./Modulos/Modulo_' + Modulename + "/index.mjs")) {
+            //this._events.emit("Log.info", "Modulo importado:", Modulename);
+            import('../../Modulos/Modulo_' + Modulename + "/index.mjs").then(moduleclass => {
+                //this._events.emit("Log.info", "Modulo importado:", Modulename);
                 const moduleinstance = new moduleclass.default(this._db, this._events);
-                moduleinstance.PostInit(this._clients[client_hashsalt]["socket_connection"], client_hashsalt, this);
+                moduleinstance.PostInit(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt], this);
                 this._events.emit("Log.info", "Modulo inicializado:", Modulename, client_hashsalt);
-                this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
-                this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+                //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
             }).catch(err => {
                 this._events.emit("Log.erros", "Erro no import do instalador", err);
                 throw err;
             });
         } else {
-            this._events.emit("Log.erros", "Modulo Nao Encontrado:", './_Server-Core/Modules/Module_' + Modulename + "/index.mjs", client_hashsalt);
+            this._events.emit("Log.erros", "Modulo Nao Encontrado:", './Modulos/Modulo_' + Modulename + "/index.mjs", client_hashsalt);
         }
+    }
+
+    /**
+     * Realiza o carregamento do Modulo na instancia do cliente
+     * @param {String} Modulename 
+     * @param {String} client_hashsalt
+     */
+    PreloadModulos(client_hashsalt) {
+        //this._events.emit("Log.info", "Inicializando Modulo:", Modulename, client_hashsalt);
+        let modulos = fs.readdirSync('./Modulos/');
+        modulos.forEach(Modulename => {
+            if (fs.existsSync("./Modulos/" + Modulename + "/index.mjs")) {
+                //this._events.emit("Log.info", "Modulo importado:", Modulename);
+                import("../../Modulos/" + Modulename + "/index.mjs").then(moduleclass => {
+                    //this._events.emit("Log.info", "Modulo importado:", Modulename);
+                    const moduleinstance = new moduleclass.default(this._db, this._events);
+                    moduleinstance.PreInit(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt], this);
+                    this._events.emit("Log.info", "Modulo inicializado:", Modulename, client_hashsalt);
+                    //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                    //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+                }).catch(err => {
+                    this._events.emit("Log.erros", "Erro no import do instalador", err);
+                    throw err;
+                });
+            } else {
+                this._events.emit("Log.erros", "Modulo Nao Encontrado:", './Modulos/Modulo_' + Modulename + "/index.mjs", client_hashsalt);
+            }
+        })
     }
 
     /**

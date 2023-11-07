@@ -40,9 +40,10 @@ export default {
     "Navbar/modulos": {
         title: "Módulos",
         permissao: "Navbar/modulos",
-        icon: "home",
+        icon: "developer_mode",
+        haschild: true,
         icon_class: "material-icons",
-        onclick: { type: 'open_top_NavBar' }
+        onclick: { type: 'open_Left_subNavbar' }
     },
     "Navbar/terminal": {
         title: "Terminal",

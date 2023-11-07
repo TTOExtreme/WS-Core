@@ -147,6 +147,12 @@ export default class CoreServer {
                 });
             })
 
+            fs.readdirSync('./Modulos').forEach(modulo => {
+                if (fs.existsSync("./Modulos/" + modulo + "/Web/")) {
+                    expressAPP.get("/Modulos/" + modulo.replace("Modulo_") + "/*", express.static(join(__dirname + "/Modulos/" + modulo + "/Web/")))
+                }
+            })
+
             //inicialização de handler Home
             expressAPP.get("/login", (req, res) => {
                 res.sendFile('_Client-Web/login.html', {

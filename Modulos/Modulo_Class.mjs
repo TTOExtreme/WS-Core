@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { Socket } from 'socket.io';
-import SocketServe from '../Utils/SocketServe.mjs';
+import SocketServe from '../_Server-Core/Utils/SocketServe.mjs';
 
 
 
@@ -41,32 +41,43 @@ export default class Module_Class {
     }
 
     /**
+     * Calls de pre inicialização de modulos
+     * realizar a call para cadastro dos dados
+     * @param {Socket} socket_connection 
+     * @param {JSON} client_instance 
+     * @param {SocketServe} SocketServe 
+     */
+    PreInit(socket_connection, client_instance, SocketServe) {
+
+    }
+
+    /**
      * Calls de inicialização de modulos
      * realizar a call para cadastro dos eventos
      * @param {Socket} socket_connection 
-     * @param {String} client_hashsalt 
+     * @param {JSON} client_instance 
      * @param {SocketServe} SocketServe 
      */
-    PostInit(socket_connection, client_hashsalt, SocketServe) {
+    PostInit(socket_connection, client_instance, SocketServe) {
 
         this._events.emit("Log.info", "Iniciado Modulo:", this._module_name)
-        SocketServe.addUniqueListener("Module." + this._module_name, client_hashsalt, () => {
+        SocketServe.addUniqueListener("Module." + this._module_name, client_instance, () => {
             this.InitModuleEvents(socket_connection);
         })
-        SocketServe.addUniqueListener('Module.' + this._module_name + '.Ping', client_hashsalt, () => {
+        SocketServe.addUniqueListener('Module.' + this._module_name + '.Ping', client_instance, () => {
             this._events.emit("Log.info", "Recebido Ping")
             socket_connection.emit('Module.' + this._module_name + '.Pong');
         })
-        this.InitModuleEvents(socket_connection, client_hashsalt, SocketServe);
+        this.InitModuleEvents(socket_connection, client_instance, SocketServe);
     }
 
     /**
      * Calls de inicialização de modulos
      * realizar o cadastro de eventos do modulo nesse estagio
      * @param {Socket} socket_connection 
-     * @param {String} client_hashsalt 
+     * @param {JSON} client_instance 
      * @param {SocketServe} SocketServe 
      */
-    InitModuleEvents(socket_connection, client_hashsalt, SocketServe) {
+    InitModuleEvents(socket_connection, client_instance, SocketServe) {
     }
 }

@@ -128,8 +128,8 @@ export default class Users_Socket extends User {
                         let Pref = JSON.parse(Preferences)
 
                         if (Permissions.length > 1) {
-                            for (let index = 0; index < Object.keys(NavBarStructure).length; index++) {
-                                const navbarstruct = NavBarStructure[Object.keys(NavBarStructure)[index]];
+                            for (let index = 0; index < Object.keys(client_instance.NavBarStructure).length; index++) {
+                                const navbarstruct = client_instance.NavBarStructure[Object.keys(client_instance.NavBarStructure)[index]];
                                 if (Permissions.findIndex((value) => { return (value.permissao == navbarstruct.permissao && value.tipo == 1) }) != -1) {
                                     if (Permissions.findIndex((value) => { return (value.permissao == navbarstruct.permissao && value.tipo == 2) }) == -1) {
                                         //Verifica se é um sub botão ou o principal da barra de navegação
@@ -161,8 +161,8 @@ export default class Users_Socket extends User {
                 if (Permissions != undefined) {
                     //let Perms = JSON.parse(Permissions)
                     if (Permissions.length > 1) {
-                        for (let index = 0; index < Object.keys(NavBarStructure).length; index++) {
-                            const navbarstruct = NavBarStructure[Object.keys(NavBarStructure)[index]];
+                        for (let index = 0; index < Object.keys(client_instance.NavBarStructure).length; index++) {
+                            const navbarstruct = client_instance.NavBarStructure[Object.keys(client_instance.NavBarStructure)[index]];
                             if (Permissions.findIndex((value) => { return (value.permissao == navbarstruct.permissao && value.tipo == 1) }) != -1) {
                                 if (Permissions.findIndex((value) => { return (value.permissao == navbarstruct.permissao && value.tipo == 2) }) == -1) {
                                     //Verifica se é um sub botão ou o principal da barra de navegação

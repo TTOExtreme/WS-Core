@@ -218,7 +218,7 @@ export default class Permissao_Socket extends Permissao {
         if (client_instance.UUID != undefined) {
             this.Permissions_Get_Specific(client_instance.UUID, "permissao/user/add").then(() => {
 
-                this.Permissao_User.Add_Perm_Group(client_instance.ID, UserData.perm_id, UserData.user_id, UserData.ativo, UserData.tipo).then((Users) => {
+                this.Permissao_User.Add_Perm_User(client_instance.ID, UserData.perm_id, UserData.user_id, UserData.ativo, UserData.tipo).then((Users) => {
                     callback(null, Users);
                 }).catch(err => {
                     this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Permissao_Users_Add UUID: " + (client_instance.UUID).toString(), err)
