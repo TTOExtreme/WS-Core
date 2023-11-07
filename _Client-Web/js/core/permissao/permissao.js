@@ -293,8 +293,8 @@ class Tela_Permissao {
                             },
                             {
                                 active: true,
-                                name: "ID " + (this.Tipo_Registro == 'User' ? "Usuário" : "Grupo"),
-                                input: "<input disabled id='Permissao." + this.Tipo_Registro + ".userid.add_" + id_subscreen + "' value='" + (this.Tipo_Registro == 'User' ? row._row.data.user_id : row._row.data.group_id) + "'>",
+                                name: "ID " + (this.Tipo_Registro == 'Users' ? "Usuário" : "Grupo"),
+                                input: "<input disabled id='Permissao." + this.Tipo_Registro + ".userid.add_" + id_subscreen + "' value='" + (this.Tipo_Registro == 'Users' ? row._row.data.user_id : row._row.data.group_id) + "'>",
                             },
                             {
                                 active: true,
