@@ -47,14 +47,14 @@ export default class Permissao_User extends DatabaseStructure {
                     this._events.emit("Log.erros", "Erros encontrados no Add_Perm_Username: " + Permissao, err);
                     throw "Erros encontrados ao tentar executar Select do Add_Perm_Username: " + Permissao;
                 }
-                if (user_results != undefined) {
-                    if (user_results[0] != undefined) {
+                if (user_results[0] != undefined) {
+                    if (user_results[0][0] != undefined) {
                         this._db.Query(Permissoes_SQLs.sql_get_permissionid, [Permissao]).then((perm_results, err) => {
                             if (err) {
                                 this._events.emit("Log.erros", "Erros encontrados no Add_Perm_Username: " + Permissao, err);
                                 throw "Erros encontrados ao tentar executar Select do Add_Perm_Username: " + Permissao;
                             }
-                            if (perm_results != undefined) {
+                            if (perm_results[0] != undefined) {
                                 if (perm_results[0] != undefined) {
                                     this.LogDatabase.LogDatabase(0, "Perm.Username.Add", { ID_Responsavel: 0, user_id: user_results[0][0].id, permissao_id: perm_results[0][0].id, ativo: (ativo ? 1 : 0), tipo: (tipo ? 1 : 0) }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
                                     this._db.Query(Permissoes_SQLs.sql_permissions_add_user, [1, user_results[0][0].id, perm_results[0][0].id, (ativo ? 1 : 0), (tipo ? 1 : 0)]).then((add_results, err) => {
