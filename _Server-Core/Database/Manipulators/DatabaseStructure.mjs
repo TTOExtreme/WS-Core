@@ -220,19 +220,44 @@ export default class DatabaseStructure {
                     perm_delete += (perm_delete.length > 0 ? "," : "") + "'" + perm.permissao + "'";
                     perm_include += (perm_include.length > 0 ? "," : "") + "('" + perm.nome + "','" + perm.permissao + "','" + perm.descricao + "'," + perm.ativo + ")"
                 })
-                this._db.Query("DELETE FROM _Permissions WHERE permissao IN (" + perm_delete + ");").then((results, err0) => {
+                this._db.Query("SELECT id FROM _Permissions WHERE permissao IN (" + perm_delete + ");").then((r2, err0) => {
                     if (err0) {
                         this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
                         reject("Erro na limpeza das permissoes: " + this._tablename);
                     }
-                    this._db.Query("INSERT INTO _Permissions (nome,permissao,descricao,ativo) VALUES " + perm_include + ";").then((results, err1) => {
-                        if (err1) {
-                            if (err1.indexOf("Unknown table") == -1) {
-                                this._events.emit("Log.erros", "Erros encontrados na criação das permissoes: " + this._tablename, err1);
-                            }
-                            reject("Erro na criação das permissoes: " + this._tablename);
+                    let listIdPerms = "";
+                    if (r2[0] != undefined) {
+
+                        r2[0].forEach(perm => {
+                            listIdPerms += (listIdPerms.length > 0 ? "," : "") + "" + perm.id + "";
+                        })
+                    }
+                    this._db.Query((listIdPerms.length > 0 ? "DELETE FROM _Permissions WHERE id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
+                        if (err0) {
+                            this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
+                            reject("Erro na limpeza das permissoes: " + this._tablename);
                         }
-                        resolv();
+                        this._db.Query((listIdPerms.length > 0 ? "DELETE FROM Permissao_Group WHERE permissao_id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
+                            if (err0) {
+                                this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
+                                reject("Erro na limpeza das permissoes: " + this._tablename);
+                            }
+                            this._db.Query((listIdPerms.length > 0 ? "DELETE FROM Permissao_User WHERE permissao_id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
+                                if (err0) {
+                                    this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
+                                    reject("Erro na limpeza das permissoes: " + this._tablename);
+                                }
+                                this._db.Query("INSERT INTO _Permissions (nome,permissao,descricao,ativo) VALUES " + perm_include + ";").then((r3, err1) => {
+                                    if (err1) {
+                                        if (err1.indexOf("Unknown table") == -1) {
+                                            this._events.emit("Log.erros", "Erros encontrados na criação das permissoes: " + this._tablename, err1);
+                                        }
+                                        reject("Erro na criação das permissoes: " + this._tablename);
+                                    }
+                                    resolv(this._table_permisao);
+                                })
+                            })
+                        })
                     })
                 })
             } else {
@@ -240,6 +265,7 @@ export default class DatabaseStructure {
             }
         })
     }
+
 
     /**
      * Chamado após toda a criação de dados na tabela
