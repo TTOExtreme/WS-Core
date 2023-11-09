@@ -147,10 +147,25 @@ export default class CoreServer {
                 });
             })
 
-            fs.readdirSync('./Modulos').forEach(modulo => {
-                if (fs.existsSync("./Modulos/" + modulo + "/Web/")) {
-                    expressAPP.get("/Modulos/" + modulo.replace("Modulo_") + "/*", express.static(join(__dirname + "/Modulos/" + modulo + "/Web/")))
+            expressAPP.get("/Modulos/*", (req, res) => {
+                if (req.originalUrl.split('/').length > 2) {
+                    let modulo = req.originalUrl.split('/')[2]
+                    if (modulo != undefined) {
+
+                        if (fs.existsSync(join(__dirname + "/Modulos/Modulo_" + modulo + "/Web"))) {
+                            let url_loc = "/Modulos/Modulo_" + modulo + "/Web" + req.originalUrl.replace("/Modulos/" + modulo, "");
+                            if (fs.existsSync(join(__dirname + url_loc))) {
+                                res.sendFile(url_loc, {
+                                    root: __dirname
+                                });
+                                return;
+                            }
+                        }
+                    }
                 }
+                res.sendFile('_Client-Web/404.html', {
+                    root: __dirname
+                });
             })
 
             //inicialização de handler Home
@@ -162,13 +177,14 @@ export default class CoreServer {
 
             //handler de toda a pasta _Client-Web
             expressAPP.get("/*", express.static(join(__dirname + "/_Client-Web/")))
-
+            expressAPP.get("/mod/*", express.static(join(__dirname + "/Modulos/Backupper/Web/")))
+            /*
             //inicialização de handler 404
             expressAPP.get("*", (req, res) => {
                 res.sendFile('_Client-Web/404.html', {
                     root: __dirname
                 });
-            })
+            })//*/
 
         })
     }
