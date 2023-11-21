@@ -175,7 +175,8 @@ nav#left_navbar:hover {
     display: inline-flex;
     background-color: var(--navbar-left-botao);
     height: 35px;
-    width: 140px;
+    min-width: 100px;
+    width: fit-content;
     margin-top: 5px;
     border-radius: 8px 8px 0 0;
     margin-left: 5px;
@@ -202,7 +203,7 @@ nav#left_navbar:hover {
 .top_navbar_button>span {
     cursor: pointer;
     display: flex;
-    width: 170px;
+    /* width: 170px; */
     height: 20px;
     font-size: medium;
     margin-top: 10px;
