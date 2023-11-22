@@ -191,11 +191,11 @@ export default class Groups extends DatabaseStructure {
                                 if (group_results[0] != undefined) {
                                     this._db.Query(Groups_SQLs.sql_group_add_user_Username, [group_results[0][0].id, user_results[0][0].id, responsavel_results[0][0].id, (ativo ? 1 : 0)]).then((addreturn, err) => {
                                         if (err) {
-                                            this.LogDatabase.LogDatabase(ID_Responsavel, "Group.User.Add", { ID_Responsavel: 0, group_id: group_results[0][0].id, user_id: user_results[0][0].id, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
+                                            this.LogDatabase.LogDatabase(0, "Group.User.Add", { ID_Responsavel: 0, group_id: group_results[0][0].id, user_id: user_results[0][0].id, err: err }, this.LogDatabase.EstadoLog.ERRO).then().catch();
                                             this._events.emit("Log.erros", "Erros encontrados no Group_Add: " + groupcode, err);
                                             throw "Erros encontrados ao tentar executar Insert do Group_Add: " + groupcode;
                                         }
-                                        this.LogDatabase.LogDatabase(ID_Responsavel, "Group.User.Add", { ID_Responsavel: 0, group_id: group_results[0][0].id, user_id: user_results[0][0].id }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
+                                        this.LogDatabase.LogDatabase(0, "Group.User.Add", { ID_Responsavel: 0, group_id: group_results[0][0].id, user_id: user_results[0][0].id }, this.LogDatabase.EstadoLog.SUCESSO).then().catch();
                                         resolv();
                                     }).catch(reject)
                                 } else {

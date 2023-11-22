@@ -45,6 +45,14 @@ export default {
         icon_class: "material-icons",
         onclick: { type: 'open_Left_subNavbar' }
     },
+    "Navbar/modulos/lista": {
+        title: "Lista Modulos",
+        permissao: "Navbar/modulos",
+        icon: "list_alt",
+        parent: "Módulos",
+        icon_class: "material-icons",
+        onclick: { type: 'open_top_NavBar', load: '/js/core/modulos/modulos.js' }
+    },
     "Navbar/terminal": {
         title: "Terminal",
         permissao: "Navbar/terminal",

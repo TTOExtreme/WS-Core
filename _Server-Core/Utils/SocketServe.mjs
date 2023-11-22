@@ -3,6 +3,7 @@ import { Server, Socket } from "socket.io";
 import BCypher from "./BCypher_2.0.mjs";
 import fs from "fs";
 import NavBarStructure from "../Database/Manipulators/ServerConfig/NavBarStructure.mjs";
+import User from "../Database/Manipulators/Users/Users.mjs";
 
 /**
  * Classe referente ao controlde de todas as conexões instanciadas do Socket
@@ -58,31 +59,40 @@ export default class SocketServe {
                 socket_connection.once("Load.Home", (client_hashsalt, callback = () => { }) => {
                     if (client_hashsalt != undefined) {
                         if (client_hashsalt.length == 64) {
-                            this._clients[client_hashsalt] = {
-                                NavBarStructure: NavBarStructure,
-                                socket_connection: socket_connection,
-                                socket_listeners: [],
-                                username: "",
-                                UUID: "",
-                                connected_in: new Date().getTime(),
-                                last_heartbeat: new Date().getTime(),
-                            }
 
-                            this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
-                            this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
+                            this.Users = new User(this._db, this._events);
 
+                            this.Users.LogInUUID(client_hashsalt).then((userdata) => {
 
-                            this.LoadFullCoreMods(client_hashsalt);
-                            socket_connection.emit('_hs', client_hashsalt);
-                            if (typeof (callback) == 'function') { callback(); }
-                            /**
-                             * Realiza a exclusao da conexãop instanciada
-                             */
-                            socket_connection.on('disconnect', () => {
-                                delete this._clients[client_hashsalt];
-                                this._events.emit("Log.info", "Cliente Desconectado: ", client_hashsalt);
+                                this._clients[client_hashsalt] = {
+                                    NavBarStructure: NavBarStructure,
+                                    socket_connection: socket_connection,
+                                    socket_listeners: [],
+                                    username: userdata.username,
+                                    UUID: userdata.UUID,
+                                    connected_in: new Date().getTime(),
+                                    last_heartbeat: new Date().getTime(),
+                                }
+
+                                this._events.emit("Log.info", "Nova Conexão Socket: ", client_hashsalt);
                                 this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
-                            });
+
+
+                                this.LoadFullCoreMods(client_hashsalt);
+                                socket_connection.emit('_hs', client_hashsalt);
+                                if (typeof (callback) == 'function') { callback(); }
+                                /**
+                                 * Realiza a exclusao da conexãop instanciada
+                                 */
+                                socket_connection.on('disconnect', () => {
+                                    delete this._clients[client_hashsalt];
+                                    this._events.emit("Log.info", "Cliente Desconectado: ", client_hashsalt);
+                                    this._events.emit("Log.info", "N Sockets Conectados: ", Object.keys(this._clients).length);
+                                });
+
+                            }).catch(err => {
+                                this._events.emit("Log.info", "Cliente Sem UUID ou UUID Invalido: ", client_hashsalt);
+                            })
                         } else {
                             this._events.emit("Log.info", "Cliente Sem UUID ou UUID Invalido: ", client_hashsalt);
                         }
@@ -182,6 +192,22 @@ export default class SocketServe {
         this.addUniqueListener("Module.Load", client_hashsalt, (Modulename) => {
             this.LoadModule(Modulename, client_hashsalt);
         })
+
+        this.Users.Permissions_Get_Specific(client_hashsalt, "permissao/modulos/list").then(() => {
+            this.addUniqueListener("Modulos.List", client_hashsalt, (callback) => {
+                let modulos = fs.readdirSync('./Modulos/');
+                let ret = [];
+                modulos = modulos.filter((value) => { return (value.indexOf("Exemple") == -1 && value.indexOf(".mjs") == -1); })
+                modulos.forEach(mod => {
+
+                    ret.push({ nome: mod, instalado: 0 });
+                })
+                callback(null, ret);
+            })
+        }).catch(err => {
+            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Groups_Active UUID: " + (client_hashsalt), err)
+            //callback("Acesso Negado", null);
+        })
     }
 
 
@@ -192,21 +218,23 @@ export default class SocketServe {
      */
     LoadModule(Modulename, client_hashsalt) {
         //this._events.emit("Log.info", "Inicializando Modulo:", Modulename, client_hashsalt);
-        if (fs.existsSync('./Modulos/Modulo_' + Modulename + "/index.mjs")) {
-            //this._events.emit("Log.info", "Modulo importado:", Modulename);
-            import('../../Modulos/Modulo_' + Modulename + "/index.mjs").then(moduleclass => {
+        if (this._clients[client_hashsalt] != undefined) {
+            if (fs.existsSync('./Modulos/Modulo_' + Modulename + "/index.mjs")) {
                 //this._events.emit("Log.info", "Modulo importado:", Modulename);
-                const moduleinstance = new moduleclass.default(this._db, this._events);
-                moduleinstance.PostInit(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt], this);
-                this._events.emit("Log.info", "Modulo inicializado:", Modulename, client_hashsalt);
-                //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
-                //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
-            }).catch(err => {
-                this._events.emit("Log.erros", "Erro no import do instalador", err);
-                throw err;
-            });
-        } else {
-            this._events.emit("Log.erros", "Modulo Nao Encontrado:", './Modulos/Modulo_' + Modulename + "/index.mjs", client_hashsalt);
+                import('../../Modulos/Modulo_' + Modulename + "/index.mjs").then(moduleclass => {
+                    //this._events.emit("Log.info", "Modulo importado:", Modulename);
+                    const moduleinstance = new moduleclass.default(this._db, this._events);
+                    moduleinstance.PostInit(this._clients[client_hashsalt]["socket_connection"], this._clients[client_hashsalt], this);
+                    this._events.emit("Log.info", "Modulo inicializado:", Modulename, client_hashsalt);
+                    //this._events.emit("Log.info", "N Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames().length);
+                    //this._events.emit("Log.info", "Listenters: ", this._clients[client_hashsalt]["socket_connection"].eventNames());
+                }).catch(err => {
+                    this._events.emit("Log.erros", "Erro no import do instalador", err);
+                    throw err;
+                });
+            } else {
+                this._events.emit("Log.erros", "Modulo Nao Encontrado:", './Modulos/Modulo_' + Modulename + "/index.mjs", client_hashsalt);
+            }
         }
     }
 

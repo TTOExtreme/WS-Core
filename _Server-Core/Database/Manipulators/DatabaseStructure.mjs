@@ -232,7 +232,7 @@ export default class DatabaseStructure {
                             listIdPerms += (listIdPerms.length > 0 ? "," : "") + "" + perm.id + "";
                         })
                     }
-                    this._db.Query((listIdPerms.length > 0 ? "DELETE FROM _Permissions WHERE id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
+                    this._db.Query((listIdPerms.length > 0 ? "DELETE FROM Permissao_User WHERE permissao_id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
                         if (err0) {
                             this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
                             reject("Erro na limpeza das permissoes: " + this._tablename);
@@ -242,7 +242,7 @@ export default class DatabaseStructure {
                                 this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
                                 reject("Erro na limpeza das permissoes: " + this._tablename);
                             }
-                            this._db.Query((listIdPerms.length > 0 ? "DELETE FROM Permissao_User WHERE permissao_id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
+                            this._db.Query((listIdPerms.length > 0 ? "DELETE FROM _Permissions WHERE id IN (" + listIdPerms + ");" : "")).then((r1, err0) => {
                                 if (err0) {
                                     this._events.emit("Log.erros", "Erros encontrados na limpeza das permissões: " + this._tablename, err1);
                                     reject("Erro na limpeza das permissoes: " + this._tablename);

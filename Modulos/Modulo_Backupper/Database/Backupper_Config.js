@@ -9,7 +9,7 @@ export default class BackupperDB extends DatabaseStructure {
      * Chamada para alteração de predefiniçoes da classe mae
      */
     PreinitClass() {
-        this._tablename = "Modulo_Backupper"
+        this._tablename = "Modulo_Backupper_Config"
         this._tablestruct.email = {
             create: " VARCHAR(512)",
             descricao: "Email a ser usado para envio de relatório",

@@ -158,6 +158,20 @@ export default {
             ativo: 1
         },
 
+        //Permissoes dos Modulos
+        {
+            nome: "Listar Modulos do sistema",
+            permissao: "permissao/modulos/list",
+            descricao: "",
+            ativo: 1
+        },
+        {
+            nome: "Instalar Modulos no sistema",
+            permissao: "permissao/modulos/install",
+            descricao: "",
+            ativo: 1
+        },
+
         //Permissões de Telas
 
         {
