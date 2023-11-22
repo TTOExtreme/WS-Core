@@ -388,7 +388,7 @@ class Tela_Grupos {
                                     this.reload_Group();
                                 })
                                 .catch((err) => {
-                                    _events.emit("Info.Erro", { text: "Erro ao editar Gruopo.", payload: err });
+                                    _events.emit("Info.Erro", { text: "Erro ao editar Grupo.", payload: err });
                                     this.reload_Group();
                                 })
                         }
