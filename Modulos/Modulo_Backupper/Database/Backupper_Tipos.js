@@ -36,5 +36,14 @@ export default class BackupperTipos extends DatabaseStructure {
         this.LogDatabase = new LogAudit(this._db, this._events);
     }
 
-
+    /**
+     * Calls de inicialização de modulos
+     * realizar o cadastro de eventos do modulo nesse estagio
+     * @param {Socket} socket_connection 
+     * @param {JSOn} client_instance 
+     * @param {SocketServe} SocketServe 
+     */
+    InitModuleEvents(socket_connection, client_instance, SocketServe) {
+        this._events.emit("Log.info", "Inicializando Socket Modulo_Backupper_Tipos");
+    }
 }

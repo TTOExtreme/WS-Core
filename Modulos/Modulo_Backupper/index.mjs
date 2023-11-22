@@ -2,7 +2,7 @@ import Permissao_Group from "../../_Server-Core/Database/Manipulators/Permission
 import Permissao_User from "../../_Server-Core/Database/Manipulators/Permissions/Permissao_User.mjs";
 import Users from "../../_Server-Core/Database/Manipulators/Users/Users.mjs";
 import Module_Class from "../Modulo_Class.mjs";
-import BackupperDB from "./Database/Backupper_Config.js";
+import BackupperConfig from "./Database/Backupper_Config.js";
 import BackupperTipos from "./Database/Backupper_Tipos.js";
 
 
@@ -47,7 +47,8 @@ export default class Module_Exemple extends Module_Class {
                     callback(err, "Erro na instalação do modulo");
                 })
             })
-        })
+        }).catch((err) => { })
+        this.InitModuleEvents(socket_connection, client_instance, SocketServe);
     }
 
     /**
@@ -58,26 +59,17 @@ export default class Module_Exemple extends Module_Class {
      * @param {SocketServe} SocketServe 
      */
     InitModuleEvents(socket_connection, client_instance, SocketServe) {
-        /**
-         * Inicializa socket listener
-         */
-        socket_connection.on('Users.Validar', (UUID = null, callback = (err, result) => { }) => {
+        this.BackupperDB = new BackupperConfig(this._db, this._events);
+        this.BackupperDB.InitModuleEvents(socket_connection, client_instance, SocketServe);
 
-        });
-
-        /*
-        SocketServe.addUniqueListener('Module.' + this._module_name + '.Promisse', client_instance, (resolv) => {
-            this._events.emit("Log.info", "Recebido Promisse")
-            resolv("Retorno de callback")
-            //socket_connection.emit('Module.' + this._module_name + '.Pong');
-        })//*/
-
+        this.BackupperTipos = new BackupperTipos(this._db, this._events);
+        this.BackupperTipos.InitModuleEvents(socket_connection, client_instance, SocketServe);
     }
 
     Install() {
         return new Promise((resolv, reject) => {
             this._events.emit('Log.system', "Instalando Modulo Backupper");
-            let Backupperdb = new BackupperDB(this._db, this._events)
+            let Backupperdb = new BackupperConfig(this._db, this._events)
             let permUser = new Permissao_User(this._db, this._events);
             let permGroup = new Permissao_Group(this._db, this._events);
             this._events.emit('Log.info', " - Modulo Backupper adicionando Permissoes");

@@ -54,40 +54,22 @@ export default class Users_Socket extends User {
 
                         this.Permissions_Get_Specific(client_instance.UUID, "user/list").then(() => {
                             socket_connection.on('Users.List', (...args) => { this.Socket_Users_List(socket_connection, client_instance, ...args) });
-                        }).catch(err => {
-                            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Users_List UUID: " + (client_instance.UUID), err)
-                            callback("Acesso Negado", null);
-                        })
+                        }).catch(err => { })
                         this.Permissions_Get_Specific(client_instance.UUID, "user/edit").then(() => {
                             socket_connection.on('Users.Edit', (...args) => { this.Socket_Users_Edit(socket_connection, client_instance, ...args) });
-                        }).catch(err => {
-                            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Users_Edit UUID: " + (client_instance.UUID), err)
-                            callback("Acesso Negado", null);
-                        })
+                        }).catch(err => { })
                         this.Permissions_Get_Specific(client_instance.UUID, "user/edit/pass").then(() => {
                             socket_connection.on('Users.Edit.Pass', (...args) => { this.Socket_Users_Edit_Pass(socket_connection, client_instance, ...args) });
-                        }).catch(err => {
-                            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Users_Edit_Pass UUID: " + (client_instance.UUID), err)
-                            callback("Acesso Negado", null);
-                        })
+                        }).catch(err => { })
                         this.Permissions_Get_Specific(client_instance.UUID, "user/add").then(() => {
                             socket_connection.on('Users.Add', (...args) => { this.Socket_Users_Add(socket_connection, client_instance, ...args) });
-                        }).catch(err => {
-                            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Users_Add UUID: " + (client_instance.UUID), err)
-                            callback("Acesso Negado", null);
-                        })
+                        }).catch(err => { })
                         this.Permissions_Get_Specific(client_instance.UUID, "user/delete").then(() => {
                             socket_connection.on('Users.Delete', (...args) => { this.Socket_Users_Delete(socket_connection, client_instance, ...args) });
-                        }).catch(err => {
-                            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Users_Delete UUID: " + (client_instance.UUID), err)
-                            callback("Acesso Negado", null);
-                        })
+                        }).catch(err => { })
                         this.Permissions_Get_Specific(client_instance.UUID, "user/active").then(() => {
                             socket_connection.on('Users.Active', (...args) => { this.Socket_Users_Active(socket_connection, client_instance, ...args) });
-                        }).catch(err => {
-                            this._events.emit('Log.error', "Tentativa de acesso Invalida: Socket_Users_Active UUID: " + (client_instance.UUID), err)
-                            callback("Acesso Negado", null);
-                        })
+                        }).catch(err => { })
                         /**
                          * Fim dos Listeners apos login
                          */

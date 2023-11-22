@@ -203,7 +203,7 @@ class Tela_Backupper {
                                 Reload_Button.innerHTML = "<i class='material-symbols-outlined'>refresh</i>";
                                 Reload_Button.setAttribute('class', 'tabulator-page')
                                 Reload_Button.onclick = () => {
-                                    this.reload_Group();
+                                    this.reload_Backupper();
                                 }
                                 backupper_footer.appendChild(Reload_Button);
 
@@ -223,12 +223,6 @@ class Tela_Backupper {
                                                     name: "Nome",
                                                     input: "<input id='backupper.nome.add' placeholder='Nome'>",
                                                 },
-
-                                                {
-                                                    active: true,
-                                                    name: "Código",
-                                                    input: "<input id='backupper.code.add' placeholder='0.0.0.0'>",
-                                                },
                                                 {
                                                     active: true,
                                                     name: "Descrição",
@@ -236,8 +230,28 @@ class Tela_Backupper {
                                                 },
                                                 {
                                                     active: true,
+                                                    name: "Preferencias",
+                                                    input: "<textarea id='backupper.preferencias.add'></textarea>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Tempo Restart",
+                                                    input: "<input title='Tempo em Segundos para cada Restart' id='backupper.restart.add'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Cron",
+                                                    input: "<input title='Configuração de Execução Cron' id='backupper.cron.add'>",
+                                                },
+                                                {
+                                                    active: true,
                                                     name: "Ativo",
                                                     input: "<input type='checkbox' id='backupper.active.add'>",
+                                                },
+                                                {
+                                                    active: true,
+                                                    name: "Salvar Log",
+                                                    input: "<input type='checkbox' id='backupper.log.add'>",
                                                 },
                                                 {
                                                     active: true,
@@ -251,34 +265,40 @@ class Tela_Backupper {
                                             console.log("ID Contexto", id);
                                             bot_addUser.onclick = (ev) => {
                                                 let unome = document.getElementById('backupper.nome.add').value;
-                                                let ucode = document.getElementById('backupper.code.add').value;
                                                 let udescr = document.getElementById('backupper.descricao.add').value;
+                                                let upref = document.getElementById('backupper.preferencias.add').value;
+                                                let urestart = document.getElementById('backupper.restart.add').value;
+                                                let ucron = document.getElementById('backupper.cron.add').value;
                                                 let uativo = document.getElementById('backupper.active.add').checked;
-                                                if (unome == "" || ucode == "" || udescr == "") {
+                                                let ulog = document.getElementById('backupper.log.add').checked;
+                                                if (unome == "" || udescr == "") {
                                                     _events.emit("Info.Info", { text: "Favor preencher todos os campos." });
                                                     return;
                                                 }
-                                                this.add_group({
+                                                this.add_Backup({
                                                     nome: unome,
-                                                    code: ucode,
                                                     descricao: udescr,
-                                                    ativo: (uativo ? 1 : 0)
+                                                    preferences: upref,
+                                                    tempo_restart: urestart,
+                                                    crontab: ucron,
+                                                    ativo: (uativo ? 1 : 0),
+                                                    salvar_log: (ulog ? 1 : 0)
                                                 })
                                                     .then((groupdata) => {
-                                                        _events.emit("Info.Ok", { text: "Grupo Criado.", payload: groupdata });
+                                                        _events.emit("Info.Ok", { text: "Configuração Backup Criado.", payload: groupdata });
                                                         _events.emit("ContextCreator.Close", id);
-                                                        this.reload_Group();
+                                                        this.reload_Backupper();
                                                     })
                                                     .catch((err) => {
-                                                        _events.emit("Info.Erro", { text: "Erro ao criar Gruopo.", payload: err });
-                                                        this.reload_Group();
+                                                        _events.emit("Info.Erro", { text: "Erro ao criar Configuração de backup.", payload: err });
+                                                        this.reload_Backupper();
                                                     })
                                             }
                                         });
                                 }
                                 backupper_footer.appendChild(Add_Button);
 
-                                this.reload_Group();
+                                this.reload_Backupper();
                             }, 300);
                         });
                     }, document.head)
@@ -301,56 +321,56 @@ class Tela_Backupper {
     /**
      * Realiza um recarregamento da lista de Backups
      */
-    reload_Group() {
+    reload_Backupper() {
         SocketEmit("Backupper.List", (...args) => { this.load_groups(this.tabulator, ...args); })
     }
 
     /**
-     * Subida de novos dados do usuário (completo)
-     * @param {JSON} userdata 
+     * Subida de novos dados do Backup (completo)
+     * @param {JSON} backupperdata 
      */
-    edit_group(userdata = null) {
+    edit_group(backupperdata = null) {
         return new Promise((resolv, reject) => {
-            SocketEmit("Backupper.Edit", userdata, (err, userupdated) => {
-                if (err) { console.error("Erro no retorno do Usuário", err) }
+            SocketEmit("Backupper.Edit", backupperdata, (err, userupdated) => {
+                if (err) { console.error("Erro no retorno do Backup", err) }
                 resolv(userupdated)
             })
         })
     }
 
     /**
-     * Exclusão do usuário
-     * @param {JSON} userdata 
+     * Exclusão do Backup
+     * @param {JSON} backupperdata 
      */
-    delete_group(userdata = null) {
+    delete_group(backupperdata = null) {
         return new Promise((resolv, reject) => {
-            SocketEmit("Backupper.Delete", userdata, (err, userupdated) => {
-                if (err) { console.error("Erro no retorno do Usuário", err) }
+            SocketEmit("Backupper.Delete", backupperdata, (err, userupdated) => {
+                if (err) { console.error("Erro no retorno do Backup", err) }
                 resolv(userupdated)
             })
         })
     }
     /**
-     * Exclusão do usuário
-     * @param {JSON} userdata 
+     * Exclusão do Backup
+     * @param {JSON} backupperdata 
      */
-    active_group(userdata = null) {
+    active_group(backupperdata = null) {
         return new Promise((resolv, reject) => {
-            SocketEmit("Backupper.Active", userdata, (err, userupdated) => {
-                if (err) { console.error("Erro no retorno do Usuário", err) }
+            SocketEmit("Backupper.Active", backupperdata, (err, userupdated) => {
+                if (err) { console.error("Erro no retorno do Backup", err) }
                 resolv(userupdated)
             })
         })
     }
     /**
-     * Subida de novos dados do usuário (completo)
-     * @param {JSON} userdata 
+     * Subida de novos dados do Backup (completo)
+     * @param {JSON} backupperdata 
      */
-    add_group(userdata = null) {
+    add_Backup(backupperdata = null) {
         return new Promise((resolv, reject) => {
-            SocketEmit("Backupper.Add", userdata, (err, userupdated) => {
+            SocketEmit("Backupper.Add", backupperdata, (err, userupdated) => {
                 if (err) {
-                    console.error("Erro no retorno do Usuário", err);
+                    console.error("Erro no retorno do Backup", err);
                     reject(err);
                     return;
                 }
@@ -432,11 +452,11 @@ class Tela_Backupper {
                                 .then((groupdata) => {
                                     _events.emit("Info.Ok", { text: "Grupo Editado.", payload: groupdata });
                                     _events.emit("ContextCreator.Close", id);
-                                    this.reload_Group();
+                                    this.reload_Backupper();
                                 })
                                 .catch((err) => {
                                     _events.emit("Info.Erro", { text: "Erro ao editar Gruopo.", payload: err });
-                                    this.reload_Group();
+                                    this.reload_Backupper();
                                 })
                         }
                     });
@@ -444,7 +464,7 @@ class Tela_Backupper {
         }, {
             label: "<i class='material-symbols-outlined'>settings_account_box</i><span>Permissões</span>",
             action: (e, row) => {
-                let nuserdata = row._row.data;
+                let nbackupperdata = row._row.data;
 
                 let tab_screen = document.createElement('div');
                 tab_screen.setAttribute('class', 'tab_Screen')
@@ -456,7 +476,7 @@ class Tela_Backupper {
                         {
                             active: true,
                             name: "",
-                            input: "Grupo: " + nuserdata.nome,
+                            input: "Grupo: " + nbackupperdata.nome,
                         },
                         {
                             active: true,
@@ -467,7 +487,7 @@ class Tela_Backupper {
                     ]
                 }, (id_aba) => {
                     loadJS('/js/core/permissao/permissao.js', () => {
-                        _events.emit("Load.Permissoes.List", 'tabscreen_permission_' + id_subscreen, nuserdata.id, false);
+                        _events.emit("Load.Permissoes.List", 'tabscreen_permission_' + id_subscreen, nbackupperdata.id, false);
                     }, document.head)
                 });
             }
@@ -477,10 +497,10 @@ class Tela_Backupper {
             action: (e, row) => {
                 let ncode = prompt("Confirme o Código para excluir <" + row._row.data.code + ">:");
                 if (ncode == row._row.data.code) {
-                    let nuserdata = row._row.data;
-                    nuserdata.excluido = (nuserdata.excluido == 0 ? 1 : 0);
-                    this.delete_group(nuserdata).then(() => {
-                        this.reload_Group();
+                    let nbackupperdata = row._row.data;
+                    nbackupperdata.excluido = (nbackupperdata.excluido == 0 ? 1 : 0);
+                    this.delete_group(nbackupperdata).then(() => {
+                        this.reload_Backupper();
                     }).catch(() => {
                         events.emit("Info.Erro", { texto: "Falha ao realizar operação", payload: err });
                     })
@@ -492,10 +512,10 @@ class Tela_Backupper {
             action: (e, row) => {
                 let ncode = prompt("Confirme o código para Inativar/Ativar <" + row._row.data.code + ">:");
                 if (ncode == row._row.data.code) {
-                    let nuserdata = row._row.data;
-                    nuserdata.ativo = (nuserdata.ativo == 0 ? 1 : 0);
-                    this.active_group(nuserdata).then(() => {
-                        this.reload_Group();
+                    let nbackupperdata = row._row.data;
+                    nbackupperdata.ativo = (nbackupperdata.ativo == 0 ? 1 : 0);
+                    this.active_group(nbackupperdata).then(() => {
+                        this.reload_Backupper();
                     }).catch(() => {
                         events.emit("Info.Erro", { texto: "Falha ao realizar operação", payload: err });
                     })
