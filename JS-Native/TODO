@@ -1,0 +1,54 @@
+// FIX
+
+// Mudanças
+    - [x] Mudar painel Administrativo para /Administrativo
+    - [x] Adicionar Pagina 404
+
+// Menu Lateral
+    - [x] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
+    - [x] Adicionar barra para abrir menu lateral
+    - [x] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [] Botão de Logout
+
+// Pagina de Configuração do sistema
+    - [x] Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
+    - [] Adicionar usuario
+    - [] Criar aba de Grupos
+        - [] criar logica de hierarquia dos grupos / Permissões
+        - [] Adicionar grupos
+        - [] Editar grupos
+        - [] Atribuir grupos
+        - [] Atribuir permissioes
+    - [] criar troca de senha usuario
+    - [] Criar menu de permissioes do usuario (Administrativo)
+    - [] Criar menu de grupos do usuario
+
+
+// Pagina de gerencia de Redes
+    - [] Criar log de alteração de Dados MAC, ...
+    - [] Testar Nmap
+    - [] Testar Scan ARP
+
+// Terminal
+    - [x] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
+    - [x] Reiniciar / parar instancia apos configurar
+
+// Janelas
+    - [x] posicionamento dinamico parra multiplas Janelas
+
+// usuario
+    - [] Mudar senha de usuario
+    - [] carregar preferencias de usuario
+    - [] salvar preferencias do usuario
+
+// Core
+    - [x] Auto instalação apos configuração
+    - [x] Mudar painel Administrativo para /Administrativo
+    - [x] Adicionar Pagina 404
+
+// Ideias
+
+    - [] Criar gerencia de sites
+        - [] Gerenciar redirecionamentos
+        - [] Informações de acesso (numero de acessos)
+        - [] Sistema de portal Administrativo do site (estilo wordpress);

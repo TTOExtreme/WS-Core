@@ -1,0 +1,252 @@
+{
+    "database": "WS_1_3_0",
+    "tables": [
+        {
+            "table": "_Users",
+            "colunas": [
+                {
+                    "name": "id_user",
+                    "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+                },
+                {
+                    "name": "user",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "username",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "pass",
+                    "struct": "VARCHAR(4096)"
+                },
+                {
+                    "name": "UUID",
+                    "struct": "VARCHAR(4096)"
+                },
+                {
+                    "name": "lastLogin",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "lastTry",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "isConnected",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "lastIp",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "deactivatedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                }
+            ]
+        },
+        {
+            "table": "_Groups",
+            "colunas": [
+                {
+                    "name": "id_group",
+                    "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+                },
+                {
+                    "name": "grp",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "groupname",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "GID",
+                    "struct": "VARCHAR(4096)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "deactivatedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                }
+            ]
+        },
+        {
+            "table": "_Permissions",
+            "colunas": [
+                {
+                    "name": "id_Permission",
+                    "struct": "INT(10) PRIMARY KEY AUTO_INCREMENT"
+                },
+                {
+                    "name": "perm_code",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "perm_name",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "perm_desc",
+                    "struct": "VARCHAR(200)"
+                },
+                {
+                    "name": "perm_type",
+                    "struct": "VARCHAR(200)"
+                }
+            ]
+        },
+        {
+            "table": "rel_perm_usr",
+            "colunas": [
+                {
+                    "name": "id_Permission",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_user",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedby",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "rel_groups_usr",
+            "colunas": [
+                {
+                    "name": "id_group",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_user",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "rel_group_group",
+            "colunas": [
+                {
+                    "name": "id_group",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_group_son",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        },
+        {
+            "table": "rel_perm_group",
+            "colunas": [
+                {
+                    "name": "id_Permission",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "id_group",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "addedIn",
+                    "struct": "VARCHAR(20)"
+                },
+                {
+                    "name": "addedBy",
+                    "struct": "INT(10)"
+                },
+                {
+                    "name": "active",
+                    "struct": "INT(1)"
+                },
+                {
+                    "name": "deactivatedIn",
+                    "struct": "VARCHAR(20)"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,200 @@
+[
+    {
+        "table": "_HBMD_System_Stats",
+        "colunas": [
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128) PRIMARY KEY"
+            },
+            {
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
+            },
+            {
+                "name": "mac",
+                "struct": "VARCHAR(60)"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "LONGTEXT"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_CPU_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
+            },
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
+            },
+            {
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "med",
+                "struct": "VARCHAR(200)"
+            },
+            {
+                "name": "max",
+                "struct": "VARCHAR(200)"
+            },
+            {
+                "name": "min",
+                "struct": "VARCHAR(200)"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_Network_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
+            },
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
+            },
+            {
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "med",
+                "struct": "VARCHAR(200)"
+            },
+            {
+                "name": "max",
+                "struct": "VARCHAR(200)"
+            },
+            {
+                "name": "min",
+                "struct": "VARCHAR(200)"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_MEM_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
+            },
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
+            },
+            {
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "med",
+                "struct": "VARCHAR(200)"
+            },
+            {
+                "name": "max",
+                "struct": "VARCHAR(200)"
+            },
+            {
+                "name": "min",
+                "struct": "VARCHAR(200)"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_Disk_Stats",
+        "colunas": [
+            {
+                "name": "id_hbmd",
+                "struct": "INT(32) PRIMARY KEY AUTO_INCREMENT"
+            },
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128)"
+            },
+            {
+                "name": "hostname",
+                "struct": "VARCHAR(100)"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "MEDIUMTEXT"
+            },
+            {
+                "name": "info",
+                "struct": "MEDIUMTEXT"
+            }
+        ]
+    },
+    {
+        "table": "_HBMD_Disk_Files",
+        "colunas": [
+            {
+                "name": "pcid",
+                "struct": "VARCHAR(128) PRIMARY KEY"
+            },
+            {
+                "name": "timestamp",
+                "struct": "VARCHAR(30)"
+            },
+            {
+                "name": "data",
+                "struct": "LONGTEXT"
+            }
+        ]
+    }
+]

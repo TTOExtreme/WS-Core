@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <title>WebServer</title>
+    <script src="./js/libs/loader.js"></script>
+    <script src="./js/pages/home.js"></script>
+</head>
+
+<style>
+    .background_root {
+        opacity: 0;
+    }
+</style>
+
+<body>
+    <header>
+        <nav>
+            <div id='TopMenu' class='TopMenu'>
+                <table id='topMenu_Items_table'>
+                    <tr id="TopMenuTableRow"></tr>
+                </table>
+            </div>
+        </nav>
+    </header>
+
+    <section id="mainPage" class="mainPage">
+    </section>
+
+    <aside>
+        <nav class="LeftMenuClose">
+            <table>
+                <tr>
+                    <td id="openLeftMenu">&#9776;</td>
+                </tr>
+            </table>
+        </nav>
+        <nav class="LeftMenu" id="leftMenuHolder">
+            <table style="float: right;" class="LeftMenuUserBar">
+                <tr>
+                    <td id="LMI-LogoutButton" title="Sair">
+                        <img class="LeftMenuUserBar-item" src="./img/logout.png">
+                    </td>
+                    <td id="LMI-UserButton" title="Informações do Usuário">
+                        <img class="LeftMenuUserBar-item" src="./img/user.png">
+                    </td>
+                    <td id="closeLeftMenu" title="Fechar aba lateral">
+                        <img class="LeftMenuUserBar-item" src="./img/cross.png">
+                    </td>
+                </tr>
+            </table>
+            <div class="LeftMenuTable">
+                <table id="LeftMenuTable" class="LMI">
+                </table>
+            </div>
+        </nav>
+        <div id="LeftMenu-UserMenu" class="LeftMenu-UserMenu">
+            <Table>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">Usuário:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-Username"></td>
+                </tr>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">Nome:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-Name"></td>
+                </tr>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">IP:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-Ip"></td>
+                </tr>
+                <tr>
+                    <td class="LeftMenu-UserMenu-title">Ultimo Login:</td>
+                    <td class="LeftMenu-UserMenu-info" id="LMU-LastLogin"></td>
+                </tr>
+                <tr id='LMI-ChangePassButton' style='display: none;'>
+                    <td colspan="2" class="LeftMenu-UserMenu-title">
+                        <center>
+                            <input type="button" onclick='ClientEvents.emit("usr/edt/pass")' value="AlterarSenha">
+                        </center>
+                    </td>
+                </tr>
+                <tr id='LMI-PreferencesButton' style='display: none;'>
+                    <td colspan="2" class="LeftMenu-UserMenu-title">
+                        <center>
+                            <input type="button" onclick="ClientEvents.emit('usr/edt/pass')" value="Preferencias">
+                        </center>
+                    </td>
+                </tr>
+            </Table>
+        </div>
+    </aside>
+    <div id="MainScreenHolder" class="MainScreenHolder">
+        <div id="MainScreen" class="MainScreen">
+        </div>
+    </div>
+
+    <footer id="Credits_Holder">
+        <p>Criado e desenvolvido por Lucas R.Camarotto 2020-2021</p>
+    </footer>
+
+    <div>
+        <center>
+            <table id='sub_menu_over' class='sub_menu_over_holder'></table>
+        </center>
+    </div>
+</body>
+
+</html>

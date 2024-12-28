@@ -1,0 +1,134 @@
+.wsmk_calendario_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.wsmk_calendario_div {
+    color: white;
+    font-family: sans-serif;
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    padding-right: 20px;
+    border-radius: 10px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #606060;
+}
+
+.wsmk_calendario_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+    float: right;
+}
+
+.wsmk_calendar_table {
+    color: #fff;
+}
+
+.wsmk_calendar_table div {
+    width: calc((100vw - 145px) / 7);
+    height: calc((100vw - 140px) / 7);
+    max-width: 100px;
+    max-height: calc((100vh - 140px) / 7);
+    overflow: hidden;
+    border: 1px solid #00000000;
+    border-radius: 10px;
+}
+
+.wsmk_day_num {
+    color: #fff;
+    font-size: 9pt;
+    float: left;
+    min-width: 15px;
+    height: 15px;
+    background: #303030f0;
+    padding: 3px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    margin-top: -5px;
+    margin-left: -5px;
+}
+
+.wsmk_day_edt {
+    color: #fff;
+    font-size: 9pt;
+    float: right;
+    min-width: 15px;
+    height: 15px;
+    background: #303030f0;
+    padding: 5px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    margin-top: -5px;
+    margin-right: -5px;
+}
+
+.wsmk_day_card {
+    color: #fff;
+    padding: 5px;
+}
+
+.wsmk_day_title {
+    font-size: 11pt;
+    background: #303030d0;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 20px;
+}
+
+.wsmk_edt_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.edt_usr_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+.wsmk_edt_label {
+    float: right;
+    color: var(--div-text);
+    height: 20px;
+    white-space: nowrap;
+}
+
+.wsmk_edt_label_info {
+    color: red;
+    animation: opacity 1s linear;
+}
+
+.wsmk_edt_img_thumb {
+    max-height: 100px;
+    max-width: 100px;
+}

@@ -1,0 +1,46 @@
+{
+    "tables": [
+        {
+            "name": "_Permissions",
+            "struct": "id_Permission,perm_code,perm_name,perm_desc,perm_type",
+            "data": [
+                "20000,'tab/side/ipam','Aba IPAM','Acesso a aba IPAM','acesso'",
+                "20001,'ipam/get/top/menu','Listar Abas IPAM','Listar abas permitidas do menu IPAM','user'",
+                "20010,'ipam/top/menu/subnet','Aba Redes','Acesso a aba Redes do IPAM','user'",
+                "20011,'ipam/top/menu/hosts','Aba Hosts','Acesso a aba Hosts do IPAM','user'",
+                "20012,'ipam/top/menu/config','Aba Configuração','Acesso a aba Configuração do IPAM','user'",
+                "20020,'ipam/get/subnets','(Global) Listar Redes','Listar Redes do IPAM','adm'",
+                "20021,'ipam/get/hosts','(Global) Listar Hosts','Listar Hosts do IPAM','adm'",
+                "20022,'ipam/get/config','(Global) Listar Configurações','Listar Configurações do IPAM','adm'",
+                "20030,'ipam/add/subnets','(Global) Adicionar Rede','Adicionar Rede','adm'",
+                "20031,'ipam/add/hosts','(Global) Adicionar Host','Adicionar Host','adm'",
+                "20040,'ipam/edt/subnets','(Global) Editar Rede','Editar Rede','adm'",
+                "20041,'ipam/edt/hosts','(Global) Editar Host','Editar Host','adm'",
+                "20050,'ipam/del/subnets','(Global) Excluir Rede','Excluir Rede','adm'",
+                "20051,'ipam/del/hosts','(Global) Excluir Host','Excluir Host','adm'",
+                "20060,'ipam/scan/subnets','(Global) Escanear Redes','Escanear Redes','adm'"
+            ]
+        },
+        {
+            "name": "rel_perm_usr",
+            "struct": "id_Permission,id_user,addedIn,addedBy,active,deactivatedIn",
+            "data": [
+                " 20000,1,2,1,1,0",
+                " 20001,1,2,1,1,0",
+                " 20010,1,2,1,1,0",
+                " 20011,1,2,1,1,0",
+                " 20012,1,2,1,1,0",
+                " 20020,1,2,1,1,0",
+                " 20021,1,2,1,1,0",
+                " 20022,1,2,1,1,0",
+                " 20030,1,2,1,1,0",
+                " 20031,1,2,1,1,0",
+                " 20040,1,2,1,1,0",
+                " 20041,1,2,1,1,0",
+                " 20050,1,2,1,1,0",
+                " 20051,1,2,1,1,0",
+                " 20060,1,2,1,1,0"
+            ]
+        }
+    ]
+}

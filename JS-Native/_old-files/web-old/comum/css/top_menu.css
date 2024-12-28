@@ -1,0 +1,69 @@
+.topMenu {
+    height: 32px;
+    width: 100vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color:  var(--menu-sub-bg);
+    overflow: hidden;
+    transition: 0.5s;
+    padding-left: 48px;
+}
+  
+.topMenu a {
+    padding: 8px 8px 8px 48px;
+    text-decoration: none;
+    font-size: 25px;
+    color: var(--div-text);
+    display: block;
+    transition: 0.3s;
+}
+
+.topMenu_Items div, .topMenu_Items p{
+    max-height: 32px;
+    overflow: hidden;
+} 
+
+.topMenuItemImg {
+    padding: 8px 8px 8px 48px;
+    width: 32px;
+    height: 32px;
+    display: block;
+    fill: var(--div-text);
+    float: left;
+    z-index: 1;
+}
+
+.topMenu_Items_tr{
+
+    max-height: 32px;
+}
+
+.topMenu_Items_td{
+    max-height: 20px;
+}
+
+.topMenu_Items_td p {
+    padding: 0;
+    margin: 0px;
+    margin: 0;
+    height: 32px;
+    margin-left:10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 4px;
+    border-radius: 5px 5px 0 0;
+    background-color: var(--menu-item-bg);
+    color: var(--div-text);
+}
+
+.topMenu_Items_td:hover p {
+    background-color: var(--menu-item-bg-hover);
+    color: var(--div-text-hover);
+    cursor: pointer;
+}
+
+.topMenu_Items_table{
+    
+}

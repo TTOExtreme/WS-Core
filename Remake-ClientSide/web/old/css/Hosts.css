@@ -1,0 +1,365 @@
+
+.hosts_main_table_holder{
+    background-color: #30303050;
+    width: 100vw;
+    max-width: calc(100vw - 52px);
+    margin: 0;
+    padding: 0;
+    margin-top: 32px;
+    margin-left: 48px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.hosts_Lside_table_holder{
+    background-color: #30303050;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.hosts_Mside_table_holder{
+    background-color: #30303050;
+    width: calc(100vw - 54px);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.hosts_Mside_table{
+    background-color: #30303050;
+    width: calc(100vw - 54px);
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+    scrollbar-width: none;
+}
+
+.hosts_Lside_table_items_holder{
+    background-color: #30303050;
+    width: 250px;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    height: calc(100vh - 96px);
+    max-height: calc(100vh - 96px);
+    scrollbar-width: none;
+}
+
+.hosts_ipmap_table_holder{
+    background-color: #30303050;
+    height: 250px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    width: calc(100vw - 322px);
+    max-height: 76px;
+}
+
+.hosts_ipmap_table{
+    background-color: #30303050;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    max-width: calc(100vw - 322px);
+    max-height: 25px;
+}
+
+.hosts_ipmap_section_tr{
+    height:76px;
+    max-height:76px;
+}
+
+.hosts_ipmap_section_td{
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: calc(100vw - 72px);
+    max-width: calc(100vw - 72px);
+    max-height: 76px;
+    /*! height: 76px; */
+}
+
+.hosts_ipmap_table_td{
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    padding:0;
+    margin:0;
+    border:0;
+}
+
+.hosts_ipmap_table_td p{
+    max-width: 14px;
+    max-height: 14px;
+    height: 14px;
+    width: 14px;
+    padding:0;
+    margin:0;
+    border:0;
+    border-radius: 7px;
+}
+
+.hosts_stats_table_td_label p{
+    margin:5px;
+    padding:0;
+    border:0;
+    white-space: nowrap;
+}
+
+.hosts_stats_table_td_label{
+    font-size: 14pt;
+    color: white;
+    vertical-align: middle;
+    white-space:nowrap;
+    height: 15px;
+    overflow: hidden;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #101010f8;
+    text-align: center;
+}
+
+.hosts_stats_table_td p { 
+    background: #303030f0;
+}
+
+.hosts_stats_table_td{
+    background: #30303090;
+}
+
+.hosts_stats_table_td:hover { 
+    background: #303030c0;
+}
+
+.hosts_hostlist_section_tr{
+    height:76px;
+    max-height:76px;
+}
+
+.hosts_hostlist_section_td{
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: calc(100vw - 72px);
+    max-width: calc(100vw - 72px);
+    max-height: 176px;
+}
+
+.hosts_hostlist_section_tr{
+    height:calc(100vh - 76px - 40px - 150px - 40px);
+    /*! max-height:16px; */
+    
+}
+
+.hosts_hostlist_tablelist_holder{
+    background-color: #30303050;
+    height: 1000px;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    width: calc(100vw - 60px);
+    max-height: calc(100vh - 75px);
+}
+
+.hosts_hostlist_tablelist_td_dot{
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #303030f0;
+}
+
+.hosts_hostlist_tablelist_tr:hover { 
+    background: #000;
+}
+
+.hosts_hostlist_tablelist_td{
+    color: white;
+    vertical-align: middle;
+    white-space:nowrap;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #303030f0;
+    text-align: center;
+}
+
+.hosts_hostlist_tablelist_td_label p{
+    margin:5px;
+    padding:0;
+    border:0;
+}
+
+.hosts_hostlist_tablelist_td_label{
+    font-size: 18pt;
+    color: white;
+    vertical-align: middle;
+    white-space:nowrap;
+    height: 20px;
+    overflow: hidden;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #101010f8;
+    text-align: center;
+}
+
+.hosts_hostlist_tablelist_td p{
+    margin:5px;
+    max-height: 30px;
+    padding:0;
+    border:0;
+}
+
+.hosts_hostlist_tablelist_td_dot p{
+    max-width: 14px;
+    max-height: 14px;
+    height: 14px;
+    width: 14px;
+    padding:0;
+    margin:0;
+    border:0;
+    border-radius: 7px;
+}
+
+.hosts_ipmap_table_td p:hover { 
+    background: #00000060;
+}
+
+
+.subnet_hosts_td_alive_0 p{ /* nao cadastrado*/
+    background-color: #10101070;
+    border: 1px solid #303030;
+}
+
+.subnet_hosts_td_alive_1 p{ /* cadastrado mas inativo*/
+    background-color: #ff101070;
+    border: 1px solid #919191;
+}
+
+.subnet_hosts_td_alive_2 p{ /* nao cadastrado e ativo (impossivel)*/
+}
+
+.subnet_hosts_td_alive_3 p{ /* cadastrado e ativo*/
+    background-color: #10ff1070;
+    border: 1px solid #919191;
+}
+
+.hosts_Lside_table{
+    background-color: #30303050;
+    width: 250px;
+    height: 0;
+    opacity: 0;
+    overflow-y: scroll;
+    transition: 0.5s;
+}
+.hosts_stats_table_infotable td{
+    background: #303030f0;
+    color: white;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.hosts_stats_table_infotable tr{
+    background: #303030f0;
+    color: white;
+    white-space: nowrap;
+}
+
+.hosts_Lside_tr_item{
+    background-color: #30303050;
+}
+
+.hosts_Lside_tr_item_label{
+    background-color: #30303050;
+}
+
+.hosts_Lside_tr_item:hover{
+    background-color: #30303080;
+}
+
+.hosts_Lside_td_item_label{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.hosts_Lside_td_item_label p{
+    color: #f1f1f1;
+    margin: 0;
+    padding-left: 16px;
+}
+
+.hosts_Lside_td_item p,.hosts_Lside_td_item a{
+    color: #818181;
+    margin: 0;
+    padding-left: 16px;
+}
+
+.hosts_Lside_td_item p:hover,.hosts_Lside_td_item a:hover{
+    color: #f1f1f1;
+}
+
+.hosts_Lside_tr_item_label a, .hosts_Lside_td_item a{
+    color: #f1f1f1;
+    background-color: #30303080;
+    margin-left: 8px;
+    padding: 0 4px 0 4px;
+}
+
+.hosts_add_table_holder{
+    vertical-align: middle;
+    background-color: #303030;
+    opacity: 0;
+    position: absolute;
+    width: 40vw;
+    height: 40vh;
+    top: -100vh;
+    left: 30vw;
+    transition: 0.5s;
+    border-radius: 25px;
+    border: 1px solid black;
+}
+
+.hosts_add_table{
+    vertical-align: middle;
+    background-color: #10101050;
+    width: 40vw;
+}
+
+.hosts_add_table p{
+    margin:4px;
+    border:0;
+    padding:0;
+}
+
+.hosts_add_table_holder td{
+    width: 20vw;
+    color: #f1f1f1
+}

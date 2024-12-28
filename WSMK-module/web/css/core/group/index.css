@@ -1,0 +1,54 @@
+.grp_edt_label {
+    float: right;
+    color: var(--div-text);
+    height: 20px;
+}
+
+.grp_edt_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.edt_grp_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+.grp_add_label {
+    float: right;
+    color: var(--div-text);
+    height: 20px;
+}
+
+.grp_add_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.add_grp_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+input[type="text"]:disabled {
+    background: var(--input-disabled-bg);
+    color: var(--input-disabled-text);
+}

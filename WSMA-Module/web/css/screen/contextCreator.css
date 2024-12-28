@@ -1,0 +1,29 @@
+.contextMenu{
+    position: absolute;
+    background:#f0f0f0;
+    border-radius:15px;
+    border:1px solid black;
+}
+.contextMenu table{
+    margin:10px;
+    width-min:100px;
+    border-collapse:collapse;
+}
+
+.contextMenu p{
+    cursor:pointer;
+    font-size:15px;
+    height:15px;
+    padding:0;
+    margin:0;
+}
+.contextMenu th{
+    float:right;
+    border:none;
+}
+.contextMenu td{
+    border-bottom: 1px solid #ffffff;
+}
+.ctx-item-disabled {
+    color: #9c9c9c;
+}

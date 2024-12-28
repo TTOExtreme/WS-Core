@@ -1,0 +1,50 @@
+.system_main_table_holder{
+    background-color: var(--div);
+    width: 100vw;
+    max-width: calc(100vw - 48px);
+    margin: 0;
+    padding: 0;
+    margin-top: 32px;
+    margin-left: 48px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+}
+
+.system_top_table_holder{
+    background-color: var(--div);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    height: 32px;
+    max-height: 32px;
+}
+
+.system_top_table{
+    margin: 0;
+    padding: 0;
+    height: 32px;
+    max-height: 32px;
+}
+
+.system_bottom_table{
+    background-color: var(--div);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+    width: calc(100vw - 56px);
+}
+.system_bottom_table_holder{
+    height: calc(100vh - 64px - 44px);
+}
+
+.system_user_table{
+    
+}

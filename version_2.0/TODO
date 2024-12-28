@@ -1,0 +1,188 @@
+Reestruturação completa CORE V2.0
+
+- [X] Atualização para versão 16.2.0 nodejs
+- [] Melhor estrutura de utilização
+- [] Simplificação de hierarquia (muito tempo dependendo disso)
+    - [~] hierarquia de nivel 1 apenas ( Usuario dentro de grupo apenas, conceito de group stacking não aplicado)
+- [] Redução de peso de memoria cliente <> servidor
+- [] Melhoria de menus:
+    - [] Estruturar para callbacks (similar a versão anterior)
+    - [] Estruturar calls para criar e selecionar
+- [] Facilidade de estruturação de dados (mongodb, criar modificar esquemas) (versão antiga em mysql)
+
+
+/*** Servidor ***
+// Core
+    - [X] Auto instalação apos configuração
+    - [] Mudar painel Administrativo para /Administrativo
+    - [X] Adicionar Pagina 404
+    - [] Criar estrutura de Execução e inicialização de Modulos
+        .. Estrutura
+            Startup.js <-- Executar ao inicialização do sistema (Carregar permissioes)
+            Running.js <-- Executar ao termino das inicializações
+            Stop.js <-- Executar ao desligar o servidor
+    - [] Criar cache de dados dos modulos
+    - [] Sistema de Favoritos na pagina principal
+        - [] Alterar todos os itens de menu superior para menu interno da tabela
+    - [] Todas as funçoes com context mover para coluna de ações da tabela
+    - [] Adicionado Email e Telefone para o Usuário
+
+
+
+/*** Cliente ***/
+// Menu Lateral
+    - [] Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
+    - [] Adicionar barra para abrir menu lateral
+    - [] Mostrar informação completa (Falta IP e data do ultimo login)
+    - [] Botão de Logout
+
+// Pagina de Configuração do sistema
+    - [] Aba Usuário
+        - [] Criar
+        - [] Atribuir Permissão
+        - [] Editar
+        - [] Desativar
+        - [] Remover
+        - [] Atribuir Grupo
+        - [] Alterar senha
+        - [] Alteração do botão criação de usuário para um item da tabela
+    - [] Aba Grupos
+        // mudar modo de mostrar os grupos (somente o associado como pai)
+        // corrigir hierarchy
+        - [] Criar
+        - [] Atribuir Permissão
+            - [] Mostrar Permissão herdada de quem
+            - [] Bloquear edição de permissao herdada 
+        - [] Editar
+        - [] Desativar
+        - [] Remover
+        - [] Atribuir Grupo
+        - [] Logica de hierarquia
+        - [] Lista de usuários no grupo
+        - [] Alteração do botão criação de grupo para um item da tabela
+    - [] Interface Cliente
+        - [] Trocar a propria senha
+        - [] Ultimo Ip Conectado
+        - [] Ultimo login
+        - [] Preferencias
+        - [] Acesso Rapido / Favoritos
+        - [] Tela principal com favoritos na barra superior
+        - [] Abertura de favorito automatico
+        - [] reordenação de favoritos
+    - [] Alterar Creditos
+        - [] Direito de uso em base GPL 3.0
+
+
+
+
+// Terminal
+    - [] Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
+    - [] Reiniciar / parar instancia apos configurar
+
+// Janelas
+    - [] posicionamento dinamico parra multiplas Janelas
+
+
+//Modulo IPMA
+    // Pagina de gerencia de Redes
+        - [] Criar log de alteração de Dados MAC, ...
+        - [] Testar Nmap
+        - [] Testar Scan ARP
+
+//Modulo WPMA
+    - [] Criar estrutura de tabelas
+    - [] Criar carregamento de estrutura dos sites em cache 
+    - [] Criar log de acesso por pagina/site/post/menu
+    - [] Criar Abas de Gerencia na área Administrativa
+        - [] Listar sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+                - [] Reiniciar Host de sites ao adicionar site ativo
+            - [] Editar
+            - [] Deletar
+                - [] Reiniciar Host de sites
+            - [] Desativar
+                - [] Reiniciar Host de sites
+        - [] Gerencia de Menus dos sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+            - [] Editar 
+            - [] Excluir
+            - [] Desativar
+        - [] Gerencia de Posts dos sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+            - [] Editar 
+            - [] Excluir
+            - [] Desativar
+        - [] Gerencia de Paginas dos sites
+            - [] Mudar context Menu (itens)
+            - [] Adicionar
+            - [] Editar 
+            - [] Excluir
+            - [] Desativar
+
+        
+    - [] Criar gerencia de sites
+        - [] Gerenciar redirecionamentos (subdominio/rota)
+        - [] Informações de acesso (numero de acessos)
+        - [] Sistema de portal Administrativo do site (estilo wordpress);
+        - [] Pagina de criação de sites
+    ..Estrutura
+        <modulo>/webpages/<site>
+            home.html (pagina inicial)
+            js/
+            css/
+            img/
+            .../(estrutura de pastas de acesso estatico)
+
+//Modulo WSOP
+    WebServer Ordem de Produção
+    - [] Clientes
+        - [] Adicionar
+            - [] Pesquisa de CNPJ (limitado a 3 por minuto)
+            - [] Pesquisa de CEP
+        - [] Editar
+        - [] Excluir (desativar)
+    - [] Produtos
+        // para cada modelo e tamanho cadastrar como item diferente EX. Camisa Manga Longa Tamanho P
+        // uso de estilo PBS (Product Based System)
+        - [] Adicionar
+        - [] Editar
+        - [] Excluir (desativar)
+        - [] Imagem associada
+            - [] Thumbnails com diferentes resoluções
+            - [] Fix Endereço salvo no BD para somente nome do arquivo
+        - [] Itens adicionais no produto
+            - [] Vies
+            - [] Gola
+            - [] Tamanho (no cadastro de produto para cada OS/OP)
+    - [] Emitente
+        - [] Cadastro
+            - [] Pesquisa de CEP
+            - [] Pesquisa de CNPJ
+    - [] OS/OP
+        - [] Campo Descrição com wysiwyg
+        - [] Adicionar
+            - [] Abrir editor para adicionar items (anexos/produtos)
+        - [] Editar
+        - [] Excluir (desativar)
+        - [] Sistema de Tags
+        - [] Cores distintas para cada Status
+        - [] campo Expira/ Termino em
+        - [] Anexos
+        - [] Produtos com Pesquisa, quantidade, e Observação
+            - [] Criar redução do inventario quando associa;
+        - [] Status
+            - [] Botao atualizar
+            - [] Listas com cada Status (terminais de Produçao) uso da lista principal filtrada
+                - [] Botão para enviar pedido para o proximo Status
+        - [] Impressão de OS (via do Cliente) e de OP (via da Produção)
+    - [] Terminais com cada status
+        - [] Botão para passagem para o proximo processo
+            
+    - [] Fix
+        - [] Editar produto não carrega a imagem de thumbnail
+        - [] Tamanho da tela de Edt Os incoerente com a tela do computador
+        - [] Travamento do Socket quando manda imprimir
+        

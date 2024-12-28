@@ -1,0 +1,134 @@
+.WSOP_posvendas_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.WSOP_posvendas_div {
+    color: white;
+    font-family: sans-serif;
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    padding-right: 20px;
+    border-radius: 10px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #606060;
+}
+
+.WSOP_posvendas_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+    float: right;
+}
+
+.WSOP_posvendas_table {
+    color: #fff;
+}
+
+.WSOP_posvendas_table div {
+    width: calc((100vw - 145px) / 7);
+    height: calc((100vw - 140px) / 7);
+    max-width: 100px;
+    max-height: calc((100vh - 140px) / 7);
+    overflow: hidden;
+    border: 1px solid #00000000;
+    border-radius: 10px;
+}
+
+.WSOP_day_num {
+    color: #fff;
+    font-size: 9pt;
+    float: left;
+    min-width: 15px;
+    height: 15px;
+    background: #303030f0;
+    padding: 3px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    margin-top: -5px;
+    margin-left: -5px;
+}
+
+.WSOP_day_edt {
+    color: #fff;
+    font-size: 9pt;
+    float: right;
+    min-width: 15px;
+    height: 15px;
+    background: #303030f0;
+    padding: 5px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    margin-top: -5px;
+    margin-right: -5px;
+}
+
+.WSOP_day_card {
+    color: #fff;
+    padding: 5px;
+}
+
+.WSOP_day_title {
+    font-size: 11pt;
+    background: #303030d0;
+    padding: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 20px;
+}
+
+.WSOP_edt_div {
+    position: absolute;
+    background: var(--menu-bg);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.edt_usr_closeButton {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--menu-item-bg);
+    width: 20px;
+    text-align: center;
+}
+
+.WSOP_edt_label {
+    float: right;
+    color: var(--div-text);
+    height: 20px;
+    white-space: nowrap;
+}
+
+.WSOP_edt_label_info {
+    color: red;
+    animation: opacity 1s linear;
+}
+
+.WSOP_edt_img_thumb {
+    max-height: 100px;
+    max-width: 100px;
+}

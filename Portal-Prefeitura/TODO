@@ -1,0 +1,18 @@
+// Menu Lateral
+    -- Mudar para recolhimento completo (é possovel acessar os menus com ele fechado)
+    -- Adicionar barra para abrir menu lateral
+
+// Pagina de Configuração do sistema
+
+    -- Mover Permissões/Grupos do Usuário para o editor (pagina sobreposta ao resto)
+    -- Criar aba de Grupos
+        -- criar logica de hierarquia dos grupos / Permissões
+
+// Pagina de gerencia de Redes
+    -- Criar log de alteração de Dados MAC, ...
+    -- Testar Nmap
+    -- Testar Scan ARP
+
+// Terminal
+    OK -- Adicionar segmentação do terminal (metade para os sistemas e a outra para o log)
+    -- Reiniciar / parar instancia apos configurar

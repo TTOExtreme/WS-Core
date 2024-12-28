@@ -1,0 +1,53 @@
+
+/*Loader*/
+  
+.loading_holderBg{
+    z-index: 2;
+    opacity: 0;
+    position: absolute;
+    top:-200px;
+    left: calc(50vw - 50px);
+    width: 100px;
+    height: 100px;
+    transition: 0.5s;
+}
+  
+.loading_holder{
+    opacity: 0;
+    position: absolute;
+    top:calc(40% - 50px);
+    left: calc(45% - 50px);
+    width: 100px;
+    height: 100px;
+    transform: translate(50%,50%);
+    transition: 0.5s;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg);   }
+    to   { transform: rotate(360deg); }
+}
+
+.loading_svg {
+    top: calc(40vh - 50px);
+    left: calc(50vw - 50px);
+    animation: rotate 1s linear infinite;
+    stroke: url(#loaderStroke);
+}
+
+.svg-circle{
+    stroke-linecap: round;
+    stroke-dasharray: 0 999;
+    transform: rotate(-90deg);
+}
+.svg-circle circle{
+    stroke-width: 8;
+    fill: none;
+}
+.svg-circle text{
+    stroke: transparent;
+    stroke-width: 0;
+    fill: white;
+    transform: translate(50%,50%) rotate(90deg);
+}
+  

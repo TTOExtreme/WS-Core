@@ -1,0 +1,146 @@
+.hbmd_main_table_holder{
+    background-color: var(--div);
+    width: 100vw;
+    max-width: calc(100vw - 48px);
+    margin: 0;
+    padding: 0;
+    margin-top: 32px;
+    margin-left: 48px;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 72px);
+    max-height: calc(100vh - 72px);
+}
+
+.hbmd_top_table_holder{
+    background-color: var(--div);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    height: 32px;
+    max-height: 32px;
+}
+
+.hbmd_top_table{
+    margin: 0;
+    padding: 0;
+    height: 32px;
+    max-height: 32px;
+}
+
+.hbmd_bottom_table{
+    background-color: var(--div);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    scrollbar-width: none;
+    height: calc(100vh - 64px);
+    max-height: calc(100vh - 64px);
+    width: calc(100vw - 56px);
+}
+.hbmd_bottom_table_holder{
+    height: calc(100vh - 64px - 44px);
+}
+
+.hbmd_user_table{
+    
+}
+.overlay_input_table{
+    vertical-align: middle;
+    background-color: #303030;
+    opacity: 0;
+    position: absolute;
+    width: 40vw;
+    height: 40vh;
+    top: -100vh;
+    left: 30vw;
+    transition: 0.5s;
+    border-radius: 25px;
+    border: 1px solid black;
+}
+
+
+.overlay_input_table p{
+    margin:4px;
+    border:0;
+    padding:0;
+}
+
+.overlay_input_table td{
+    width: 20vw;
+    color: #f1f1f1
+}
+
+
+
+.div_dot{
+    width: 16px;
+    height: 16px;
+    max-width: 16px;
+    max-height: 16px;
+    padding:0;
+    margin:0;
+    border:0;
+    background: #30303000;
+}
+
+.div_dot p{
+    max-width: 14px;
+    max-height: 14px;
+    height: 14px;
+    width: 14px;
+    padding:0;
+    margin:0;
+    border:0;
+    border-radius: 7px;
+}
+
+.div_dot_0 p{ /* nao cadastrado*/
+    background-color: #10101070;
+    border: 1px solid #303030;
+}
+
+.div_dot_1 p{ /* cadastrado mas inativo*/
+    background-color: #ff101070;
+    border: 1px solid #919191;
+}
+
+.div_dot_2 p{ /* nao cadastrado e ativo (impossivel)*/
+}
+
+.div_dot_3 p{ /* cadastrado e ativo*/
+    background-color: #10ff1070;
+    border: 1px solid #919191;
+}
+.host_data_holder{
+    box-sizing: border-box;
+    padding: 0px;
+    border: none;
+    background: rgb(221, 221, 221);
+    display: block;
+    border: 1px solid #f1f1f1;
+}
+.host_data_table{
+    color: #303030;
+    border-collapse: collapse;
+    width: 100%;
+}
+.host_data_table th{
+    background: #233167;
+    color: #d8d8d8;
+    width: calc(25% - 3px);
+    max-width: calc(25% - 3px);
+}
+.host_data_table td{
+    background: #555c77;
+    color: #fff;
+    width: calc(25% - 3px);
+    max-width: calc(25% - 3px);
+    overflow: hidden;
+}
+.host_data_table_right{
+    border-right: 1px solid #ffffff;
+}

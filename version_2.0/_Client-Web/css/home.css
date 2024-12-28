@@ -1,0 +1,272 @@
+/*Barras de navegação*/
+nav#left_navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 100vh;
+    background-color: var(--navbar-left);
+    transition: width 0.5s ease-in-out;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-align: center;
+}
+
+
+nav#right_navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 100vh;
+    background-color: #b2b3b4;
+}
+
+nav#top_navbar {
+    position: fixed;
+    top: 0;
+    left: 50px;
+    width: calc(100vw - 70px);
+    height: 40px;
+    background-color: #326a29;
+}
+
+nav#bottom_navbar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 20px;
+    background-color: #474545;
+}
+
+nav#left_navbar:hover {
+    width: 150px;
+}
+
+
+/*Logo*/
+.left_navbar:hover>.logo_botao {
+    margin-left: 0px;
+}
+
+.left_navbar>.logo_botao {
+    margin-left: -50px;
+    transition: margin 0.5s ease-in-out;
+}
+
+.logo_botao {
+    overflow: hidden;
+    display: block;
+    margin-left: -50px;
+    width: 150px;
+    height: 50px;
+    transition: margin 0.5s ease-in-out;
+}
+
+/*Botoes Barra de navegação Esquerda*/
+.left_navbar_button {
+    cursor: pointer;
+    display: inline-flex;
+    background-color: var(--navbar-left-botao);
+    height: 50px;
+    width: 150px;
+}
+
+.left_navbar_button>i {
+    cursor: pointer;
+    width: 38px;
+    height: 50px;
+    font-size: 30px;
+    padding: 10px;
+}
+
+.left_navbar_button>span {
+    cursor: pointer;
+    display: flex;
+    width: 170px;
+    height: 20px;
+    font-size: medium;
+    margin-top: 15px;
+    padding: 0;
+    border: 0;
+}
+
+.left_navbar_button:hover {
+    background-color: var(--navbar-left-botao-hover);
+}
+
+.left_navbar_button_selecionado {
+    background-color: var(--navbar-left-botao-selecionado);
+}
+
+
+/*sub Botoes Barra de navegação Esquerda*/
+.left_subnavbar {
+    cursor: pointer;
+    display: block;
+    background-color: var(--subnavbar-left-botao);
+    /* height: 40px; */
+    width: 140px;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.left_subnavbar>i {
+    cursor: pointer;
+    width: 38px;
+    height: 50px;
+    font-size: 30px;
+    padding: 10px;
+}
+
+.left_subnavbar>span {
+    cursor: pointer;
+    display: flex;
+    width: 170px;
+    height: 20px;
+    font-size: medium;
+    margin-top: 15px;
+    padding: 0;
+    border: 0;
+}
+
+.left_subnavbar_button:hover {
+    background-color: var(--subnavbar-left-botao-hover);
+}
+
+.left_subnavbar_closed {
+    height: 0;
+}
+
+/*subBotoes Barra de navegação Esquerda*/
+.left_subnavbar_button {
+    cursor: pointer;
+    display: inline-flex;
+    background-color: var(--subnavbar-left-botao);
+    height: 40px;
+    width: 150px;
+}
+
+.left_subnavbar_button>i {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    padding: 10px;
+    padding-top: 10px;
+}
+
+.left_subnavbar_button>span {
+    cursor: pointer;
+    display: flex;
+    width: 170px;
+    height: 25px;
+    font-size: medium;
+    margin-top: 11px;
+    padding: 0;
+    border: 0;
+}
+
+
+/*Botoes Barra de navegação Topo*/
+.top_navbar_button {
+    cursor: pointer;
+    display: inline-flex;
+    background-color: var(--navbar-left-botao);
+    height: 35px;
+    min-width: 100px;
+    width: fit-content;
+    margin-top: 5px;
+    border-radius: 8px 8px 0 0;
+    margin-left: 5px;
+}
+
+.top_navbar_button>i {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+    padding: 3px;
+}
+
+.top_navbar_button>.topnavbaricon {
+    cursor: pointer;
+    width: 15px;
+    height: 20px;
+    font-size: 20px;
+    padding: 3px;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.top_navbar_button>span {
+    cursor: pointer;
+    display: flex;
+    /* width: 170px; */
+    height: 20px;
+    font-size: medium;
+    margin-top: 10px;
+    padding: 0;
+    border: 0;
+}
+
+.top_navbar_button:hover {
+    background-color: var(--navbar-left-botao-hover);
+}
+
+.top_navbar_button_selecionado {
+    background-color: var(--navbar-left-botao-selecionado);
+}
+
+/*Body*/
+body {
+    background-image: url("/img/bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+/*Scrollbar Estilo*/
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    border: 1px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 9999px;
+    background-color: #AAAAAA;
+}
+
+/*Tela central*/
+.middle_screen {
+    width: calc(100vw - 70px);
+    height: calc(100vh - 60px);
+    position: absolute;
+    top: 40px;
+    left: 50px;
+    overflow: hidden;
+}
+
+.middle_screen_tela {
+    width: calc(100vw - 70px);
+    height: calc(100vh - 60px);
+    background-color: #a1aaa061;
+    top: 40px;
+    position: fixed;
+    padding: 5px;
+    overflow: auto;
+}
+
+.middle_screen_tela_hidden {
+    opacity: 0;
+    display: none;
+}
+
+p.tela_id {
+    font-size: 7px;
+    padding: 0;
+    margin: 0;
+    display: none;
+}

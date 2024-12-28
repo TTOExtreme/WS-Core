@@ -1,0 +1,55 @@
+.contextMenu {
+    position: absolute;
+    background: var(--table-header-bg-hover);
+    border-radius: 15px;
+    border: 1px solid var(--table-header-move-border);
+    color: var(--table-header-text);
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+
+.contextMenu table {
+    margin: 10px;
+    width-min: 100px;
+    border-collapse: collapse;
+}
+
+.contextMenu p {
+    cursor: pointer;
+    font-size: 15px;
+    height: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.contextMenu th {
+    /* float: right; */
+    border: none;
+    /* width: 100%; */
+}
+
+.contextMenu td {
+    /* border-bottom: 1px solid var(--table-item-row-bg); */
+    padding: 5px;
+    vertical-align: top;
+    text-wrap: nowrap;
+}
+
+.ctx-item-disabled {
+    color: #9c9c9c;
+}
+
+.move_menu {
+    user-select: none;
+    cursor: grab;
+}
+
+.close_menu {
+    user-select: none;
+    cursor: pointer;
+}
+
+.move_menu:active {
+    cursor: grabbing;
+}
