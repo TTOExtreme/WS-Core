@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/socket.io": "^3.0.1",
+    "@types/socket.io-client": "^1.4.36",
+    "ansi-colors": "^4.1.3",
+    "crypto-js": "^4.2.0",
+    "express": "^4.21.0",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0",
+    "mysql2": "^3.11.3",
+    "net": "^1.0.2",
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^4.8.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.6.0",
+    "jest": "^29.7.0",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2"
+  },
+  "name": "WSCore",
+  "version": "0.0.1",
+  "description": "Sistema de gerenciamento de dados generico",
+  "main": "/src/Server.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --ignore-watch ./node_modules/ --clear  ./src/Server.ts",
+    "build": "npx tsc --build --clean && cp src/config/config.cfg dist/src/config/config.cfg && npx tsc --build",
+    "build-run": "npm run build && npm run dist",
+    "dist": "node dist/src/Server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TTOExtreme/WS-Core.git"
+  },
+  "author": "TTOExtreme",
+  "license": "MIT"
+}

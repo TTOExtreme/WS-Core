@@ -1,0 +1,15 @@
+{
+    "BD": {
+        "Usuario": "wscore_usuario",
+        "Senha": "senhasegura123",
+        "Database": "wscore",
+        "Host": "127.0.0.1",
+        "Porta": 3306
+    },
+    "LOG": {
+        "Console": true,
+        "Arquivo": true,
+        "LocalArquivo": "/var/log/wscore/",
+        "Rotatividade": 86400
+    }
+}
